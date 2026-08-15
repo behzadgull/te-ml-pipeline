@@ -1,0 +1,49 @@
+# Thermoelectric ML Pipeline configuration.
+# Placeholders only -- fill in during implementation.
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  external_data_dir: "data/external"  # ESTM, teMatDb
+  figures_dir: "figures"
+  models_dir: "models"
+
+extraction:
+  starrydata2_date: null  # ISO date the fresh pull was taken, e.g. "2026-08-15"
+
+seeds:
+  global_seed: null
+  n_repeats_80_20: 20  # repeated random 80/20 splits, pooled (Paper A, item 1)
+
+cv:
+  k_folds_5: 5
+  k_folds_10: 10
+  n_repeats_grouped_cv: null  # repeated grouped CV for chemistry-cluster rung
+  nested_cv_inner_folds: null
+
+clustering:
+  dopant_threshold_at_pct: 5.0  # frozen primary threshold
+  dopant_threshold_sensitivity:
+    looser_at_pct: null
+    stricter_at_pct: null
+
+temperature:
+  min_k: 300
+  max_k: 800
+  bin_width_k: 25
+
+property_bounds:
+  seebeck_uv_per_k: [-1000, 1000]
+  conductivity_s_per_m: [1, 1.0e7]
+  thermal_conductivity_w_per_mk: [0.05, 25]
+  zt: [0, 4]
+
+cleaning:
+  zt_self_consistency_max_rel_error: 0.5
+  mad_outlier_threshold: 3.5
+  min_temperature_coverage: 3
+  smoothness_rolling_window: 3
+  multi_source_cv_threshold: null  # set via data-driven knee method
+
+paper_b:
+  min_family_sample_size: null

@@ -1,0 +1,22 @@
+# Data
+data/
+*.csv
+*.parquet
+*.pkl
+
+# Credentials / secrets
+.env
+*.key
+credentials.json
+secrets.yaml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Models / outputs
+models/
+*.ipynb_checkpoints/
