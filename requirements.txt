@@ -5,3 +5,8 @@ scikit-learn==1.4.2
 xgboost==2.0.3
 matminer==0.9.2
 optuna==3.6.1
+CBFV==1.1.0
+# CBFV imports pkg_resources, deprecated by setuptools and slated for
+# removal -- pin below 81 or CBFV fails to import. Revisit if CBFV
+# publishes a fix, or replace it with a maintained alternative.
+setuptools<81
