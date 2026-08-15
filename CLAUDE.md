@@ -113,6 +113,34 @@ threshold are dopants and do not split the cluster.
   repeat (e.g. shuffle the unique group list before a manual balanced
   assignment, or use repeated GroupShuffleSplit with distinct
   random_states), not simply looping GroupKFold.
+- **src/nested_cv.py compute budget: full XGBoost search space requires
+  Kaggle/GPU, not local CPU.** Measured directly on the 2026-08-15
+  featurized pull (142,997 zT rows, 396 MAGPIE+CBFV features,
+  ~114k-126k rows per outer training fold): a single XGBoost fit costs
+  3s at max_depth=3/n_estimators=100 vs 57s at max_depth=10/
+  n_estimators=600 -- depth dominates cost, roughly 4x per doubling of
+  the capped-vs-full range. One full calibration repeat (5 outer folds,
+  6 Optuna trials/fold, 3 inner folds, search space capped to
+  max_depth<=7/n_estimators<=350) took 1,615s (~27 min), giving mean
+  outer R² = 0.5045, std = 0.0233 -- a real but intentionally
+  under-tuned result (6 trials, 1 repeat), not a trustworthy estimate
+  of the honest ceiling.
+
+  | | Capped (depth<=7, n_est<=350) | Full (depth<=10, n_est<=600) |
+  |---|---|---|
+  | Per outer fold, 20 trials | ~1,077s (~18 min), linear-scaled from measured | ~3,472-4,428s (~58-74 min), worst-case/avg-scaled from measured single-fit costs |
+  | 5 repeats x 5 folds (25 outer folds) | ~7.5 hours | ~24-31 hours |
+  | 10 repeats x 5 folds (50 outer folds) | ~15 hours | ~48-61 hours |
+
+  Conclusion: the full intended search space (max_depth up to 10,
+  n_estimators up to 600) across the full 5-10 repeat design is
+  infeasible on local CPU (1-2.5+ days). **src/nested_cv.py's search
+  space must stay at its full, originally-intended range and must never
+  be silently narrowed for local-runtime convenience** -- a capped
+  range is acceptable only for a clearly-labeled calibration/smoke-test
+  run, never as the default the real reported numbers come from. The
+  real run (5-10 repeats, full search space) runs on Kaggle/GPU; decide
+  and document explicitly here if that changes.
 
 **Global cleaning, not fold-local**: clean the full dataset once, globally,
 before any split. The cross-row cleaning filters (multi-source CV
