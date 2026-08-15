@@ -23,6 +23,7 @@ row-counts stay balanced by the same bin-packing logic. This is
 verified directly in verify_randomization() below, not assumed.
 """
 
+import json
 import time
 from pathlib import Path
 
@@ -147,7 +148,7 @@ def verify_randomization(groups, n_splits=5, n_seeds=5, watch_groups=None):
     }
 
 
-def _xgb_objective(trial, X, y, groups, n_inner_folds):
+def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
     # Full intended search space. Measured per-fit cost on this CPU-only
     # machine (396 features, ~114k-126k row training folds): 57s/fit at
     # max_depth=10/n_estimators=600 vs 3s at depth=3/n_estimators=100 --
@@ -173,7 +174,7 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds):
     scores = []
     for step, (inner_train_idx, inner_val_idx) in enumerate(inner_gkf.split(X, groups=groups)):
         model = xgb.XGBRegressor(
-            **params, n_jobs=-1, tree_method="hist", random_state=0, objective="reg:squarederror"
+            **params, n_jobs=-1, tree_method="hist", device=device, random_state=0, objective="reg:squarederror"
         )
         model.fit(X[inner_train_idx], y[inner_train_idx])
         preds = model.predict(X[inner_val_idx])
@@ -186,7 +187,9 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds):
     return float(np.mean(scores))
 
 
-def tune_hyperparameters(X_train, y_train, groups_train, n_trials=N_OPTUNA_TRIALS, n_inner_folds=N_INNER_FOLDS, seed=0):
+def tune_hyperparameters(
+    X_train, y_train, groups_train, n_trials=N_OPTUNA_TRIALS, n_inner_folds=N_INNER_FOLDS, seed=0, device="cpu"
+):
     """
     Nested GroupKFold hyperparameter search via Optuna (TPE sampler,
     MedianPruner), grouped by chemistry_cluster_id -- not a random
@@ -197,10 +200,75 @@ def tune_hyperparameters(X_train, y_train, groups_train, n_trials=N_OPTUNA_TRIAL
     pruner = optuna.pruners.MedianPruner(n_warmup_steps=1)
     study = optuna.create_study(direction="maximize", sampler=sampler, pruner=pruner)
     study.optimize(
-        lambda trial: _xgb_objective(trial, X_train, y_train, groups_train, n_inner_folds),
+        lambda trial: _xgb_objective(trial, X_train, y_train, groups_train, n_inner_folds, device=device),
         n_trials=n_trials,
     )
     return study.best_params, study.best_value
+
+
+def _fold_checkpoint_path(checkpoint_dir, repeat, fold):
+    return checkpoint_dir / f"repeat{repeat}_fold{fold}.json"
+
+
+def _load_checkpoints(checkpoint_dir):
+    """Load every repeatN_foldN.json in checkpoint_dir. Returns list of result dicts."""
+    records = []
+    for path in sorted(checkpoint_dir.glob("repeat*_fold*.json")):
+        with open(path, encoding="utf-8") as f:
+            records.append(json.load(f))
+    return records
+
+
+def _write_run_config(checkpoint_dir, config):
+    path = checkpoint_dir / "run_config.json"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2)
+
+
+def _check_run_config(checkpoint_dir, config):
+    """
+    On resume, verify this call's parameters match the run that produced
+    the existing checkpoints for every field that affects fold
+    composition or data identity (target, seed, n_outer_folds). n_repeats
+    is allowed to increase (extending an existing run is safe since the
+    outer RNG stream is drawn sequentially, one draw per repeat index,
+    so repeats 0..old_n_repeats-1 reproduce identically regardless of
+    how many more repeats a later call asks for). n_trials/n_inner_folds/
+    device only affect hyperparameter search cost and where it runs, not
+    fold composition, so mismatches are warned about, not fatal.
+    """
+    path = checkpoint_dir / "run_config.json"
+    if not path.exists():
+        _write_run_config(checkpoint_dir, config)
+        return
+
+    with open(path, encoding="utf-8") as f:
+        existing = json.load(f)
+
+    fatal_keys = ("target", "seed", "n_outer_folds")
+    mismatches = {k: (existing[k], config[k]) for k in fatal_keys if existing.get(k) != config[k]}
+    if mismatches:
+        raise ValueError(
+            f"Resume parameter mismatch in {checkpoint_dir}: {mismatches}. "
+            f"target/seed/n_outer_folds must match the run that produced the existing checkpoints, "
+            f"since changing any of them changes fold composition for already-checkpointed repeats. "
+            f"Use a different checkpoint_dir for a genuinely new run."
+        )
+    if existing.get("n_repeats", 0) > config["n_repeats"]:
+        raise ValueError(
+            f"Resume requested n_repeats={config['n_repeats']} but checkpoints already exist for "
+            f"n_repeats={existing['n_repeats']} in {checkpoint_dir}. Shrinking n_repeats on resume "
+            f"would silently discard completed results; pass n_repeats >= {existing['n_repeats']}."
+        )
+    for k in ("n_inner_folds", "n_trials", "device"):
+        if existing.get(k) != config[k]:
+            print(
+                f"WARNING: resuming with {k}={config[k]}, but existing checkpoints in "
+                f"{checkpoint_dir} were produced with {k}={existing.get(k)}. Fold composition is "
+                f"unaffected, but hyperparameter search cost/results may be inconsistent across "
+                f"already-completed vs. newly-run folds."
+            )
+    _write_run_config(checkpoint_dir, config)
 
 
 def run_nested_cv(
@@ -210,6 +278,8 @@ def run_nested_cv(
     n_inner_folds=N_INNER_FOLDS,
     n_trials=N_OPTUNA_TRIALS,
     seed=0,
+    device="cpu",
+    checkpoint_dir=None,
 ):
     """
     Full repeated nested grouped CV for one target. Outer folds
@@ -217,7 +287,48 @@ def run_nested_cv(
     tuned fresh inside each outer training fold via a nested, grouped
     (not random) Optuna search, then refit on the full outer-training
     fold and evaluated once on the outer-test fold.
+
+    device: passed straight to xgb.XGBRegressor (with tree_method="hist"
+    fixed) -- "cpu" (default) or "cuda" for GPU-accelerated fits, e.g.
+    on Kaggle.
+
+    checkpoint_dir: directory to write one JSON file per completed
+    (repeat, fold) -- {"repeat", "fold", "n_train", "n_test",
+    "outer_r2", "inner_cv_r2", "param_*"} -- immediately after that
+    fold finishes, plus a run_config.json recording the parameters that
+    must match on resume. Defaults to checkpoints/nested_cv/<target>/.
+    On startup, any (repeat, fold) with an existing checkpoint file is
+    skipped and its saved result reused instead of recomputed -- this
+    is how a run resumes after a Kaggle session is killed mid-run.
+    Resuming REQUIRES the same target/seed/n_outer_folds as the
+    original call (n_repeats may be increased to extend the run); a
+    mismatch raises rather than silently producing an inconsistent
+    result set. Pass checkpoint_dir=False to disable checkpointing
+    entirely (nothing written, nothing skipped).
     """
+    if checkpoint_dir is False:
+        checkpoint_dir = None
+    elif checkpoint_dir is None:
+        checkpoint_dir = Path("checkpoints") / "nested_cv" / target
+    else:
+        checkpoint_dir = Path(checkpoint_dir)
+
+    completed = {}
+    if checkpoint_dir is not None:
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        _check_run_config(
+            checkpoint_dir,
+            {
+                "target": target, "seed": seed, "n_outer_folds": n_outer_folds,
+                "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
+                "n_trials": n_trials, "device": device,
+            },
+        )
+        for record in _load_checkpoints(checkpoint_dir):
+            completed[(record["repeat"], record["fold"])] = record
+        if completed:
+            print(f"Resuming: {len(completed)} outer fold(s) already checkpointed in {checkpoint_dir}")
+
     df = load_target_data(target)
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
@@ -226,52 +337,61 @@ def run_nested_cv(
 
     print(
         f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
-        f"{len(np.unique(groups)):,} chemistry_cluster_id groups"
+        f"{len(np.unique(groups)):,} chemistry_cluster_id groups, device={device}"
     )
 
-    results = []
+    results = list(completed.values())
     rng_master = np.random.default_rng(seed)
     t_start = time.perf_counter()
 
     for repeat in range(n_repeats):
         repeat_rng = np.random.default_rng(rng_master.integers(0, 2**32 - 1))
         for fold, (train_idx, test_idx) in enumerate(randomized_group_kfold(groups, n_outer_folds, repeat_rng)):
+            if (repeat, fold) in completed:
+                print(f"repeat {repeat} fold {fold}: skipping, already checkpointed")
+                continue
+
             X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
             X_test, y_test = X[test_idx], y[test_idx]
 
             best_params, inner_r2 = tune_hyperparameters(
                 X_train, y_train, groups_train,
-                n_trials=n_trials, n_inner_folds=n_inner_folds, seed=repeat * 100 + fold,
+                n_trials=n_trials, n_inner_folds=n_inner_folds, seed=repeat * 100 + fold, device=device,
             )
 
             model = xgb.XGBRegressor(
-                **best_params, n_jobs=-1, tree_method="hist", random_state=0, objective="reg:squarederror"
+                **best_params, n_jobs=-1, tree_method="hist", device=device,
+                random_state=0, objective="reg:squarederror",
             )
             model.fit(X_train, y_train)
             outer_r2 = r2_score(y_test, model.predict(X_test))
 
-            results.append(
-                {
-                    "repeat": repeat, "fold": fold,
-                    "n_train": len(train_idx), "n_test": len(test_idx),
-                    "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
-                    **{f"param_{k}": v for k, v in best_params.items()},
-                }
-            )
+            record = {
+                "repeat": repeat, "fold": fold,
+                "n_train": len(train_idx), "n_test": len(test_idx),
+                "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
+                **{f"param_{k}": v for k, v in best_params.items()},
+            }
+
+            if checkpoint_dir is not None:
+                with open(_fold_checkpoint_path(checkpoint_dir, repeat, fold), "w", encoding="utf-8") as f:
+                    json.dump(record, f, indent=2)
+
+            results.append(record)
             print(
                 f"repeat {repeat} fold {fold}: outer R^2={outer_r2:.4f} "
                 f"(inner cv R^2={inner_r2:.4f}), n_train={len(train_idx):,}, n_test={len(test_idx):,}"
             )
 
     elapsed = time.perf_counter() - t_start
-    results_df = pd.DataFrame(results)
+    results_df = pd.DataFrame(results).sort_values(["repeat", "fold"]).reset_index(drop=True)
     mean_r2 = results_df["outer_r2"].mean()
     std_r2 = results_df["outer_r2"].std()
 
     print(f"\n=== {target}: repeated grouped CV summary ===")
     print(f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations")
     print(f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f}")
-    print(f"total time: {elapsed:.1f}s")
+    print(f"this call's new compute time: {elapsed:.1f}s")
 
     return results_df
 
