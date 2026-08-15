@@ -137,6 +137,24 @@ would clean the data differently).
 4. **Pivot long→wide** (one row per sample per temperature bin).
 5. **Formula cleaning** — remove formulas unparseable by pymatgen's
    Composition class (Ong et al. 2013).
+   **TODO (found 2026-08-15, not blocking, fix before finalizing
+   cleaning_funnel and cluster_size_distribution for the paper):**
+   pymatgen's Composition parser does not reject placeholder/template
+   element tokens (e.g. "M", "A", "Ln", "G") -- it silently accepts
+   them as DummySpecies instead of raising, so formulas like
+   "M0.125Ba0.125Sr0.5Yb0.25Co4Sb12.5H0.5" or "Ln0.949Lu0.05Sn0.001O3"
+   (generic-site notation from source papers, not real chemistry)
+   currently pass step 5 and get a composition_id / chemistry_cluster_id
+   like any real formula. Found via src/featurization.py failing on 23
+   such formulas (matminer raises KeyError, CBFV crashes outright).
+   Step 5 needs an explicit DummySpecies check
+   (isinstance(el, pymatgen.core.periodic_table.DummySpecies) for el in
+   comp.elements) to reject these at the source, same place unparseable
+   formulas are already dropped. Until fixed, cleaning_funnel's step 5
+   count and cluster_size_distribution's cluster count both include a
+   small number of bogus, non-chemistry clusters -- rerun
+   scripts/make_figures.py after the fix and before those two figures
+   are treated as final.
 6. **zT self-consistency check** — remove rows where |reported zT −
    calculated S²σT/κ| relative error exceeds 50%.
 7. **DFT data removal** — keyword search paper metadata ("DFT", "first
