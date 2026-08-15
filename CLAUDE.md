@@ -72,10 +72,47 @@ threshold are dopants and do not split the cluster.
   ladder, never as equivalent to the chemistry-cluster anchor.
 - Run the ladder once more at a looser and a stricter clustering threshold
   as a 3-row sensitivity table before freezing 5 at% as primary.
-- With an estimated ~15-25 meaningful chemistry clusters, 5-fold grouped
-  CV puts few clusters per test fold → large std across outer folds. Use
-  **repeated grouped CV** or a Nadeau-Bengio corrected significance test
-  before claiming any inflation delta between ladder rungs is real, not noise.
+- Terminology note (resolved 2026-08-15, after the fine-grained
+  chemistry_cluster_id implementation was built and run against the real
+  pull): the "~15-25 meaningful chemistry clusters" language used in
+  earlier drafts of this file referred to broad structural families (the
+  half-Heusler / skutterudite / PbTe-based kind of grouping, the same
+  level Paper B's stoichiometric-template matching operates at) -- NOT
+  the fine-grained chemistry_cluster_id defined above. chemistry_cluster_id
+  correctly produces thousands of groups (12,454 measured on the
+  2026-08-15 pull), most of them small (median size 1 sample, 70%
+  singletons) -- that is the intended behavior of the 5 at% definition,
+  not a bug, and it should not be conflated with Paper B's coarser family
+  count.
+- **Repeated grouped CV is still required, but the justification is
+  group-SIZE imbalance, not group scarcity.** Measured directly (2026-08-15,
+  sklearn 1.4.2 GroupKFold, n_splits=5, chemistry_cluster_id groups, real
+  cleaned pull): fold ROW COUNTS come out essentially balanced (68,165-
+  68,167 rows per fold, std < 0.01% of the mean) -- sklearn's GroupKFold
+  greedily bin-packs groups by descending size, which balances total rows
+  per fold even with a heavy-tailed group-size distribution. The actual
+  problem is fold COMPOSITION: GroupKFold guarantees each group lands
+  entirely in one fold, so the single largest cluster (CoSb3, skutterudite,
+  780 samples / 9,898 rows) makes up 14.5% of whichever fold it lands in,
+  and the next-largest (Ca3Co4O9, 548 samples / 5,027 rows) makes up 7.4%
+  of its fold. A single grouped split is one arbitrary draw of which large,
+  chemically distinct cluster gets held out in which fold; that fold's R^2
+  is then partly a referendum on "how well does the model generalize to
+  this one specific chemistry" rather than a representative average.
+  Repeating with a different group-to-fold assignment is what separates
+  that single-split composition effect from genuine model variance -- use
+  a Nadeau-Bengio corrected significance test before claiming any
+  inflation delta between ladder rungs is real, not noise.
+  Implementation note for src/nested_cv.py: plain sklearn GroupKFold
+  (as pinned, 1.4.2) has no shuffle/random_state parameter and is fully
+  deterministic given a set of group labels -- calling it multiple times,
+  or pre-shuffling row order first, both verified empirically to return
+  the identical fold assignment every time (bin-packing depends only on
+  group sizes, not row or group order). "Repeated" grouped CV therefore
+  requires deliberately randomizing the group-to-fold assignment each
+  repeat (e.g. shuffle the unique group list before a manual balanced
+  assignment, or use repeated GroupShuffleSplit with distinct
+  random_states), not simply looping GroupKFold.
 
 **Global cleaning, not fold-local**: clean the full dataset once, globally,
 before any split. The cross-row cleaning filters (multi-source CV
