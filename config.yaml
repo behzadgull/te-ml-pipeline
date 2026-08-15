@@ -9,7 +9,10 @@ paths:
   models_dir: "models"
 
 extraction:
-  starrydata2_date: null  # ISO date the fresh pull was taken, e.g. "2026-08-15"
+  starrydata2_date: "2026-08-15"  # date of first successful raw pull, see data/raw/extraction_metadata.json
+  starrydata2_extraction_timestamp_utc: "2026-08-15T11:22:33.063116+00:00"
+  starrydata2_upstream_db_snapshot: "2026-08-15 02:00:02 UTC+0900 (JST)"
+  starrydata2_project: "ThermoelectricMaterials"
 
 seeds:
   global_seed: null
