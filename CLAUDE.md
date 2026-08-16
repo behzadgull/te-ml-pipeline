@@ -354,6 +354,17 @@ test" without this qualifier.
 
 ---
 
+## Local dev environment
+- Neither Python nor git is on PATH in this terminal — call by full path:
+  Python at `C:\Users\choha\AppData\Local\Programs\Python\Python312\python.exe`,
+  git at `C:\Program Files\Git\cmd\git.exe`.
+- This machine has no GPU (integrated Intel Iris Xe only, no NVIDIA/CUDA,
+  no cupy installed). GPU code paths (`device="cuda"` in
+  `src/nested_cv.py`) cannot be run or timed locally — verify them on
+  Kaggle. Locally, only smoke-test such paths on `device="cpu"` for
+  behavior-preservation, and say explicitly that GPU behavior/performance
+  is unverified until run on Kaggle.
+
 ## Code conventions
 - Python, `src/` module structure (not notebooks) — this repo goes on
   GitHub for a PhD portfolio, needs to read as engineered, not exploratory.
