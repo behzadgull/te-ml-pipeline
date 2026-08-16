@@ -23,6 +23,7 @@ row-counts stay balanced by the same bin-packing logic. This is
 verified directly in verify_randomization() below, not assumed.
 """
 
+import argparse
 import json
 import time
 from pathlib import Path
@@ -396,5 +397,42 @@ def run_nested_cv(
     return results_df
 
 
+def _parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Repeated nested grouped CV for one thermoelectric property target.",
+    )
+    parser.add_argument("--target", default="zT", help="Target property column (default: zT)")
+    parser.add_argument(
+        "--device", default="cpu", choices=["cpu", "cuda"],
+        help='XGBoost device, passed with tree_method="hist" (default: cpu; use cuda on Kaggle/GPU)',
+    )
+    parser.add_argument(
+        "--checkpoint-dir", default=None,
+        help="Directory for per-fold checkpoint JSON files (default: checkpoints/nested_cv/<target>/)",
+    )
+    parser.add_argument("--n-repeats", type=int, default=N_OUTER_REPEATS, help=f"Outer repeats (default: {N_OUTER_REPEATS})")
+    parser.add_argument("--n-outer-folds", type=int, default=N_OUTER_FOLDS, help=f"Outer folds per repeat (default: {N_OUTER_FOLDS})")
+    parser.add_argument("--n-inner-folds", type=int, default=N_INNER_FOLDS, help=f"Inner tuning folds (default: {N_INNER_FOLDS})")
+    parser.add_argument("--n-trials", type=int, default=N_OPTUNA_TRIALS, help=f"Optuna trials per outer fold (default: {N_OPTUNA_TRIALS})")
+    parser.add_argument("--seed", type=int, default=0, help="Master RNG seed (default: 0)")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    args = _parse_args(argv)
+    results_df = run_nested_cv(
+        target=args.target,
+        n_repeats=args.n_repeats,
+        n_outer_folds=args.n_outer_folds,
+        n_inner_folds=args.n_inner_folds,
+        n_trials=args.n_trials,
+        seed=args.seed,
+        device=args.device,
+        checkpoint_dir=args.checkpoint_dir,
+    )
+    print(results_df)
+    return results_df
+
+
 if __name__ == "__main__":
-    run_nested_cv(target="zT")
+    main()
