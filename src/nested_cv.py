@@ -211,6 +211,21 @@ def _fold_checkpoint_path(checkpoint_dir, repeat, fold):
     return checkpoint_dir / f"repeat{repeat}_fold{fold}.json"
 
 
+def _log_progress(checkpoint_dir, message):
+    """
+    Append a timestamped line to checkpoint_dir/progress.log, if
+    checkpointing is enabled. Kaggle's committed/batch execution mode
+    buffers stdout until the process exits, and its log viewer can hide
+    that buffered output entirely -- this file is readable at any time
+    while a run is still in progress, independent of stdout.
+    """
+    if checkpoint_dir is None:
+        return
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(checkpoint_dir / "progress.log", "a", encoding="utf-8") as f:
+        f.write(f"[{timestamp}] {message}\n")
+
+
 def _load_checkpoints(checkpoint_dir):
     """Load every repeatN_foldN.json in checkpoint_dir. Returns list of result dicts."""
     records = []
@@ -267,7 +282,8 @@ def _check_run_config(checkpoint_dir, config):
                 f"WARNING: resuming with {k}={config[k]}, but existing checkpoints in "
                 f"{checkpoint_dir} were produced with {k}={existing.get(k)}. Fold composition is "
                 f"unaffected, but hyperparameter search cost/results may be inconsistent across "
-                f"already-completed vs. newly-run folds."
+                f"already-completed vs. newly-run folds.",
+                flush=True,
             )
     _write_run_config(checkpoint_dir, config)
 
@@ -328,7 +344,9 @@ def run_nested_cv(
         for record in _load_checkpoints(checkpoint_dir):
             completed[(record["repeat"], record["fold"])] = record
         if completed:
-            print(f"Resuming: {len(completed)} outer fold(s) already checkpointed in {checkpoint_dir}")
+            msg = f"Resuming: {len(completed)} outer fold(s) already checkpointed in {checkpoint_dir}"
+            print(msg, flush=True)
+            _log_progress(checkpoint_dir, msg)
 
     df = load_target_data(target)
     feature_cols = get_feature_columns(df)
@@ -336,10 +354,12 @@ def run_nested_cv(
     y = df[target].to_numpy(dtype=np.float64)
     groups = df[GROUP_COL].to_numpy()
 
-    print(
+    start_msg = (
         f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
         f"{len(np.unique(groups)):,} chemistry_cluster_id groups, device={device}"
     )
+    print(start_msg, flush=True)
+    _log_progress(checkpoint_dir, start_msg)
 
     results = list(completed.values())
     rng_master = np.random.default_rng(seed)
@@ -349,7 +369,9 @@ def run_nested_cv(
         repeat_rng = np.random.default_rng(rng_master.integers(0, 2**32 - 1))
         for fold, (train_idx, test_idx) in enumerate(randomized_group_kfold(groups, n_outer_folds, repeat_rng)):
             if (repeat, fold) in completed:
-                print(f"repeat {repeat} fold {fold}: skipping, already checkpointed")
+                msg = f"repeat {repeat} fold {fold}: skipping, already checkpointed"
+                print(msg, flush=True)
+                _log_progress(checkpoint_dir, msg)
                 continue
 
             X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
@@ -379,20 +401,27 @@ def run_nested_cv(
                     json.dump(record, f, indent=2)
 
             results.append(record)
-            print(
+            fold_msg = (
                 f"repeat {repeat} fold {fold}: outer R^2={outer_r2:.4f} "
                 f"(inner cv R^2={inner_r2:.4f}), n_train={len(train_idx):,}, n_test={len(test_idx):,}"
             )
+            print(fold_msg, flush=True)
+            _log_progress(checkpoint_dir, fold_msg)
 
     elapsed = time.perf_counter() - t_start
     results_df = pd.DataFrame(results).sort_values(["repeat", "fold"]).reset_index(drop=True)
     mean_r2 = results_df["outer_r2"].mean()
     std_r2 = results_df["outer_r2"].std()
 
-    print(f"\n=== {target}: repeated grouped CV summary ===")
-    print(f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations")
-    print(f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f}")
-    print(f"this call's new compute time: {elapsed:.1f}s")
+    summary_lines = [
+        f"=== {target}: repeated grouped CV summary ===",
+        f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations",
+        f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f}",
+        f"this call's new compute time: {elapsed:.1f}s",
+    ]
+    print("\n" + "\n".join(summary_lines), flush=True)
+    for line in summary_lines:
+        _log_progress(checkpoint_dir, line)
 
     return results_df
 
@@ -430,7 +459,7 @@ def main(argv=None):
         device=args.device,
         checkpoint_dir=args.checkpoint_dir,
     )
-    print(results_df)
+    print(results_df, flush=True)
     return results_df
 
 
