@@ -27,6 +27,23 @@ front, in run_nested_cv (see _to_device) instead of leaving them as
 numpy and letting XGBoost bridge the device mismatch on every single
 fit/predict call. See _to_device's docstring for what that mismatch
 costs.
+
+--split-strategy selects the OUTER fold scheme, i.e. which rung of
+CLAUDE.md's five-way validation-inflation ladder (Paper A item 1) this
+run reports: "random" (repeated random 80/20 holdout, ungrouped),
+"kfold" (ordinary shuffled K-fold, ungrouped -- pass --n-outer-folds 5
+or 10 for those two specific rungs), "composition" (grouped by
+composition_id, the looser intermediate rung), "chemistry" (grouped by
+chemistry_cluster_id, the frozen strict anchor -- default). See
+outer_splits() for the exact per-strategy definition. The INNER
+hyperparameter-tuning split inside tune_hyperparameters always groups by
+chemistry_cluster_id regardless of --split-strategy, per Paper A item
+1's "tune once on the chemistry-cluster split" -- this module still
+retunes fresh per outer fold rather than truly freezing one global
+model across all five rungs, so it is a building block toward the
+ladder, not the full denominator-matched, single-frozen-model
+comparison; that pooling/matching step belongs in
+src/validation_ladder.py.
 """
 
 import argparse
@@ -39,13 +56,17 @@ import optuna
 import pandas as pd
 import xgboost as xgb
 from sklearn.metrics import r2_score
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import GroupKFold, KFold, ShuffleSplit
 
 PROCESSED_DATA_DIR = Path("data/processed")
 PROJECT = "ThermoelectricMaterials"
 
 FEATURE_PREFIXES = ("MagpieData", "CBFV_")
 GROUP_COL = "chemistry_cluster_id"
+
+SPLIT_STRATEGIES = ("random", "kfold", "composition", "chemistry")
+SPLIT_STRATEGY_GROUP_COL = {"composition": "composition_id", "chemistry": GROUP_COL}
+RANDOM_HOLDOUT_TEST_SIZE = 0.2  # CLAUDE.md Paper A item 1: "random 80/20"
 
 N_OUTER_REPEATS = 5  # lower end of CLAUDE.md's 5-10 range; see run_nested_cv's report for the local-compute tradeoff
 N_OUTER_FOLDS = 5
@@ -137,6 +158,45 @@ def randomized_group_kfold(groups, n_splits, rng):
     for fold in range(n_splits):
         test_mask = fold_assignment == fold
         yield np.where(~test_mask)[0], np.where(test_mask)[0]
+
+
+def outer_splits(split_strategy, n_rows, group_lookup, n_outer_folds, rng):
+    """
+    Yield (train_idx, test_idx) for one repeat's worth of outer folds
+    under `split_strategy` -- see the module docstring for what each of
+    the four CLAUDE.md ladder rungs this implements means:
+
+    - "chemistry" / "composition": randomized_group_kfold over
+      group_lookup[split_strategy] (chemistry_cluster_id /
+      composition_id respectively) -- n_outer_folds partitions covering
+      every row exactly once, each group confined to one fold.
+    - "kfold": ordinary shuffled sklearn KFold over all rows, no
+      grouping -- the same chemistry cluster or composition can appear
+      in both train and test.
+    - "random": n_outer_folds independent random 80/20 holdout draws
+      (sklearn ShuffleSplit), no grouping and NOT a partition -- test
+      sets can overlap across draws within a repeat. This is
+      deliberate: CLAUDE.md's ladder repeats the 80/20 split ~20 times
+      and pools results, since a single 80/20 split only covers 20% of
+      rows (unlike the other, full-coverage rungs).
+
+    group_lookup: {"composition": composition_id array, "chemistry":
+    chemistry_cluster_id array}; only the entry matching split_strategy
+    is read.
+    """
+    if split_strategy in ("composition", "chemistry"):
+        yield from randomized_group_kfold(group_lookup[split_strategy], n_outer_folds, rng)
+        return
+
+    seed = int(rng.integers(0, 2**32 - 1))
+    placeholder = np.empty(n_rows)
+    if split_strategy == "kfold":
+        splitter = KFold(n_splits=n_outer_folds, shuffle=True, random_state=seed)
+    elif split_strategy == "random":
+        splitter = ShuffleSplit(n_splits=n_outer_folds, test_size=RANDOM_HOLDOUT_TEST_SIZE, random_state=seed)
+    else:
+        raise ValueError(f"Unknown split_strategy {split_strategy!r}; must be one of {SPLIT_STRATEGIES}")
+    yield from splitter.split(placeholder)
 
 
 def verify_randomization(groups, n_splits=5, n_seeds=5, watch_groups=None):
@@ -286,7 +346,8 @@ def _check_run_config(checkpoint_dir, config):
     """
     On resume, verify this call's parameters match the run that produced
     the existing checkpoints for every field that affects fold
-    composition or data identity (target, seed, n_outer_folds). n_repeats
+    composition or data identity (target, split_strategy, seed,
+    n_outer_folds). n_repeats
     is allowed to increase (extending an existing run is safe since the
     outer RNG stream is drawn sequentially, one draw per repeat index,
     so repeats 0..old_n_repeats-1 reproduce identically regardless of
@@ -302,14 +363,14 @@ def _check_run_config(checkpoint_dir, config):
     with open(path, encoding="utf-8") as f:
         existing = json.load(f)
 
-    fatal_keys = ("target", "seed", "n_outer_folds")
+    fatal_keys = ("target", "split_strategy", "seed", "n_outer_folds")
     mismatches = {k: (existing[k], config[k]) for k in fatal_keys if existing.get(k) != config[k]}
     if mismatches:
         raise ValueError(
             f"Resume parameter mismatch in {checkpoint_dir}: {mismatches}. "
-            f"target/seed/n_outer_folds must match the run that produced the existing checkpoints, "
-            f"since changing any of them changes fold composition for already-checkpointed repeats. "
-            f"Use a different checkpoint_dir for a genuinely new run."
+            f"target/split_strategy/seed/n_outer_folds must match the run that produced the existing "
+            f"checkpoints, since changing any of them changes fold composition for already-checkpointed "
+            f"repeats. Use a different checkpoint_dir for a genuinely new run."
         )
     if existing.get("n_repeats", 0) > config["n_repeats"]:
         raise ValueError(
@@ -331,6 +392,7 @@ def _check_run_config(checkpoint_dir, config):
 
 def run_nested_cv(
     target="zT",
+    split_strategy="chemistry",
     n_repeats=N_OUTER_REPEATS,
     n_outer_folds=N_OUTER_FOLDS,
     n_inner_folds=N_INNER_FOLDS,
@@ -340,34 +402,41 @@ def run_nested_cv(
     checkpoint_dir=None,
 ):
     """
-    Full repeated nested grouped CV for one target. Outer folds
-    (repeated, randomized) are for reporting only; hyperparameters are
-    tuned fresh inside each outer training fold via a nested, grouped
-    (not random) Optuna search, then refit on the full outer-training
-    fold and evaluated once on the outer-test fold.
+    Full repeated nested CV for one target, outer folds built under
+    `split_strategy` (one of SPLIT_STRATEGIES; see the module docstring
+    and outer_splits() for what each rung is). Outer folds (repeated,
+    randomized) are for reporting only; hyperparameters are tuned fresh
+    inside each outer training fold via a nested Optuna search grouped
+    by chemistry_cluster_id (always, regardless of split_strategy -- see
+    module docstring), then refit on the full outer-training fold and
+    evaluated once on the outer-test fold.
 
     device: passed straight to xgb.XGBRegressor (with tree_method="hist"
     fixed) -- "cpu" (default) or "cuda" for GPU-accelerated fits, e.g.
     on Kaggle.
 
     checkpoint_dir: directory to write one JSON file per completed
-    (repeat, fold) -- {"repeat", "fold", "n_train", "n_test",
-    "outer_r2", "inner_cv_r2", "param_*"} -- immediately after that
-    fold finishes, plus a run_config.json recording the parameters that
-    must match on resume. Defaults to checkpoints/nested_cv/<target>/.
-    On startup, any (repeat, fold) with an existing checkpoint file is
-    skipped and its saved result reused instead of recomputed -- this
-    is how a run resumes after a Kaggle session is killed mid-run.
-    Resuming REQUIRES the same target/seed/n_outer_folds as the
-    original call (n_repeats may be increased to extend the run); a
-    mismatch raises rather than silently producing an inconsistent
-    result set. Pass checkpoint_dir=False to disable checkpointing
-    entirely (nothing written, nothing skipped).
+    (repeat, fold) -- {"repeat", "fold", "split_strategy", "n_train",
+    "n_test", "outer_r2", "inner_cv_r2", "param_*"} -- immediately after
+    that fold finishes, plus a run_config.json recording the parameters
+    that must match on resume. Defaults to
+    checkpoints/nested_cv/<target>/<split_strategy>/. On startup, any
+    (repeat, fold) with an existing checkpoint file is skipped and its
+    saved result reused instead of recomputed -- this is how a run
+    resumes after a Kaggle session is killed mid-run. Resuming REQUIRES
+    the same target/split_strategy/seed/n_outer_folds as the original
+    call (n_repeats may be increased to extend the run); a mismatch
+    raises rather than silently producing an inconsistent result set.
+    Pass checkpoint_dir=False to disable checkpointing entirely (nothing
+    written, nothing skipped).
     """
+    if split_strategy not in SPLIT_STRATEGIES:
+        raise ValueError(f"split_strategy={split_strategy!r} must be one of {SPLIT_STRATEGIES}")
+
     if checkpoint_dir is False:
         checkpoint_dir = None
     elif checkpoint_dir is None:
-        checkpoint_dir = Path("checkpoints") / "nested_cv" / target
+        checkpoint_dir = Path("checkpoints") / "nested_cv" / target / split_strategy
     else:
         checkpoint_dir = Path(checkpoint_dir)
 
@@ -377,7 +446,7 @@ def run_nested_cv(
         _check_run_config(
             checkpoint_dir,
             {
-                "target": target, "seed": seed, "n_outer_folds": n_outer_folds,
+                "target": target, "split_strategy": split_strategy, "seed": seed, "n_outer_folds": n_outer_folds,
                 "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
                 "n_trials": n_trials, "device": device,
             },
@@ -393,16 +462,29 @@ def run_nested_cv(
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
     y = df[target].to_numpy(dtype=np.float64)
-    groups = df[GROUP_COL].to_numpy()  # left on host: used only for grouping/indexing, never fed to XGBoost
+
+    # chemistry_groups is used for two independent purposes: (a) the
+    # inner hyperparameter-tuning split, always, regardless of
+    # split_strategy; (b) the outer split itself, only when
+    # split_strategy == "chemistry". Both stay on host: grouping/index
+    # bookkeeping only, never fed to XGBoost.
+    chemistry_groups = df[GROUP_COL].to_numpy()
+    group_lookup = {"chemistry": chemistry_groups, "composition": df["composition_id"].to_numpy()}
 
     # Convert once, up front, not per-fold -- see _to_device docstring for
     # why this is the fix for the cross-device DMatrix-fallback warning.
     X = _to_device(X, device)
     y = _to_device(y, device)
 
+    if split_strategy in ("composition", "chemistry"):
+        group_col = SPLIT_STRATEGY_GROUP_COL[split_strategy]
+        n_groups = len(np.unique(group_lookup[split_strategy]))
+        split_desc = f"split_strategy={split_strategy} ({n_groups:,} {group_col} groups)"
+    else:
+        split_desc = f"split_strategy={split_strategy} (ungrouped)"
     start_msg = (
         f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
-        f"{len(np.unique(groups)):,} chemistry_cluster_id groups, device={device}"
+        f"{split_desc}, device={device}"
     )
     print(start_msg, flush=True)
     _log_progress(checkpoint_dir, start_msg)
@@ -413,14 +495,15 @@ def run_nested_cv(
 
     for repeat in range(n_repeats):
         repeat_rng = np.random.default_rng(rng_master.integers(0, 2**32 - 1))
-        for fold, (train_idx, test_idx) in enumerate(randomized_group_kfold(groups, n_outer_folds, repeat_rng)):
+        fold_iter = outer_splits(split_strategy, len(df), group_lookup, n_outer_folds, repeat_rng)
+        for fold, (train_idx, test_idx) in enumerate(fold_iter):
             if (repeat, fold) in completed:
                 msg = f"repeat {repeat} fold {fold}: skipping, already checkpointed"
                 print(msg, flush=True)
                 _log_progress(checkpoint_dir, msg)
                 continue
 
-            X_train, y_train, groups_train = X[train_idx], y[train_idx], groups[train_idx]
+            X_train, y_train, groups_train = X[train_idx], y[train_idx], chemistry_groups[train_idx]
             X_test, y_test = X[test_idx], y[test_idx]
 
             best_params, inner_r2 = tune_hyperparameters(
@@ -436,7 +519,7 @@ def run_nested_cv(
             outer_r2 = r2_score(_to_host(y_test), _to_host(model.predict(X_test)))
 
             record = {
-                "repeat": repeat, "fold": fold,
+                "repeat": repeat, "fold": fold, "split_strategy": split_strategy,
                 "n_train": len(train_idx), "n_test": len(test_idx),
                 "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
                 **{f"param_{k}": v for k, v in best_params.items()},
@@ -478,12 +561,18 @@ def _parse_args(argv=None):
     )
     parser.add_argument("--target", default="zT", help="Target property column (default: zT)")
     parser.add_argument(
+        "--split-strategy", default="chemistry", choices=SPLIT_STRATEGIES,
+        help="Outer-fold scheme, one rung of CLAUDE.md's five-way validation ladder (default: chemistry). "
+        "Use --split-strategy kfold with --n-outer-folds 5 or 10 for those two rungs.",
+    )
+    parser.add_argument(
         "--device", default="cpu", choices=["cpu", "cuda"],
         help='XGBoost device, passed with tree_method="hist" (default: cpu; use cuda on Kaggle/GPU)',
     )
     parser.add_argument(
         "--checkpoint-dir", default=None,
-        help="Directory for per-fold checkpoint JSON files (default: checkpoints/nested_cv/<target>/)",
+        help="Directory for per-fold checkpoint JSON files "
+        "(default: checkpoints/nested_cv/<target>/<split_strategy>/)",
     )
     parser.add_argument("--n-repeats", type=int, default=N_OUTER_REPEATS, help=f"Outer repeats (default: {N_OUTER_REPEATS})")
     parser.add_argument("--n-outer-folds", type=int, default=N_OUTER_FOLDS, help=f"Outer folds per repeat (default: {N_OUTER_FOLDS})")
@@ -497,6 +586,7 @@ def main(argv=None):
     args = _parse_args(argv)
     results_df = run_nested_cv(
         target=args.target,
+        split_strategy=args.split_strategy,
         n_repeats=args.n_repeats,
         n_outer_folds=args.n_outer_folds,
         n_inner_folds=args.n_inner_folds,
