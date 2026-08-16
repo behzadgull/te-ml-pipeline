@@ -26,7 +26,11 @@ device="cuda" (Kaggle GPU) converts X and y to cupy arrays once, up
 front, in run_nested_cv (see _to_device) instead of leaving them as
 numpy and letting XGBoost bridge the device mismatch on every single
 fit/predict call. See _to_device's docstring for what that mismatch
-costs.
+costs. cupy is optional, not required: if it fails to import (e.g. a
+numpy-2.x-only cupy build against this project's pinned numpy 1.26.4),
+_to_device warns once and falls back to numpy arrays rather than
+raising, so this module still runs -- just without the fix -- on a
+Kaggle image where cupy and the pinned numpy don't line up.
 
 --split-strategy selects the OUTER fold scheme, i.e. which rung of
 CLAUDE.md's five-way validation-inflation ladder (Paper A item 1) this
@@ -81,6 +85,9 @@ def get_feature_columns(df):
     return [c for c in df.columns if c.startswith(FEATURE_PREFIXES)]
 
 
+_CUPY_UNAVAILABLE_WARNED = False
+
+
 def _to_device(arr, device):
     """
     Move arr onto the GPU as a cupy array when device=='cuda'. Passing a
@@ -94,16 +101,32 @@ def _to_device(arr, device):
     and the repeated per-outer-fold, per-inner-fold, per-Optuna-trial
     slices inside tune_hyperparameters -- resident on the GPU with no
     further host<->device transfers. No-op on cpu.
+
+    If cupy itself fails to import (e.g. a cupy build requiring numpy 2.x
+    against this project's pinned numpy 1.26.4 -- seen on Kaggle), this
+    is optional, not required: warn once and fall back to returning arr
+    unchanged. XGBoost then reproduces the original cross-device
+    DMatrix-fallback behavior (correct, just slower) instead of the run
+    failing outright.
     """
+    global _CUPY_UNAVAILABLE_WARNED
     if device != "cuda":
         return arr
     try:
         import cupy as cp
-    except ImportError as e:
-        raise ImportError(
-            "device='cuda' requires cupy (e.g. `pip install cupy-cuda12x`); "
-            "preinstalled on Kaggle's GPU notebook images."
-        ) from e
+    except Exception as e:
+        if not _CUPY_UNAVAILABLE_WARNED:
+            print(
+                f"WARNING: device='cuda' requested but cupy is unavailable "
+                f"({type(e).__name__}: {e}); falling back to numpy arrays. XGBoost will still "
+                f"run on device='cuda' but will rebuild a GPU-side DMatrix on every fit/predict "
+                f"call to bridge the host/device gap (correct, just slower -- see _to_device's "
+                f"docstring). Install a cupy build compatible with the pinned numpy version to "
+                f"restore the fix.",
+                flush=True,
+            )
+            _CUPY_UNAVAILABLE_WARNED = True
+        return arr
     return cp.asarray(arr)
 
 
