@@ -21,6 +21,12 @@ Since the large majority of chemistry_cluster_id groups are singletons
 changes which ones land in which fold across repeats, while fold
 row-counts stay balanced by the same bin-packing logic. This is
 verified directly in verify_randomization() below, not assumed.
+
+device="cuda" (Kaggle GPU) converts X and y to cupy arrays once, up
+front, in run_nested_cv (see _to_device) instead of leaving them as
+numpy and letting XGBoost bridge the device mismatch on every single
+fit/predict call. See _to_device's docstring for what that mismatch
+costs.
 """
 
 import argparse
@@ -52,6 +58,37 @@ optuna.logging.set_verbosity(optuna.logging.WARNING)
 def get_feature_columns(df):
     """All MAGPIE + CBFV feature columns in df (see src/featurization.py)."""
     return [c for c in df.columns if c.startswith(FEATURE_PREFIXES)]
+
+
+def _to_device(arr, device):
+    """
+    Move arr onto the GPU as a cupy array when device=='cuda'. Passing a
+    host (numpy) array to an XGBRegressor with device='cuda' still runs,
+    but XGBoost detects the booster device and the input array's device
+    don't match and transparently rebuilds a DMatrix on the GPU on every
+    single fit/predict call to bridge the gap (warns "Falling back to
+    prediction using DMatrix due to mismatched devices" and re-copies the
+    full feature matrix across the PCIe bus each time). Converting once,
+    up front, keeps every downstream slice -- X[train_idx], X[test_idx],
+    and the repeated per-outer-fold, per-inner-fold, per-Optuna-trial
+    slices inside tune_hyperparameters -- resident on the GPU with no
+    further host<->device transfers. No-op on cpu.
+    """
+    if device != "cuda":
+        return arr
+    try:
+        import cupy as cp
+    except ImportError as e:
+        raise ImportError(
+            "device='cuda' requires cupy (e.g. `pip install cupy-cuda12x`); "
+            "preinstalled on Kaggle's GPU notebook images."
+        ) from e
+    return cp.asarray(arr)
+
+
+def _to_host(arr):
+    """Bring a possibly-GPU (cupy) array back to numpy, e.g. for sklearn metrics. No-op for numpy input."""
+    return arr.get() if hasattr(arr, "get") else arr
 
 
 def load_target_data(target, processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT):
@@ -173,13 +210,17 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
 
     inner_gkf = GroupKFold(n_splits=n_inner_folds)
     scores = []
-    for step, (inner_train_idx, inner_val_idx) in enumerate(inner_gkf.split(X, groups=groups)):
+    # split() only needs sample count and `groups` (always a host numpy
+    # array -- see run_nested_cv); pass a host placeholder in X's place so
+    # sklearn's split-index bookkeeping never touches a GPU-resident X.
+    split_placeholder = np.empty(len(groups))
+    for step, (inner_train_idx, inner_val_idx) in enumerate(inner_gkf.split(split_placeholder, groups=groups)):
         model = xgb.XGBRegressor(
             **params, n_jobs=-1, tree_method="hist", device=device, random_state=0, objective="reg:squarederror"
         )
         model.fit(X[inner_train_idx], y[inner_train_idx])
         preds = model.predict(X[inner_val_idx])
-        scores.append(r2_score(y[inner_val_idx], preds))
+        scores.append(r2_score(_to_host(y[inner_val_idx]), _to_host(preds)))
 
         trial.report(float(np.mean(scores)), step)
         if trial.should_prune():
@@ -352,7 +393,12 @@ def run_nested_cv(
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
     y = df[target].to_numpy(dtype=np.float64)
-    groups = df[GROUP_COL].to_numpy()
+    groups = df[GROUP_COL].to_numpy()  # left on host: used only for grouping/indexing, never fed to XGBoost
+
+    # Convert once, up front, not per-fold -- see _to_device docstring for
+    # why this is the fix for the cross-device DMatrix-fallback warning.
+    X = _to_device(X, device)
+    y = _to_device(y, device)
 
     start_msg = (
         f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
@@ -387,7 +433,7 @@ def run_nested_cv(
                 random_state=0, objective="reg:squarederror",
             )
             model.fit(X_train, y_train)
-            outer_r2 = r2_score(y_test, model.predict(X_test))
+            outer_r2 = r2_score(_to_host(y_test), _to_host(model.predict(X_test)))
 
             record = {
                 "repeat": repeat, "fold": fold,
