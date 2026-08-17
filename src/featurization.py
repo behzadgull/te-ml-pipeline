@@ -4,12 +4,9 @@ Composition-based descriptor featurization.
 Computes descriptors once per unique formula, keyed by composition_id
 from src/canonicalization.py, then merges back onto every row of the
 cleaned dataset -- not once per row (CLAUDE.md's ~13x compute reduction
-note; the exact ratio moves with the cleaned pull, see the row/formula
-counts in CLAUDE.md's Data Cleaning Pipeline section for the current
-figures -- data/processed/featurized_ThermoelectricMaterials_2026-08-15.csv
-was built against the pre-2026-08-17 cleaned pull and needs re-running
-after the step 8/9 row-drop fix before its row/formula counts are
-trustworthy again). Two deliberately different composition-based
+note; on the 2026-08-17 re-run, post step 8/9 row-drop fix, it is closer
+to 16x, 279,857 rows vs 17,157 successfully featurized unique formulas).
+Two deliberately different composition-based
 feature sets are computed per unique formula: matminer's MAGPIE
 elemental-property statistics (Ward et al. 2016) and the CBFV package's
 Oliynyk elemental-property statistics (Jha et al.) -- not two
