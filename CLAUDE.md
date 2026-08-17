@@ -156,9 +156,10 @@ would clean the data differently).
 
 ## Data Cleaning Pipeline (11 steps — replicate this spec on the fresh pull)
 1. **Property extraction & range filtering** (~1,114,628 rows). Bounds: S
-   -1000 to +1000 μV/K; σ 1 to 10^7 S/m (semiconductor-insulator boundary
-   — confirm exact lower bound during implementation); κ 0.05 to 25 W/mK
-   (Cahill-Pohl minimum); zT 0 to 4. Cite Snyder & Toberer 2008.
+   -1000 to +1000 μV/K; σ 10 to 10^7 S/m (semiconductor-insulator
+   boundary, confirmed against thesis 2026-08-17 -- was implemented as 1
+   before that, see resolved TODO below); κ 0.05 to 25 W/mK (Cahill-Pohl
+   minimum); zT 0 to 4. Cite Snyder & Toberer 2008.
 2. **Data integration & consolidation** (Python + pandas). Convert
    resistivity to conductivity.
 3. **Temperature filtering** (300-800K), binned into 25K intervals.
@@ -194,8 +195,9 @@ would clean the data differently).
    round-robin source (that circularity was identified and closed; the
    round-robin source is used ONLY for the noise-floor anchor, Phase 1
    item 6, nowhere else in the pipeline).
-9. **MAD outlier filter** — 3.5×MAD from median, log scale for σ, κ. NOT
-   applied to zT (judged against Step 1 bounds instead).
+9. **MAD outlier filter** — remove rows exceeding 3.5×MAD from the
+   median, log scale for σ, κ. NOT applied to zT (judged against Step 1
+   bounds instead).
 10. **Minimum temperature coverage** — remove formulas with <3 distinct
     temperature measurements.
 11. **Smoothness filter** — rolling median (window=3), flag spikes as NaN,
@@ -205,6 +207,106 @@ Reference-scale sanity check (expect similar magnitude on the fresh pull,
 not identical values): final dataset previously ~184,167 rows, ~13,605
 unique formulas, ~2,834 parent chemical systems. Large deviations at any
 step are a signal to stop and investigate, not to proceed.
+
+**Reference per-step row counts (thesis)**, reconstructed from the
+thesis's reported step deltas (absolute count given for steps 1, 3, 4, 5;
+steps 6-11 given as -count (-%) relative to the previous step, chained
+below):
+
+| Step | Thesis row count | Delta from previous step |
+|---|---|---|
+| 1. Property extraction & range filtering | 1,114,628 | (starting point) |
+| 2. Integration & consolidation | not reported | — |
+| 3. Temperature filtering 300-800K | 397,651 | — (step 2 not separately reported, so this delta spans steps 2+3 combined) |
+| 4. Pivot long→wide | 399,287 | +1,636 -- **inconsistent as given: a wide-pivot collapses multiple property-rows per (sample, temperature) into one row and should REDUCE row count, not increase it. This figure is flagged, not trusted as-is** (see note below) |
+| 5. Formula cleaning | 244,834 | -154,453 (-38.7%) |
+| 6. zT self-consistency check | 238,667 | -6,167 (-2.5%) |
+| 7. DFT data removal | 236,887 | -1,780 (-0.8%) |
+| 8. Multi-source consistency filtering | 201,777 | -35,110 (-14.8%) |
+| 9. MAD outlier filter | 198,609 | -3,168 (-1.6%) |
+| 10. Minimum temperature coverage | 184,687 | -13,922 (-7.0%) |
+| 11. Smoothness filter (final) | 184,167 | -~500 (-0.3%) |
+
+Note on step 4: the thesis figure (399,287) is larger than step 3's
+(397,651), which is physically implausible for a long-to-wide pivot.
+Coincidentally, 399,287 is also this pipeline's OWN step 4 row count on
+the 2026-08-15 pull (see commit 413ec37) -- treat this reference value
+as unverified/possibly mistranscribed, not as a trustworthy target, until
+checked directly against the thesis text.
+
+**Reference final-dataset per-property statistics (thesis)**, on the
+184,167-row final dataset:
+
+| Property | Coverage | Mean | Median | Std | Range |
+|---|---|---|---|---|---|
+| S (μV/K) | 91.4% | 17.3 | 61.5 | 173.9 | [-452, 577] |
+| sigma (S/m) | 89.2% | 84,813 | 52,384 | 106,287 | [1,884, 1,200,000] |
+| kappa (W/mK) | 63.8% | 2.51 | 2.02 | 1.88 | [0.32, 12.9] |
+| zT | 68.0% | 0.44 | 0.33 | 0.39 | [0, 3.55] |
+
+**RESOLVED 2026-08-17: steps 8 and 9 now drop rows, matching the thesis
+mechanism.** Found 2026-08-17 comparing the 2026-08-15 pull's funnel
+against the thesis's per-step counts: step 8 was removing 0 rows here
+(NaN-out only) vs 14.8% in the thesis, and step 9 was removing 0 rows
+here vs 1.6% in the thesis. Fixed in `step8_multi_source_consistency`
+and `step9_mad_outlier_filter` (src/data_cleaning.py): both now drop
+every row in a group/every row with a flagged value, rather than nulling
+the offending property and keeping the row. The sigma lower bound was
+also corrected from 1 to 10 S/m in the same pass (see item 1 above).
+
+Funnel, same 2026-08-15 raw pull, before vs after the fix vs thesis:
+
+| Step | Before fix | After fix | Thesis | Ratio after/thesis |
+|---|---|---|---|---|
+| 1. Extraction & range filter | 2,009,248 | 1,992,138 | 1,114,628 | 1.79x |
+| 3. Temperature filtering | 1,098,084 | 1,093,377 | 397,651 | 2.75x |
+| 4. Pivot long→wide | 399,287 | 397,791 | 399,287 (flagged) | — |
+| 5. Formula cleaning | 394,419 | 392,927 | 244,834 | 1.61x |
+| 6. zT self-consistency | 389,562 | 388,221 | 238,667 | 1.63x |
+| 7. DFT removal | 388,576 | 387,235 | 236,887 | 1.63x |
+| 8. Multi-source consistency | 388,576 | 308,656 | 201,777 | 1.53x |
+| 9. MAD outlier filter | 388,576 | 289,318 | 198,609 | 1.46x |
+| 10. Min. temperature coverage | 379,079 | 284,671 | 184,687 | 1.54x |
+| 11. Smoothness filter (final) | 340,831 | 280,348 | 184,167 | **1.52x** |
+
+Final row-count ratio improved from 1.85x to 1.52x. Step 8 now removes
+20.3% (vs thesis's 14.8%) and step 9 removes 6.3% (vs thesis's 1.6%) --
+we now OVER-remove relative to the thesis at both steps, the opposite
+problem from before. This implementation drops a group/row if ANY of
+the four properties trips its threshold (OR across properties); the
+thesis's actual criterion may check fewer properties, use a looser
+per-property threshold, or aggregate differently -- worth revisiting
+once find_knee_threshold's knee-tuning (item 8's TODO) is unblocked in
+Phase 1.
+
+Final-dataset per-property statistics also moved closer to the thesis
+table above (compare against it directly): coverage improved for S
+(63.2%→66.0%, thesis 91.4%), sigma (60.3%→65.2%, thesis 89.2%), and zT
+(42.0%→46.2%, thesis 68.0%); kappa was flat (43.5%→43.2%, thesis 63.8%).
+Mean/median/std moved measurably closer to the thesis for sigma, kappa,
+and zT; S's median moved slightly further away (58.4→50.7 vs thesis
+61.5) even as its mean improved (25.4→19.5 vs thesis 17.3). Coverage
+gaps of 20-25 points remain on all four properties -- consistent with
+the still-unresolved step 3 and step 5 divergences below still inflating
+the final row count relative to the thesis.
+
+**Still unresolved, NOT touched by this fix:**
+- **Step 3 (temperature filtering): 2.75x ratio, the largest remaining
+  divergence in the funnel.** Step 2 isn't separately reported by the
+  thesis, so this could partly be an unreported step 2 effect, but our
+  own step 2 removes 0 rows, making step 3 the leading suspect. Check
+  the thesis's exact 300-800K window and binning logic against
+  `step3_filter_temperature`.
+- **Step 5 (formula cleaning): 1.2% removed here vs 38.7% in the
+  thesis.** `step5_clean_formulas` only drops pymatgen-unparseable
+  formulas. A 38.7% cut is too large to be parse failures alone --
+  likely additional composition-based scope filtering in the thesis
+  (candidates: enforcing the "general, non-perovskite scope" from this
+  file's Goal section, excluding pure elements/binaries, or
+  deduplicating near-identical formulas). Not yet implemented here.
+
+Resolve both before treating this pipeline's funnel or final dataset as
+thesis-equivalent.
 
 ---
 

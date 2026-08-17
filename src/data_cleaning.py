@@ -34,7 +34,7 @@ PROJECT = "ThermoelectricMaterials"
 # Step 1 physical property bounds (Snyder & Toberer 2008).
 PROPERTY_BOUNDS = {
     "S": (-1000.0, 1000.0),  # microV/K
-    "sigma": (1.0, 1.0e7),  # S/m; lower bound = semiconductor-insulator boundary
+    "sigma": (10.0, 1.0e7),  # S/m; lower bound = semiconductor-insulator boundary (confirmed against thesis 2026-08-17)
     "kappa": (0.05, 25.0),  # W/mK, Cahill-Pohl minimum
     "zT": (0.0, 4.0),
 }
@@ -295,9 +295,12 @@ def step8_multi_source_consistency(wide_df, cv_thresholds=None):
     Groups by (composition_id, temperature_bin) -- i.e. across
     different samples/papers reporting nominally the same formula at
     the same temperature -- and computes each property's coefficient of
-    variation (std/mean) within the group. Values in a group whose CV
-    exceeds cv_thresholds[property] are set to NaN (not row-dropped, so
-    a row's other still-consistent properties survive).
+    variation (std/mean) within the group. If ANY property's CV in a
+    group exceeds cv_thresholds[property], every row in that group is
+    dropped entirely (row-drop, matching the thesis mechanism -- see
+    CLAUDE.md's 2026-08-17 TODO -- not a per-value NaN-out: multiple
+    sources disagreeing on even one property means none of that group's
+    rows can be trusted).
 
     Thresholds default to MULTI_SOURCE_CV_THRESHOLDS, the frozen
     starting values -- NOT the final knee-tuned thresholds, see
@@ -309,6 +312,7 @@ def step8_multi_source_consistency(wide_df, cv_thresholds=None):
 
     df = wide_df.copy()
     group_cols = ["composition_id", "temperature_bin"]
+    exceeds_threshold = pd.Series(False, index=df.index)
     with warnings.catch_warnings():
         # groups that are entirely NaN for `prop` correctly produce a NaN
         # mean/std; numpy warns on that empty-slice reduction every time,
@@ -323,24 +327,27 @@ def step8_multi_source_consistency(wide_df, cv_thresholds=None):
             std = grouped.transform("std")
             count = grouped.transform("count")
             cv = (std / mean.abs()).where(count > 1, other=0.0)
-            exceeds = (cv > threshold).fillna(False)
-            df.loc[exceeds, prop] = np.nan
-    return df
+            exceeds_threshold |= (cv > threshold).fillna(False)
+    return df[~exceeds_threshold].reset_index(drop=True)
 
 
 def step9_mad_outlier_filter(wide_df, mad_threshold=MAD_THRESHOLD):
     """
     Step 9: MAD outlier filter.
 
-    For S (linear scale) and sigma/kappa (log10 scale), flags values
-    more than mad_threshold * MAD from the property's global median
-    as outliers and sets them to NaN: |x - median| > mad_threshold * MAD.
-    NOT applied to zT (step 1's [0,4] bound is used instead).
+    For S (linear scale) and sigma/kappa (log10 scale), flags a value as
+    an outlier if it deviates from the property's global median by more
+    than mad_threshold * MAD: |x - median| > mad_threshold * MAD. A row
+    with ANY flagged property is dropped entirely (row-drop, matching
+    the thesis mechanism -- see CLAUDE.md's 2026-08-17 TODO -- not a
+    per-value NaN-out). NOT applied to zT (step 1's [0,4] bound is used
+    instead).
     """
     df = wide_df.copy()
     log_props = ("sigma", "kappa")
     linear_props = ("S",)
 
+    is_outlier = pd.Series(False, index=df.index)
     for prop in linear_props + log_props:
         if prop not in df.columns:
             continue
@@ -354,9 +361,8 @@ def step9_mad_outlier_filter(wide_df, mad_threshold=MAD_THRESHOLD):
         if mad == 0 or np.isnan(mad):
             continue
         deviation = (transformed - median).abs()
-        outlier = valid & (deviation > mad_threshold * mad)
-        df.loc[outlier, prop] = np.nan
-    return df
+        is_outlier |= valid & (deviation > mad_threshold * mad)
+    return df[~is_outlier].reset_index(drop=True)
 
 
 def step10_min_temperature_coverage(wide_df, min_coverage=MIN_TEMP_COVERAGE):

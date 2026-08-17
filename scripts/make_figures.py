@@ -27,22 +27,25 @@ FIGURES_DIR = Path("figures")
 
 # Actual row counts from the run_cleaning_pipeline() run logged against
 # the 2026-08-15 ThermoelectricMaterials pull (data/processed/cleaned_
-# ThermoelectricMaterials_2026-08-15.csv). Step 1 is an expansion (each
-# raw curve digitizes into many temperature-property points), so it is
-# annotated separately rather than folded into the monotonic funnel.
+# ThermoelectricMaterials_2026-08-15.csv), re-run 2026-08-17 after fixing
+# steps 8/9 to drop rows (not NaN-out values) and the sigma lower bound
+# (1 -> 10 S/m) to match the thesis, see CLAUDE.md's Data Cleaning
+# Pipeline section. Step 1 is an expansion (each raw curve digitizes into
+# many temperature-property points), so it is annotated separately
+# rather than folded into the monotonic funnel.
 RAW_CURVES = 155_758
 CLEANING_STEPS = [
-    ("1. Property extraction\n& range filtering", 2_009_248),
-    ("2. Integration &\nconsolidation", 2_009_248),
-    ("3. Temperature filtering\n300-800K", 1_098_084),
-    ("4. Pivot long→wide", 399_287),
-    ("5. Formula cleaning", 394_419),
-    ("6. zT self-consistency\ncheck", 389_562),
-    ("7. DFT data removal", 388_576),
-    ("8. Multi-source\nconsistency filtering", 388_576),
-    ("9. MAD outlier filter", 388_576),
-    ("10. Min. temperature\ncoverage", 379_079),
-    ("11. Smoothness filter", 340_831),
+    ("1. Property extraction\n& range filtering", 1_992_138),
+    ("2. Integration &\nconsolidation", 1_992_138),
+    ("3. Temperature filtering\n300-800K", 1_093_377),
+    ("4. Pivot long→wide", 397_791),
+    ("5. Formula cleaning", 392_927),
+    ("6. zT self-consistency\ncheck", 388_221),
+    ("7. DFT data removal", 387_235),
+    ("8. Multi-source\nconsistency filtering", 308_656),
+    ("9. MAD outlier filter", 289_318),
+    ("10. Min. temperature\ncoverage", 284_671),
+    ("11. Smoothness filter", 280_348),
 ]
 
 

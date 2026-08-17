@@ -37,7 +37,7 @@ temperature:
 
 property_bounds:
   seebeck_uv_per_k: [-1000, 1000]
-  conductivity_s_per_m: [1, 1.0e7]
+  conductivity_s_per_m: [10, 1.0e7]  # confirmed against thesis 2026-08-17 (was 1, semiconductor-insulator boundary)
   thermal_conductivity_w_per_mk: [0.05, 25]
   zt: [0, 4]
 
