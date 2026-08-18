@@ -39,15 +39,45 @@ run reports: "random" (repeated random 80/20 holdout, ungrouped),
 or 10 for those two specific rungs), "composition" (grouped by
 composition_id, the looser intermediate rung), "chemistry" (grouped by
 chemistry_cluster_id, the frozen strict anchor -- default). See
-outer_splits() for the exact per-strategy definition. The INNER
-hyperparameter-tuning split inside tune_hyperparameters always groups by
-chemistry_cluster_id regardless of --split-strategy, per Paper A item
-1's "tune once on the chemistry-cluster split" -- this module still
-retunes fresh per outer fold rather than truly freezing one global
-model across all five rungs, so it is a building block toward the
-ladder, not the full denominator-matched, single-frozen-model
-comparison; that pooling/matching step belongs in
-src/validation_ladder.py.
+outer_splits() for the exact per-strategy definition.
+
+Two-step workflow for the actual five-way ladder (CLAUDE.md Paper A item
+1: "tune hyperparameters ONCE on the chemistry-cluster split via nested
+CV, freeze. Evaluate the identical frozen model under all five schemes
+... using pooled out-of-fold R^2"):
+
+  1. tune_once(target=...) -- ONE chemistry-cluster-grouped hyperparameter
+     search on the full dataset, saved to disk (default
+     checkpoints/frozen_hyperparams/<target>.json). This constitutes a
+     complete nested-CV tuning pass on its own: tune_hyperparameters()'s
+     Optuna search already validates every trial via an inner
+     chemistry-cluster-grouped GroupKFold.
+  2. run_nested_cv(..., frozen_hyperparams_path=<that file>) -- once per
+     rung (five calls, varying only split_strategy/n_outer_folds). Every
+     outer fold reuses the frozen hyperparameters unchanged instead of
+     retuning via tune_hyperparameters() -- split_strategy is then the
+     ONLY varying factor across the five runs, as the ladder requires.
+     Without frozen_hyperparams_path, run_nested_cv still retunes fresh
+     per outer fold (the original, pre-ladder behavior) -- useful on its
+     own, but not the frozen-model ladder comparison.
+
+Every run_nested_cv() call, regardless of frozen/retuned mode, computes
+and reports POOLED out-of-fold R^2 -- all held-out (y_true, y_pred) pairs
+across every outer fold and repeat, concatenated once and scored with a
+single r2_score() call -- as the PRIMARY ladder metric (results_df.attrs
+["pooled_r2"]), alongside the mean/std of per-fold R^2 as a secondary
+diagnostic. Per-fold predictions are saved to
+<checkpoint_dir>/repeatN_foldN_predictions.npz so pooling stays correct
+across a resumed run, not just folds computed in the current process.
+
+n_repeats defaults to None, resolved per split_strategy rather than one
+fixed number for all five rungs: N_OUTER_REPEATS_GROUPED (5) for
+composition/chemistry, where CLAUDE.md's group-composition-effect
+justification applies (see the Grouping Key section's "Repeated grouped
+CV is still required" note); N_OUTER_REPEATS_UNGROUPED (1) for
+random/kfold, which have no group-composition confound to average away
+-- see the Grouping Key section for the full reasoning. Pass --n-repeats
+explicitly to override either default.
 """
 
 import argparse
@@ -64,6 +94,7 @@ from sklearn.model_selection import GroupKFold, KFold, ShuffleSplit
 
 PROCESSED_DATA_DIR = Path("data/processed")
 PROJECT = "ThermoelectricMaterials"
+FROZEN_HYPERPARAMS_DIR = Path("checkpoints") / "frozen_hyperparams"
 
 FEATURE_PREFIXES = ("MagpieData", "CBFV_")
 TEMPERATURE_COL = "temperature_bin"
@@ -71,9 +102,14 @@ GROUP_COL = "chemistry_cluster_id"
 
 SPLIT_STRATEGIES = ("random", "kfold", "composition", "chemistry")
 SPLIT_STRATEGY_GROUP_COL = {"composition": "composition_id", "chemistry": GROUP_COL}
+GROUPED_SPLIT_STRATEGIES = tuple(SPLIT_STRATEGY_GROUP_COL.keys())  # ("composition", "chemistry")
 RANDOM_HOLDOUT_TEST_SIZE = 0.2  # CLAUDE.md Paper A item 1: "random 80/20"
 
-N_OUTER_REPEATS = 5  # lower end of CLAUDE.md's 5-10 range; see run_nested_cv's report for the local-compute tradeoff
+# Deliberate per-strategy defaults, not one number for all five ladder
+# rungs -- see the module docstring and CLAUDE.md's Grouping Key section
+# for why grouped and ungrouped strategies need different repeat counts.
+N_OUTER_REPEATS_GROUPED = 5  # lower end of CLAUDE.md's 5-10 range for composition/chemistry
+N_OUTER_REPEATS_UNGROUPED = 1  # random/kfold: no group-composition confound to average away
 N_OUTER_FOLDS = 5
 N_INNER_FOLDS = 3
 N_OPTUNA_TRIALS = 20
@@ -218,7 +254,7 @@ def outer_splits(split_strategy, n_rows, group_lookup, n_outer_folds, rng):
     chemistry_cluster_id array}; only the entry matching split_strategy
     is read.
     """
-    if split_strategy in ("composition", "chemistry"):
+    if split_strategy in GROUPED_SPLIT_STRATEGIES:
         yield from randomized_group_kfold(group_lookup[split_strategy], n_outer_folds, rng)
         return
 
@@ -344,8 +380,106 @@ def tune_hyperparameters(
     return study.best_params, study.best_value
 
 
+def tune_once(
+    target="zT",
+    n_trials=N_OPTUNA_TRIALS,
+    n_inner_folds=N_INNER_FOLDS,
+    seed=0,
+    device="cpu",
+    output_path=None,
+):
+    """
+    Tune XGBoost hyperparameters ONCE via chemistry-cluster-grouped CV on
+    the full dataset, then save the result to disk -- CLAUDE.md Paper A
+    item 1: "tune hyperparameters ONCE on the chemistry-cluster split via
+    nested CV, freeze." tune_hyperparameters()'s Optuna search already
+    validates every trial via an inner chemistry-cluster-grouped
+    GroupKFold (n_inner_folds), so a single call here on the FULL
+    dataset (not one outer fold's training subset) is a complete
+    nested-CV tuning pass on its own. Each of the five ladder rungs then
+    supplies the "outer" half -- its own fold scheme, evaluated with
+    these frozen hyperparameters via
+    run_nested_cv(frozen_hyperparams_path=output_path), never retuning.
+
+    output_path defaults to FROZEN_HYPERPARAMS_DIR/<target>.json.
+    Returns the saved result dict (target, tuning params, inner_cv_r2,
+    best_params, n_rows, n_features).
+    """
+    df = load_target_data(target)
+    feature_cols = get_feature_columns(df)
+    X = df[feature_cols].to_numpy(dtype=np.float64)
+    y = df[target].to_numpy(dtype=np.float64)
+    groups = df[GROUP_COL].to_numpy()
+
+    print(
+        f"tune_once: target={target}, {len(df):,} rows, {len(feature_cols)} features, "
+        f"{len(np.unique(groups)):,} chemistry_cluster_id groups, n_trials={n_trials}, "
+        f"n_inner_folds={n_inner_folds}, device={device}",
+        flush=True,
+    )
+
+    best_params, inner_cv_r2 = tune_hyperparameters(
+        X, y, groups, n_trials=n_trials, n_inner_folds=n_inner_folds, seed=seed, device=device
+    )
+
+    result = {
+        "target": target,
+        "n_trials": n_trials,
+        "n_inner_folds": n_inner_folds,
+        "seed": seed,
+        "device": device,
+        "n_rows": len(df),
+        "n_features": len(feature_cols),
+        "inner_cv_r2": inner_cv_r2,
+        "best_params": best_params,
+    }
+
+    output_path = Path(output_path) if output_path else FROZEN_HYPERPARAMS_DIR / f"{target}.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2)
+
+    print(f"tune_once: inner CV R^2 = {inner_cv_r2:.4f}", flush=True)
+    print(f"tune_once: saved frozen hyperparameters to {output_path}", flush=True)
+    return result
+
+
+def _load_frozen_hyperparams(path):
+    """Load a tune_once() JSON output. Returns (best_params, inner_cv_r2)."""
+    with open(path, encoding="utf-8") as f:
+        result = json.load(f)
+    return result["best_params"], result["inner_cv_r2"]
+
+
 def _fold_checkpoint_path(checkpoint_dir, repeat, fold):
     return checkpoint_dir / f"repeat{repeat}_fold{fold}.json"
+
+
+def _predictions_path(checkpoint_dir, repeat, fold):
+    return checkpoint_dir / f"repeat{repeat}_fold{fold}_predictions.npz"
+
+
+def _save_predictions(checkpoint_dir, repeat, fold, y_true, y_pred):
+    """
+    Persist one outer fold's held-out (y_true, y_pred) pair (host numpy
+    arrays) so pooled out-of-fold R^2 can be reconstructed correctly
+    across a resumed run -- not just from folds computed in the current
+    process. No-op if checkpointing is disabled.
+    """
+    if checkpoint_dir is None:
+        return
+    np.savez(_predictions_path(checkpoint_dir, repeat, fold), y_true=y_true, y_pred=y_pred)
+
+
+def _load_predictions(checkpoint_dir, repeat, fold):
+    """
+    Load one outer fold's saved (y_true, y_pred) pair. Raises
+    FileNotFoundError for a checkpoint written before pooled-R^2 support
+    existed (no predictions file saved) -- callers should warn and
+    exclude that fold from pooling rather than crash the whole run.
+    """
+    data = np.load(_predictions_path(checkpoint_dir, repeat, fold))
+    return data["y_true"], data["y_pred"]
 
 
 def _log_progress(checkpoint_dir, message):
@@ -388,8 +522,9 @@ def _check_run_config(checkpoint_dir, config):
     outer RNG stream is drawn sequentially, one draw per repeat index,
     so repeats 0..old_n_repeats-1 reproduce identically regardless of
     how many more repeats a later call asks for). n_trials/n_inner_folds/
-    device only affect hyperparameter search cost and where it runs, not
-    fold composition, so mismatches are warned about, not fatal.
+    device/frozen_hyperparams_path only affect hyperparameter search
+    cost, where it runs, or which hyperparameters get used -- not fold
+    composition -- so mismatches are warned about, not fatal.
     """
     path = checkpoint_dir / "run_config.json"
     if not path.exists():
@@ -414,7 +549,7 @@ def _check_run_config(checkpoint_dir, config):
             f"n_repeats={existing['n_repeats']} in {checkpoint_dir}. Shrinking n_repeats on resume "
             f"would silently discard completed results; pass n_repeats >= {existing['n_repeats']}."
         )
-    for k in ("n_inner_folds", "n_trials", "device"):
+    for k in ("n_inner_folds", "n_trials", "device", "frozen_hyperparams_path"):
         if existing.get(k) != config[k]:
             print(
                 f"WARNING: resuming with {k}={config[k]}, but existing checkpoints in "
@@ -429,45 +564,78 @@ def _check_run_config(checkpoint_dir, config):
 def run_nested_cv(
     target="zT",
     split_strategy="chemistry",
-    n_repeats=N_OUTER_REPEATS,
+    n_repeats=None,
     n_outer_folds=N_OUTER_FOLDS,
     n_inner_folds=N_INNER_FOLDS,
     n_trials=N_OPTUNA_TRIALS,
     seed=0,
     device="cpu",
     checkpoint_dir=None,
+    frozen_hyperparams_path=None,
 ):
     """
     Full repeated nested CV for one target, outer folds built under
     `split_strategy` (one of SPLIT_STRATEGIES; see the module docstring
-    and outer_splits() for what each rung is). Outer folds (repeated,
-    randomized) are for reporting only; hyperparameters are tuned fresh
-    inside each outer training fold via a nested Optuna search grouped
-    by chemistry_cluster_id (always, regardless of split_strategy -- see
-    module docstring), then refit on the full outer-training fold and
-    evaluated once on the outer-test fold.
+    and outer_splits() for what each rung is).
+
+    n_repeats: defaults to None, resolved per split_strategy rather than
+    one fixed number for all five ladder rungs -- N_OUTER_REPEATS_GROUPED
+    (5) for composition/chemistry (CLAUDE.md's group-composition-effect
+    justification), N_OUTER_REPEATS_UNGROUPED (1) for random/kfold (no
+    such confound). Pass explicitly to override. See module docstring.
+
+    frozen_hyperparams_path: path to a tune_once() JSON output. When
+    given, every outer fold reuses those hyperparameters unchanged
+    instead of calling tune_hyperparameters() -- this is what makes
+    split_strategy the ONLY varying factor across the five ladder rungs
+    (CLAUDE.md Paper A item 1). When None (default), hyperparameters are
+    tuned fresh inside each outer training fold via a nested Optuna
+    search grouped by chemistry_cluster_id (always, regardless of
+    split_strategy), then refit on the full outer-training fold and
+    evaluated once on the outer-test fold -- the original, pre-ladder
+    behavior, still useful on its own.
 
     device: passed straight to xgb.XGBRegressor (with tree_method="hist"
     fixed) -- "cpu" (default) or "cuda" for GPU-accelerated fits, e.g.
     on Kaggle.
 
     checkpoint_dir: directory to write one JSON file per completed
-    (repeat, fold) -- {"repeat", "fold", "split_strategy", "n_train",
-    "n_test", "outer_r2", "inner_cv_r2", "param_*"} -- immediately after
+    (repeat, fold) -- {"repeat", "fold", "split_strategy",
+    "hyperparam_source", "n_train", "n_test", "outer_r2", "inner_cv_r2",
+    "param_*"} -- plus a same-named *_predictions.npz holding that
+    fold's held-out (y_true, y_pred) arrays (used to reconstruct pooled
+    out-of-fold R^2 correctly across a resumed run), immediately after
     that fold finishes, plus a run_config.json recording the parameters
     that must match on resume. Defaults to
     checkpoints/nested_cv/<target>/<split_strategy>/. On startup, any
     (repeat, fold) with an existing checkpoint file is skipped and its
-    saved result reused instead of recomputed -- this is how a run
-    resumes after a Kaggle session is killed mid-run. Resuming REQUIRES
-    the same target/split_strategy/seed/n_outer_folds as the original
-    call (n_repeats may be increased to extend the run); a mismatch
-    raises rather than silently producing an inconsistent result set.
-    Pass checkpoint_dir=False to disable checkpointing entirely (nothing
-    written, nothing skipped).
+    saved result (and predictions) reused instead of recomputed -- this
+    is how a run resumes after a Kaggle session is killed mid-run.
+    Resuming REQUIRES the same target/split_strategy/seed/n_outer_folds
+    as the original call (n_repeats may be increased to extend the run);
+    a mismatch raises rather than silently producing an inconsistent
+    result set. Pass checkpoint_dir=False to disable checkpointing
+    entirely (nothing written, nothing skipped).
+
+    Returns results_df with two extra pieces of metadata attached via
+    .attrs: "pooled_r2" and "pooled_n" -- the PRIMARY ladder metric
+    (CLAUDE.md Paper A item 1), a single R^2 computed from every held-out
+    prediction across all outer folds and repeats concatenated together,
+    distinct from the per-fold "outer_r2" column's macro-averaged
+    mean/std (secondary/diagnostic; the two can diverge, especially for
+    split_strategy="random" where held-out sets overlap and vary in
+    size across draws).
     """
     if split_strategy not in SPLIT_STRATEGIES:
         raise ValueError(f"split_strategy={split_strategy!r} must be one of {SPLIT_STRATEGIES}")
+
+    if n_repeats is None:
+        n_repeats = N_OUTER_REPEATS_GROUPED if split_strategy in GROUPED_SPLIT_STRATEGIES else N_OUTER_REPEATS_UNGROUPED
+
+    if frozen_hyperparams_path is not None:
+        frozen_params, frozen_inner_r2 = _load_frozen_hyperparams(frozen_hyperparams_path)
+    else:
+        frozen_params, frozen_inner_r2 = None, None
 
     if checkpoint_dir is False:
         checkpoint_dir = None
@@ -485,6 +653,7 @@ def run_nested_cv(
                 "target": target, "split_strategy": split_strategy, "seed": seed, "n_outer_folds": n_outer_folds,
                 "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
                 "n_trials": n_trials, "device": device,
+                "frozen_hyperparams_path": str(frozen_hyperparams_path) if frozen_hyperparams_path else None,
             },
         )
         for record in _load_checkpoints(checkpoint_dir):
@@ -512,20 +681,24 @@ def run_nested_cv(
     X = _to_device(X, device)
     y = _to_device(y, device)
 
-    if split_strategy in ("composition", "chemistry"):
+    if split_strategy in GROUPED_SPLIT_STRATEGIES:
         group_col = SPLIT_STRATEGY_GROUP_COL[split_strategy]
         n_groups = len(np.unique(group_lookup[split_strategy]))
         split_desc = f"split_strategy={split_strategy} ({n_groups:,} {group_col} groups)"
     else:
         split_desc = f"split_strategy={split_strategy} (ungrouped)"
+    hyperparam_desc = (
+        f"frozen ({frozen_hyperparams_path})" if frozen_params is not None else "retuned per outer fold"
+    )
     start_msg = (
         f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
-        f"{split_desc}, device={device}"
+        f"{split_desc}, n_repeats={n_repeats}, hyperparameters={hyperparam_desc}, device={device}"
     )
     print(start_msg, flush=True)
     _log_progress(checkpoint_dir, start_msg)
 
     results = list(completed.values())
+    pooled_y_true, pooled_y_pred = [], []
     rng_master = np.random.default_rng(seed)
     t_start = time.perf_counter()
 
@@ -537,25 +710,48 @@ def run_nested_cv(
                 msg = f"repeat {repeat} fold {fold}: skipping, already checkpointed"
                 print(msg, flush=True)
                 _log_progress(checkpoint_dir, msg)
+                if checkpoint_dir is not None:
+                    try:
+                        y_true_saved, y_pred_saved = _load_predictions(checkpoint_dir, repeat, fold)
+                        pooled_y_true.append(y_true_saved)
+                        pooled_y_pred.append(y_pred_saved)
+                    except FileNotFoundError:
+                        warn_msg = (
+                            f"WARNING: repeat {repeat} fold {fold} has a checkpoint but no saved "
+                            f"predictions file (checkpointed before pooled-R^2 support was added) -- "
+                            f"excluded from this run's pooled out-of-fold R^2, which will undercount."
+                        )
+                        print(warn_msg, flush=True)
+                        _log_progress(checkpoint_dir, warn_msg)
                 continue
 
             X_train, y_train, groups_train = X[train_idx], y[train_idx], chemistry_groups[train_idx]
             X_test, y_test = X[test_idx], y[test_idx]
 
-            best_params, inner_r2 = tune_hyperparameters(
-                X_train, y_train, groups_train,
-                n_trials=n_trials, n_inner_folds=n_inner_folds, seed=repeat * 100 + fold, device=device,
-            )
+            if frozen_params is not None:
+                best_params, inner_r2 = frozen_params, frozen_inner_r2
+            else:
+                best_params, inner_r2 = tune_hyperparameters(
+                    X_train, y_train, groups_train,
+                    n_trials=n_trials, n_inner_folds=n_inner_folds, seed=repeat * 100 + fold, device=device,
+                )
 
             model = xgb.XGBRegressor(
                 **best_params, n_jobs=-1, tree_method="hist", device=device,
                 random_state=0, objective="reg:squarederror",
             )
             model.fit(X_train, y_train)
-            outer_r2 = r2_score(_to_host(y_test), _to_host(model.predict(X_test)))
+            y_test_host = _to_host(y_test)
+            y_pred_host = _to_host(model.predict(X_test))
+            outer_r2 = r2_score(y_test_host, y_pred_host)
+
+            _save_predictions(checkpoint_dir, repeat, fold, y_test_host, y_pred_host)
+            pooled_y_true.append(y_test_host)
+            pooled_y_pred.append(y_pred_host)
 
             record = {
                 "repeat": repeat, "fold": fold, "split_strategy": split_strategy,
+                "hyperparam_source": "frozen" if frozen_params is not None else "retuned_per_fold",
                 "n_train": len(train_idx), "n_test": len(test_idx),
                 "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
                 **{f"param_{k}": v for k, v in best_params.items()},
@@ -578,10 +774,27 @@ def run_nested_cv(
     mean_r2 = results_df["outer_r2"].mean()
     std_r2 = results_df["outer_r2"].std()
 
+    if pooled_y_true:
+        pooled_true_arr = np.concatenate(pooled_y_true)
+        pooled_pred_arr = np.concatenate(pooled_y_pred)
+        pooled_r2 = float(r2_score(pooled_true_arr, pooled_pred_arr))
+        pooled_n = int(len(pooled_true_arr))
+    else:
+        pooled_r2 = float("nan")
+        pooled_n = 0
+
+    results_df.attrs["pooled_r2"] = pooled_r2
+    results_df.attrs["pooled_n"] = pooled_n
+    results_df.attrs["split_strategy"] = split_strategy
+    results_df.attrs["hyperparam_source"] = "frozen" if frozen_params is not None else "retuned_per_fold"
+
     summary_lines = [
-        f"=== {target}: repeated grouped CV summary ===",
+        f"=== {target} ({split_strategy}): repeated CV summary ===",
         f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations",
-        f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f}",
+        f"POOLED out-of-fold R^2 = {pooled_r2:.4f} (n={pooled_n:,} held-out predictions) "
+        f"-- PRIMARY ladder metric, CLAUDE.md Paper A item 1",
+        f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f} (per-fold macro-average, secondary/diagnostic)",
+        f"hyperparameters: {hyperparam_desc}",
         f"this call's new compute time: {elapsed:.1f}s",
     ]
     print("\n" + "\n".join(summary_lines), flush=True)
@@ -610,16 +823,51 @@ def _parse_args(argv=None):
         help="Directory for per-fold checkpoint JSON files "
         "(default: checkpoints/nested_cv/<target>/<split_strategy>/)",
     )
-    parser.add_argument("--n-repeats", type=int, default=N_OUTER_REPEATS, help=f"Outer repeats (default: {N_OUTER_REPEATS})")
+    parser.add_argument(
+        "--n-repeats", type=int, default=None,
+        help="Outer repeats. Default depends on --split-strategy: "
+        f"{N_OUTER_REPEATS_GROUPED} for grouped strategies (composition/chemistry, to average "
+        f"away GroupKFold's fold-composition effect), {N_OUTER_REPEATS_UNGROUPED} for ungrouped "
+        "strategies (random/kfold, no group-composition confound to average away) -- see "
+        "CLAUDE.md's Grouping Key section. Pass explicitly to override.",
+    )
     parser.add_argument("--n-outer-folds", type=int, default=N_OUTER_FOLDS, help=f"Outer folds per repeat (default: {N_OUTER_FOLDS})")
     parser.add_argument("--n-inner-folds", type=int, default=N_INNER_FOLDS, help=f"Inner tuning folds (default: {N_INNER_FOLDS})")
     parser.add_argument("--n-trials", type=int, default=N_OPTUNA_TRIALS, help=f"Optuna trials per outer fold (default: {N_OPTUNA_TRIALS})")
     parser.add_argument("--seed", type=int, default=0, help="Master RNG seed (default: 0)")
+    parser.add_argument(
+        "--frozen-hyperparams", default=None,
+        help="Path to a tune_once() JSON output. When given, every outer fold reuses those "
+        "hyperparameters unchanged instead of retuning -- makes split_strategy the ONLY "
+        "varying factor across the five ladder rungs (CLAUDE.md Paper A item 1). Generate "
+        "with --tune-once.",
+    )
+    parser.add_argument(
+        "--tune-once", action="store_true",
+        help="Run ONLY the one-time chemistry-cluster-grouped hyperparameter search and save "
+        "it to --frozen-hyperparams-out, then exit -- does not run the ladder itself. Run this "
+        "once per target, then pass its output to --frozen-hyperparams for all five rungs.",
+    )
+    parser.add_argument(
+        "--frozen-hyperparams-out", default=None,
+        help="Output path for --tune-once (default: checkpoints/frozen_hyperparams/<target>.json)",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = _parse_args(argv)
+
+    if args.tune_once:
+        return tune_once(
+            target=args.target,
+            n_trials=args.n_trials,
+            n_inner_folds=args.n_inner_folds,
+            seed=args.seed,
+            device=args.device,
+            output_path=args.frozen_hyperparams_out,
+        )
+
     results_df = run_nested_cv(
         target=args.target,
         split_strategy=args.split_strategy,
@@ -630,8 +878,14 @@ def main(argv=None):
         seed=args.seed,
         device=args.device,
         checkpoint_dir=args.checkpoint_dir,
+        frozen_hyperparams_path=args.frozen_hyperparams,
     )
     print(results_df, flush=True)
+    print(
+        f"\npooled out-of-fold R^2 = {results_df.attrs.get('pooled_r2'):.4f} "
+        f"(n={results_df.attrs.get('pooled_n'):,})",
+        flush=True,
+    )
     return results_df
 
 

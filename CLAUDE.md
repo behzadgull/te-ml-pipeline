@@ -145,6 +145,29 @@ threshold are dopants and do not split the cluster.
   repeat (e.g. shuffle the unique group list before a manual balanced
   assignment, or use repeated GroupShuffleSplit with distinct
   random_states), not simply looping GroupKFold.
+- **n_repeats for the ladder's two UNGROUPED rungs (random 80/20,
+  5-fold/10-fold): deliberately 1, not the grouped rungs' 5, decided
+  2026-08-19.** The repeated-CV justification directly above is specific
+  to GROUPED CV: GroupKFold forces an entire cluster onto one side of a
+  split, so a single split is one arbitrary draw of which large,
+  chemically distinct cluster gets held out, and repeats separate that
+  composition effect from genuine model variance. Plain sklearn KFold/
+  ShuffleSplit assign ROWS independently of any group, so there is no
+  analogous whole-cluster-forced-onto-one-fold effect to average away --
+  at this dataset's row count (~280K), a single shuffled split already
+  gives a representative, low-variance partition. Additionally, the
+  random-80/20 rung is already internally repeated: CLAUDE.md's own "~20
+  times, pool" prescription is satisfied by `--n-outer-folds 20` (20
+  independent ShuffleSplit draws within one outer-repeat pass, see Paper
+  A item 1's implementation note) -- an extra outer n_repeats layer on
+  top would just re-run that same 20-draw set again, adding compute
+  without changing what's being measured (this ladder rung is deliberately
+  the "how leaky is this naive baseline" measurement, not the calibrated
+  honest-ceiling estimate that repeats are protecting elsewhere).
+  src/nested_cv.py's `run_nested_cv(n_repeats=None)` (the default)
+  therefore resolves to `N_OUTER_REPEATS_GROUPED` (5) for
+  composition/chemistry and `N_OUTER_REPEATS_UNGROUPED` (1) for
+  random/kfold -- pass `--n-repeats` explicitly to override either.
 - **src/nested_cv.py compute budget: full XGBoost search space requires
   Kaggle/GPU, not local CPU.** Measured directly on the 2026-08-15
   featurized pull (142,997 zT rows, 396 MAGPIE+CBFV features,
@@ -362,6 +385,35 @@ preempt a reviewer citing it back).
    State explicitly: this measured inflation is a LOWER BOUND on
    real-world practitioner inflation (a practitioner using a leaky split
    would also tune on it, compounding the effect).
+   **Implemented 2026-08-19 in src/nested_cv.py** (both gaps closed):
+   `tune_once(target=...)` runs the ONE chemistry-cluster-grouped
+   Optuna search on the full dataset and saves it to
+   `checkpoints/frozen_hyperparams/<target>.json`;
+   `run_nested_cv(..., frozen_hyperparams_path=<that file>)` then reuses
+   those hyperparameters unchanged for every outer fold instead of
+   retuning, making `--split-strategy` the only varying factor across
+   the five rungs. Every `run_nested_cv()` call (frozen or not) now
+   computes and reports **pooled out-of-fold R²** — every held-out
+   (y_true, y_pred) pair across all outer folds and repeats concatenated
+   once and scored with a single `r2_score()` call — as the primary
+   metric (`results_df.attrs["pooled_r2"]`), alongside the pre-existing
+   per-fold mean/std as a secondary diagnostic (the two can diverge,
+   especially for the random-80/20 rung where held-out sets overlap
+   across draws). Per-fold predictions are checkpointed to
+   `*_predictions.npz` so pooling reconstructs correctly across a
+   resumed run, not just folds computed in the current process. Exact
+   six-command workflow for one target's full ladder:
+   ```
+   python src/nested_cv.py --tune-once --target zT
+   python src/nested_cv.py --split-strategy chemistry   --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   python src/nested_cv.py --split-strategy composition --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 5  --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 10 --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   python src/nested_cv.py --split-strategy random --n-outer-folds 20 --n-repeats 1 --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   ```
+   Without `--frozen-hyperparams`, `run_nested_cv` still retunes fresh
+   per outer fold (the original, pre-ladder behavior) — useful on its
+   own, but not the frozen-model ladder comparison this item requires.
 2. **Nested GroupKFold** for hyperparameter tuning — outer folds for
    reporting only, hyperparameters tuned on inner folds nested inside each
    outer training fold. Never tune and report on the same folds.
