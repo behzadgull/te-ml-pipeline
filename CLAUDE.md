@@ -88,6 +88,34 @@ threshold are dopants and do not split the cluster.
   singletons) -- that is the intended behavior of the 5 at% definition,
   not a bug, and it should not be conflated with Paper B's coarser family
   count.
+- **chemistry_cluster_id vs. the thesis's "parent chemical system"
+  (sorted element set, no stoichiometry, no dopant threshold): not a
+  finer/coarser pair of the same grouping, they cross-cut each other.**
+  Measured 2026-08-19 by recomputing parent-system grouping on our own
+  cleaned pull (17,207 formulas): 3,921 parent_system groups vs. 12,024
+  chemistry_cluster_id groups -- fewer, bigger groups, which naively
+  reads as "parent_system is just a coarser, stricter version." It
+  isn't: 1,399 of 12,024 chemistry_cluster_id groups (11.6%) have
+  members that span MORE THAN ONE parent_system, so the two definitions
+  do not nest. Worst case -- **CoSb3, the single largest chemistry
+  cluster (780 samples, see the repeated-CV note below), splits into 69
+  different parent_system groups** purely because its filler/dopant
+  species varies (La, Ce, Yb, Ba, In, Ga, Tl, K, Na, Br, I, Sn, O, ...).
+  Under parent_system, a La-doped CoSb3 sample and a Yb-doped CoSb3
+  sample -- chemically near-identical host-lattice measurements, the
+  exact near-duplicate leakage case chemistry_cluster_id's 5 at%
+  threshold exists to catch -- could legally land in different CV
+  folds. On this axis parent_system is LOOSER than chemistry_cluster_id,
+  not stricter. (Conversely parent_system is stricter on a different
+  axis it isn't credited for: it merges compounds sharing an element set
+  at very different stoichiometry, e.g. "Bi-Sb-Te" absorbs 109 distinct
+  chemistry_cluster_id values regardless of how physically different
+  they are -- an artifact of ignoring concentration, not a targeted
+  leakage safeguard.) Conclusion: chemistry_cluster_id remains the more
+  defensible anchor for the leakage mechanism this project actually
+  cares about (dopant-variant near-duplicates of the same host lattice);
+  parent_system's lower group count is not evidence it is a stricter
+  superset.
 - **Repeated grouped CV is still required, but the justification is
   group-SIZE imbalance, not group scarcity.** Measured directly (2026-08-15,
   sklearn 1.4.2 GroupKFold, n_splits=5, chemistry_cluster_id groups, real
