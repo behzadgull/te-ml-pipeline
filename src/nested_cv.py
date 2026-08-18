@@ -66,6 +66,7 @@ PROCESSED_DATA_DIR = Path("data/processed")
 PROJECT = "ThermoelectricMaterials"
 
 FEATURE_PREFIXES = ("MagpieData", "CBFV_")
+TEMPERATURE_COL = "temperature_bin"
 GROUP_COL = "chemistry_cluster_id"
 
 SPLIT_STRATEGIES = ("random", "kfold", "composition", "chemistry")
@@ -81,8 +82,18 @@ optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 
 def get_feature_columns(df):
-    """All MAGPIE + CBFV feature columns in df (see src/featurization.py)."""
-    return [c for c in df.columns if c.startswith(FEATURE_PREFIXES)]
+    """
+    All MAGPIE + CBFV feature columns in df (see src/featurization.py),
+    plus TEMPERATURE_COL. Temperature is a per-row model input like any
+    other -- each row is already one formula at one temperature_bin, so
+    withholding it discards real signal. CLAUDE.md's frozen "temperature
+    axis cut" (Paper A item 8) only rules out building a dedicated
+    temperature-extrapolation experiment; it was previously misread as
+    excluding temperature from the feature set entirely, which this
+    function did until 2026-08-18 (found by comparing against the
+    thesis's own feature list, which does include T_K).
+    """
+    return [c for c in df.columns if c.startswith(FEATURE_PREFIXES)] + [TEMPERATURE_COL]
 
 
 _CUPY_UNAVAILABLE_WARNED = False
@@ -271,7 +282,9 @@ def verify_randomization(groups, n_splits=5, n_seeds=5, watch_groups=None):
 
 def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
     # Full intended search space. Measured per-fit cost on this CPU-only
-    # machine (396 features, ~114k-126k row training folds): 57s/fit at
+    # machine (396 features -- now 397 with temperature_bin added
+    # 2026-08-18, negligible cost difference -- ~114k-126k row training
+    # folds): 57s/fit at
     # max_depth=10/n_estimators=600 vs 3s at depth=3/n_estimators=100 --
     # depth dominates cost. At this range, the full 5-10 repeat design
     # projects to ~24-61 hours locally (measured/projected 2026-08-15,

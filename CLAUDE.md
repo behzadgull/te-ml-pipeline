@@ -39,7 +39,11 @@ implement as written.**
 8. Direct-vs-derived zT pathway, on the all-four-properties subset.
 9. Screening rediscovery test, targeted holdout only (Paper A, item 7).
 10. Temperature axis — write as ONE limitation paragraph only, do not build
-    as a full experimental axis (cut per frozen decision, see below).
+    a dedicated temperature-extrapolation EXPERIMENT (cut per frozen
+    decision, see below). This is a scoping decision about the
+    experiment, not the feature set: temperature_bin stays in the model
+    as a per-row input throughout, same as any other feature (see Paper
+    A item 8).
 11. PCA-split head-to-head against Athar/Jund (Paper A, item 9).
 
 **Phase 3 — Paper B (only after Phase 1-2 complete):**
@@ -124,7 +128,11 @@ threshold are dopants and do not split the cluster.
   max_depth<=7/n_estimators<=350) took 1,615s (~27 min), giving mean
   outer R² = 0.5045, std = 0.0233 -- a real but intentionally
   under-tuned result (6 trials, 1 repeat), not a trustworthy estimate
-  of the honest ceiling.
+  of the honest ceiling. **Also trained without temperature as a
+  feature** (get_feature_columns() bug, fixed 2026-08-18 -- see Paper A
+  item 8) -- doubly not representative of the frozen model, re-run
+  after the fix before citing this number for anything beyond
+  compute-time calibration.
 
   | | Capped (depth<=7, n_est<=350) | Full (depth<=10, n_est<=600) |
   |---|---|---|
@@ -359,11 +367,40 @@ preempt a reviewer citing it back).
    a performance signal to generalize from. Interpret result as caveated
    tail-extrapolation. If the high-zT region is too thin after holdout,
    report that finding directly rather than forcing a positive result.
-8. **Temperature axis — CUT, one paragraph only.** zT is typically
-   non-monotonic in temperature (peaks then rolls over, often within
-   600-800K) — no extrapolator, tree-based or otherwise, can recover this
-   from only the ≤600K rising branch. This is a data-coverage fact, not a
-   generalization finding. Do not build this as a full experimental axis.
+8. **Temperature axis — no dedicated extrapolation experiment; temperature
+   STAYS a per-row model feature.** zT is typically non-monotonic in
+   temperature (peaks then rolls over, often within 600-800K) — no
+   extrapolator, tree-based or otherwise, can recover this from only the
+   ≤600K rising branch. This is a data-coverage fact, not a
+   generalization finding, so do not build a dedicated temperature-
+   extrapolation EXPERIMENT (e.g. train on ≤600K / test on >600K, or a
+   results section arguing temperature generalization) as a full
+   experimental axis — write it as one limitation paragraph instead.
+   **This is a decision about which EXPERIMENT to run, not about what
+   goes into the model.** temperature_bin is part of every row already
+   (each row is one formula at one temperature) and stays in the
+   feature set for every experiment in this project, the same as any
+   other per-row input.
+   **RESOLVED 2026-08-18: this item's wording was ambiguous and had been
+   misread as "exclude temperature from the feature set," not just "skip
+   the extrapolation experiment."** src/nested_cv.py's
+   get_feature_columns() dropped temperature_bin entirely (only
+   MagpieData/CBFV_-prefixed columns were selected), so every model in
+   this project was trained without ever seeing temperature. Found
+   2026-08-18 comparing against the actual thesis dataset/feature list
+   (C:\Users\choha\Downloads\archive\MASTER_DATASET_FINAL.xls +
+   features_v2.json): the thesis's 335-feature set is 132 MAGPIE + 202
+   non-Magpie descriptor columns + T_K itself, and its reported R^2
+   (~0.70) is measured against models trained WITH temperature as an
+   input; this pipeline's calibration run (~0.50, see the Grouping Key
+   section's compute-budget note, "src/nested_cv.py compute budget")
+   omitted it entirely -- not a like-for-like comparison, and a likely
+   major contributor to the gap. Fixed in get_feature_columns() to
+   include temperature_bin alongside the MagpieData/CBFV_ columns. Any
+   nested_cv.py results computed before this fix (including that
+   section's 0.5045 calibration number) were trained without
+   temperature and should not be treated as representative of the
+   frozen model going forward.
 9. **PCA-split engagement, empirical not asserted**: run chemistry-cluster
    CV AND a PCA-based split (Athar/Jund's method) on the same data, report
    both honest numbers, state why chemistry-cluster grouping is stricter

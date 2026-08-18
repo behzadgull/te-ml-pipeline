@@ -19,6 +19,15 @@ property table. Formulas that fail either featurizer are excluded from
 the final merged dataset (a partial feature vector isn't usable by most
 downstream models) but are logged to a failures CSV and reported --
 never silently dropped.
+
+This module computes only the composition-based (MagpieData/CBFV_)
+descriptors; it does not touch temperature_bin, which is already a
+column on cleaned_df (see src/data_cleaning.py step 4) and passes
+straight through the merge unchanged. temperature_bin IS part of the
+model's feature set -- src/nested_cv.py's get_feature_columns() adds it
+alongside the MagpieData/CBFV_ columns computed here (CLAUDE.md Paper A
+item 8: the frozen "temperature axis cut" rules out a dedicated
+extrapolation experiment, not temperature as a per-row input feature).
 """
 
 import re
