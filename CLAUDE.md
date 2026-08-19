@@ -388,7 +388,7 @@ preempt a reviewer citing it back).
    **Implemented 2026-08-19 in src/nested_cv.py** (both gaps closed):
    `tune_once(target=...)` runs the ONE chemistry-cluster-grouped
    Optuna search on the full dataset and saves it to
-   `checkpoints/frozen_hyperparams/<target>.json`;
+   `checkpoints/frozen_hyperparams/<target>_<model>.json`;
    `run_nested_cv(..., frozen_hyperparams_path=<that file>)` then reuses
    those hyperparameters unchanged for every outer fold instead of
    retuning, making `--split-strategy` the only varying factor across
@@ -402,18 +402,48 @@ preempt a reviewer citing it back).
    across draws). Per-fold predictions are checkpointed to
    `*_predictions.npz` so pooling reconstructs correctly across a
    resumed run, not just folds computed in the current process. Exact
-   six-command workflow for one target's full ladder:
+   six-command workflow for one target's full ladder (xgboost, the
+   default `--model`):
    ```
    python src/nested_cv.py --tune-once --target zT
-   python src/nested_cv.py --split-strategy chemistry   --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
-   python src/nested_cv.py --split-strategy composition --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
-   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 5  --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
-   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 10 --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
-   python src/nested_cv.py --split-strategy random --n-outer-folds 20 --n-repeats 1 --frozen-hyperparams checkpoints/frozen_hyperparams/zT.json --target zT
+   python src/nested_cv.py --split-strategy chemistry   --frozen-hyperparams checkpoints/frozen_hyperparams/zT_xgboost.json --target zT
+   python src/nested_cv.py --split-strategy composition --frozen-hyperparams checkpoints/frozen_hyperparams/zT_xgboost.json --target zT
+   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 5  --frozen-hyperparams checkpoints/frozen_hyperparams/zT_xgboost.json --target zT
+   python src/nested_cv.py --split-strategy kfold  --n-outer-folds 10 --frozen-hyperparams checkpoints/frozen_hyperparams/zT_xgboost.json --target zT
+   python src/nested_cv.py --split-strategy random --n-outer-folds 20 --n-repeats 1 --frozen-hyperparams checkpoints/frozen_hyperparams/zT_xgboost.json --target zT
    ```
    Without `--frozen-hyperparams`, `run_nested_cv` still retunes fresh
    per outer fold (the original, pre-ladder behavior) — useful on its
    own, but not the frozen-model ladder comparison this item requires.
+
+   **Model-comparison capability, added 2026-08-19: `--model` flag
+   (MODEL_TYPES: `xgboost` default, `lightgbm`, `random_forest`,
+   `ridge`).** Supports a model-selection figure (Figure 1) justifying
+   XGBoost empirically under honest (chemistry-cluster) grouping, rather
+   than asserting it, and doubles as the infrastructure Paper B item 4's
+   "two model families... bracket capacity" comparison runs on. Every
+   `--model` choice runs through the exact same nested-CV machinery,
+   chemistry-cluster grouping, `--split-strategy` rungs,
+   frozen-hyperparameter mode, and pooled-OOF-R² reporting above — only
+   the Optuna search space and model constructor differ (see
+   `MODEL_REGISTRY` in src/nested_cv.py), so `results_df` is directly
+   comparable across models via the same schema (`model_type`,
+   `pooled_r2`, `pooled_n` columns/attrs). `ridge` is wrapped in a
+   `StandardScaler` pipeline (MAGPIE/CBFV/temperature features span very
+   different scales; an unscaled Ridge fit would measure that, not real
+   capacity) — it is the constrained/lower-capacity bracket model for
+   Paper B item 4; `random_forest` is a structurally different
+   high-capacity tree ensemble (bagged, not boosted) from `xgboost`/
+   `lightgbm`. Hyperparameters are tuned and frozen per model_type
+   separately (`tune_once(..., model_type=...)`), never shared or
+   compared as values across models, only via each model's resulting
+   R². Only `xgboost` has a GPU path in this module; `--device cuda`
+   with any other `--model` runs on CPU with a one-time warning. Add
+   `--model <name>` to any command in the six-command workflow above to
+   run that rung for a different model family (remember to
+   `--tune-once --model <name>` first — frozen files are per-model,
+   loading the wrong one raises a clear error rather than silently
+   reusing another model's hyperparameters).
 2. **Nested GroupKFold** for hyperparameter tuning — outer folds for
    reporting only, hyperparameters tuned on inner folds nested inside each
    outer training fold. Never tune and report on the same folds.
@@ -519,6 +549,12 @@ finer intra-family composition signal?
 4. **Two model families**, chosen to bracket capacity (one high-capacity
    GBDT, one constrained/lower-capacity model). Report per-family results
    for each SEPARATELY — do not average.
+   `src/nested_cv.py --model` (see Paper A item 1's implementation note)
+   provides this directly: `xgboost`/`lightgbm` as high-capacity GBDTs,
+   `ridge` as the constrained/lower-capacity bracket, `random_forest` as
+   a third, structurally different high-capacity option (bagged, not
+   boosted) if a non-boosting high-capacity comparison is wanted instead
+   of/alongside a GBDT.
 5. **Sample-level grouping applies identically** across true LOFO and
    both controls — not only the LOFO condition. This is a common silent-
    divergence point; verify explicitly.

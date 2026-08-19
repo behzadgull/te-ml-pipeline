@@ -4,8 +4,23 @@ Nested GroupKFold hyperparameter tuning + repeated grouped CV.
 Outer loop: repeated, randomized grouped k-fold over chemistry_cluster_id,
 for reporting only. Inner loop: nested inside each outer training fold,
 also grouped by chemistry_cluster_id (not random), used only to select
-XGBoost hyperparameters via Optuna with MedianPruner. Hyperparameters
-are never tuned and reported on the same fold (CLAUDE.md Paper A item 2).
+hyperparameters via Optuna with MedianPruner. Hyperparameters are never
+tuned and reported on the same fold (CLAUDE.md Paper A item 2).
+
+--model selects the model family (MODEL_TYPES: "xgboost" default,
+"lightgbm", "random_forest", "ridge"), all driven through the exact same
+nested-CV machinery, chemistry-cluster grouping, split_strategy rungs,
+frozen-hyperparameter mode, and pooled-OOF-R^2 reporting below -- only
+the search space (see MODEL_REGISTRY) and the model constructor differ,
+so results are directly comparable across model families (a Figure 1
+model-comparison table/plot, and CLAUDE.md Paper B item 4's "two model
+families... bracket capacity" requirement, both read off the same
+results_df schema regardless of --model). ridge is deliberately wrapped
+in a StandardScaler pipeline -- MAGPIE/CBFV/temperature features span
+wildly different scales, and an unscaled Ridge fit would be measuring
+that, not real model capacity. Only xgboost has a GPU path in this
+module (see _to_device); --device cuda with any other --model prints a
+one-time warning and runs that model on CPU regardless.
 
 Plain sklearn GroupKFold is fully deterministic given a set of group
 labels: it internally sorts on np.unique(groups), which is alphabetical
@@ -46,12 +61,14 @@ Two-step workflow for the actual five-way ladder (CLAUDE.md Paper A item
 CV, freeze. Evaluate the identical frozen model under all five schemes
 ... using pooled out-of-fold R^2"):
 
-  1. tune_once(target=...) -- ONE chemistry-cluster-grouped hyperparameter
-     search on the full dataset, saved to disk (default
-     checkpoints/frozen_hyperparams/<target>.json). This constitutes a
-     complete nested-CV tuning pass on its own: tune_hyperparameters()'s
-     Optuna search already validates every trial via an inner
-     chemistry-cluster-grouped GroupKFold.
+  1. tune_once(target=..., model_type=...) -- ONE chemistry-cluster-grouped
+     hyperparameter search on the full dataset, saved to disk (default
+     checkpoints/frozen_hyperparams/<target>_<model_type>.json -- one
+     frozen file per model, hyperparameters aren't comparable across
+     model families). This constitutes a complete nested-CV tuning pass
+     on its own: tune_hyperparameters()'s Optuna search already
+     validates every trial via an inner chemistry-cluster-grouped
+     GroupKFold.
   2. run_nested_cv(..., frozen_hyperparams_path=<that file>) -- once per
      rung (five calls, varying only split_strategy/n_outer_folds). Every
      outer fold reuses the frozen hyperparameters unchanged instead of
@@ -89,8 +106,12 @@ import numpy as np
 import optuna
 import pandas as pd
 import xgboost as xgb
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import Ridge
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GroupKFold, KFold, ShuffleSplit
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 PROCESSED_DATA_DIR = Path("data/processed")
 PROJECT = "ThermoelectricMaterials"
@@ -104,6 +125,8 @@ SPLIT_STRATEGIES = ("random", "kfold", "composition", "chemistry")
 SPLIT_STRATEGY_GROUP_COL = {"composition": "composition_id", "chemistry": GROUP_COL}
 GROUPED_SPLIT_STRATEGIES = tuple(SPLIT_STRATEGY_GROUP_COL.keys())  # ("composition", "chemistry")
 RANDOM_HOLDOUT_TEST_SIZE = 0.2  # CLAUDE.md Paper A item 1: "random 80/20"
+
+MODEL_TYPES = ("xgboost", "lightgbm", "random_forest", "ridge")
 
 # Deliberate per-strategy defaults, not one number for all five ladder
 # rungs -- see the module docstring and CLAUDE.md's Grouping Key section
@@ -316,7 +339,7 @@ def verify_randomization(groups, n_splits=5, n_seeds=5, watch_groups=None):
     }
 
 
-def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
+def _xgb_search_space(trial):
     # Full intended search space. Measured per-fit cost on this CPU-only
     # machine (396 features -- now 397 with temperature_bin added
     # 2026-08-18, negligible cost difference -- ~114k-126k row training
@@ -329,7 +352,7 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
     # (depth<=7, n_estimators<=350) was
     # used ONLY for local calibration runs and is not applied here --
     # do not narrow this range without an explicit, documented decision.
-    params = {
+    return {
         "n_estimators": trial.suggest_int("n_estimators", 100, 600, step=50),
         "max_depth": trial.suggest_int("max_depth", 3, 10),
         "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.3, log=True),
@@ -340,6 +363,115 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
         "reg_alpha": trial.suggest_float("reg_alpha", 1e-3, 10.0, log=True),
     }
 
+
+def _build_xgb_model(params, device):
+    return xgb.XGBRegressor(
+        **params, n_jobs=-1, tree_method="hist", device=device, random_state=0, objective="reg:squarederror"
+    )
+
+
+def _lightgbm_search_space(trial):
+    # Same depth/estimator/regularization scale as xgboost's space, plus
+    # num_leaves (LightGBM's primary complexity control, leaf-wise growth
+    # rather than xgboost's level-wise) and min_child_samples in place of
+    # min_child_weight.
+    return {
+        "n_estimators": trial.suggest_int("n_estimators", 100, 600, step=50),
+        "max_depth": trial.suggest_int("max_depth", 3, 12),
+        "num_leaves": trial.suggest_int("num_leaves", 15, 255, log=True),
+        "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.3, log=True),
+        "subsample": trial.suggest_float("subsample", 0.5, 1.0),
+        "colsample_bytree": trial.suggest_float("colsample_bytree", 0.5, 1.0),
+        "min_child_samples": trial.suggest_int("min_child_samples", 5, 50),
+        "reg_lambda": trial.suggest_float("reg_lambda", 1e-3, 10.0, log=True),
+        "reg_alpha": trial.suggest_float("reg_alpha", 1e-3, 10.0, log=True),
+    }
+
+
+def _build_lightgbm_model(params, device):
+    try:
+        import lightgbm as lgb
+    except ImportError as e:
+        raise ImportError(
+            "model_type='lightgbm' requires the lightgbm package (pip install lightgbm, "
+            "pinned in requirements.txt)."
+        ) from e
+    # No GPU path for lightgbm in this module -- see module docstring;
+    # `device` is accepted for interface parity with the other builders
+    # but intentionally unused here.
+    return lgb.LGBMRegressor(**params, n_jobs=-1, random_state=0, verbosity=-1)
+
+
+def _random_forest_search_space(trial):
+    # Bagged trees, not boosted -- structurally different from
+    # xgboost/lightgbm (CLAUDE.md Paper B item 4's "bracket capacity"
+    # framing: still a high-capacity tree ensemble, but no sequential
+    # residual-fitting, no learning rate).
+    return {
+        "n_estimators": trial.suggest_int("n_estimators", 100, 600, step=50),
+        "max_depth": trial.suggest_int("max_depth", 3, 30),
+        "min_samples_split": trial.suggest_int("min_samples_split", 2, 20),
+        "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
+        "max_features": trial.suggest_float("max_features", 0.1, 1.0),
+    }
+
+
+def _build_random_forest_model(params, device):
+    return RandomForestRegressor(**params, n_jobs=-1, random_state=0)
+
+
+def _ridge_search_space(trial):
+    # The constrained/lower-capacity model CLAUDE.md Paper B item 4 asks
+    # the high-capacity GBDT to be bracketed against -- linear in the
+    # features, one regularization knob.
+    return {"alpha": trial.suggest_float("alpha", 1e-3, 1e3, log=True)}
+
+
+def _build_ridge_model(params, device):
+    # StandardScaler first: MAGPIE/CBFV/temperature features span wildly
+    # different scales (see module docstring) -- an unscaled Ridge fit
+    # would be measuring that, not real model capacity.
+    return make_pipeline(StandardScaler(), Ridge(**params, random_state=0))
+
+
+MODEL_REGISTRY = {
+    "xgboost": {"search_space": _xgb_search_space, "build": _build_xgb_model, "supports_gpu": True},
+    "lightgbm": {"search_space": _lightgbm_search_space, "build": _build_lightgbm_model, "supports_gpu": False},
+    "random_forest": {
+        "search_space": _random_forest_search_space, "build": _build_random_forest_model, "supports_gpu": False,
+    },
+    "ridge": {"search_space": _ridge_search_space, "build": _build_ridge_model, "supports_gpu": False},
+}
+
+
+_NON_XGB_GPU_WARNED = False
+
+
+def _resolve_device_for_model(model_type, device):
+    """
+    Only xgboost has a GPU path in this module (see module docstring).
+    Downgrades device to "cpu" for any other model_type when
+    device=="cuda" was requested, printing a one-time warning instead of
+    silently ignoring the request or letting an unsupported device kwarg
+    fail deep inside model construction.
+    """
+    global _NON_XGB_GPU_WARNED
+    if device != "cuda" or MODEL_REGISTRY[model_type]["supports_gpu"]:
+        return device
+    if not _NON_XGB_GPU_WARNED:
+        print(
+            f"WARNING: device='cuda' requested but model_type={model_type!r} has no GPU path in "
+            f"this module (only 'xgboost' does) -- running on CPU instead.",
+            flush=True,
+        )
+        _NON_XGB_GPU_WARNED = True
+    return "cpu"
+
+
+def _objective(trial, model_type, X, y, groups, n_inner_folds, device="cpu"):
+    registry = MODEL_REGISTRY[model_type]
+    params = registry["search_space"](trial)
+
     inner_gkf = GroupKFold(n_splits=n_inner_folds)
     scores = []
     # split() only needs sample count and `groups` (always a host numpy
@@ -347,9 +479,7 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
     # sklearn's split-index bookkeeping never touches a GPU-resident X.
     split_placeholder = np.empty(len(groups))
     for step, (inner_train_idx, inner_val_idx) in enumerate(inner_gkf.split(split_placeholder, groups=groups)):
-        model = xgb.XGBRegressor(
-            **params, n_jobs=-1, tree_method="hist", device=device, random_state=0, objective="reg:squarederror"
-        )
+        model = registry["build"](params, device)
         model.fit(X[inner_train_idx], y[inner_train_idx])
         preds = model.predict(X[inner_val_idx])
         scores.append(r2_score(_to_host(y[inner_val_idx]), _to_host(preds)))
@@ -362,19 +492,23 @@ def _xgb_objective(trial, X, y, groups, n_inner_folds, device="cpu"):
 
 
 def tune_hyperparameters(
-    X_train, y_train, groups_train, n_trials=N_OPTUNA_TRIALS, n_inner_folds=N_INNER_FOLDS, seed=0, device="cpu"
+    X_train, y_train, groups_train, model_type="xgboost",
+    n_trials=N_OPTUNA_TRIALS, n_inner_folds=N_INNER_FOLDS, seed=0, device="cpu"
 ):
     """
     Nested GroupKFold hyperparameter search via Optuna (TPE sampler,
     MedianPruner), grouped by chemistry_cluster_id -- not a random
-    split -- entirely inside the outer training fold. Returns
+    split -- entirely inside the outer training fold. Search space and
+    model constructor come from MODEL_REGISTRY[model_type]. Returns
     (best_params, best_inner_cv_r2).
     """
+    if model_type not in MODEL_REGISTRY:
+        raise ValueError(f"model_type={model_type!r} must be one of {MODEL_TYPES}")
     sampler = optuna.samplers.TPESampler(seed=seed)
     pruner = optuna.pruners.MedianPruner(n_warmup_steps=1)
     study = optuna.create_study(direction="maximize", sampler=sampler, pruner=pruner)
     study.optimize(
-        lambda trial: _xgb_objective(trial, X_train, y_train, groups_train, n_inner_folds, device=device),
+        lambda trial: _objective(trial, model_type, X_train, y_train, groups_train, n_inner_folds, device=device),
         n_trials=n_trials,
     )
     return study.best_params, study.best_value
@@ -382,6 +516,7 @@ def tune_hyperparameters(
 
 def tune_once(
     target="zT",
+    model_type="xgboost",
     n_trials=N_OPTUNA_TRIALS,
     n_inner_folds=N_INNER_FOLDS,
     seed=0,
@@ -389,41 +524,52 @@ def tune_once(
     output_path=None,
 ):
     """
-    Tune XGBoost hyperparameters ONCE via chemistry-cluster-grouped CV on
-    the full dataset, then save the result to disk -- CLAUDE.md Paper A
-    item 1: "tune hyperparameters ONCE on the chemistry-cluster split via
-    nested CV, freeze." tune_hyperparameters()'s Optuna search already
-    validates every trial via an inner chemistry-cluster-grouped
+    Tune model_type's hyperparameters ONCE via chemistry-cluster-grouped
+    CV on the full dataset, then save the result to disk -- CLAUDE.md
+    Paper A item 1: "tune hyperparameters ONCE on the chemistry-cluster
+    split via nested CV, freeze." tune_hyperparameters()'s Optuna search
+    already validates every trial via an inner chemistry-cluster-grouped
     GroupKFold (n_inner_folds), so a single call here on the FULL
     dataset (not one outer fold's training subset) is a complete
     nested-CV tuning pass on its own. Each of the five ladder rungs then
     supplies the "outer" half -- its own fold scheme, evaluated with
     these frozen hyperparameters via
-    run_nested_cv(frozen_hyperparams_path=output_path), never retuning.
+    run_nested_cv(model_type=model_type, frozen_hyperparams_path=output_path),
+    never retuning.
 
-    output_path defaults to FROZEN_HYPERPARAMS_DIR/<target>.json.
-    Returns the saved result dict (target, tuning params, inner_cv_r2,
-    best_params, n_rows, n_features).
+    output_path defaults to FROZEN_HYPERPARAMS_DIR/<target>_<model_type>.json
+    -- hyperparameters are model-specific, so each model_type gets its
+    own frozen file even for the same target.
+    Returns the saved result dict (target, model_type, tuning params,
+    inner_cv_r2, best_params, n_rows, n_features).
     """
+    if model_type not in MODEL_REGISTRY:
+        raise ValueError(f"model_type={model_type!r} must be one of {MODEL_TYPES}")
+    device = _resolve_device_for_model(model_type, device)
+
     df = load_target_data(target)
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
     y = df[target].to_numpy(dtype=np.float64)
     groups = df[GROUP_COL].to_numpy()
 
+    X = _to_device(X, device)
+    y = _to_device(y, device)
+
     print(
-        f"tune_once: target={target}, {len(df):,} rows, {len(feature_cols)} features, "
-        f"{len(np.unique(groups)):,} chemistry_cluster_id groups, n_trials={n_trials}, "
-        f"n_inner_folds={n_inner_folds}, device={device}",
+        f"tune_once: target={target}, model_type={model_type}, {len(df):,} rows, "
+        f"{len(feature_cols)} features, {len(np.unique(groups)):,} chemistry_cluster_id groups, "
+        f"n_trials={n_trials}, n_inner_folds={n_inner_folds}, device={device}",
         flush=True,
     )
 
     best_params, inner_cv_r2 = tune_hyperparameters(
-        X, y, groups, n_trials=n_trials, n_inner_folds=n_inner_folds, seed=seed, device=device
+        X, y, groups, model_type=model_type, n_trials=n_trials, n_inner_folds=n_inner_folds, seed=seed, device=device
     )
 
     result = {
         "target": target,
+        "model_type": model_type,
         "n_trials": n_trials,
         "n_inner_folds": n_inner_folds,
         "seed": seed,
@@ -434,7 +580,7 @@ def tune_once(
         "best_params": best_params,
     }
 
-    output_path = Path(output_path) if output_path else FROZEN_HYPERPARAMS_DIR / f"{target}.json"
+    output_path = Path(output_path) if output_path else FROZEN_HYPERPARAMS_DIR / f"{target}_{model_type}.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
@@ -444,10 +590,24 @@ def tune_once(
     return result
 
 
-def _load_frozen_hyperparams(path):
-    """Load a tune_once() JSON output. Returns (best_params, inner_cv_r2)."""
+def _load_frozen_hyperparams(path, expected_model_type=None):
+    """
+    Load a tune_once() JSON output. Returns (best_params, inner_cv_r2).
+    Raises ValueError if expected_model_type is given and doesn't match
+    the file's model_type -- hyperparameters are model-specific, so
+    silently reusing e.g. xgboost params to construct a Ridge model
+    would otherwise crash confusingly deep inside model construction
+    instead of with a clear message here.
+    """
     with open(path, encoding="utf-8") as f:
         result = json.load(f)
+    file_model_type = result.get("model_type", "xgboost")  # files predating --model default to xgboost
+    if expected_model_type is not None and file_model_type != expected_model_type:
+        raise ValueError(
+            f"{path} was tuned for model_type={file_model_type!r}, but this run requested "
+            f"model_type={expected_model_type!r}. Hyperparameters are model-specific -- generate "
+            f"a separate frozen file per model with --tune-once --model {expected_model_type}."
+        )
     return result["best_params"], result["inner_cv_r2"]
 
 
@@ -516,9 +676,15 @@ def _check_run_config(checkpoint_dir, config):
     """
     On resume, verify this call's parameters match the run that produced
     the existing checkpoints for every field that affects fold
-    composition or data identity (target, split_strategy, seed,
-    n_outer_folds). n_repeats
-    is allowed to increase (extending an existing run is safe since the
+    composition, data identity, or which model a checkpoint's results
+    belong to (target, model_type, split_strategy, seed, n_outer_folds).
+    model_type is fatal (not warn-only) even though it doesn't affect
+    fold COMPOSITION, specifically so pointing two different models at
+    the same checkpoint_dir can never silently reuse one model's cached
+    predictions/outer_r2 under another model's label -- that would
+    silently corrupt a multi-model comparison rather than just cost
+    search-quality, unlike the warn-only fields below. n_repeats is
+    allowed to increase (extending an existing run is safe since the
     outer RNG stream is drawn sequentially, one draw per repeat index,
     so repeats 0..old_n_repeats-1 reproduce identically regardless of
     how many more repeats a later call asks for). n_trials/n_inner_folds/
@@ -534,14 +700,15 @@ def _check_run_config(checkpoint_dir, config):
     with open(path, encoding="utf-8") as f:
         existing = json.load(f)
 
-    fatal_keys = ("target", "split_strategy", "seed", "n_outer_folds")
+    fatal_keys = ("target", "model_type", "split_strategy", "seed", "n_outer_folds")
     mismatches = {k: (existing[k], config[k]) for k in fatal_keys if existing.get(k) != config[k]}
     if mismatches:
         raise ValueError(
             f"Resume parameter mismatch in {checkpoint_dir}: {mismatches}. "
-            f"target/split_strategy/seed/n_outer_folds must match the run that produced the existing "
-            f"checkpoints, since changing any of them changes fold composition for already-checkpointed "
-            f"repeats. Use a different checkpoint_dir for a genuinely new run."
+            f"target/model_type/split_strategy/seed/n_outer_folds must match the run that produced "
+            f"the existing checkpoints, since changing any of them changes fold composition or which "
+            f"model the checkpointed results belong to. Use a different checkpoint_dir for a "
+            f"genuinely new run."
         )
     if existing.get("n_repeats", 0) > config["n_repeats"]:
         raise ValueError(
@@ -563,6 +730,7 @@ def _check_run_config(checkpoint_dir, config):
 
 def run_nested_cv(
     target="zT",
+    model_type="xgboost",
     split_strategy="chemistry",
     n_repeats=None,
     n_outer_folds=N_OUTER_FOLDS,
@@ -574,9 +742,11 @@ def run_nested_cv(
     frozen_hyperparams_path=None,
 ):
     """
-    Full repeated nested CV for one target, outer folds built under
-    `split_strategy` (one of SPLIT_STRATEGIES; see the module docstring
-    and outer_splits() for what each rung is).
+    Full repeated nested CV for one target, one model_type (MODEL_TYPES;
+    see module docstring and MODEL_REGISTRY for the per-model search
+    space/constructor), outer folds built under `split_strategy` (one of
+    SPLIT_STRATEGIES; see the module docstring and outer_splits() for
+    what each rung is).
 
     n_repeats: defaults to None, resolved per split_strategy rather than
     one fixed number for all five ladder rungs -- N_OUTER_REPEATS_GROUPED
@@ -584,8 +754,9 @@ def run_nested_cv(
     justification), N_OUTER_REPEATS_UNGROUPED (1) for random/kfold (no
     such confound). Pass explicitly to override. See module docstring.
 
-    frozen_hyperparams_path: path to a tune_once() JSON output. When
-    given, every outer fold reuses those hyperparameters unchanged
+    frozen_hyperparams_path: path to a tune_once() JSON output for this
+    SAME model_type (mismatches raise, see _load_frozen_hyperparams).
+    When given, every outer fold reuses those hyperparameters unchanged
     instead of calling tune_hyperparameters() -- this is what makes
     split_strategy the ONLY varying factor across the five ladder rungs
     (CLAUDE.md Paper A item 1). When None (default), hyperparameters are
@@ -595,52 +766,62 @@ def run_nested_cv(
     evaluated once on the outer-test fold -- the original, pre-ladder
     behavior, still useful on its own.
 
-    device: passed straight to xgb.XGBRegressor (with tree_method="hist"
-    fixed) -- "cpu" (default) or "cuda" for GPU-accelerated fits, e.g.
-    on Kaggle.
+    device: "cpu" (default) or "cuda" for GPU-accelerated fits, e.g. on
+    Kaggle -- only meaningful for model_type="xgboost" (see module
+    docstring and _resolve_device_for_model); silently downgraded to
+    "cpu" (with a one-time warning) for every other model_type.
 
     checkpoint_dir: directory to write one JSON file per completed
-    (repeat, fold) -- {"repeat", "fold", "split_strategy",
+    (repeat, fold) -- {"repeat", "fold", "split_strategy", "model_type",
     "hyperparam_source", "n_train", "n_test", "outer_r2", "inner_cv_r2",
     "param_*"} -- plus a same-named *_predictions.npz holding that
     fold's held-out (y_true, y_pred) arrays (used to reconstruct pooled
     out-of-fold R^2 correctly across a resumed run), immediately after
     that fold finishes, plus a run_config.json recording the parameters
     that must match on resume. Defaults to
-    checkpoints/nested_cv/<target>/<split_strategy>/. On startup, any
-    (repeat, fold) with an existing checkpoint file is skipped and its
-    saved result (and predictions) reused instead of recomputed -- this
-    is how a run resumes after a Kaggle session is killed mid-run.
-    Resuming REQUIRES the same target/split_strategy/seed/n_outer_folds
-    as the original call (n_repeats may be increased to extend the run);
-    a mismatch raises rather than silently producing an inconsistent
-    result set. Pass checkpoint_dir=False to disable checkpointing
-    entirely (nothing written, nothing skipped).
+    checkpoints/nested_cv/<target>/<model_type>/<split_strategy>/. On
+    startup, any (repeat, fold) with an existing checkpoint file is
+    skipped and its saved result (and predictions) reused instead of
+    recomputed -- this is how a run resumes after a Kaggle session is
+    killed mid-run. Resuming REQUIRES the same
+    target/model_type/split_strategy/seed/n_outer_folds as the original
+    call (n_repeats may be increased to extend the run); a mismatch
+    raises rather than silently producing an inconsistent result set
+    (model_type is fatal, not warn-only, specifically so pointing two
+    different models at the same checkpoint_dir can never silently reuse
+    one model's cached predictions under another model's label). Pass
+    checkpoint_dir=False to disable checkpointing entirely (nothing
+    written, nothing skipped).
 
-    Returns results_df with two extra pieces of metadata attached via
-    .attrs: "pooled_r2" and "pooled_n" -- the PRIMARY ladder metric
-    (CLAUDE.md Paper A item 1), a single R^2 computed from every held-out
+    Returns results_df with extra metadata attached via .attrs:
+    "pooled_r2" and "pooled_n" -- the PRIMARY ladder metric (CLAUDE.md
+    Paper A item 1), a single R^2 computed from every held-out
     prediction across all outer folds and repeats concatenated together,
     distinct from the per-fold "outer_r2" column's macro-averaged
     mean/std (secondary/diagnostic; the two can diverge, especially for
     split_strategy="random" where held-out sets overlap and vary in
-    size across draws).
+    size across draws) -- plus "model_type", "split_strategy", and
+    "hyperparam_source" for labeling a multi-model comparison figure.
     """
     if split_strategy not in SPLIT_STRATEGIES:
         raise ValueError(f"split_strategy={split_strategy!r} must be one of {SPLIT_STRATEGIES}")
+    if model_type not in MODEL_REGISTRY:
+        raise ValueError(f"model_type={model_type!r} must be one of {MODEL_TYPES}")
+
+    device = _resolve_device_for_model(model_type, device)
 
     if n_repeats is None:
         n_repeats = N_OUTER_REPEATS_GROUPED if split_strategy in GROUPED_SPLIT_STRATEGIES else N_OUTER_REPEATS_UNGROUPED
 
     if frozen_hyperparams_path is not None:
-        frozen_params, frozen_inner_r2 = _load_frozen_hyperparams(frozen_hyperparams_path)
+        frozen_params, frozen_inner_r2 = _load_frozen_hyperparams(frozen_hyperparams_path, expected_model_type=model_type)
     else:
         frozen_params, frozen_inner_r2 = None, None
 
     if checkpoint_dir is False:
         checkpoint_dir = None
     elif checkpoint_dir is None:
-        checkpoint_dir = Path("checkpoints") / "nested_cv" / target / split_strategy
+        checkpoint_dir = Path("checkpoints") / "nested_cv" / target / model_type / split_strategy
     else:
         checkpoint_dir = Path(checkpoint_dir)
 
@@ -650,7 +831,8 @@ def run_nested_cv(
         _check_run_config(
             checkpoint_dir,
             {
-                "target": target, "split_strategy": split_strategy, "seed": seed, "n_outer_folds": n_outer_folds,
+                "target": target, "model_type": model_type, "split_strategy": split_strategy,
+                "seed": seed, "n_outer_folds": n_outer_folds,
                 "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
                 "n_trials": n_trials, "device": device,
                 "frozen_hyperparams_path": str(frozen_hyperparams_path) if frozen_hyperparams_path else None,
@@ -672,12 +854,14 @@ def run_nested_cv(
     # inner hyperparameter-tuning split, always, regardless of
     # split_strategy; (b) the outer split itself, only when
     # split_strategy == "chemistry". Both stay on host: grouping/index
-    # bookkeeping only, never fed to XGBoost.
+    # bookkeeping only, never fed to the model.
     chemistry_groups = df[GROUP_COL].to_numpy()
     group_lookup = {"chemistry": chemistry_groups, "composition": df["composition_id"].to_numpy()}
 
     # Convert once, up front, not per-fold -- see _to_device docstring for
     # why this is the fix for the cross-device DMatrix-fallback warning.
+    # No-op for model_type != "xgboost" since device was already resolved
+    # to "cpu" above.
     X = _to_device(X, device)
     y = _to_device(y, device)
 
@@ -691,7 +875,7 @@ def run_nested_cv(
         f"frozen ({frozen_hyperparams_path})" if frozen_params is not None else "retuned per outer fold"
     )
     start_msg = (
-        f"target={target}: {len(df):,} rows, {len(feature_cols)} features, "
+        f"target={target}: model_type={model_type}, {len(df):,} rows, {len(feature_cols)} features, "
         f"{split_desc}, n_repeats={n_repeats}, hyperparameters={hyperparam_desc}, device={device}"
     )
     print(start_msg, flush=True)
@@ -732,14 +916,11 @@ def run_nested_cv(
                 best_params, inner_r2 = frozen_params, frozen_inner_r2
             else:
                 best_params, inner_r2 = tune_hyperparameters(
-                    X_train, y_train, groups_train,
+                    X_train, y_train, groups_train, model_type=model_type,
                     n_trials=n_trials, n_inner_folds=n_inner_folds, seed=repeat * 100 + fold, device=device,
                 )
 
-            model = xgb.XGBRegressor(
-                **best_params, n_jobs=-1, tree_method="hist", device=device,
-                random_state=0, objective="reg:squarederror",
-            )
+            model = MODEL_REGISTRY[model_type]["build"](best_params, device)
             model.fit(X_train, y_train)
             y_test_host = _to_host(y_test)
             y_pred_host = _to_host(model.predict(X_test))
@@ -750,7 +931,7 @@ def run_nested_cv(
             pooled_y_pred.append(y_pred_host)
 
             record = {
-                "repeat": repeat, "fold": fold, "split_strategy": split_strategy,
+                "repeat": repeat, "fold": fold, "model_type": model_type, "split_strategy": split_strategy,
                 "hyperparam_source": "frozen" if frozen_params is not None else "retuned_per_fold",
                 "n_train": len(train_idx), "n_test": len(test_idx),
                 "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
@@ -785,11 +966,12 @@ def run_nested_cv(
 
     results_df.attrs["pooled_r2"] = pooled_r2
     results_df.attrs["pooled_n"] = pooled_n
+    results_df.attrs["model_type"] = model_type
     results_df.attrs["split_strategy"] = split_strategy
     results_df.attrs["hyperparam_source"] = "frozen" if frozen_params is not None else "retuned_per_fold"
 
     summary_lines = [
-        f"=== {target} ({split_strategy}): repeated CV summary ===",
+        f"=== {target} ({model_type}, {split_strategy}): repeated CV summary ===",
         f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations",
         f"POOLED out-of-fold R^2 = {pooled_r2:.4f} (n={pooled_n:,} held-out predictions) "
         f"-- PRIMARY ladder metric, CLAUDE.md Paper A item 1",
@@ -810,18 +992,27 @@ def _parse_args(argv=None):
     )
     parser.add_argument("--target", default="zT", help="Target property column (default: zT)")
     parser.add_argument(
+        "--model", dest="model_type", default="xgboost", choices=MODEL_TYPES,
+        help="Model family (default: xgboost). Same nested-CV machinery, chemistry-cluster "
+        "grouping, and pooled-OOF-R^2 reporting for every choice -- only the hyperparameter "
+        "search space and model constructor differ (see MODEL_REGISTRY). Only xgboost has a "
+        "GPU path in this module.",
+    )
+    parser.add_argument(
         "--split-strategy", default="chemistry", choices=SPLIT_STRATEGIES,
         help="Outer-fold scheme, one rung of CLAUDE.md's five-way validation ladder (default: chemistry). "
         "Use --split-strategy kfold with --n-outer-folds 5 or 10 for those two rungs.",
     )
     parser.add_argument(
         "--device", default="cpu", choices=["cpu", "cuda"],
-        help='XGBoost device, passed with tree_method="hist" (default: cpu; use cuda on Kaggle/GPU)',
+        help='Device for model_type="xgboost" (tree_method="hist", device=...); every other '
+        "--model runs on CPU regardless, with a one-time warning (default: cpu; use cuda on "
+        "Kaggle/GPU)",
     )
     parser.add_argument(
         "--checkpoint-dir", default=None,
         help="Directory for per-fold checkpoint JSON files "
-        "(default: checkpoints/nested_cv/<target>/<split_strategy>/)",
+        "(default: checkpoints/nested_cv/<target>/<model_type>/<split_strategy>/)",
     )
     parser.add_argument(
         "--n-repeats", type=int, default=None,
@@ -837,20 +1028,21 @@ def _parse_args(argv=None):
     parser.add_argument("--seed", type=int, default=0, help="Master RNG seed (default: 0)")
     parser.add_argument(
         "--frozen-hyperparams", default=None,
-        help="Path to a tune_once() JSON output. When given, every outer fold reuses those "
-        "hyperparameters unchanged instead of retuning -- makes split_strategy the ONLY "
-        "varying factor across the five ladder rungs (CLAUDE.md Paper A item 1). Generate "
-        "with --tune-once.",
+        help="Path to a tune_once() JSON output for this SAME --model. When given, every outer "
+        "fold reuses those hyperparameters unchanged instead of retuning -- makes split_strategy "
+        "the ONLY varying factor across the five ladder rungs (CLAUDE.md Paper A item 1). "
+        "Generate with --tune-once --model <same model>.",
     )
     parser.add_argument(
         "--tune-once", action="store_true",
-        help="Run ONLY the one-time chemistry-cluster-grouped hyperparameter search and save "
-        "it to --frozen-hyperparams-out, then exit -- does not run the ladder itself. Run this "
-        "once per target, then pass its output to --frozen-hyperparams for all five rungs.",
+        help="Run ONLY the one-time chemistry-cluster-grouped hyperparameter search for --model "
+        "and save it to --frozen-hyperparams-out, then exit -- does not run the ladder itself. "
+        "Run this once per target PER MODEL, then pass its output to --frozen-hyperparams.",
     )
     parser.add_argument(
         "--frozen-hyperparams-out", default=None,
-        help="Output path for --tune-once (default: checkpoints/frozen_hyperparams/<target>.json)",
+        help="Output path for --tune-once "
+        "(default: checkpoints/frozen_hyperparams/<target>_<model>.json)",
     )
     return parser.parse_args(argv)
 
@@ -861,6 +1053,7 @@ def main(argv=None):
     if args.tune_once:
         return tune_once(
             target=args.target,
+            model_type=args.model_type,
             n_trials=args.n_trials,
             n_inner_folds=args.n_inner_folds,
             seed=args.seed,
@@ -870,6 +1063,7 @@ def main(argv=None):
 
     results_df = run_nested_cv(
         target=args.target,
+        model_type=args.model_type,
         split_strategy=args.split_strategy,
         n_repeats=args.n_repeats,
         n_outer_folds=args.n_outer_folds,
