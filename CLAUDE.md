@@ -458,6 +458,35 @@ preempt a reviewer citing it back).
    is a lower bound on true database noise (excludes digitization error),
    so computed headroom is conservative/optimistic-in-the-paper's-favor —
    state this direction explicitly.
+   **Decision (2026-08-20): sigma and kappa are trained on log10-
+   transformed targets, not just evaluated in log space post-hoc.**
+   sigma spans ~10³–10⁶⁺ S/m and kappa ~0.05–25 W/mK, both multiple
+   orders of magnitude — raw-scale squared-error loss (what every model
+   here optimizes) is then dominated by the largest-magnitude samples
+   and effectively ignores relative error on low-conductivity/low-kappa
+   materials; log10 converts this into a relative-error objective, which
+   is what actually matters for a property spanning that range. S (can
+   be negative, -1000 to 1000 μV/K — log10 undefined) and zT (0–4, not
+   multiple orders of magnitude) stay on linear/raw scale. This decision
+   also makes this item's "report model R² in log space" requirement
+   internally consistent rather than needing a post-hoc conversion step:
+   the model is already trained and evaluated in the same space the
+   noise-floor ceiling is computed in, for sigma/kappa.
+   Implemented in `src/nested_cv.py`: `LOG_TRANSFORM_TARGETS = ("sigma",
+   "kappa")`; `_transform_target()` applies `np.log10` right after
+   loading `y`, before any device conversion, in both `tune_once()` and
+   `run_nested_cv()` — every downstream R² (`outer_r2`, `inner_cv_r2`,
+   `pooled_r2`) is therefore computed in log10 space for sigma/kappa,
+   linear space for S/zT, never mixed. `results_df.attrs["target_scale"]`
+   and each checkpoint record's `"target_scale"` field record which
+   explicitly, so this is never ambiguous downstream (e.g. in a
+   cross-target comparison figure). `target_scale` is a FATAL resume key
+   in `_check_run_config` — a sigma/kappa `checkpoint_dir` predating this
+   decision cannot be silently resumed and have its old linear-scale
+   predictions mixed into a new pooled log-space R²; it raises instead,
+   same protection already in place for `model_type` mismatches.
+   Positivity for `log10` is guaranteed by `data_cleaning.py` step 1's
+   bounds (sigma ≥ 10, kappa ≥ 0.05), not re-checked in `nested_cv.py`.
 4. **Unique-formula featurization** — compute descriptors once per unique
    formula, not per row (~13x compute reduction). CPU is sufficient, no
    GPU needed.

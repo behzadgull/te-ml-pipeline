@@ -22,6 +22,20 @@ that, not real model capacity. Only xgboost has a GPU path in this
 module (see _to_device); --device cuda with any other --model prints a
 one-time warning and runs that model on CPU regardless.
 
+sigma and kappa are trained and evaluated on log10-transformed targets
+(LOG_TRANSFORM_TARGETS), decided 2026-08-20: both span multiple orders
+of magnitude (sigma ~10^3-10^6+ S/m, kappa ~0.05-25 W/mK), so raw-scale
+squared-error loss is dominated by the largest-magnitude samples and
+effectively ignores relative error on low-conductivity/low-kappa
+materials; log10 converts this to a relative-error objective. S and zT
+stay on linear/raw scale (S can be negative; neither spans orders of
+magnitude the same way). This also makes the noise-floor comparison
+(CLAUDE.md Paper A item 3, which requires log-space R^2) internally
+consistent rather than needing a post-hoc conversion. Every R^2 this
+module reports for sigma/kappa is therefore in log10 space, not linear
+scale -- results_df.attrs["target_scale"] and the "target_scale"
+checkpoint/record column make this explicit rather than ambiguous.
+
 Plain sklearn GroupKFold is fully deterministic given a set of group
 labels: it internally sorts on np.unique(groups), which is alphabetical
 and independent of row order (verified empirically -- see CLAUDE.md
@@ -127,6 +141,29 @@ GROUPED_SPLIT_STRATEGIES = tuple(SPLIT_STRATEGY_GROUP_COL.keys())  # ("compositi
 RANDOM_HOLDOUT_TEST_SIZE = 0.2  # CLAUDE.md Paper A item 1: "random 80/20"
 
 MODEL_TYPES = ("xgboost", "lightgbm", "random_forest", "ridge")
+
+# sigma spans ~10^3-10^6+ S/m, kappa ~0.05-25 W/mK -- both multiple
+# orders of magnitude. Raw-scale squared-error loss is then dominated by
+# the largest-magnitude samples and effectively ignores relative error
+# on low-conductivity/low-kappa materials; log10 converts this to a
+# relative-error objective. S (can be negative, -1000 to 1000 uV/K) and
+# zT (0-4, not multiple orders of magnitude) stay on raw scale. Decided
+# 2026-08-20, see CLAUDE.md Paper A item 3 -- this also makes the
+# noise-floor comparison (which requires log-space R^2) internally
+# consistent instead of needing a post-hoc conversion. Positivity for
+# log10 is guaranteed by data_cleaning.py's step 1 bounds (sigma >= 10,
+# kappa >= 0.05), not re-checked here.
+LOG_TRANSFORM_TARGETS = ("sigma", "kappa")
+
+
+def _target_scale(target):
+    """"log10" for LOG_TRANSFORM_TARGETS, else "linear"."""
+    return "log10" if target in LOG_TRANSFORM_TARGETS else "linear"
+
+
+def _transform_target(y, target):
+    """Apply the frozen per-target scale decision (see LOG_TRANSFORM_TARGETS) to a raw y array."""
+    return np.log10(y) if target in LOG_TRANSFORM_TARGETS else y
 
 # Deliberate per-strategy defaults, not one number for all five ladder
 # rungs -- see the module docstring and CLAUDE.md's Grouping Key section
@@ -539,9 +576,13 @@ def tune_once(
 
     output_path defaults to FROZEN_HYPERPARAMS_DIR/<target>_<model_type>.json
     -- hyperparameters are model-specific, so each model_type gets its
-    own frozen file even for the same target.
-    Returns the saved result dict (target, model_type, tuning params,
-    inner_cv_r2, best_params, n_rows, n_features).
+    own frozen file even for the same target. For target in
+    LOG_TRANSFORM_TARGETS ("sigma", "kappa"), y is log10-transformed
+    before tuning (see LOG_TRANSFORM_TARGETS docstring), so inner_cv_r2
+    is computed in log space for those two targets, linear scale for
+    S/zT -- result["target_scale"] records which.
+    Returns the saved result dict (target, target_scale, model_type,
+    tuning params, inner_cv_r2, best_params, n_rows, n_features).
     """
     if model_type not in MODEL_REGISTRY:
         raise ValueError(f"model_type={model_type!r} must be one of {MODEL_TYPES}")
@@ -551,13 +592,15 @@ def tune_once(
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
     y = df[target].to_numpy(dtype=np.float64)
+    target_scale = _target_scale(target)
+    y = _transform_target(y, target)
     groups = df[GROUP_COL].to_numpy()
 
     X = _to_device(X, device)
     y = _to_device(y, device)
 
     print(
-        f"tune_once: target={target}, model_type={model_type}, {len(df):,} rows, "
+        f"tune_once: target={target} (scale={target_scale}), model_type={model_type}, {len(df):,} rows, "
         f"{len(feature_cols)} features, {len(np.unique(groups)):,} chemistry_cluster_id groups, "
         f"n_trials={n_trials}, n_inner_folds={n_inner_folds}, device={device}",
         flush=True,
@@ -569,6 +612,7 @@ def tune_once(
 
     result = {
         "target": target,
+        "target_scale": target_scale,
         "model_type": model_type,
         "n_trials": n_trials,
         "n_inner_folds": n_inner_folds,
@@ -676,14 +720,18 @@ def _check_run_config(checkpoint_dir, config):
     """
     On resume, verify this call's parameters match the run that produced
     the existing checkpoints for every field that affects fold
-    composition, data identity, or which model a checkpoint's results
-    belong to (target, model_type, split_strategy, seed, n_outer_folds).
-    model_type is fatal (not warn-only) even though it doesn't affect
-    fold COMPOSITION, specifically so pointing two different models at
-    the same checkpoint_dir can never silently reuse one model's cached
-    predictions/outer_r2 under another model's label -- that would
-    silently corrupt a multi-model comparison rather than just cost
-    search-quality, unlike the warn-only fields below. n_repeats is
+    composition, data identity, or which model/scale a checkpoint's
+    results belong to (target, target_scale, model_type, split_strategy,
+    seed, n_outer_folds). model_type and target_scale are fatal (not
+    warn-only) even though neither affects fold COMPOSITION, specifically
+    so pointing two different models -- or resuming a sigma/kappa
+    checkpoint_dir predating the log10-transform decision (2026-08-20,
+    see LOG_TRANSFORM_TARGETS) -- at the same checkpoint_dir can never
+    silently reuse cached predictions/outer_r2 computed under a
+    different model or a different target scale. That would silently
+    corrupt a multi-model comparison or mix log-space and linear-scale
+    predictions in one pooled R^2, rather than just cost search-quality
+    like the warn-only fields below. n_repeats is
     allowed to increase (extending an existing run is safe since the
     outer RNG stream is drawn sequentially, one draw per repeat index,
     so repeats 0..old_n_repeats-1 reproduce identically regardless of
@@ -700,15 +748,19 @@ def _check_run_config(checkpoint_dir, config):
     with open(path, encoding="utf-8") as f:
         existing = json.load(f)
 
-    fatal_keys = ("target", "model_type", "split_strategy", "seed", "n_outer_folds")
-    mismatches = {k: (existing[k], config[k]) for k in fatal_keys if existing.get(k) != config[k]}
+    fatal_keys = ("target", "target_scale", "model_type", "split_strategy", "seed", "n_outer_folds")
+    # existing.get(), not existing[], on BOTH sides: a checkpoint_dir predating the
+    # introduction of a given fatal key (e.g. target_scale, added 2026-08-20) simply
+    # lacks that key entirely -- must still raise the clean ValueError below, not a
+    # bare KeyError from indexing a missing key.
+    mismatches = {k: (existing.get(k), config[k]) for k in fatal_keys if existing.get(k) != config[k]}
     if mismatches:
         raise ValueError(
             f"Resume parameter mismatch in {checkpoint_dir}: {mismatches}. "
-            f"target/model_type/split_strategy/seed/n_outer_folds must match the run that produced "
-            f"the existing checkpoints, since changing any of them changes fold composition or which "
-            f"model the checkpointed results belong to. Use a different checkpoint_dir for a "
-            f"genuinely new run."
+            f"target/target_scale/model_type/split_strategy/seed/n_outer_folds must match the run "
+            f"that produced the existing checkpoints, since changing any of them changes fold "
+            f"composition or which model/scale the checkpointed results belong to. Use a different "
+            f"checkpoint_dir for a genuinely new run."
         )
     if existing.get("n_repeats", 0) > config["n_repeats"]:
         raise ValueError(
@@ -793,6 +845,15 @@ def run_nested_cv(
     checkpoint_dir=False to disable checkpointing entirely (nothing
     written, nothing skipped).
 
+    For target in LOG_TRANSFORM_TARGETS ("sigma", "kappa"), y is
+    log10-transformed before training/evaluation (see
+    LOG_TRANSFORM_TARGETS docstring for rationale) -- every R^2 in
+    results_df and its .attrs is then computed in log10 space, not
+    linear/raw scale, for those two targets; S/zT stay linear.
+    results_df.attrs["target_scale"] ("log10" or "linear") and the
+    "target_scale" checkpoint column record which for every row, so this
+    is never ambiguous downstream.
+
     Returns results_df with extra metadata attached via .attrs:
     "pooled_r2" and "pooled_n" -- the PRIMARY ladder metric (CLAUDE.md
     Paper A item 1), a single R^2 computed from every held-out
@@ -800,8 +861,9 @@ def run_nested_cv(
     distinct from the per-fold "outer_r2" column's macro-averaged
     mean/std (secondary/diagnostic; the two can diverge, especially for
     split_strategy="random" where held-out sets overlap and vary in
-    size across draws) -- plus "model_type", "split_strategy", and
-    "hyperparam_source" for labeling a multi-model comparison figure.
+    size across draws) -- plus "model_type", "split_strategy",
+    "target_scale", and "hyperparam_source" for labeling a multi-model
+    comparison figure.
     """
     if split_strategy not in SPLIT_STRATEGIES:
         raise ValueError(f"split_strategy={split_strategy!r} must be one of {SPLIT_STRATEGIES}")
@@ -825,13 +887,16 @@ def run_nested_cv(
     else:
         checkpoint_dir = Path(checkpoint_dir)
 
+    target_scale = _target_scale(target)
+
     completed = {}
     if checkpoint_dir is not None:
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
         _check_run_config(
             checkpoint_dir,
             {
-                "target": target, "model_type": model_type, "split_strategy": split_strategy,
+                "target": target, "target_scale": target_scale, "model_type": model_type,
+                "split_strategy": split_strategy,
                 "seed": seed, "n_outer_folds": n_outer_folds,
                 "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
                 "n_trials": n_trials, "device": device,
@@ -849,6 +914,7 @@ def run_nested_cv(
     feature_cols = get_feature_columns(df)
     X = df[feature_cols].to_numpy(dtype=np.float64)
     y = df[target].to_numpy(dtype=np.float64)
+    y = _transform_target(y, target)
 
     # chemistry_groups is used for two independent purposes: (a) the
     # inner hyperparameter-tuning split, always, regardless of
@@ -875,8 +941,9 @@ def run_nested_cv(
         f"frozen ({frozen_hyperparams_path})" if frozen_params is not None else "retuned per outer fold"
     )
     start_msg = (
-        f"target={target}: model_type={model_type}, {len(df):,} rows, {len(feature_cols)} features, "
-        f"{split_desc}, n_repeats={n_repeats}, hyperparameters={hyperparam_desc}, device={device}"
+        f"target={target} (scale={target_scale}): model_type={model_type}, {len(df):,} rows, "
+        f"{len(feature_cols)} features, {split_desc}, n_repeats={n_repeats}, "
+        f"hyperparameters={hyperparam_desc}, device={device}"
     )
     print(start_msg, flush=True)
     _log_progress(checkpoint_dir, start_msg)
@@ -932,6 +999,7 @@ def run_nested_cv(
 
             record = {
                 "repeat": repeat, "fold": fold, "model_type": model_type, "split_strategy": split_strategy,
+                "target_scale": target_scale,
                 "hyperparam_source": "frozen" if frozen_params is not None else "retuned_per_fold",
                 "n_train": len(train_idx), "n_test": len(test_idx),
                 "outer_r2": outer_r2, "inner_cv_r2": inner_r2,
@@ -968,11 +1036,17 @@ def run_nested_cv(
     results_df.attrs["pooled_n"] = pooled_n
     results_df.attrs["model_type"] = model_type
     results_df.attrs["split_strategy"] = split_strategy
+    results_df.attrs["target_scale"] = target_scale
     results_df.attrs["hyperparam_source"] = "frozen" if frozen_params is not None else "retuned_per_fold"
 
+    r2_scale_note = (
+        f"computed in log10 space (target={target} trained on log10-transformed y, "
+        f"see LOG_TRANSFORM_TARGETS)" if target_scale == "log10" else "computed in linear (raw) space"
+    )
     summary_lines = [
-        f"=== {target} ({model_type}, {split_strategy}): repeated CV summary ===",
+        f"=== {target} ({model_type}, {split_strategy}, scale={target_scale}): repeated CV summary ===",
         f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations",
+        f"R^2 below {r2_scale_note}.",
         f"POOLED out-of-fold R^2 = {pooled_r2:.4f} (n={pooled_n:,} held-out predictions) "
         f"-- PRIMARY ladder metric, CLAUDE.md Paper A item 1",
         f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f} (per-fold macro-average, secondary/diagnostic)",
@@ -1077,7 +1151,7 @@ def main(argv=None):
     print(results_df, flush=True)
     print(
         f"\npooled out-of-fold R^2 = {results_df.attrs.get('pooled_r2'):.4f} "
-        f"(n={results_df.attrs.get('pooled_n'):,})",
+        f"(n={results_df.attrs.get('pooled_n'):,}, scale={results_df.attrs.get('target_scale')})",
         flush=True,
     )
     return results_df
