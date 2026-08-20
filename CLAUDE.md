@@ -545,6 +545,31 @@ preempt a reviewer citing it back).
    both honest numbers, state why chemistry-cluster grouping is stricter
    against near-duplicate leakage specifically.
 
+---
+
+## Confirmed Results — Five-Way Ladder (Paper A item 1, FINAL)
+
+Pooled out-of-fold R², frozen hyperparameters per target (tuned once via
+`tune_once`, reused unchanged across all five rungs), 397 features
+(MAGPIE + CBFV + temperature_bin), XGBoost. sigma and kappa trained and
+scored in log10 space per the frozen decision above; S and zT in linear
+space.
+
+| Target | random 80/20 | 5-fold | 10-fold | composition | chemistry cluster |
+|---|---|---|---|---|---|
+| S | 0.9586 | 0.9585 | 0.9594 | 0.8314 | 0.8083 |
+| sigma (log10) | 0.9539 | 0.9533 | 0.9550 | 0.7791 | 0.7522 |
+| kappa (log10) | 0.9615 | 0.9611 | 0.9625 | 0.8380 | 0.8226 |
+| zT | 0.9138 | 0.9132 | 0.9148 | 0.8164 | 0.7965 |
+
+All four targets show the same qualitative pattern: the three ungrouped
+rungs (random/5-fold/10-fold) cluster tightly within ~0.001-0.002 of each
+other, then drop sharply at composition-level grouping and drop again,
+more modestly, at the chemistry-cluster anchor — the honest ceiling this
+project reports. The ungrouped-to-chemistry-cluster gap is largest for
+sigma (0.9539 to 0.7522, 20.2 points) and smallest for S (0.9586 to
+0.8083, 15.0 points).
+
 ## Paper B — Cross-Family Generalization (FROZEN)
 
 **Core claim = two falsifiable questions, not vague "granularity"
