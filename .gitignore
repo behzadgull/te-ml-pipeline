@@ -20,3 +20,5 @@ venv/
 # Models / outputs
 models/
 *.ipynb_checkpoints/
+checkpoints/
+logs/
