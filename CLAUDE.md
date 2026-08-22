@@ -32,7 +32,9 @@ implement as written.**
 
 **Phase 1 — Paper A's publishable spine:**
 5. Five-way validation-inflation ladder (Section: Paper A, item 1).
-6. Noise-floor anchor computed in log space (Paper A, item 3).
+6. Noise-floor anchor computed in per-property matched space (log10 for
+   sigma and kappa, linear for S and zT, matching each property's
+   confirmed R² scoring space) (Paper A, item 3).
 7. External validation, two separate numbers (Paper A, item 6).
 
 **Phase 2 — Paper A finish:**
@@ -444,10 +446,38 @@ preempt a reviewer citing it back).
    `--tune-once --model <name>` first — frozen files are per-model,
    loading the wrong one raises a clear error rather than silently
    reusing another model's hyperparameters).
+
+   **Per-repeat pooling + Nadeau-Bengio test, added 2026-08-22.** The
+   all-repeats `pooled_r2` above reports one bare number with no spread
+   — cannot say whether a composition-vs-chemistry gap is real or noise.
+   `run_nested_cv()` now also pools *within* each repeat (that repeat's
+   `n_outer_folds` folds only), giving `n_repeats` separate R² values in
+   `results_df.attrs["per_repeat_r2"]`, plus their
+   `per_repeat_r2_mean`/`per_repeat_r2_std` — this is the number the
+   ladder table should report (mean ± across-repeat SD), not the bare
+   pooled figure. Validity of pairing composition's repeat *i* against
+   chemistry's repeat *i* (needed for the NB test below) requires both
+   rungs to draw identical per-repeat RNG seeds for the same `--seed` —
+   verified empirically, not assumed, by `verify_repeat_seed_parity()`
+   (runs two real `run_nested_cv()` calls, composition vs. chemistry,
+   with `np.random.default_rng` instrumented to record every seed
+   constructed; confirmed identical sequence for seed=0, the default
+   every rung in the six-command workflow above uses). `nadeau_bengio_test
+   (scores_a, scores_b, n_train, n_test)` implements the corrected
+   paired t-test (Nadeau & Bengio 2003): inflates the naive paired
+   t-test's variance estimate by `(1/k + n_test/n_train)` rather than
+   `1/k` alone, correcting for the fact that repeated-CV repeats share
+   overlapping training data and aren't independent. Takes two arrays of
+   paired per-repeat R² (e.g. chemistry's and composition's
+   `per_repeat_r2`, same seed) plus representative single-fold
+   `n_train`/`n_test`; returns the mean diff, corrected t-statistic,
+   `df=k-1`, and a two-sided p-value.
 2. **Nested GroupKFold** for hyperparameter tuning — outer folds for
    reporting only, hyperparameters tuned on inner folds nested inside each
    outer training fold. Never tune and report on the same folds.
-3. **Noise floor, computed in log space** (relative uncertainties are
+3. **Noise floor, computed in per-property matched space (log10 for
+   sigma and kappa, linear for S and zT, matching each property's
+   confirmed R² scoring space)** (relative uncertainties are
    multiplicative/heteroscedastic, not additive):
    `R²_max = 1 − σ²_noise(log) / σ²_total(log)`, with σ_noise(log) ≈ 0.17
    for zT (from Alleno et al. 2015, Rev. Sci. Instrum. 86:011301, DOI
@@ -569,6 +599,58 @@ more modestly, at the chemistry-cluster anchor — the honest ceiling this
 project reports. The ungrouped-to-chemistry-cluster gap is largest for
 sigma (0.9539 to 0.7522, 20.2 points) and smallest for S (0.9586 to
 0.8083, 15.0 points).
+
+**Chemistry-cluster spread across repeats (2026-08-22, per-repeat pooled
+R², see the per-repeat pooling note above)**, computed from a Kaggle
+checkpoint set supplied 2026-08-22:
+
+| Target | chemistry cluster mean ± SD | per-repeat values |
+|---|---|---|
+| S | 0.8076 ± 0.0018 | 0.8062, 0.8064, 0.8077, 0.8071, 0.8108 |
+| sigma (log10) | 0.7600 ± 0.0008 | 0.7608, 0.7599, 0.7608, 0.7598, 0.7588 |
+| kappa (log10) | 0.8460 ± 0.0011 | 0.8463, 0.8463, 0.8470, 0.8465, 0.8441 |
+| zT | 0.7968 ± 0.0030 | 0.7973, 0.7915, 0.7985, 0.7984, 0.7983 |
+
+**Discrepancy, flagged not reconciled**: this checkpoint set's all-repeats
+pooled R² (S=0.8076, sigma=0.7600, kappa=0.8460, zT=0.7968 — the mean of
+the per-repeat column above) does not exactly match the chemistry-cluster
+column in the table above (S=0.8083, sigma=0.7522, kappa=0.8226,
+zT=0.7965). S and zT are close; sigma is off by 0.008 and kappa by 0.023
+— more than rounding. This checkpoint set is very likely a different
+(re-run) Kaggle pass than whatever produced the table above's numbers,
+not yet identified which. The table above's numbers are kept as the
+confirmed figures pending that reconciliation; treat the per-repeat
+spread here as informative about repeat-to-repeat variance, not as a
+replacement point estimate.
+
+**Composition-rung spread and the composition-vs-chemistry Nadeau-Bengio
+significance test are BOTH PENDING**: no composition-rung checkpoint
+predictions exist locally (only the chemistry-rung set above has been
+supplied) — `nadeau_bengio_test()` is implemented and ready
+(`src/nested_cv.py`, see the per-repeat pooling note above) but has
+nothing to run against yet. Complete once composition-rung
+`repeatN_foldM_predictions.npz` + `run_config.json` files (same layout
+as the chemistry set) are available, for all four properties.
+
+## Confirmed Results — Noise Floor (Paper A item 3, FINAL)
+
+R²_max computed per-property matched space (log10 for sigma/kappa,
+linear for S/zT — matching each property's confirmed R² scoring space,
+see item 3 above), Alleno et al. 2015 round-robin relative uncertainties
+as the noise reference. Implemented in `src/noise_floor.py`.
+
+| Target | Scale | R²_max | Confirmed ceiling | Headroom |
+|---|---|---|---|---|
+| S | linear | 0.9974 | 0.8083 | 0.189 |
+| sigma | log10 | 0.9968 | 0.7522 | 0.245 |
+| kappa | log10 | 0.9776 | 0.8226 | 0.155 |
+| zT | linear | 0.9785 | 0.7965 | 0.182 |
+
+R²_max is a best-case upper bound: Alleno et al. is a single-compound
+(skutterudite) round-robin measurement excluding digitization error, so
+true database noise is higher than this and true headroom is smaller
+than shown — state this direction explicitly wherever these numbers are
+cited, per item 3's frozen instruction.
 
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 

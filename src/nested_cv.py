@@ -376,6 +376,146 @@ def verify_randomization(groups, n_splits=5, n_seeds=5, watch_groups=None):
     }
 
 
+def verify_repeat_seed_parity(seed=0, n_repeats=3, n_outer_folds=3, n_rows=200):
+    """
+    Empirically confirm that run_nested_cv()'s per-repeat outer-fold RNG
+    seeding depends ONLY on `seed` (and n_repeats), not on split_strategy
+    -- required for the composition-vs-chemistry Nadeau-Bengio pairing
+    (CLAUDE.md Paper A item 1) to be valid: "repeat i" must land at the
+    same point in the RNG stream in both rungs, so paired differences
+    are comparing "the same random draw index" even though composition
+    and chemistry group by different columns and can never share an
+    actual row partition.
+
+    Runs two REAL run_nested_cv() calls -- split_strategy="composition"
+    and "chemistry", identical seed, tiny synthetic in-memory data
+    (load_target_data patched so no CSV I/O), frozen ridge
+    hyperparameters (cheap), checkpointing disabled -- with
+    np.random.default_rng wrapped to record every seed it's constructed
+    from, in call order. Compares the two recorded sequences (index 0 is
+    rng_master itself, seeded from `seed` in both calls by construction;
+    indices 1..n_repeats are the per-repeat repeat_rng seeds actually
+    exercising run_nested_cv's real code path, not a manual
+    re-derivation of it).
+
+    Returns the shared sequence (list of ints) if the two rungs match;
+    raises AssertionError with both sequences if they diverge -- would
+    mean the NB-test pairing assumption is false and item 4 cannot
+    treat composition/chemistry repeats as paired.
+    """
+    import tempfile
+    from unittest.mock import patch
+
+    rng = np.random.default_rng(12345)
+    synthetic_df = pd.DataFrame(
+        {
+            "MagpieData_test": rng.normal(size=n_rows),
+            TEMPERATURE_COL: rng.choice([300.0, 325.0, 350.0], size=n_rows),
+            "dummy_target": rng.normal(size=n_rows),
+            "composition_id": rng.integers(0, 20, size=n_rows),
+            GROUP_COL: rng.integers(0, 40, size=n_rows),
+        }
+    )
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        frozen_path = Path(tmp_dir) / "dummy_ridge.json"
+        with open(frozen_path, "w", encoding="utf-8") as f:
+            json.dump(
+                {"target": "dummy_target", "target_scale": "linear", "model_type": "ridge",
+                 "inner_cv_r2": 0.0, "best_params": {"alpha": 1.0}},
+                f,
+            )
+
+        recorded = {"composition": [], "chemistry": []}
+
+        def _run_one(split_strategy):
+            seeds_seen = []
+            real_default_rng = np.random.default_rng
+
+            def _recording_default_rng(s=None):
+                seeds_seen.append(s)
+                return real_default_rng(s)
+
+            with patch("src.nested_cv.load_target_data", return_value=synthetic_df.copy()), \
+                 patch("numpy.random.default_rng", side_effect=_recording_default_rng):
+                run_nested_cv(
+                    target="dummy_target", model_type="ridge", split_strategy=split_strategy,
+                    n_repeats=n_repeats, n_outer_folds=n_outer_folds, seed=seed,
+                    checkpoint_dir=False, frozen_hyperparams_path=frozen_path,
+                )
+            recorded[split_strategy] = seeds_seen
+
+        _run_one("composition")
+        _run_one("chemistry")
+
+    comp_seeds, chem_seeds = recorded["composition"], recorded["chemistry"]
+    if comp_seeds != chem_seeds:
+        raise AssertionError(
+            f"Per-repeat RNG seed sequences diverged between split_strategy='composition' "
+            f"({comp_seeds}) and 'chemistry' ({chem_seeds}) for the same seed={seed} -- the "
+            f"composition-vs-chemistry Nadeau-Bengio pairing assumption does NOT hold."
+        )
+    return comp_seeds
+
+
+def nadeau_bengio_test(scores_a, scores_b, n_train, n_test):
+    """
+    Nadeau & Bengio (2003) corrected paired t-test for k repeated-CV
+    scores from two rungs/methods. A naive paired t-test assumes
+    independent samples; repeated-CV repeats share overlapping training
+    data (e.g. the same rows land in different folds' training sets
+    across repeats), which understates the true variance and inflates
+    the false-positive rate. The correction inflates the variance
+    estimate by (1/k + n_test/n_train) instead of the naive test's 1/k
+    alone -- the test/train size ratio approximates the correlation
+    that overlap induces.
+
+    scores_a, scores_b: paired per-repeat scores, e.g. two
+    run_nested_cv() calls' results_df.attrs["per_repeat_r2"] values for
+    the SAME seed -- pairing requires "repeat i" to mean the same point
+    in the RNG stream in both arrays, verified for this project by
+    verify_repeat_seed_parity(), not assumed. n_train/n_test:
+    representative SINGLE-FOLD training/test set sizes (e.g. the mean
+    n_train/n_test across one rung's outer folds) -- not the whole
+    dataset size and not summed across a repeat's folds.
+
+    Returns a dict: k (number of paired repeats), mean_diff, var_diff,
+    the corrected t-statistic, degrees of freedom (k-1), and a two-sided
+    p-value (scipy.stats.t).
+    """
+    from scipy import stats
+
+    scores_a = np.asarray(scores_a, dtype=float)
+    scores_b = np.asarray(scores_b, dtype=float)
+    if scores_a.shape != scores_b.shape:
+        raise ValueError(
+            f"scores_a and scores_b must be paired (same shape): {scores_a.shape} vs {scores_b.shape}"
+        )
+    k = len(scores_a)
+    if k < 2:
+        raise ValueError(f"Nadeau-Bengio test needs at least 2 paired repeats, got k={k}")
+
+    d = scores_a - scores_b
+    mean_d = float(d.mean())
+    var_d = float(d.var(ddof=1))
+    correction = 1.0 / k + n_test / n_train
+    denom = np.sqrt(correction * var_d)
+
+    if denom == 0:
+        t_stat = 0.0 if mean_d == 0 else float("inf") * np.sign(mean_d)
+    else:
+        t_stat = mean_d / denom
+
+    df = k - 1
+    p_value = float(2 * (1 - stats.t.cdf(abs(t_stat), df))) if np.isfinite(t_stat) else 0.0
+
+    return {
+        "k": k, "mean_diff": mean_d, "var_diff": var_d,
+        "n_train": n_train, "n_test": n_test,
+        "t_statistic": float(t_stat), "df": df, "p_value": p_value,
+    }
+
+
 def _xgb_search_space(trial):
     # Full intended search space. Measured per-fit cost on this CPU-only
     # machine (396 features -- now 397 with temperature_bin added
@@ -949,7 +1089,13 @@ def run_nested_cv(
     _log_progress(checkpoint_dir, start_msg)
 
     results = list(completed.values())
-    pooled_y_true, pooled_y_pred = [], []
+    # Bucketed by repeat, not one flat list: lets us report a pooled
+    # R^2 PER REPEAT (pool only that repeat's n_outer_folds folds), not
+    # just one R^2 pooled across every repeat and fold together. The
+    # flat, all-repeats pooled_r2/pooled_n below are still computed --
+    # just derived from these buckets rather than a separate list --
+    # since r2_score doesn't care about concatenation order.
+    pooled_by_repeat = {r: {"y_true": [], "y_pred": []} for r in range(n_repeats)}
     rng_master = np.random.default_rng(seed)
     t_start = time.perf_counter()
 
@@ -964,8 +1110,8 @@ def run_nested_cv(
                 if checkpoint_dir is not None:
                     try:
                         y_true_saved, y_pred_saved = _load_predictions(checkpoint_dir, repeat, fold)
-                        pooled_y_true.append(y_true_saved)
-                        pooled_y_pred.append(y_pred_saved)
+                        pooled_by_repeat[repeat]["y_true"].append(y_true_saved)
+                        pooled_by_repeat[repeat]["y_pred"].append(y_pred_saved)
                     except FileNotFoundError:
                         warn_msg = (
                             f"WARNING: repeat {repeat} fold {fold} has a checkpoint but no saved "
@@ -994,8 +1140,8 @@ def run_nested_cv(
             outer_r2 = r2_score(y_test_host, y_pred_host)
 
             _save_predictions(checkpoint_dir, repeat, fold, y_test_host, y_pred_host)
-            pooled_y_true.append(y_test_host)
-            pooled_y_pred.append(y_pred_host)
+            pooled_by_repeat[repeat]["y_true"].append(y_test_host)
+            pooled_by_repeat[repeat]["y_pred"].append(y_pred_host)
 
             record = {
                 "repeat": repeat, "fold": fold, "model_type": model_type, "split_strategy": split_strategy,
@@ -1023,9 +1169,39 @@ def run_nested_cv(
     mean_r2 = results_df["outer_r2"].mean()
     std_r2 = results_df["outer_r2"].std()
 
-    if pooled_y_true:
-        pooled_true_arr = np.concatenate(pooled_y_true)
-        pooled_pred_arr = np.concatenate(pooled_y_pred)
+    # Per-repeat pooled R^2: pool only the n_outer_folds folds belonging
+    # to ONE repeat, giving n_repeats separate R^2 values -- CLAUDE.md's
+    # bare all-repeats pooled_r2 below has no spread to report; this is
+    # what a mean+-SD ladder entry, and the Nadeau-Bengio paired test
+    # between two rungs (see nadeau_bengio_test), are actually computed
+    # from.
+    per_repeat_r2 = {}
+    for repeat in range(n_repeats):
+        yt = pooled_by_repeat[repeat]["y_true"]
+        yp = pooled_by_repeat[repeat]["y_pred"]
+        if yt:
+            per_repeat_r2[repeat] = float(r2_score(np.concatenate(yt), np.concatenate(yp)))
+
+    if per_repeat_r2:
+        per_repeat_r2_values = np.array([per_repeat_r2[r] for r in sorted(per_repeat_r2)])
+        per_repeat_r2_mean = float(per_repeat_r2_values.mean())
+        per_repeat_r2_std = (
+            float(per_repeat_r2_values.std(ddof=1)) if len(per_repeat_r2_values) > 1 else float("nan")
+        )
+    else:
+        per_repeat_r2_values = np.array([])
+        per_repeat_r2_mean = float("nan")
+        per_repeat_r2_std = float("nan")
+
+    # Flat, all-repeats pooled R^2: same underlying predictions as
+    # per_repeat_r2 above, just concatenated across every repeat instead
+    # of kept separate -- r2_score doesn't depend on concatenation
+    # order, so this is unaffected by the per-repeat bucketing.
+    all_y_true = [arr for bucket in pooled_by_repeat.values() for arr in bucket["y_true"]]
+    all_y_pred = [arr for bucket in pooled_by_repeat.values() for arr in bucket["y_pred"]]
+    if all_y_true:
+        pooled_true_arr = np.concatenate(all_y_true)
+        pooled_pred_arr = np.concatenate(all_y_pred)
         pooled_r2 = float(r2_score(pooled_true_arr, pooled_pred_arr))
         pooled_n = int(len(pooled_true_arr))
     else:
@@ -1034,6 +1210,9 @@ def run_nested_cv(
 
     results_df.attrs["pooled_r2"] = pooled_r2
     results_df.attrs["pooled_n"] = pooled_n
+    results_df.attrs["per_repeat_r2"] = per_repeat_r2
+    results_df.attrs["per_repeat_r2_mean"] = per_repeat_r2_mean
+    results_df.attrs["per_repeat_r2_std"] = per_repeat_r2_std
     results_df.attrs["model_type"] = model_type
     results_df.attrs["split_strategy"] = split_strategy
     results_df.attrs["target_scale"] = target_scale
@@ -1043,12 +1222,16 @@ def run_nested_cv(
         f"computed in log10 space (target={target} trained on log10-transformed y, "
         f"see LOG_TRANSFORM_TARGETS)" if target_scale == "log10" else "computed in linear (raw) space"
     )
+    per_repeat_str = ", ".join(f"{per_repeat_r2[r]:.4f}" for r in sorted(per_repeat_r2))
     summary_lines = [
         f"=== {target} ({model_type}, {split_strategy}, scale={target_scale}): repeated CV summary ===",
         f"{n_repeats} repeats x {n_outer_folds} outer folds = {len(results_df)} outer evaluations",
         f"R^2 below {r2_scale_note}.",
         f"POOLED out-of-fold R^2 = {pooled_r2:.4f} (n={pooled_n:,} held-out predictions) "
-        f"-- PRIMARY ladder metric, CLAUDE.md Paper A item 1",
+        f"-- all repeats combined into one number",
+        f"PER-REPEAT pooled R^2 = {per_repeat_r2_mean:.4f} +/- {per_repeat_r2_std:.4f} "
+        f"(n={len(per_repeat_r2_values)} repeats: [{per_repeat_str}]) "
+        f"-- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1",
         f"mean outer R^2 = {mean_r2:.4f}, std = {std_r2:.4f} (per-fold macro-average, secondary/diagnostic)",
         f"hyperparameters: {hyperparam_desc}",
         f"this call's new compute time: {elapsed:.1f}s",
