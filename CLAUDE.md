@@ -672,6 +672,25 @@ errors multiplicatively rather than additively — direct prediction
 clearly wins. Consistent with Paper A item 5's requirement to report
 component-error correlation structure rather than assume independence.
 
+**Back-transform bias check (Duan smearing correction, 2026-08-22)**:
+sigma and kappa are predicted in log10 space then exponentiated back for
+S²σT/κ, which can introduce Jensen's-inequality retransformation bias
+(E[10^X] > 10^E[X] for any X with nonzero spread) — checked whether that
+bias, not genuine error propagation, explains the 0.127 gap above.
+Implemented in `src/backtransform_check.py`; figure at
+`figures/fig_backtransform_check.pdf`/`.png`.
+
+- Gap survives Duan correction: derived R² = 0.6563 (corrected) vs
+  0.6659 (uncorrected) — correction slightly worsens, not improves.
+- Tail-SSE shares nearly identical (direct 24.7% vs derived 24.0% for
+  the top 1% of rows) — no concentrated outlier blow-up from
+  exponentiation; the residual distribution is broadly wider for derived
+  across its whole range, not just in the tails.
+- sigma/kappa residual correlation = 0.42 (moderate, positive) — errors
+  do not cancel, they compound.
+- **Conclusion: the 0.127 gap is genuine multiplicative error
+  propagation, not a back-transform artifact.**
+
 ## Paper B — Cross-Family Generalization (FROZEN)
 
 **Core claim = two falsifiable questions, not vague "granularity"
