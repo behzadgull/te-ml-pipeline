@@ -570,6 +570,26 @@ project reports. The ungrouped-to-chemistry-cluster gap is largest for
 sigma (0.9539 to 0.7522, 20.2 points) and smallest for S (0.9586 to
 0.8083, 15.0 points).
 
+## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
+
+Direct-vs-derived zT, all-four-properties-present subset (55,948 rows,
+5,786 chemistry clusters), chemistry-cluster grouped CV, one shared
+frozen XGBoost hyperparameter set (from a single zT `tune_once` run)
+reused across all four models so the comparison isolates pathway choice,
+not per-property tuning. Implemented in `src/direct_vs_derived_zt.py`.
+
+- Direct zT: pooled R² = 0.7931
+- Derived S²σT/κ: pooled R² = 0.6659
+- Gap: 0.127 (direct beats derived)
+
+Component models feeding the derived pathway, same subset/splits/frozen
+hyperparameters: S = 0.8735, sigma (log10) = 0.7719, kappa (log10) =
+0.8693. Each component model is individually decent on its own, but
+combining three imperfect predictions through S²σT/κ compounds their
+errors multiplicatively rather than additively — direct prediction
+clearly wins. Consistent with Paper A item 5's requirement to report
+component-error correlation structure rather than assume independence.
+
 ## Paper B — Cross-Family Generalization (FROZEN)
 
 **Core claim = two falsifiable questions, not vague "granularity"
