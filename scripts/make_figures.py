@@ -6,12 +6,14 @@ distribution that motivates repeated grouped CV. Reads the cleaned CSV
 written by src/data_cleaning.py; run that first.
 """
 
+import json
 import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.metrics import r2_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -24,6 +26,26 @@ from src.plotting_style import (
 )
 
 FIGURES_DIR = Path("figures")
+
+# Figure 3: actual-vs-predicted scatter, chemistry-cluster CV, XGBoost.
+# Reads pooled out-of-fold predictions checkpointed from the real Kaggle
+# production run (device=cuda, frozen hyperparameters, 5 repeats x 5
+# outer folds) -- these are NOT regenerable locally (no GPU, see
+# CLAUDE.md's Local dev environment note), so this figure only runs if
+# that checkpoint tree has been copied in under FIG3_CHECKPOINT_DIR.
+FIG3_CHECKPOINT_DIR = Path("checkpoints") / "saved_predictions" / "checkpoints"
+FIG3_TARGETS = ["S", "sigma", "kappa", "zT"]
+FIG3_PANEL_LETTERS = ["a", "b", "c", "d"]
+# sigma/kappa checkpoints hold log10-space y_true/y_pred (target_scale
+# in run_config.json), matching nested_cv.py's LOG_TRANSFORM_TARGETS --
+# axis labels reflect that; S/zT are linear/raw, same as their training
+# scale.
+FIG3_AXIS_LABELS = {
+    "S": "S (μV/K)",
+    "sigma": "log$_{10}(\\sigma$, S/m)",
+    "kappa": "log$_{10}(\\kappa$, W/m·K)",
+    "zT": "zT",
+}
 
 # Actual row counts from the run_cleaning_pipeline() run logged against
 # the 2026-08-15 ThermoelectricMaterials pull (data/processed/cleaned_
@@ -399,6 +421,101 @@ def make_validation_ladder(out_path):
     plt.close(fig)
 
 
+def load_fig3_predictions(target, checkpoint_dir=FIG3_CHECKPOINT_DIR):
+    """
+    Load and pool every repeatN_foldM_predictions.npz for `target` under
+    checkpoint_dir/<target>_chemistry/ -- one array of all held-out
+    (y_true, y_pred) pairs across every outer fold and repeat, exactly
+    what nested_cv.py's own pooled out-of-fold R^2 is computed from.
+    Returns (y_true, y_pred, run_config dict).
+    """
+    target_dir = checkpoint_dir / f"{target}_chemistry"
+    run_config_path = target_dir / "run_config.json"
+    if not run_config_path.exists():
+        raise FileNotFoundError(
+            f"No run_config.json in {target_dir} -- expected the Kaggle chemistry-cluster "
+            f"checkpoint tree for target={target!r}"
+        )
+    with open(run_config_path, encoding="utf-8") as f:
+        run_config = json.load(f)
+
+    npz_paths = sorted(target_dir.glob("repeat*_fold*_predictions.npz"))
+    if not npz_paths:
+        raise FileNotFoundError(f"No repeat*_fold*_predictions.npz files in {target_dir}")
+
+    y_true_parts, y_pred_parts = [], []
+    for npz_path in npz_paths:
+        data = np.load(npz_path)
+        y_true_parts.append(data["y_true"])
+        y_pred_parts.append(data["y_pred"])
+
+    return np.concatenate(y_true_parts), np.concatenate(y_pred_parts), run_config
+
+
+def make_actual_vs_predicted(out_path, checkpoint_dir=FIG3_CHECKPOINT_DIR):
+    """
+    Figure 3: 2x2 panel of actual-vs-predicted scatter plots, one per
+    target (S, sigma, kappa, zT), chemistry-cluster grouped CV, XGBoost,
+    frozen hyperparameters -- pooled out-of-fold predictions loaded from
+    the real Kaggle run's checkpoints (see load_fig3_predictions).
+
+    sigma/kappa panels plot the checkpointed values directly (already
+    log10-space, per run_config's target_scale -- matches
+    nested_cv.py's LOG_TRANSFORM_TARGETS); S/zT plot raw/linear values.
+    Each panel gets a y=x reference line (perfect prediction) and is
+    annotated with the pooled R^2 (recomputed here from the loaded
+    arrays, not copied from CLAUDE.md, so this figure is self-verifying)
+    and n. No temperature_bin color-coding: the local featurized dataset
+    is off by ~200-260 rows per target from whatever the Kaggle run
+    actually trained on (confirmed by attempting to regenerate the exact
+    same chemistry-cluster splits locally and finding the reconstructed
+    y_true did not match the checkpointed y_true for any fold), so a
+    per-point temperature color would not be trustworthy -- flagged and
+    dropped rather than plotted anyway.
+    """
+    fig, axes = plt.subplots(
+        2, 2, figsize=get_figsize(2, 2, panel_width=4.4, panel_height=4.2),
+        constrained_layout=True,
+    )
+    point_color = COLORBLIND_PALETTE[5]  # blue -- same "honest model" color as Figures 1-2
+
+    for ax, target, letter in zip(axes.flat, FIG3_TARGETS, FIG3_PANEL_LETTERS):
+        y_true, y_pred, run_config = load_fig3_predictions(target, checkpoint_dir)
+        pooled_r2 = r2_score(y_true, y_pred)
+        n = len(y_true)
+
+        lo = min(y_true.min(), y_pred.min())
+        hi = max(y_true.max(), y_pred.max())
+        pad = (hi - lo) * 0.03
+        lo, hi = lo - pad, hi + pad
+
+        ax.scatter(
+            y_true, y_pred, s=2, alpha=0.12, color=point_color,
+            edgecolors="none", rasterized=True,
+        )
+        ax.plot([lo, hi], [lo, hi], color="black", linestyle="--", linewidth=1.2, zorder=5)
+
+        ax.set_xlim(lo, hi)
+        ax.set_ylim(lo, hi)
+        ax.set_aspect("equal", adjustable="box")
+        axis_label = FIG3_AXIS_LABELS[target]
+        ax.set_xlabel(f"Actual {axis_label}")
+        ax.set_ylabel(f"Predicted {axis_label}")
+
+        ax.text(
+            0.04, 0.96, f"$R^2$={pooled_r2:.4f}\nn={n:,}",
+            transform=ax.transAxes, ha="left", va="top", fontsize=9.5,
+            bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5),
+        )
+        add_panel_label(ax, letter)
+
+    # constrained_layout (set in plt.subplots above) handles spacing for
+    # this figure -- calling tight_layout() here would fight it and
+    # reproduce the overlapping-label bug this replaced.
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
 def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -420,6 +537,12 @@ def main():
 
     make_validation_ladder(FIGURES_DIR / "fig2_validation_ladder")
     print("Saved fig2_validation_ladder.png / .pdf")
+
+    try:
+        make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
+        print("Saved fig3_actual_vs_predicted.png / .pdf")
+    except FileNotFoundError as e:
+        print(f"Skipped fig3_actual_vs_predicted: {e}")
 
 
 if __name__ == "__main__":
