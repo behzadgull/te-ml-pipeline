@@ -1,0 +1,22 @@
+{
+  "target": "kappa",
+  "target_scale": "log10",
+  "model_type": "xgboost",
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "seed": 0,
+  "device": "cuda",
+  "n_rows": 121110,
+  "n_features": 397,
+  "inner_cv_r2": 0.8419289898254999,
+  "best_params": {
+    "n_estimators": 350,
+    "max_depth": 9,
+    "learning_rate": 0.05741815501967946,
+    "subsample": 0.9052182073106718,
+    "colsample_bytree": 0.7081730343531392,
+    "min_child_weight": 6,
+    "reg_lambda": 0.05444122226792827,
+    "reg_alpha": 3.3513428043937066
+  }
+}

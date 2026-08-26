@@ -1,0 +1,22 @@
+{
+  "target": "S",
+  "target_scale": "linear",
+  "model_type": "xgboost",
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "seed": 0,
+  "device": "cuda",
+  "n_rows": 185064,
+  "n_features": 397,
+  "inner_cv_r2": 0.7972220210002797,
+  "best_params": {
+    "n_estimators": 500,
+    "max_depth": 10,
+    "learning_rate": 0.03183308682237681,
+    "subsample": 0.8969010059780653,
+    "colsample_bytree": 0.5061521655432422,
+    "min_child_weight": 4,
+    "reg_lambda": 0.6494186419907995,
+    "reg_alpha": 8.79300330033791
+  }
+}
