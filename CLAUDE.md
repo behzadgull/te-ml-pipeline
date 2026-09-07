@@ -577,60 +577,107 @@ preempt a reviewer citing it back).
 
 ---
 
+**Process fix (2026-08-22): every confirmed number below must cite its
+checkpoint directory (or frozen-hyperparameter file) as its source.**
+The chemistry-rung sigma/kappa discrepancy below traced back to a
+headline number with no surviving `run_config.json` or checkpoint
+directory to verify it against — an orphaned number that could not be
+reproduced or audited after the fact. Going forward, a result is not
+"confirmed" in this document unless its producing checkpoint directory
+(local path, or frozen-hyperparameter file) is named alongside it, so
+an orphaned headline number cannot be created again.
+
 ## Confirmed Results — Five-Way Ladder (Paper A item 1, FINAL)
 
 Pooled out-of-fold R², frozen hyperparameters per target (tuned once via
 `tune_once`, reused unchanged across all five rungs), 397 features
 (MAGPIE + CBFV + temperature_bin), XGBoost. sigma and kappa trained and
 scored in log10 space per the frozen decision above; S and zT in linear
-space.
+space. Composition and chemistry-cluster report mean ± across-repeat SD
+(5 repeats, per-repeat pooled R², see the per-repeat pooling note
+above); random 80/20 and 5-fold/10-fold report the single pooled R²
+(n_repeats=1 for ungrouped rungs, per the frozen decision in the
+Grouping Key section — no repeat-to-repeat spread to report there).
 
 | Target | random 80/20 | 5-fold | 10-fold | composition | chemistry cluster |
 |---|---|---|---|---|---|
-| S | 0.9586 | 0.9585 | 0.9594 | 0.8314 | 0.8083 |
-| sigma (log10) | 0.9539 | 0.9533 | 0.9550 | 0.7791 | 0.7522 |
-| kappa (log10) | 0.9615 | 0.9611 | 0.9625 | 0.8380 | 0.8226 |
-| zT | 0.9138 | 0.9132 | 0.9148 | 0.8164 | 0.7965 |
+| S | 0.9588 | 0.9588 | 0.9595 | 0.8331 ± 0.0034 | 0.8076 ± 0.0018 |
+| sigma (log10) | 0.9152 | 0.9150 | 0.9175 | 0.7772 ± 0.0019 | 0.7600 ± 0.0008 |
+| kappa (log10) | 0.9442 | 0.9444 | 0.9459 | 0.8562 ± 0.0010 | 0.8460 ± 0.0011 |
+| zT | 0.9186 | 0.9184 | 0.9196 | 0.8174 ± 0.0019 | 0.7968 ± 0.0030 |
 
-All four targets show the same qualitative pattern: the three ungrouped
-rungs (random/5-fold/10-fold) cluster tightly within ~0.001-0.002 of each
-other, then drop sharply at composition-level grouping and drop again,
-more modestly, at the chemistry-cluster anchor — the honest ceiling this
-project reports. The ungrouped-to-chemistry-cluster gap is largest for
-sigma (0.9539 to 0.7522, 20.2 points) and smallest for S (0.9586 to
-0.8083, 15.0 points).
+**All 20 cells are reproducible, provenance-cited, 2026-08-22.** Every
+cell above comes from a checkpointed run with a surviving
+`run_config.json` (seed=0, n_outer_folds/n_repeats as described above,
+frozen hyperparameters from `checkpoints/saved_predictions/checkpoints/
+frozen_hyperparams/{S,sigma,kappa,zT}.json`, the same files force-added
+to git):
 
-**Chemistry-cluster spread across repeats (2026-08-22, per-repeat pooled
-R², see the per-repeat pooling note above)**, computed from a Kaggle
-checkpoint set supplied 2026-08-22:
+- chemistry cluster: `checkpoints/saved_predictions/checkpoints/
+  {S,sigma,kappa,zT}_chemistry/`
+- composition, random 80/20, 5-fold, 10-fold: `checkpoints/
+  ladder_regen_dl/{S,sigma,kappa,zT}_{composition,random,kfold,kfold}
+  _{f5,f20,f5,f10}/` (folder-name suffix is outer-fold count, e.g.
+  `sigma_random_f20`, `kappa_kfold_f10`)
 
-| Target | chemistry cluster mean ± SD | per-repeat values |
-|---|---|---|
-| S | 0.8076 ± 0.0018 | 0.8062, 0.8064, 0.8077, 0.8071, 0.8108 |
-| sigma (log10) | 0.7600 ± 0.0008 | 0.7608, 0.7599, 0.7608, 0.7598, 0.7588 |
-| kappa (log10) | 0.8460 ± 0.0011 | 0.8463, 0.8463, 0.8470, 0.8465, 0.8441 |
-| zT | 0.7968 ± 0.0030 | 0.7973, 0.7915, 0.7985, 0.7984, 0.7983 |
+This replaces every orphaned point estimate from the lost-config run
+(prior chemistry-cluster: S=0.8083, sigma=0.7522, kappa=0.8226,
+zT=0.7965; prior random/5-fold/10-fold/composition numbers were from
+that same run) — none of which could be verified or reproduced (see
+discrepancy diagnosis below). Nothing in this table is orphaned any
+more.
 
-**Discrepancy, flagged not reconciled**: this checkpoint set's all-repeats
-pooled R² (S=0.8076, sigma=0.7600, kappa=0.8460, zT=0.7968 — the mean of
-the per-repeat column above) does not exactly match the chemistry-cluster
-column in the table above (S=0.8083, sigma=0.7522, kappa=0.8226,
-zT=0.7965). S and zT are close; sigma is off by 0.008 and kappa by 0.023
-— more than rounding. This checkpoint set is very likely a different
-(re-run) Kaggle pass than whatever produced the table above's numbers,
-not yet identified which. The table above's numbers are kept as the
-confirmed figures pending that reconciliation; treat the per-repeat
-spread here as informative about repeat-to-repeat variance, not as a
-replacement point estimate.
+The three ungrouped rungs (random/5-fold/10-fold) cluster tightly
+within ~0.001-0.003 of each other for every target, then drop sharply
+at composition-level grouping and drop again, more modestly, at the
+chemistry-cluster anchor — the honest ceiling this project reports.
+The ungrouped-to-chemistry-cluster gap (random 80/20 minus chemistry
+cluster) is largest for sigma (0.9152 to 0.7600, 15.5 points) and
+smallest for kappa (0.9442 to 0.8460, 9.8 points).
 
-**Composition-rung spread and the composition-vs-chemistry Nadeau-Bengio
-significance test are BOTH PENDING**: no composition-rung checkpoint
-predictions exist locally (only the chemistry-rung set above has been
-supplied) — `nadeau_bengio_test()` is implemented and ready
-(`src/nested_cv.py`, see the per-repeat pooling note above) but has
-nothing to run against yet. Complete once composition-rung
-`repeatN_foldM_predictions.npz` + `run_config.json` files (same layout
-as the chemistry set) are available, for all four properties.
+**Discrepancy diagnosis (2026-08-22): H1 (scale mismatch) is
+UNRESOLVABLE, not rejected.** Tested whether the orphaned run's
+sigma=0.7522/kappa=0.8226 were linear-space scores from before the
+2026-08-20 log10 decision, by back-transforming the reproducible run's
+log10-space predictions to linear space and rescoring: sigma landed at
+0.6547 linear vs. 0.7600 log10 (orphaned value 0.7522 sits close to the
+log10 number); kappa landed at 0.8015 linear vs. 0.8460 log10 (orphaned
+value 0.8226 sits roughly between the two, closer to neither). This
+neither confirms nor rules out H1: back-transforming a log10-TRAINED
+model's predictions to linear space and rescoring is not equivalent to
+what a model actually TRAINED on linear targets would have produced
+(different loss function during training, not just different scoring),
+so the test cannot distinguish "the orphaned run trained on linear
+targets" from "the orphaned run trained on log10 targets with different
+hyperparameters or data" — both remain consistent with the orphaned
+numbers. The discrepancy was resolved not by identifying which of these
+is true (the orphaned run's config no longer exists to check) but by
+regenerating every rung from scratch on Kaggle with a preserved config,
+per the process fix above.
+
+**Composition-vs-chemistry Nadeau-Bengio corrected paired t-test**
+(`nadeau_bengio_test()`, `src/nested_cv.py`), paired per-repeat
+differences (composition minus chemistry), k=5 repeats,
+seed alignment verified by `verify_repeat_seed_parity()` (both rungs'
+`run_config.json` confirm `seed=0`, `n_repeats=5`, `n_outer_folds=5`).
+Variance correction: `t = mean(d) / sqrt((1/k + n_test/n_train) *
+var(d))`, `d` = the 5 paired (composition − chemistry) per-repeat
+differences, `var(d)` with `ddof=1`, `n_train`/`n_test` = composition
+rung's mean per-fold training/test set sizes (5-fold outer structure),
+`df = k - 1 = 4`:
+
+| Target | mean diff (comp − chem) | t | df | p |
+|---|---|---|---|---|
+| S | +0.0255 | 8.972 | 4 | 0.0009 |
+| sigma | +0.0171 | 9.607 | 4 | 0.0007 |
+| kappa | +0.0102 | 8.729 | 4 | 0.0009 |
+| zT | +0.0206 | 8.550 | 4 | 0.0010 |
+
+All four significant at p<0.001: composition scores significantly
+higher (less strict) than chemistry-cluster for every property,
+confirming chemistry-cluster grouping is a measurably stricter honest-
+ceiling anchor, not just numerically different by chance or repeat-to-
+repeat noise.
 
 ## Confirmed Results — Noise Floor (Paper A item 3, FINAL)
 
@@ -641,10 +688,21 @@ as the noise reference. Implemented in `src/noise_floor.py`.
 
 | Target | Scale | R²_max | Confirmed ceiling | Headroom |
 |---|---|---|---|---|
-| S | linear | 0.9974 | 0.8083 | 0.189 |
-| sigma | log10 | 0.9968 | 0.7522 | 0.245 |
-| kappa | log10 | 0.9776 | 0.8226 | 0.155 |
-| zT | linear | 0.9785 | 0.7965 | 0.182 |
+| S | linear | 0.9974 | 0.8076 | 0.190 |
+| sigma | log10 | 0.9968 | 0.7600 | 0.237 |
+| kappa | log10 | 0.9776 | 0.8460 | 0.132 |
+| zT | linear | 0.9785 | 0.7968 | 0.182 |
+
+Confirmed ceiling = the chemistry-cluster mean from the reproducible
+2026-08-22 checkpoint set at `checkpoints/saved_predictions/checkpoints/
+{S,sigma,kappa,zT}_chemistry/` (see the Five-Way Ladder section above).
+Headroom inherits that set's across-repeat SD (S ±0.0018, sigma ±0.0008,
+kappa ±0.0011, zT ±0.0030) as its ceiling-side uncertainty, but the
+dominant uncertainty remains R²_max's optimistic-bound caveat below, not
+this repeat-to-repeat spread. This table is FINAL: its only dependency
+(the chemistry-cluster ceiling) is now reproducible and provenance-clean
+— unlike the Five-Way Ladder table above, which stays non-final until
+its four orphaned rungs are regenerated.
 
 R²_max is a best-case upper bound: Alleno et al. is a single-compound
 (skutterudite) round-robin measurement excluding digitization error, so
