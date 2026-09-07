@@ -1,0 +1,14 @@
+[2026-09-06 06:45:50] target=kappa (scale=log10): model_type=xgboost, 121,535 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json), device=cuda
+[2026-09-06 06:46:04] repeat 0 fold 0: outer R^2=0.9441 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:46:16] repeat 0 fold 1: outer R^2=0.9436 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:46:29] repeat 0 fold 2: outer R^2=0.9433 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:46:42] repeat 0 fold 3: outer R^2=0.9456 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:46:55] repeat 0 fold 4: outer R^2=0.9454 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:46:55] === kappa (xgboost, kfold, scale=log10): repeated CV summary ===
+[2026-09-06 06:46:55] 1 repeats x 5 outer folds = 5 outer evaluations
+[2026-09-06 06:46:55] R^2 below computed in log10 space (target=kappa trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-06 06:46:55] POOLED out-of-fold R^2 = 0.9444 (n=121,535 held-out predictions) -- all repeats combined into one number
+[2026-09-06 06:46:55] PER-REPEAT pooled R^2 = 0.9444 +/- nan (n=1 repeats: [0.9444]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-06 06:46:55] mean outer R^2 = 0.9444, std = 0.0010 (per-fold macro-average, secondary/diagnostic)
+[2026-09-06 06:46:55] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json)
+[2026-09-06 06:46:55] this call's new compute time: 64.3s

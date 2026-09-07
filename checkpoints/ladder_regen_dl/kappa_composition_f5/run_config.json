@@ -1,0 +1,13 @@
+{
+  "target": "kappa",
+  "target_scale": "log10",
+  "model_type": "xgboost",
+  "split_strategy": "composition",
+  "seed": 0,
+  "n_outer_folds": 5,
+  "n_repeats": 5,
+  "n_inner_folds": 3,
+  "n_trials": 20,
+  "device": "cuda",
+  "frozen_hyperparams_path": "checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json"
+}

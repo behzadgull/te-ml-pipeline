@@ -1,0 +1,29 @@
+[2026-09-06 06:40:51] target=kappa (scale=log10): model_type=xgboost, 121,535 rows, 397 features, split_strategy=random (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json), device=cuda
+[2026-09-06 06:41:05] repeat 0 fold 0: outer R^2=0.9443 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:41:19] repeat 0 fold 1: outer R^2=0.9446 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:41:33] repeat 0 fold 2: outer R^2=0.9438 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:41:47] repeat 0 fold 3: outer R^2=0.9437 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:42:01] repeat 0 fold 4: outer R^2=0.9458 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:42:15] repeat 0 fold 5: outer R^2=0.9454 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:42:29] repeat 0 fold 6: outer R^2=0.9446 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:42:43] repeat 0 fold 7: outer R^2=0.9446 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:42:58] repeat 0 fold 8: outer R^2=0.9429 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:43:12] repeat 0 fold 9: outer R^2=0.9401 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:43:25] repeat 0 fold 10: outer R^2=0.9422 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:43:39] repeat 0 fold 11: outer R^2=0.9440 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:43:54] repeat 0 fold 12: outer R^2=0.9457 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:44:08] repeat 0 fold 13: outer R^2=0.9448 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:44:22] repeat 0 fold 14: outer R^2=0.9436 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:44:36] repeat 0 fold 15: outer R^2=0.9471 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:44:50] repeat 0 fold 16: outer R^2=0.9449 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:45:04] repeat 0 fold 17: outer R^2=0.9424 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:45:18] repeat 0 fold 18: outer R^2=0.9454 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:45:32] repeat 0 fold 19: outer R^2=0.9448 (inner cv R^2=0.8419), n_train=97,228, n_test=24,307
+[2026-09-06 06:45:32] === kappa (xgboost, random, scale=log10): repeated CV summary ===
+[2026-09-06 06:45:32] 1 repeats x 20 outer folds = 20 outer evaluations
+[2026-09-06 06:45:32] R^2 below computed in log10 space (target=kappa trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-06 06:45:32] POOLED out-of-fold R^2 = 0.9442 (n=486,140 held-out predictions) -- all repeats combined into one number
+[2026-09-06 06:45:32] PER-REPEAT pooled R^2 = 0.9442 +/- nan (n=1 repeats: [0.9442]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-06 06:45:32] mean outer R^2 = 0.9442, std = 0.0015 (per-fold macro-average, secondary/diagnostic)
+[2026-09-06 06:45:32] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json)
+[2026-09-06 06:45:32] this call's new compute time: 281.5s

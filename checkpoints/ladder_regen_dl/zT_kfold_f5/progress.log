@@ -1,0 +1,14 @@
+[2026-09-06 06:56:19] target=zT (scale=linear): model_type=xgboost, 129,851 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json), device=cuda
+[2026-09-06 06:56:37] repeat 0 fold 0: outer R^2=0.9198 (inner cv R^2=0.7927), n_train=103,880, n_test=25,971
+[2026-09-06 06:56:54] repeat 0 fold 1: outer R^2=0.9191 (inner cv R^2=0.7927), n_train=103,881, n_test=25,970
+[2026-09-06 06:57:12] repeat 0 fold 2: outer R^2=0.9170 (inner cv R^2=0.7927), n_train=103,881, n_test=25,970
+[2026-09-06 06:57:29] repeat 0 fold 3: outer R^2=0.9172 (inner cv R^2=0.7927), n_train=103,881, n_test=25,970
+[2026-09-06 06:57:47] repeat 0 fold 4: outer R^2=0.9190 (inner cv R^2=0.7927), n_train=103,881, n_test=25,970
+[2026-09-06 06:57:47] === zT (xgboost, kfold, scale=linear): repeated CV summary ===
+[2026-09-06 06:57:47] 1 repeats x 5 outer folds = 5 outer evaluations
+[2026-09-06 06:57:47] R^2 below computed in linear (raw) space.
+[2026-09-06 06:57:47] POOLED out-of-fold R^2 = 0.9184 (n=129,851 held-out predictions) -- all repeats combined into one number
+[2026-09-06 06:57:47] PER-REPEAT pooled R^2 = 0.9184 +/- nan (n=1 repeats: [0.9184]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-06 06:57:47] mean outer R^2 = 0.9184, std = 0.0012 (per-fold macro-average, secondary/diagnostic)
+[2026-09-06 06:57:47] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json)
+[2026-09-06 06:57:47] this call's new compute time: 87.7s

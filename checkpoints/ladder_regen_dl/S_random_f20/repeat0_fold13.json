@@ -1,0 +1,20 @@
+{
+  "repeat": 0,
+  "fold": 13,
+  "model_type": "xgboost",
+  "split_strategy": "random",
+  "target_scale": "linear",
+  "hyperparam_source": "frozen",
+  "n_train": 148675,
+  "n_test": 37169,
+  "outer_r2": 0.9586466677025133,
+  "inner_cv_r2": 0.7972220210002797,
+  "param_n_estimators": 500,
+  "param_max_depth": 10,
+  "param_learning_rate": 0.03183308682237681,
+  "param_subsample": 0.8969010059780653,
+  "param_colsample_bytree": 0.5061521655432422,
+  "param_min_child_weight": 4,
+  "param_reg_lambda": 0.6494186419907995,
+  "param_reg_alpha": 8.79300330033791
+}

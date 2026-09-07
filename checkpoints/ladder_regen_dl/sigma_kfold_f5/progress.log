@@ -1,0 +1,14 @@
+[2026-09-06 06:33:20] target=sigma (scale=log10): model_type=xgboost, 183,246 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/sigma.json), device=cuda
+[2026-09-06 06:33:47] repeat 0 fold 0: outer R^2=0.9141 (inner cv R^2=0.7490), n_train=146,596, n_test=36,650
+[2026-09-06 06:34:14] repeat 0 fold 1: outer R^2=0.9159 (inner cv R^2=0.7490), n_train=146,597, n_test=36,649
+[2026-09-06 06:34:41] repeat 0 fold 2: outer R^2=0.9145 (inner cv R^2=0.7490), n_train=146,597, n_test=36,649
+[2026-09-06 06:35:08] repeat 0 fold 3: outer R^2=0.9167 (inner cv R^2=0.7490), n_train=146,597, n_test=36,649
+[2026-09-06 06:35:35] repeat 0 fold 4: outer R^2=0.9140 (inner cv R^2=0.7490), n_train=146,597, n_test=36,649
+[2026-09-06 06:35:35] === sigma (xgboost, kfold, scale=log10): repeated CV summary ===
+[2026-09-06 06:35:35] 1 repeats x 5 outer folds = 5 outer evaluations
+[2026-09-06 06:35:35] R^2 below computed in log10 space (target=sigma trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-06 06:35:35] POOLED out-of-fold R^2 = 0.9150 (n=183,246 held-out predictions) -- all repeats combined into one number
+[2026-09-06 06:35:35] PER-REPEAT pooled R^2 = 0.9150 +/- nan (n=1 repeats: [0.9150]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-06 06:35:35] mean outer R^2 = 0.9150, std = 0.0012 (per-fold macro-average, secondary/diagnostic)
+[2026-09-06 06:35:35] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/sigma.json)
+[2026-09-06 06:35:35] this call's new compute time: 134.5s
