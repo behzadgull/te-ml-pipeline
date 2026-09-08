@@ -749,6 +749,123 @@ Implemented in `src/backtransform_check.py`; figure at
 - **Conclusion: the 0.127 gap is genuine multiplicative error
   propagation, not a back-transform artifact.**
 
+## Confirmed Results — External Validation, ESTM (Paper A item 6, ESTM COMPLETE)
+
+Protocol: refit-on-full-training-then-predict (no saved/serialized model
+exists anywhere in this repo — "frozen" means frozen hyperparameters,
+`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
+{S,sigma,kappa,zT}.json`). All four models refit on 100% of training
+(no holdout). sigma/kappa's Duan smearing factors come from ONE
+chemistry-cluster GroupKFold pass over full training data (frozen
+hyperparameters, seed=0, never retuned), calibrated and frozen before
+ESTM was touched. Implemented in `src/external_validation.py`.
+
+**Stated honestly: ESTM was touched by the frozen model twice, not
+once.** RUN1 (the intended single touch) only saved aggregate R²/n —
+`score_estm_pass()` discarded every per-row prediction. RUN2 was a
+logging-only re-run, adding per-row prediction saving with the model,
+hyperparameters, dedup, and ESTM set all held identical, and was
+certified to reproduce RUN1's aggregate R² to 4 decimals on every
+property/pass (bit-exact, 0.00e+00 diff on all 10 property/pass cells).
+RUN1's original output is retained as
+`checkpoints/external_validation/estm_results_RUN1_backup.json` for
+that audit trail. All numbers below are RUN2's (identical to RUN1's).
+
+Provenance: `checkpoints/external_validation/estm_results.json`
+(aggregate numbers), `checkpoints/external_validation/
+estm_predictions_pass{a,b}.npz` (per-row predictions, both passes).
+
+**Two dedup passes, never merged:**
+
+| Pass | Dropped rows | Surviving rows | Unique chemistry clusters surviving |
+|---|---|---|---|
+| (a) source-DOI | 1,416 | 3,123 | 505 |
+| (b) composition-cluster | 2,592 | 1,947 | 359 |
+
+**Per-property R², full-set vs. in-distribution** (in-distribution =
+within training's per-property support on S, sigma, kappa, and
+temperature simultaneously):
+
+| Pass | Property | Full R² | n | In-dist R² | n | OOD fraction |
+|---|---|---|---|---|---|---|
+| a | S | 0.5647 | 3,123 | 0.7501 | 2,709 | 2.4% |
+| a | sigma | 0.3986 | 3,123 | 0.6088 | 2,709 | 12.0% |
+| a | kappa | 0.6779 | 3,123 | 0.7240 | 2,709 | 2.9% |
+| a | zT_direct | 0.6658 | 3,123 | 0.6742 | 2,709 | — |
+| a | zT_derived | 0.2233 | 3,123 | 0.3166 | 2,709 | — |
+| b | S | 0.4217 | 1,947 | 0.6124 | 1,655 | 2.5% |
+| b | sigma | 0.2764 | 1,947 | 0.4471 | 1,655 | 13.5% |
+| b | kappa | 0.6264 | 1,947 | 0.6870 | 1,655 | 3.7% |
+| b | zT_direct | 0.5793 | 1,947 | 0.6053 | 1,655 | — |
+| b | zT_derived | −0.0188 | 1,947 | −0.0070 | 1,655 | — |
+
+Temperature contributes 0% OOD in either pass — `step3_filter_temperature`
+enforces training's exact 300-800K window on ESTM before anything else
+runs, so no temperature-driven exclusion happens later. Sigma is the
+dominant OOD contributor (12.0% pass a, 13.5% pass b) — ESTM's sigma
+tail reaches down to 4e-4 S/m, far below training's cleaned floor of
+~958 S/m.
+
+**Headline finding: a second, distinct inflation gap, beyond the
+random-vs-grouped gap the Five-Way Ladder already documents.** Pass
+(b) in-distribution — the strictest reading (novel chemistries,
+never-seen-conductivity-regime rows excluded) — against internal
+chemistry-cluster grouped CV:
+
+| Property | Internal grouped CV | ESTM pass (b), in-distribution | Drop |
+|---|---|---|---|
+| S | 0.8076 | 0.6124 | 0.1952 |
+| sigma | 0.7600 | 0.4471 | 0.3129 |
+| kappa | 0.8460 | 0.6870 | 0.1590 |
+| zT_direct | 0.7968 | 0.6053 | 0.1915 |
+
+Even chemistry-cluster grouped CV — this project's own honest ceiling,
+already measurably stricter than composition/random/k-fold per the
+Nadeau-Bengio test above — is itself optimistic relative to genuine
+cross-database transfer. This is a SECOND, independent inflation
+mechanism from the one the Five-Way Ladder documents: grouped CV
+controls for near-duplicate leakage within Starrydata2, but says
+nothing about whether the model generalizes to a differently-curated
+external database with its own measurement conventions, compound
+coverage, and digitization error.
+
+**sigma out-of-distribution handling**: report **0.4471 (in-support
+only, pass b)** as the sigma transfer number, not the 0.2764 full-set
+figure — the full-set number is dominated by extrapolation failure,
+not transfer failure. The 263 sub-floor rows (13.5% of pass b) carry
+**79.8% of total sigma SSE** (1,444.5 of 1,810.1, log10 space); their
+mean log-residual is **−2.04** (predictions ~2 orders of magnitude too
+HIGH), vs. +0.05 for in-support rows — the model extrapolates toward
+training's much higher typical conductivity when shown a
+near-insulating composition it never trained on. **State explicitly:
+the model does not extrapolate below its training conductivity floor
+of ~958 S/m — this is a scope limitation, not a silent failure mode.**
+
+**zT_derived: report the protocol-consistent frozen-smear number,
+−0.0070 (pass b, in-distribution), as the result — NOT the naive
++0.1681 figure.** Frozen smear factors (smear_sigma=1.2916,
+smear_kappa=1.0446) come from training's own chemistry-cluster
+out-of-fold residuals, calibrated and frozen BEFORE ESTM was touched,
+specifically so the correction never uses ESTM's own true values (using
+them would be test-set leakage on the external validation this
+calibrates). That protocol choice has a real, measured cost here:
+training's OOF residuals wanted a +0.111 log10 sigma correction, but
+ESTM's own in-support residuals only need about +0.058 — roughly half
+as much. Applying training's larger correction to ESTM overshoots, and
+the mis-calibrated correction makes derived-zT WORSE than no correction
+at all (naive back-transform R²=+0.1681; frozen-smear R²=−0.0070). Both
+are far below direct-zT's 0.6053 either way, so the pathway conclusion
+is unchanged. **This is the accepted trade-off of the leakage-avoidance
+protocol, not a bug**: retransformation bias is distribution-specific
+and does not transfer across databases, so a smear factor honestly
+calibrated without touching test labels will not be optimally
+calibrated for the test distribution. State this trade-off explicitly
+rather than silently reporting whichever number looks better.
+
+**ESTM external validation: COMPLETE.** teMatDb: PENDING — a separate
+dataset, not yet downloaded (item 6 requires both, each touched exactly
+once).
+
 ## Paper B — Cross-Family Generalization (FROZEN)
 
 **Core claim = two falsifiable questions, not vague "granularity"
