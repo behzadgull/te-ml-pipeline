@@ -133,15 +133,28 @@ def residual_distribution_stats(direct_resid, derived_resid):
     return stats
 
 
-def duan_smearing_correction(d):
+def duan_smearing_correction(d, smear_sigma=None, smear_kappa=None):
     """
     Apply Duan (1983) smearing to sigma/kappa's back-transform: multiply
     each 10^(log_pred) by mean(10^(held-out log residual)) before
     re-forming derived zT = (S_pred/1e6)^2 * sigma_pred * T / kappa_pred.
+
+    smear_sigma/smear_kappa: if given, used directly instead of being
+    computed from `d` -- for external validation, where the smear
+    factors must come from TRAINING out-of-fold residuals (frozen once,
+    reused as constants) rather than the external set's own true
+    values, since calibrating the correction on the same data it then
+    scores would be test-set leakage. `d` doesn't need
+    sigma_log_true/kappa_log_true in that case. Default (None) preserves
+    the original behavior exactly: compute both from `d`'s own
+    sigma_log_true/kappa_log_true, unchanged for every existing caller.
+
     Returns (zT_derived_pred_corrected, smear_sigma, smear_kappa).
     """
-    smear_sigma = float(np.mean(10.0 ** (d["sigma_log_true"] - d["sigma_log_pred"])))
-    smear_kappa = float(np.mean(10.0 ** (d["kappa_log_true"] - d["kappa_log_pred"])))
+    if smear_sigma is None:
+        smear_sigma = float(np.mean(10.0 ** (d["sigma_log_true"] - d["sigma_log_pred"])))
+    if smear_kappa is None:
+        smear_kappa = float(np.mean(10.0 ** (d["kappa_log_true"] - d["kappa_log_pred"])))
 
     sigma_pred_corrected = (10.0 ** d["sigma_log_pred"]) * smear_sigma
     kappa_pred_corrected = (10.0 ** d["kappa_log_pred"]) * smear_kappa
