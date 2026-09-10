@@ -685,6 +685,11 @@ R²_max computed per-property matched space (log10 for sigma/kappa,
 linear for S/zT — matching each property's confirmed R² scoring space,
 see item 3 above), Alleno et al. 2015 round-robin relative uncertainties
 as the noise reference. Implemented in `src/noise_floor.py`.
+Inputs (relative_uncertainty, sigma_noise, sigma_total, n_used per
+property/space, plus the input dataset path/SHA256 and checkpoint
+provenance) persisted at `results/noise_floor/20260910T134042/
+noise_floor_inputs.json`, computed against `data/processed/
+cleaned_ThermoelectricMaterials_2026-08-15.csv`.
 
 | Target | Scale | R²_max | Confirmed ceiling | Headroom |
 |---|---|---|---|---|
@@ -709,6 +714,38 @@ R²_max is a best-case upper bound: Alleno et al. is a single-compound
 true database noise is higher than this and true headroom is smaller
 than shown — state this direction explicitly wherever these numbers are
 cited, per item 3's frozen instruction.
+
+**COMBINED CEILING (measurement + digitization noise), added 2026-09-10.**
+
+| Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
+|---|---|---|---|---|---|
+| S                                  | 0.9974 | 0.963-0.981 | 0.960-0.979 | 0.8076 | 0.153-0.171 |
+| sigma                              | 0.9968 | 0.978-0.989 | 0.975-0.986 | 0.7600 | 0.215-0.226 |
+| kappa                              | 0.9776 | 0.981-0.990 | 0.958-0.968 | 0.8460 | 0.112-0.122 |
+| zT (vs ZT_author_declared)         | 0.9785 | 0.960-0.980 | 0.938-0.958 | 0.7968 | 0.141-0.162 |
+| zT (vs recomputed alpha^2*T/(rho*kappa)) | 0.9785 | 0.961-0.980 | 0.939-0.959 | 0.7968 | 0.142-0.162 |
+
+Digitization ceiling from composition-matched cross-database label
+agreement, teMatDb vs Starrydata2, restricted to 300-800 K, section N of
+reports/tematdb_inventory/inventory_report.md, commit 27ac09f. Per-property
+support: S 824 points / 86 samples; sigma 798 / 79; kappa 722 / 86; zT
+885 / 87 (declared) and 853 / 86 (recomputed). Each property's agreement
+was computed in the same space as its PAPER_SCALE entry (linear for S and
+zT, log10 for sigma and kappa); this was verified before combining, since
+the noise fractions are not additive across differing spaces. Lower bound
+of each range is raw agreement R^2; upper bound is (1+R2_agree)/2, which
+corrects for both labels being noisy under an equal-noise assumption.
+Combined via additive noise fractions: (1-R2_comb) = (1-R2_meas) +
+(1-R2_dig), valid because the Alleno round-robin measures inter-lab
+instrumental scatter and explicitly excludes digitization error, so the
+two terms are independent. Two zT rows are reported because teMatDb
+carries both an author-digitized zT and one recomputed from its own
+alpha, rho, kappa; they differ by 0.001, so target construction does not
+drive the result. The digitization fraction was measured on a
+narrower-variance subset (79-87 of 176 DOI-overlap samples) than the full
+database, so it overstates the penalty and the combined ceiling is
+conservative. Both terms remain lower bounds on total label noise: neither
+captures synthesis-to-synthesis variation.
 
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 

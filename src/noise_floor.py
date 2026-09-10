@@ -36,14 +36,19 @@ RELATIVE_UNCERTAINTY = {
     "zT": 0.18,
 }
 
-# Frozen chemistry-cluster pooled out-of-fold R^2 from CLAUDE.md's
-# "Confirmed Results -- Five-Way Ladder" table (XGBoost, frozen
-# hyperparameters).
+# Frozen chemistry-cluster pooled out-of-fold R^2, read directly from the
+# reproducible 2026-08-22 checkpoint set (25 repeat/fold predictions.npz
+# files per property, pooled) at checkpoints/saved_predictions/checkpoints/
+# {S,sigma,kappa,zT}_chemistry/ -- matches CLAUDE.md's "Confirmed Results --
+# Five-Way Ladder" table exactly (verified 2026-09-10). Do not restore the
+# prior values (S 0.8083, sigma 0.7522, kappa 0.8226, zT 0.7965) -- those
+# were the discarded orphaned run CLAUDE.md's ladder section documents as
+# superseded; this constant had drifted from them and was corrected here.
 CONFIRMED_CHEMISTRY_CLUSTER_R2 = {
-    "S": 0.8083,
-    "sigma": 0.7522,
-    "kappa": 0.8226,
-    "zT": 0.7965,
+    "S": 0.8076,
+    "sigma": 0.7600,
+    "kappa": 0.8460,
+    "zT": 0.7968,
 }
 
 # Which R2_max scale is apples-to-apples with each property's confirmed

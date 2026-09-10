@@ -1,0 +1,128 @@
+{
+  "generated_at_utc": "2026-09-10T13:40:42",
+  "input_dataset": {
+    "path": "data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv",
+    "sha256": "2a1af8b87e35e5e99c6c8684208a57e83169351237cef56c0fdaac10ad34f376",
+    "n_rows": 280348,
+    "note": "loaded via src/noise_floor.py::load_cleaned_dataset(), the same 2026-08-15 cleaned pull the confirmed ladder's featurized training CSV (featurized_ThermoelectricMaterials_2026-08-15.csv) derives from"
+  },
+  "confirmed_chemistry_cluster_r2_source": {
+    "checkpoint_dir": "checkpoints/saved_predictions/checkpoints/{S,sigma,kappa,zT}_chemistry/",
+    "method": "pooled out-of-fold R^2, computed directly from the 25 repeat*_fold*_predictions.npz files per property (5 repeats x 5 outer folds), concatenating every held-out (y_true, y_pred) pair and scoring once with sklearn.metrics.r2_score -- verified identical (to float precision) whether pooled flat across all 25 folds at once, or computed per-repeat (5 folds pooled per repeat) and then averaged across the 5 repeats",
+    "values": {
+      "S": 0.8076475931226255,
+      "sigma": 0.7600266209103556,
+      "kappa": 0.8460425404003986,
+      "zT": 0.7968093431799715
+    },
+    "per_repeat_std": {
+      "S": 0.0018,
+      "sigma": 0.0008,
+      "kappa": 0.0011,
+      "zT": 0.0030
+    },
+    "matches_claude_md_table": true,
+    "matches_prior_script_constant": false,
+    "note": "these values match CLAUDE.md's 'Confirmed Results -- Five-Way Ladder' / 'Confirmed Results -- Noise Floor' tables exactly (2026-09-10 verification); they do NOT match this repo's prior CONFIRMED_CHEMISTRY_CLUSTER_R2 constant (S 0.8083, sigma 0.7522, kappa 0.8226, zT 0.7965), which was the discarded orphaned chemistry-cluster run CLAUDE.md's ladder section documents as superseded. src/noise_floor.py was corrected to these values in this same change."
+  },
+  "results": {
+    "S": {
+      "log": {
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 0.06,
+        "sigma_total": 0.9030699688167088,
+        "n_used": 185148,
+        "n_dropped_nonpositive": 8,
+        "r2_max": 0.9955857217985844
+      },
+      "linear": {
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 8.992772,
+        "sigma_total": 176.94358280136092,
+        "n_used": 185156,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.9974170408861743
+      },
+      "paper_scale": "linear",
+      "paper_r2_max": 0.9974170408861743,
+      "confirmed_chemistry_cluster_r2": 0.8076475931226255,
+      "headroom": 0.18976944776354876
+    },
+    "sigma": {
+      "log": {
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 0.08,
+        "sigma_total": 1.4083457953756966,
+        "n_used": 182789,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.9967732793314961
+      },
+      "linear": {
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 3614.138328433917,
+        "sigma_total": 129421.03269252363,
+        "n_used": 182789,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.999220170212827
+      },
+      "paper_scale": "log",
+      "paper_r2_max": 0.9967732793314961,
+      "confirmed_chemistry_cluster_r2": 0.7600266209103556,
+      "headroom": 0.2367466584211405
+    },
+    "kappa": {
+      "log": {
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.11,
+        "sigma_total": 0.7345655360051956,
+        "n_used": 121031,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.977575422288059
+      },
+      "linear": {
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.21922845999999999,
+        "sigma_total": 1.967970839679019,
+        "n_used": 121031,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.987590435284806
+      },
+      "paper_scale": "log",
+      "paper_r2_max": 0.977575422288059,
+      "confirmed_chemistry_cluster_r2": 0.8460425404003986,
+      "headroom": 0.13153288188766042
+    },
+    "zT": {
+      "log": {
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.18,
+        "sigma_total": 1.4825188670084117,
+        "n_used": 129351,
+        "n_dropped_nonpositive": 51,
+        "r2_max": 0.9852584024002301
+      },
+      "linear": {
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.056976110999999996,
+        "sigma_total": 0.3883408872385709,
+        "n_used": 129402,
+        "n_dropped_nonpositive": 0,
+        "r2_max": 0.9784741966807317
+      },
+      "paper_scale": "linear",
+      "paper_r2_max": 0.9784741966807317,
+      "confirmed_chemistry_cluster_r2": 0.7968093431799715,
+      "headroom": 0.18166485350076016
+    }
+  },
+  "claude_md_cross_check": {
+    "claude_md_r2_max": {"S": 0.9974, "sigma": 0.9968, "kappa": 0.9776, "zT": 0.9785},
+    "freshly_computed_paper_r2_max_rounded": {"S": 0.9974, "sigma": 0.9968, "kappa": 0.9776, "zT": 0.9785},
+    "match_to_4_decimals": {"S": true, "sigma": true, "kappa": true, "zT": true},
+    "claude_md_headroom": {"S": 0.190, "sigma": 0.237, "kappa": 0.132, "zT": 0.182},
+    "freshly_computed_headroom_rounded": {"S": 0.190, "sigma": 0.237, "kappa": 0.132, "zT": 0.182},
+    "headroom_match_to_3_decimals": {"S": true, "sigma": true, "kappa": true, "zT": true}
+  },
+  "relative_uncertainty_source": "Alleno et al. 2015, Rev. Sci. Instrum. 86:011301, DOI 10.1063/1.4905250 -- ONE skutterudite compound round-robin, S ~6%, sigma ~8%, kappa ~11%, zT ~17-19% (midpoint 0.18 used)",
+  "note_units": "sigma_noise/sigma_total in 'log' rows are dimensionless (natural-log space); in 'linear' rows they carry the property's own units (S: microV/K, sigma: S/m, kappa: W/mK, zT: dimensionless)."
+}
