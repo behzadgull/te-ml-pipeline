@@ -1,0 +1,199 @@
+{
+  "step0": {
+    "tematdb_sha": "86a9bf979e35e2b9b0a4927bc50ad031edf84ad7",
+    "download_timestamp": "2026-09-09T14:21:05.952067",
+    "files": {
+      "teMatDb_collocatedTEPs.csv": {
+        "bytes": 4893361,
+        "sha256": "cc0cc7d363106a3849c266a8230721e2657534c97a56ffbe9c8a3eb1aaaf6fd9",
+        "rows": 56641,
+        "unique_sample_id": 272,
+        "expected_bytes": 4893361,
+        "expected_rows": 56641,
+        "expected_sample_ids": 272,
+        "matched_expected": true
+      },
+      "teMatDb_samples.csv": {
+        "bytes": 34995,
+        "sha256": "f65d0717864bee5702ad1e7815c658105d0e6e0e8397e35db19ae1d9a5195503",
+        "rows": 272,
+        "columns": 12,
+        "expected_bytes": 34995,
+        "expected_rows": 272,
+        "expected_columns": 12,
+        "matched_expected": true
+      }
+    }
+  },
+  "step2_doi_overlap": {
+    "n_tematdb_doi_before": 262,
+    "n_tematdb_doi_after": 262,
+    "expected_before": 262,
+    "n_training_doi_before": 5548,
+    "n_training_doi_after": 5548,
+    "n_tematdb_doi_strings_changed": 0,
+    "n_tematdb_doi_total": 272,
+    "n_training_doi_strings_changed": 0,
+    "n_training_doi_total": 279857,
+    "n_a0_samples_doi_in_training": 176,
+    "n_a_samples_doi_not_in_training": 96,
+    "thinned": {
+      "definition": "one row per (sample_id, temperature_bin), collocatedTEPs filtered to 300<=Temperature<=800, binned via step3_filter_temperature",
+      "n_total": 4195,
+      "n_a0": 2860,
+      "n_a": 1335
+    },
+    "group_value_counts_stratum_a": {
+      "Bi2Te3": 30, "PbTe": 12, "Selenide": 10, "GeTe": 10, "SKD": 8,
+      "Silicide": 4, "Telluride": 4, "Cu2Q": 4, "AgSbQ2": 3, "HH": 3,
+      "Mg3Sb2": 3, "SiGe": 2, "clathrate": 1, "Sr2Si2Te6": 1, "Oxide": 1
+    },
+    "group_value_counts_stratum_a0_context_only": {
+      "PbTe": 34, "Bi2Te3": 32, "SKD": 28, "GeTe": 12, "Silicide": 12,
+      "Telluride": 12, "Selenide": 10, "AgSbQ2": 9, "HH": 8, "Cu2Q": 7,
+      "Oxide": 2, "Sulfide": 2, "SiGe": 2, "etc": 1, "Element": 1,
+      "clathrate": 1, "Zintl": 1, "Mg3Sb2": 1, "MgAgSb": 1
+    }
+  },
+  "step3_cluster_overlap": {
+    "n_parsed": 184,
+    "n_failed": 88,
+    "n_unique_clusters_among_successes": 156,
+    "n_not_in_training_clusters": 36,
+    "order_of_magnitude_note": "failure count (88, 10^1) and not-in-training cluster count (36, 10^1) are the same order of magnitude",
+    "n_thinned_stratum_b": 549,
+    "exception_type_breakdown": {"ValueError": 88},
+    "n_failures_containing_parentheses": 16,
+    "n_failures_free_text_no_parentheses": 72
+  },
+  "step4_abscissa_agreement": {
+    "gate_result": "NOT skipped -- raw temperatures recoverable via existing step1_extract_and_filter_properties() on data/raw/ThermoelectricMaterials_curves.csv.gz",
+    "n_a0_samples": 176,
+    "n_a0_unique_doi": 169,
+    "n_matched_dois": 169,
+    "n_distances_compared": 49759,
+    "median_distance_K": 0.5996,
+    "p90_distance_K": 7.37116,
+    "max_distance_K": 400.60819,
+    "fraction_below_0.01K": 0.0121,
+    "used_2K_synthetic_grid_not_raw": true,
+    "rawTEPs_fetched": false
+  },
+  "round2": {
+    "A_repo_state_check": {
+      "git_status": "clean, only reports/ untracked",
+      "tracked_files_modified": 0,
+      "diff_stat_empty": true,
+      "diff_stat_cached_empty": true
+    },
+    "B_rawTEPs_fetch": {
+      "bytes": 537427,
+      "sha256": "ed907cd16ec9c7be1cc36e8e242f152b41485247fd581009db96b9b0b95d690c",
+      "rows": 14717,
+      "columns": ["sample_id", "tepname", "Temperature", "tepvalue"],
+      "unique_sample_id": 272,
+      "unique_tepname": ["ZT", "alpha", "kappa", "rho"],
+      "matched_expected": true
+    },
+    "C_abscissa_raw_sample_level": {
+      "property_mapping": {"alpha": ["S"], "kappa": ["kappa"], "ZT": ["zT"], "rho": ["rho", "sigma"]},
+      "n_a0_samples": 176,
+      "n_a0_unique_doi": 169,
+      "n_candidate_pairs": 1255,
+      "n_dois_with_gt1_pair": 167,
+      "per_tepname": {
+        "alpha": {"n_total_train_points": 17081, "n_dropped_out_of_range": 1965, "n_comparisons": 15116, "n_exact_0": 19, "n_below_1e-6K": 19, "n_below_0.01K": 55, "median_distance_K": 2.516039961014002, "p90_distance_K": 18.32346282194851},
+        "kappa": {"n_total_train_points": 13702, "n_dropped_out_of_range": 1859, "n_comparisons": 11843, "n_exact_0": 19, "n_below_1e-6K": 19, "n_below_0.01K": 58, "median_distance_K": 2.156099999999981, "p90_distance_K": 23.402214532533602},
+        "ZT": {"n_total_train_points": 13572, "n_dropped_out_of_range": 1275, "n_comparisons": 12297, "n_exact_0": 13, "n_below_1e-6K": 15, "n_below_0.01K": 73, "median_distance_K": 2.1041000000000167, "p90_distance_K": 19.12304000000001},
+        "rho": {"n_total_train_points": 16398, "n_dropped_out_of_range": 2129, "n_comparisons": 14269, "n_exact_0": 21, "n_below_1e-6K": 25, "n_below_0.01K": 61, "median_distance_K": 2.317804511278041, "p90_distance_K": 19.585140000000035}
+      },
+      "pooled": {"n_total_train_points": 60753, "n_dropped_out_of_range": 7228, "n_comparisons": 53525, "n_exact_0": 72, "n_below_1e-6K": 78, "n_below_0.01K": 247, "median_distance_K": 2.2743000000000393, "p90_distance_K": 19.726297765300796},
+      "own_scale_median_consecutive_gap_K": {"alpha": 25.444664031619993, "kappa": 29.0299749826265, "ZT": 27.289499999999975, "rho": 25.66354008828, "pooled": 26.228099578086017},
+      "note": "gap computed over full teMatDb_rawTEPs.csv (not restricted to a0), per-sample consecutive unique-temperature gaps pooled"
+    },
+    "D_stratify_by_parseable": {
+      "n_a0_all_272": 176,
+      "n_a_all_272": 96,
+      "n_a0_parseable": 122,
+      "n_a_parseable": 62,
+      "n_b_clusters": 36,
+      "n_b_samples": 36,
+      "n_failures_in_a0": 54,
+      "n_failures_in_a": 34,
+      "thinned_a0_parseable": 2027,
+      "thinned_a_parseable": 903,
+      "thinned_b": 549
+    },
+    "E1_stratum_b_characterization": {
+      "n_group_literal_match_in_training_clusters": 13,
+      "n_basemat_literal_match_in_training_clusters": 22,
+      "n_of_36": 36
+    },
+    "E2_failure_buckets": {
+      "composite_multi_phase": 55,
+      "free_text_descriptor": 14,
+      "range_or_inequality": 10,
+      "formula_with_decoration": 7,
+      "other": 2
+    }
+  },
+  "round3": {
+    "G1_best_match_per_tematdb_sample": {
+      "n_pairs_with_ge1_comparison": 1251,
+      "n_tematdb_samples_with_best_match": 176,
+      "min": 0.11105,
+      "p10": 0.52794,
+      "median": 1.337689,
+      "p90": 3.7569,
+      "max": 19.158,
+      "histogram_bin_edges": [0, 0.001, 0.01, 0.1, 1, 2, 5, 10, 25, "inf"],
+      "histogram_counts": [0, 0, 0, 65, 65, 34, 5, 7, 0]
+    },
+    "G2_exact_matches": {
+      "n_exact_zero_points": 72,
+      "n_distinct_tematdb_sample_ids": 18,
+      "n_distinct_candidate_pairs": 56,
+      "n_integer_temperatures": 71,
+      "n_multiple_of_5": 71,
+      "n_multiple_of_10": 68,
+      "n_multiple_of_25": 71,
+      "n_multiple_of_50": 68,
+      "train_decimal_places": {"0": 71, "2": 1},
+      "tematdb_decimal_places": {"0": 71, "2": 1},
+      "note": "the one non-integer exact match is 523.15K, exactly 250C -- a Celsius round-number artifact"
+    },
+    "G3_near_matches_0_to_0.01": {
+      "n_matches": 175,
+      "n_distinct_tematdb_sample_ids": 78,
+      "n_distinct_candidate_pairs": 141,
+      "n_integer_temperatures": 14,
+      "n_multiple_of_5": 12,
+      "n_multiple_of_10": 12,
+      "n_multiple_of_25": 12,
+      "n_multiple_of_50": 12,
+      "distance_min": 0.0,
+      "distance_median": 0.00440384,
+      "distance_max": 0.0099
+    },
+    "H_basemat_comparison": {
+      "training_side_quantity": "set(pd.read_csv(featurized_csv, usecols=['chemistry_cluster_id'])['chemistry_cluster_id'].dropna())",
+      "code_path": "stratum_b['BASEMAT'].isin(training_clusters)  -- literal string set-membership test",
+      "n_training_clusters": 12010,
+      "ill_posed": true,
+      "reason": "pymatgen's Composition(formula).reduced_formula reorders elements (e.g. PbTe -> TePb) -- the literal-string isin() test misses real matches purely due to ordering, and also happily mis-parses non-formula abbreviations (HH -> H2, SKD -> KHS) as if they were real chemistry",
+      "fourteen_reclassified": {
+        "PbTe_x4_false_negative_present_as_TePb": 4,
+        "family_abbreviation_or_template_meaningless_parse": 8,
+        "chemical_formula_with_placeholder_species_BiMI": 1,
+        "genuine_formula_no_match_even_reordered_Bi2O2Se": 1
+      },
+      "verdict": "the 14 'not in training' BASEMAT values from round 2 are UNRELIABLE as stated; only Bi2O2Se (sample 397) survives as a defensible novel-chemistry candidate after correcting for reordering and abbreviation artifacts"
+    },
+    "I_thinned_rows_parseable_strata": {
+      "a0_parseable": {"n_thinned": 2027, "alpha": 2027, "rho": 2027, "kappa": 2027, "ZT_author_declared": 2027},
+      "a_parseable": {"n_thinned": 903, "alpha": 903, "rho": 903, "kappa": 903, "ZT_author_declared": 903},
+      "b": {"n_thinned": 549, "alpha": 549, "rho": 549, "kappa": 549, "ZT_author_declared": 549},
+      "note": "100% property coverage in every stratum is expected: teMatDb_collocatedTEPs.csv is the co-interpolated grid by construction, not a raw sparse per-property table"
+    }
+  }
+}

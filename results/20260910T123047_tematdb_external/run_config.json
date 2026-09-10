@@ -1,0 +1,80 @@
+{
+  "tematdb_sha": "86a9bf979e35e2b9b0a4927bc50ad031edf84ad7",
+  "teMatDb_samples_csv_sha256": "f65d0717864bee5702ad1e7815c658105d0e6e0e8397e35db19ae1d9a5195503",
+  "teMatDb_collocatedTEPs_csv_sha256": "cc0cc7d363106a3849c266a8230721e2657534c97a56ffbe9c8a3eb1aaaf6fd9",
+  "frozen_hyperparameters": {
+    "S": {
+      "model_type": "xgboost",
+      "best_params": {
+        "n_estimators": 500,
+        "max_depth": 10,
+        "learning_rate": 0.03183308682237681,
+        "subsample": 0.8969010059780653,
+        "colsample_bytree": 0.5061521655432422,
+        "min_child_weight": 4,
+        "reg_lambda": 0.6494186419907995,
+        "reg_alpha": 8.79300330033791
+      }
+    },
+    "sigma": {
+      "model_type": "xgboost",
+      "best_params": {
+        "n_estimators": 550,
+        "max_depth": 10,
+        "learning_rate": 0.02669280098570686,
+        "subsample": 0.8676496872090056,
+        "colsample_bytree": 0.5166510752439176,
+        "min_child_weight": 4,
+        "reg_lambda": 0.8073661687820751,
+        "reg_alpha": 6.547909796510876
+      }
+    },
+    "kappa": {
+      "model_type": "xgboost",
+      "best_params": {
+        "n_estimators": 350,
+        "max_depth": 9,
+        "learning_rate": 0.05741815501967946,
+        "subsample": 0.9052182073106718,
+        "colsample_bytree": 0.7081730343531392,
+        "min_child_weight": 6,
+        "reg_lambda": 0.05444122226792827,
+        "reg_alpha": 3.3513428043937066
+      }
+    },
+    "zT": {
+      "model_type": "xgboost",
+      "best_params": {
+        "n_estimators": 500,
+        "max_depth": 9,
+        "learning_rate": 0.021879194372117446,
+        "subsample": 0.6803687069914941,
+        "colsample_bytree": 0.6984141242996358,
+        "min_child_weight": 4,
+        "reg_lambda": 1.7133930619789375,
+        "reg_alpha": 0.050328646865956124
+      }
+    }
+  },
+  "smear_factors": {
+    "sigma": 1.2916327964944954,
+    "kappa": 1.044639935350741
+  },
+  "smear_training_oof_r2": {
+    "sigma": 0.7589529288643196,
+    "kappa": 0.8458853941677181
+  },
+  "training_rows_used_for_refit": {
+    "S": 184803,
+    "sigma": 182530,
+    "kappa": 120894,
+    "zT": 129188
+  },
+  "training_csv": "data/processed/featurized_ThermoelectricMaterials_2026-08-15.csv",
+  "date": "2026-09-10",
+  "preflight": {
+    "P1": "PASS",
+    "P2": "PASS",
+    "P3": "PASS"
+  }
+}

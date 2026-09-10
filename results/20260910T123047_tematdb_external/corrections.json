@@ -1,0 +1,142 @@
+{
+  "K_clean_chemistry_transfer_stratum": {
+    "K1_cross_tab": {
+      "b_total": {"samples": 36, "clusters": 36},
+      "b_and_a0_DOI_in_training": {"samples": 11, "clusters": 11, "thinned_rows": 159, "sample_ids": [32, 57, 72, 78, 101, 104, 225, 226, 232, 291, 422]},
+      "b_and_a_DOI_not_in_training_CLEAN": {"samples": 25, "clusters": 25, "thinned_rows": 390, "sample_ids": [15, 91, 119, 141, 147, 153, 173, 201, 216, 228, 272, 302, 360, 361, 362, 364, 379, 392, 393, 396, 397, 406, 411, 418, 419]},
+      "row_check": "159 + 390 = 549 (matches stratum b total exactly)"
+    },
+    "K3_interpretability": "25 clusters in the clean subset, above the ~10-cluster threshold -- reported as a metric, not degraded to an inventory-only finding",
+    "K2_metrics": {
+      "b_and_a0": {
+        "n_rows": 159, "n_samples": 11, "n_clusters": 11,
+        "S": {"r2": 0.4339, "rmse": 124.7336, "mae": 91.0996, "n_rows": 159, "n_samples": 11, "r2_ci95": [-0.2272, 0.8026]},
+        "sigma_log10": {"r2": -0.2996, "rmse": 0.3883, "mae": 0.3107, "n_rows": 159, "n_samples": 11, "r2_ci95": [-4.1328, 0.4153]},
+        "kappa_log10": {"r2": 0.7245, "rmse": 0.1369, "mae": 0.0995, "n_rows": 159, "n_samples": 11, "r2_ci95": [0.1769, 0.9051]},
+        "zT_direct_vs_declared": {"r2": 0.4327, "rmse": 0.2468, "mae": 0.1930, "n_rows": 159, "n_samples": 11, "r2_ci95": [-0.1346, 0.7511]},
+        "zT_direct_vs_tep": {"r2": 0.4296, "rmse": 0.2462, "mae": 0.1885, "n_rows": 159, "n_samples": 11, "r2_ci95": [-0.1638, 0.7558]},
+        "zT_derived_vs_declared": {"r2": -1.1890, "rmse": 0.4847, "mae": 0.3799, "n_rows": 159, "n_samples": 11, "r2_ci95": [-3.4466, 0.0954]},
+        "zT_derived_vs_tep": {"r2": -1.1892, "rmse": 0.4824, "mae": 0.3768, "n_rows": 159, "n_samples": 11, "r2_ci95": [-3.3168, 0.0684]}
+      },
+      "b_and_a_CLEAN": {
+        "n_rows": 390, "n_samples": 25, "n_clusters": 25,
+        "S": {"r2": 0.7561, "rmse": 84.7486, "mae": 59.6404, "n_rows": 390, "n_samples": 25, "r2_ci95": [0.3875, 0.9156]},
+        "sigma_log10": {"r2": -0.2945, "rmse": 0.5326, "mae": 0.3484, "n_rows": 390, "n_samples": 25, "r2_ci95": [-2.0281, 0.5993]},
+        "kappa_log10": {"r2": 0.6281, "rmse": 0.1691, "mae": 0.1112, "n_rows": 390, "n_samples": 25, "r2_ci95": [0.0477, 0.8956]},
+        "zT_direct_vs_declared": {"r2": 0.5788, "rmse": 0.3336, "mae": 0.2299, "n_rows": 390, "n_samples": 25, "r2_ci95": [0.2287, 0.7907]},
+        "zT_direct_vs_tep": {"r2": 0.5820, "rmse": 0.3333, "mae": 0.2297, "n_rows": 390, "n_samples": 25, "r2_ci95": [0.2432, 0.7887]},
+        "zT_derived_vs_declared": {"r2": 0.2143, "rmse": 0.4557, "mae": 0.3053, "n_rows": 390, "n_samples": 25, "r2_ci95": [-0.4820, 0.6243]},
+        "zT_derived_vs_tep": {"r2": 0.2156, "rmse": 0.4566, "mae": 0.3073, "n_rows": 390, "n_samples": 25, "r2_ci95": [-0.4715, 0.6187]}
+      }
+    },
+    "note": "sigma remains negative in BOTH subsets (contaminated -0.2996 vs clean -0.2945, essentially identical) -- DOI leakage does not explain sigma's poor stratum-b performance. S and zT_direct are HIGHER in the clean subset than the contaminated one (S: 0.756 clean vs 0.434 contaminated; zT_direct: 0.579 vs 0.433) -- opposite direction from the leakage-inflation hypothesis for these two properties. kappa is somewhat lower in the clean subset (0.628 vs 0.725), the one property showing the expected direction, though the effect is modest. Reported as computed, no conclusion drawn about causation given the small sample sizes (11 and 25)."
+  },
+  "L_digitization_agreement_floor": {
+    "L1_survival": {
+      "S":     {"total_considered": 2260, "survived": 1759, "dropped_not_bracketed": 214, "dropped_bracketed_but_over_5K": 287},
+      "sigma": {"total_considered": 2119, "survived": 1712, "dropped_not_bracketed": 196, "dropped_bracketed_but_over_5K": 211},
+      "kappa": {"total_considered": 2020, "survived": 1591, "dropped_not_bracketed": 212, "dropped_bracketed_but_over_5K": 217},
+      "zT":    {"total_considered": 2005, "survived": 1626, "dropped_not_bracketed": 182, "dropped_bracketed_but_over_5K": 197},
+      "total_matched_points": 6688,
+      "tolerance_K": 5.0,
+      "method": "for each of the 176 round-3 best-match (teMatDb sample, training sample) pairs, teMatDb raw abscissae linearly interpolated against the training curve (np.interp), restricted to points within the training curve's bracket AND within 5K of the nearest training abscissa"
+    },
+    "L2_full_range": {
+      "S":     {"r2": 0.7347, "rmse": 99.4906, "mae": 34.2380, "n_points": 1759, "n_samples": 157, "r2_ci95": [0.5076, 0.8928]},
+      "sigma": {"r2": 0.5275, "rmse": 0.2996,  "mae": 0.1352,  "n_points": 1712, "n_samples": 147, "r2_ci95": [0.1704, 0.7459]},
+      "kappa": {"r2": 0.8950, "rmse": 0.0979,  "mae": 0.0538,  "n_points": 1591, "n_samples": 156, "r2_ci95": [0.8474, 0.9352]},
+      "zT":    {"r2": 0.7176, "rmse": 0.2450,  "mae": 0.1240,  "n_points": 1626, "n_samples": 144, "r2_ci95": [0.5476, 0.8295]}
+    },
+    "L2_300_800K": {
+      "S":     {"r2": 0.7175, "rmse": 102.5843, "mae": 36.0191, "n_points": 1574, "n_samples": 156, "r2_ci95": [0.4972, 0.8850]},
+      "sigma": {"r2": 0.4728, "rmse": 0.3069,   "mae": 0.1399,  "n_points": 1549, "n_samples": 145, "r2_ci95": [0.0483, 0.7184]},
+      "kappa": {"r2": 0.8951, "rmse": 0.0975,   "mae": 0.0535,  "n_points": 1441, "n_samples": 156, "r2_ci95": [0.8472, 0.9362]},
+      "zT":    {"r2": 0.7366, "rmse": 0.2306,   "mae": 0.1196,  "n_points": 1501, "n_samples": 144, "r2_ci95": [0.5866, 0.8383]}
+    },
+    "L3_sanity_gate": {
+      "scored_a0_r2": {"S": 0.9354, "sigma": 0.7505, "kappa": 0.9094, "zT": 0.8480},
+      "label_agreement_r2_300_800K": {"S": 0.7175, "sigma": 0.4728, "kappa": 0.8951, "zT": 0.7366},
+      "label_agreement_r2_full_range": {"S": 0.7347, "sigma": 0.5275, "kappa": 0.8950, "zT": 0.7176},
+      "gate_triggered": {"S": true, "sigma": true, "kappa": true, "zT": true},
+      "verdict": "TRIGGERED FOR ALL FOUR PROPERTIES -- the scored (a0) R2 exceeds the model-free digitization-agreement R2 for S, sigma, kappa, and zT alike. Reported prominently, not fixed. Two candidate explanations exist and neither is adjudicated here: (1) the L1 matching (best-pair selection + interpolation + 5K tolerance) may be flawed; (2) the (a0) stratum's model score is itself inflated because the frozen model was refit on 100% of training, which contains the exact DOIs (a0) is scored against -- the contamination concern stated at the top of section L. Both remain open.",
+      "STATUS": "SUPERSEDED -- see section N below. L1 selected training counterparts by smallest median TEMPERATURE distance, without using composition at all; most DOIs map one teMatDb sample to many training samples of DIFFERENT compositions from the same paper, so the L1/L2/L3 numbers above measured composition similarity within a paper, not digitization agreement. Discarded, not deleted, for audit continuity."
+    }
+  },
+  "N_composition_matched_digitization_agreement": {
+    "N1_identity_pairing": {
+      "method": "canonicalize teMatDb Composition_detailed and every training composition sharing the sample's DOI via parse_formula -> composition_id (pymatgen reduced_formula, identical mechanism on both sides); pair only where the two canonical reduced formulas are string-equal. DOI-sharing candidate universe reused unchanged from round 3's G1 (1,251 candidate pairs spanning all 176 stratum-a0 teMatDb samples).",
+      "n_a0_samples_doi_in_training": 176,
+      "n_a0_samples_composition_parseable": 122,
+      "n_a0_samples_composition_parse_failed": 54,
+      "n_candidate_pairs_doi_shared": 1251,
+      "n_candidate_pairs_composition_match": 197,
+      "n_teMatDb_samples_with_ge1_composition_match": 96,
+      "n_teMatDb_samples_doi_in_training_but_no_composition_match": 80,
+      "matches_per_sample_distribution": {"1": 72, "2": 8, "3": 3, "4": 3, "5": 2, "6": 3, "7": 2, "12": 1, "14": 1, "20": 1},
+      "below_20_sample_threshold": false,
+      "pair_selection_for_point_matching": "one training sample_id per teMatDb sample: among that sample's composition-identical candidates only, the smallest pair-median temperature distance (round 3's G1 metric) is used purely as a tie-break among already-identical compositions, never to select across different compositions -- 96 selected pairs, one per matched teMatDb sample."
+    },
+    "N2_matched_point_survival": {
+      "tolerance_K": 5.0,
+      "declared_streams": {
+        "S":     {"total_considered": 1215, "survived": 913, "dropped_not_bracketed": 128, "dropped_bracketed_but_over_5K": 174},
+        "sigma": {"total_considered": 1137, "survived": 884, "dropped_not_bracketed": 118, "dropped_bracketed_but_over_5K": 135},
+        "kappa": {"total_considered": 1035, "survived": 791, "dropped_not_bracketed": 105, "dropped_bracketed_but_over_5K": 139},
+        "zT_declared": {"total_considered": 1198, "survived": 949, "dropped_not_bracketed": 121, "dropped_bracketed_but_over_5K": 128}
+      },
+      "zT_tep_recompute": {
+        "method": "teMatDb's own alpha/rho/kappa raw curves (same sample_id) linearly interpolated onto that sample's own ZT raw abscissa, bracket-only (no 5K tolerance needed, intra-sample/intra-database interpolation); zt_tep = alpha^2 * temperature_K / (rho * kappa), alpha in raw V/K (SI units, matching the same formula already used in the scoring task's zt_tep field).",
+        "n_zt_abscissa_considered": 1264,
+        "n_recompute_succeeded_all_3_components_bracket": 1125,
+        "n_recompute_failed_component_does_not_bracket": 139,
+        "then_matched_against_training_declared_zT": {"total_considered": 1071, "survived": 902, "dropped_not_bracketed": 49, "dropped_bracketed_but_over_5K": 120}
+      },
+      "total_matched_points_declared": 3537,
+      "total_matched_points_zT_tep": 902
+    },
+    "N3_label_agreement_composition_matched": {
+      "note": "sigma/kappa in log10 space, S/zT linear; bootstrap 95% CI resampled at teMatDb sample_id level, 2000 draws",
+      "S":           {"full_range": {"r2": 0.9661, "rmse": 36.5586, "mae": 7.9248, "n_points": 913, "n_samples": 87, "n_distinct_dois": 85, "r2_ci95": [0.8965, 0.9984]},
+                       "300_800K":   {"r2": 0.9628, "rmse": 38.3041, "mae": 8.2368, "n_points": 824, "n_samples": 86, "n_distinct_dois": 84, "r2_ci95": [0.8825, 0.9985]}},
+      "sigma_log10": {"full_range": {"r2": 0.9788, "rmse": 0.0695, "mae": 0.0257, "n_points": 884, "n_samples": 80, "n_distinct_dois": 78, "r2_ci95": [0.9497, 0.9956]},
+                       "300_800K":   {"r2": 0.9777, "rmse": 0.0688, "mae": 0.0255, "n_points": 798, "n_samples": 79, "n_distinct_dois": 77, "r2_ci95": [0.9501, 0.9943]}},
+      "kappa_log10": {"full_range": {"r2": 0.9791, "rmse": 0.0441, "mae": 0.0172, "n_points": 791, "n_samples": 86, "n_distinct_dois": 84, "r2_ci95": [0.9553, 0.9941]},
+                       "300_800K":   {"r2": 0.9806, "rmse": 0.0419, "mae": 0.0162, "n_points": 722, "n_samples": 86, "n_distinct_dois": 84, "r2_ci95": [0.9570, 0.9952]}},
+      "zT_vs_declared": {"full_range": {"r2": 0.9504, "rmse": 0.0969, "mae": 0.0313, "n_points": 949, "n_samples": 87, "n_distinct_dois": 86, "r2_ci95": [0.8932, 0.9874]},
+                          "300_800K":   {"r2": 0.9597, "rmse": 0.0864, "mae": 0.0297, "n_points": 885, "n_samples": 87, "n_distinct_dois": 86, "r2_ci95": [0.9071, 0.9892]}},
+      "zT_vs_recomputed_TEP": {"full_range": {"r2": 0.9514, "rmse": 0.0952, "mae": 0.0358, "n_points": 902, "n_samples": 86, "n_distinct_dois": 85, "r2_ci95": [0.8953, 0.9876]},
+                                "300_800K":   {"r2": 0.9607, "rmse": 0.0847, "mae": 0.0342, "n_points": 853, "n_samples": 86, "n_distinct_dois": 85, "r2_ci95": [0.9067, 0.9899]}}
+    },
+    "N4_diagnostic_old_pairs_composition_differ_subset": {
+      "method": "old round-3 temperature-proximity best-match pairs (176, one per a0 sample), classified by whether their canonical compositions agree; metrics recomputed via the OLD L1 matched-points table restricted to pairs where compositions DIFFER, no re-matching performed",
+      "n_old_pairs_composition_differ": 61,
+      "n_old_pairs_composition_same_by_coincidence": 52,
+      "n_old_pairs_composition_unknown_unparseable": 63,
+      "metrics_on_differ_subset": {
+        "S":     {"r2": 0.6451, "rmse": 109.1541, "mae": 43.2786, "n_points": 662, "n_samples": 54, "r2_ci95": [0.2912, 0.9046]},
+        "sigma_log10": {"r2": 0.1801, "rmse": 0.3635, "mae": 0.1925, "n_points": 630, "n_samples": 51, "r2_ci95": [-0.7845, 0.6710]},
+        "kappa_log10": {"r2": 0.8534, "rmse": 0.1070, "mae": 0.0684, "n_points": 542, "n_samples": 54, "r2_ci95": [0.7258, 0.9265]},
+        "zT":    {"r2": 0.5923, "rmse": 0.2613, "mae": 0.1620, "n_points": 602, "n_samples": 53, "r2_ci95": [0.3389, 0.7668]}
+      },
+      "side_by_side_gap_composition_matched_minus_differ_subset": {
+        "S": "0.963-0.966 (matched) vs 0.645 (differ) -- gap ~0.32",
+        "sigma": "0.978-0.979 (matched) vs 0.180 (differ) -- gap ~0.80, LARGEST",
+        "kappa": "0.979-0.981 (matched) vs 0.853 (differ) -- gap ~0.13, SMALLEST",
+        "zT": "0.950-0.961 (matched) vs 0.592 (differ) -- gap ~0.36"
+      },
+      "verdict": "Confirms the diagnosis: composition-matched agreement is much higher for every property, and the gap size orders exactly as predicted -- sigma (most composition-sensitive) shows the largest gap, kappa (least composition-sensitive) shows the smallest. Reported, not adjudicated further."
+    },
+    "N5_sanity_gate_rerun": {
+      "scored_a0_r2": {"S": 0.9354, "sigma": 0.7505, "kappa": 0.9094, "zT": 0.8480},
+      "composition_matched_label_agreement_r2": {
+        "S": {"full": 0.9661, "300_800K": 0.9628},
+        "sigma": {"full": 0.9788, "300_800K": 0.9777},
+        "kappa": {"full": 0.9791, "300_800K": 0.9806},
+        "zT_vs_declared": {"full": 0.9504, "300_800K": 0.9597},
+        "zT_vs_tep": {"full": 0.9514, "300_800K": 0.9607}
+      },
+      "gate_triggered": {"S": false, "sigma": false, "kappa": false, "zT_vs_declared": false, "zT_vs_tep": false},
+      "verdict": "NOT TRIGGERED for any property under the corrected composition-matched agreement floor. The scored (a0) R2 now sits comfortably BELOW the digitization-agreement ceiling for every property, the expected/sane ordering (a model cannot exceed the floor set by independent-digitization noise). This reverses the previous section-L finding and is consistent with explanation (1) from the original L3 gate (the temperature-proximity matching was flawed), not explanation (2) (a0 contamination) -- though N does not itself rule out some degree of (a0) contamination, since the corrected floor no longer constrains it either way. Report, do not fix further."
+    }
+  }
+}

@@ -1,0 +1,89 @@
+sample_id,Composition_detailed,GROUP,exception_type,exception_message
+12,Bi0.5Sb1.5Te3 + 25wt% Te,Bi2Te3,ValueError, + 25wt%  is an invalid formula!
+13,Te + As-doping,Element,ValueError,could not convert string to float: '-'
+18,NaxPb1-xTe (0.5% < x < 2%),PbTe,ValueError,0.5% < x < 2% is an invalid formula!
+19,BiSbTe alloy,Bi2Te3,ValueError,alloy is an invalid formula!
+25,Pb0.975Na0.025S+3mol% CdS,Sulfide,ValueError,+3mol%  is an invalid formula!
+35,inorganic ligand capped Bi2Te3,Bi2Te3,ValueError,inorganic ligand capped  is an invalid formula!
+36,micro-grain and nano-grain Bi0.5Sb1.5Te3,Bi2Te3,ValueError,micro-grain and nano-grain  is an invalid formula!
+39,Bi0.5Sb1.5Te3 + 0.2wt% Mn-decorated,Bi2Te3,ValueError,could not convert string to float: '-'
+41,Bi2Te3 + 2.0vol% Ag NPs,Bi2Te3,ValueError, + 2.0vol%  is an invalid formula!
+42,Bi2Te3(ZM) 85wt% + Bi2Te3 nanotube 15wt%,Bi2Te3,ValueError,wt% +  nanotube 15wt% is an invalid formula!
+43,Bi0.5Sb1.5Te3 + 0.05wt% Ag,Bi2Te3,ValueError, + 0.05wt%  is an invalid formula!
+45,nanostructured Bi2Te3/MnTe2 composite,Bi2Te3,ValueError,nanostructured / composite is an invalid formula!
+47,Bi2Te2.85Se0.15 : I 0.005,Bi2Te3,ValueError, :  is an invalid formula!
+49,Bi2Te2.7Se0.3 : I 0.0075,Bi2Te3,ValueError, :  is an invalid formula!
+51,Bi2Te2.85Se0.15 : I0.005,Bi2Te3,ValueError, :  is an invalid formula!
+52,Bi2Te3 + 5.0vol% Bi NPs,Bi2Te3,ValueError, + 5.0vol%  is an invalid formula!
+54,(Bi2Te3)85(Bi2Se3)15 nanoflakes,Bi2Te3,ValueError, nanoflakes is an invalid formula!
+55,Bi0.48Sb1.52Te3 + 1 at% Fe,Bi2Te3,ValueError, + 1 at%  is an invalid formula!
+60,Bi2Te3 nanowires (heat-treated twin-containing NWs),Bi2Te3,ValueError,heat-treated twin-containing  is an invalid formula!
+65,Bi0.48Sb1.52Te3 + 4mol% WSe2,Bi2Te3,ValueError, + 4mol%  is an invalid formula!
+66,Bi2Te3 ingots,Bi2Te3,ValueError, ingots is an invalid formula!
+71,Bi2Te3 nanowires ,Bi2Te3,ValueError, nanowires  is an invalid formula!
+74,Bi2Te2.4 nanorods,Bi2Te3,ValueError, nanorods is an invalid formula!
+83,PbTe +3at% In,PbTe,ValueError,+3at%  is an invalid formula!
+86,PbTe(1-x)Brx,PbTe,ValueError,1-x is an invalid formula!
+88,PbTe + 5 at% Bi,PbTe,ValueError,+ 5 at%  is an invalid formula!
+90,PbTe:Bi2Te3=27:1 barbell nanowire,PbTe,ValueError,:=27:1 barbell nanowire is an invalid formula!
+99,PbTe-Sb2Te3 alloy (Pb2Sb6Te11),PbTe,ValueError,could not convert string to float: '-'
+100,PbTe + 3mol% BaTe +1mol% Na2Te,PbTe,ValueError,+ 3mol% +1mol%  is an invalid formula!
+103,NaxPb1-xTe (0.5% < x < 2%),PbTe,ValueError,0.5% < x < 2% is an invalid formula!
+108,Pb0.96Mn0.04Te : Na,PbTe,ValueError,:  is an invalid formula!
+109,Pb1-xLaxTe (0<x<0.01),PbTe,ValueError,0<x<0.01 is an invalid formula!
+111,PbSe0:5Te0:5 + 0.05mol% PbI2,PbTe,ValueError,:5:5 + 0.05mol%  is an invalid formula!
+115,PbTe0.7S0.3 + 2.5mol% K,PbTe,ValueError, + 2.5mol%  is an invalid formula!
+118,"PbTe−Ag2Te nanocomposites,",PbTe,ValueError,"−nanocomposites, is an invalid formula!"
+121,PbSe:Al0.01,Selenide,ValueError,: is an invalid formula!
+123,Al0:03PbTe,PbTe,ValueError,:03 is an invalid formula!
+134,Sn0.97In0.015Cd0.015Te + 3% CdS,Telluride,ValueError,+ 3%  is an invalid formula!
+136,SnSe + 1% PbSe,Selenide,ValueError,+ 1%  is an invalid formula!
+143,Pb0.5Sn0.5Te + 0.03at% In,PbTe,ValueError,+ 0.03at%  is an invalid formula!
+144,Pb0.5Sn0.5Te + Te,PbTe,ValueError,+  is an invalid formula!
+146,(GeTe)0.95(BiTe)0.05 + 0.67at% Cu,GeTe,ValueError, + 0.67at%  is an invalid formula!
+149,"Ge0.53Ag0.13Sb0.27□0.07Te1, Ge4AgSb2Te7.5",GeTe,ValueError,"□0.07,  is an invalid formula!"
+185,Mg2Si:Sb = 1:x(0.001≤x≤0.02),Silicide,ValueError,0.001≤x≤0.02 is an invalid formula!
+187,Mg2Si1-x-yGexSny,Silicide,ValueError,could not convert string to float: '1-'
+188,Mg2Si0.4−xSn0.6Sbx  (0≤x≤0.015) ,Silicide,ValueError,0≤x≤0.015 is an invalid formula!
+189,Mg2−xLaxSi0.58Sn0.42 (0≤x≤0.015),Silicide,ValueError,0≤x≤0.015 is an invalid formula!
+248,Bi2Te2.7Se0.3 1.5vol%MgO,Bi2Te3,ValueError, 1.5vol% is an invalid formula!
+249,Bi0.4Sb1.6Te3 0.3vol%Cu2Se,Bi2Te3,ValueError, 0.3vol% is an invalid formula!
+250,Bi0.4Sb1.6Te3 0.2vol%CuO,Bi2Te3,ValueError, 0.2vol% is an invalid formula!
+255,Bi0.7Sb1.3Te3 + 0.01at%Pb ,Bi2Te3,ValueError, + 0.01at% is an invalid formula!
+256,Bi0.48Sb1.52Te3 1wt%Cu,Bi2Te3,ValueError, 1wt% is an invalid formula!
+264,BiSbTe + GeTe(nano),Bi2Te3,ValueError,nano is an invalid formula!
+265,0.3wt%Bi + Pb0.9Ge0.1Te,GeTe,ValueError,0.3wt%+  is an invalid formula!
+266,0.3wt%Bi + Pb0.85Ge0.15Te,GeTe,ValueError,0.3wt%+  is an invalid formula!
+279,Bi2Te3 0.1vol%SiC,Bi2Te3,ValueError, 0.1vol% is an invalid formula!
+282,Yb0.26Co4Sb12 / 0.2GaSb,SKD,ValueError, / 0.2 is an invalid formula!
+283,SiGe nanopowder,SiGe,ValueError,nanopowder is an invalid formula!
+294,Cu2Se1-xIx,Cu2Q,ValueError,could not convert string to float: '1-'
+312,Bi0.07Ge0.90Te-873,GeTe,ValueError,Amounts in Composition cannot be negative!
+313,"Single-layer Sb2Si2Te6, calculation, ",Sr2Si2Te6,ValueError,could not convert string to float: '-'
+330,Na0.03Sn0.965Se purified,Selenide,ValueError,purified is an invalid formula!
+331,SnSe1-xBrx (x=0-0.03),Selenide,ValueError,x=0-0.03 is an invalid formula!
+351,Mg3.3Bi1.298Sb0.7Te0.002+Mg3.3Bi1.498Sb0.5Te0.002,Mg3Sb2,ValueError,+ is an invalid formula!
+354,0.35%BaFeO-NP / Ba0.3In0.3Co4Sb12,SKD,ValueError,could not convert string to float: '-'
+355,Pb0.98Na0.02Te-8%SrTe,PbTe,ValueError,% is an invalid formula!
+365,Bi1.8Sb0.2Te2.7Se0.3 + 15 wt% Te,Bi2Te3,ValueError, + 15 wt%  is an invalid formula!
+367,Pb0.98K0.02Se + 6% CdSe,Selenide,ValueError,+ 6%  is an invalid formula!
+368,SnSe0.95 + 1% PbBr2,Selenide,ValueError, + 1%  is an invalid formula!
+369,PbSe + 3% CdSe,Selenide,ValueError,+ 3%  is an invalid formula!
+374,Cu2Se + 1 mol% In,Cu2Q,ValueError,+ 1 mol%  is an invalid formula!
+375,PbTe0.998I0.002 + 3% Sb composite,PbTe,ValueError, + 3% composite is an invalid formula!
+376,Sn0.97Bi0.03Te + 3% PbTe,Telluride,ValueError,+ 3%  is an invalid formula!
+380,PbTe + 4% MnTe,PbTe,ValueError,+ 4%  is an invalid formula!
+387,Sn0.98Bi0.02Te + 3% HgTe,Telluride,ValueError,+ 3%  is an invalid formula!
+389,Sb2Si2Te6 / Si2Te3,Telluride,ValueError, /  is an invalid formula!
+399,Pb0.988Sb0.012Te + 13% GeTe,PbTe,ValueError,+ 13%  is an invalid formula!
+400,Sn0.99Na0.01Se + 1 mol% Ag8SnSe6,Selenide,ValueError,+ 1 mol%  is an invalid formula!
+401,(PbTe)81Sb2Te3 + 0.6Sb + 2Cu2Te,PbTe,ValueError, + 0.6+ 2 is an invalid formula!
+402,Bi0.4Sb1.6Te3 + 1 vol% Ti3C2Tx,Bi2Te3,ValueError, + 1 vol%  is an invalid formula!
+404,Cu2Se1.005 + 0.1 mol% BiCuSeO,Cu2Q,ValueError, + 0.1 mol%  is an invalid formula!
+407,PbTe + 4% InSb,PbTe,ValueError,+ 4%  is an invalid formula!
+408,Yb0.3Co4Sb12 + 20% Sb,SKD,ValueError, + 20%  is an invalid formula!
+412,((Fe0.95Co0.05)0.27Si0.73)0.94Ge0.06 + 1 at% Sb,Silicide,ValueError, + 1 at%  is an invalid formula!
+420,SnSe + 12% PbSe,Selenide,ValueError,+ 12%  is an invalid formula!
+421,Bi0.5Sb1.5Te3 + 0.6 wt% B,Bi2Te3,ValueError, + 0.6 wt%  is an invalid formula!
+423,SnSe0.95 + 2% PbBr2,Selenide,ValueError, + 2%  is an invalid formula!
+424,Ba0.3In0.3Co4Sb12+0.1%Co,SKD,ValueError,+0.1% is an invalid formula!
