@@ -43,6 +43,13 @@ featurized_ThermoelectricMaterials_2026-08-15.csv`
   (`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
   {S,sigma,kappa,zT}.json`).
 - Gitignored (`checkpoints/`), local-only, not on GitHub.
+- Backed up as a private Kaggle dataset:
+  `muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a`, verified
+  byte-identical 2026-09-11 (SHA256
+  `e97406fa5223efa466d1e3fe4ffb2b1bc0303dc94b6adac6a824a643a9156f8d`,
+  975,062,560 bytes). Kaggle input path:
+  `/kaggle/input/datasets/muhammadbehzadgull/
+  te-ml-pipeline-canonical-dataset-a/`.
 
 **File B -- used for ESTM/teMatDb external validation and the noise-floor
 inputs, NOT what produced the confirmed ladder**: `data/processed/
@@ -77,14 +84,65 @@ visibly different at the source, not only after processing:
 | File A (2026-08-22 pull) | 9,494 | 55,261 | 156,101 |
 | File B (2026-08-15 pull) | 9,481 | 55,166 | 155,758 |
 
-**OPEN ITEM (2026-09-11)**: ESTM external validation, the teMatDb
-inventory and scoring, and the noise-floor inputs are all scheduled to be
-re-run against File A so that every Paper A result derives from a single
-dataset. Until that is done, the confirmed ladder and noise-floor ceiling
-derive from File A while the external-validation numbers and sigma_total
-derive from File B. The difference is under 0.2% of rows on every target
-and is not expected to move any reported value materially, but it must
-not be described as a single dataset until the re-run is complete.
+**CLOSED (2026-09-11)**: ESTM external validation, the teMatDb inventory
+and scoring, and the noise-floor inputs were all re-run against File A.
+New output, each in its own timestamped directory, none overwriting the
+File B-era artifacts named above:
+- `results/noise_floor/20260911T114356/` (noise-floor inputs)
+- `results/20260911T114356_estm_external_fileA/` (ESTM)
+- `results/20260911T114356_tematdb_inventory_fileA/` (teMatDb DOI/cluster
+  overlap + composition-matched digitization agreement, section N)
+- `results/20260911T114356_tematdb_scoring_fileA/` (teMatDb 3-stratum
+  scoring)
+
+**Reimplementation verified faithful, not just dataset-swapped.** The
+File A re-runs called `dry_run_inventory()` / `compute_training_smear_factors()`
+/ `fit_frozen_external_model()` / `score_estm_pass()` directly (a
+reimplemented orchestration sequence, not the original
+`run_full_validation()` or the no-longer-on-disk `tematdb_scoring.py` --
+see SCRIPT PROVENANCE below), so a control run pointed the SAME script at
+File B (unmodified defaults, no override) and compared its output against
+the original: `results/20260911T134500_estm_control_fileB/`,
+`results/20260911T134500_tematdb_control_fileB/`. Result: every point
+estimate bit-identical to the original (`diff = 0.0` exactly) -- smear
+factors, dedup counts, R², RMSE, MAE, n, and every numeric per-row
+prediction field across all 5,070 ESTM rows (both dedup passes) and all
+3,479 teMatDb rows (all three strata). The one exception: teMatDb's
+bootstrap-CI bounds differ by up to 0.020 -- an artifact of
+`bootstrap_r2_ci` being freshly written for this task rather than
+reproducing whatever the original (no-longer-on-disk) script used,
+confined entirely to that one resampling diagnostic, never touching a
+point estimate. Conclusion: every File A vs. File B delta reported below
+is pure dataset effect, not reimplementation noise.
+
+**Strata membership is invariant between snapshots.** teMatDb's DOI
+overlap, cluster overlap, and composition-matched digitization strata are
+identical whether measured against File A or File B: |a0|/|a| = 176/96,
+a0-parseable/a-parseable = 122/62, parsed/failed = 184/88, unique clusters
+among successes = 156, not-in-training clusters = 36 -- the exact same
+36-sample stratum-b set, zero additions or removals. Section N's
+composition-matched denominator is likewise identical: 96 of 176 samples,
+identical matches-per-sample distribution. Only the *scored values* --
+what the frozen model, refit on each snapshot, actually predicts -- move;
+which rows belong to which stratum does not.
+
+**Largest observed deltas, by category** (File A minus File B, or the
+directional swing where sign flips):
+
+| Category | Largest \|delta\| | Where |
+|---|---|---|
+| Noise-floor R2_max / headroom | 0.00015 | kappa headroom |
+| ESTM R2 (S, sigma, kappa, zT_direct) | 0.017 | pass (b), kappa |
+| ESTM zT_derived | 0.12, sign flip | pass (b): -0.019 -> +0.101 |
+| teMatDb scoring R2 | 0.063 | stratum b, S |
+| teMatDb digitization agreement (section N) | 0.023 | zT, recomputed TEP |
+
+**File A results are now canonical for every Paper A number.** The File B
+outputs listed above (`checkpoints/external_validation/`,
+`results/20260910T123047_tematdb_external/`,
+`results/noise_floor/20260910T134042/`) are retained on disk for
+comparison and audit, not deleted, but are superseded as of this entry --
+do not cite them as the current confirmed value for anything.
 
 **Standing rule: `src/data_acquisition.py` must NOT be re-run for any
 Paper A result.** It pulls Starrydata2's GitHub "latest" release tag,
@@ -94,6 +152,50 @@ parameter anywhere in `acquire()` -- a fresh pull on any day other than
 (e.g. for the Kaggle bit-identity gate), save the output under a
 filename that does not reuse the "2026-08-15" label, and update this
 section rather than silently overwriting either file in place.
+
+**SCRIPT PROVENANCE.** The original `tematdb_scoring.py` that produced
+`results/20260910T123047_tematdb_external/metrics.json` no longer exists
+on disk anywhere in this repo or its working directories -- only its
+outputs and per-row predictions survive. Its results were reproduced
+bit-exactly (see above), so nothing is lost numerically, but its exact
+bootstrap-CI implementation could not be recovered and is not reproduced.
+The new orchestration scripts used for this entry (`estm_fileA.py`,
+`tematdb_C1_C2_fileA.py`, `tematdb_C3_fileA.py`,
+`tematdb_D_scoring_fileA.py`, `estm_control_fileB.py`,
+`tematdb_D_control_fileB.py`, `noise_floor_fileA.py`) currently live only
+in this session's local scratchpad directory, not tracked in git -- the
+same failure mode that lost `tematdb_scoring.py`. **Standing rule: any
+script that produces a number cited in this document must be committed to
+git (e.g. under `scripts/`), not left in an untracked scratchpad.** Not
+yet done for the scripts above; flagged here rather than silently left
+unrecorded.
+
+**CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
+beyond what these numbers support:**
+
+a. **Stratum b is small and unstable.** Only 36 samples. Its R² moves by
+   up to 0.063 between the File A and File B snapshots, and the earlier
+   leave-one-group-out diagnostic
+   (`results/20260910T123047_tematdb_external/per_group_breakdown.json`)
+   already showed stratum-b sigma's R² flips sign when a single 4-sample
+   GROUP (Selenide) is removed. Report stratum-b findings qualitatively
+   (direction, rough magnitude); do not quote stratum-b R² to two decimals
+   as if it were a stable estimate.
+b. **zT_derived is ill-conditioned.** A 0.7% change in the smear factor
+   (1.2916 -> 1.2822, from refitting on a slightly different training
+   snapshot) moved ESTM pass-b zT_derived's R² from -0.019 to +0.101 -- a
+   swing of about 0.12 that crosses zero. The direct-beats-derived
+   ORDERING is stable across both snapshots and is the finding to report;
+   the zT_derived point value itself is not stable enough to quote without
+   this caveat attached.
+c. **The digitization floor carries snapshot sensitivity.** With the
+   matched sample set and composition-identity pairing themselves
+   unchanged between snapshots (see "Strata membership is invariant"
+   above), the measured label-agreement R² still moved: zT +0.021
+   (declared) / +0.023 (recomputed TEP), sigma +0.006, on File A vs.
+   File B raw training curves. Quote the digitization floor to at most two
+   decimals, and state this snapshot uncertainty alongside it wherever
+   cited.
 
 ---
 
@@ -797,7 +899,9 @@ true database noise is higher than this and true headroom is smaller
 than shown — state this direction explicitly wherever these numbers are
 cited, per item 3's frozen instruction.
 
-**COMBINED CEILING (measurement + digitization noise), added 2026-09-10.**
+**COMBINED CEILING (measurement + digitization noise), added 2026-09-10 --
+SUPERSEDED 2026-09-11, digitization column below used File B; see the
+updated table after it. Retained for audit, not deleted.**
 
 | Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
 |---|---|---|---|---|---|
@@ -828,6 +932,26 @@ narrower-variance subset (79-87 of 176 DOI-overlap samples) than the full
 database, so it overstates the penalty and the combined ceiling is
 conservative. Both terms remain lower bounds on total label noise: neither
 captures synthesis-to-synthesis variation.
+
+**COMBINED CEILING, UPDATED 2026-09-11 (File A digitization values).**
+
+| Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
+|---|---|---|---|---|---|
+| S | 0.9974 | 0.964-0.982 | 0.961-0.979 | 0.8076 | 0.154-0.172 |
+| sigma | 0.9968 | 0.984-0.992 | 0.981-0.989 | 0.7600 | 0.221-0.229 |
+| kappa | 0.9776 | 0.983-0.992 | 0.961-0.969 | 0.8460 | 0.115-0.123 |
+| zT (vs ZT_author_declared) | 0.9785 | 0.981-0.990 | 0.959-0.969 | 0.7968 | 0.162-0.172 |
+| zT (vs recomputed alpha^2*T/(rho*kappa)) | 0.9785 | 0.984-0.992 | 0.962-0.971 | 0.7968 | 0.166-0.174 |
+
+Same formulas as the File B table above (lower bound = raw R2_agree,
+upper bound = (1+R2_agree)/2, combined via additive noise fractions),
+digitization values from
+`results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json`
+section N3, 300-800K. **Snapshot sensitivity: the digitization column
+alone moves by up to +/-0.02 between File A and File B (largest for zT,
+see CAVEATS (c) above) -- treat this table's bounds as carrying that
+additional uncertainty on top of the stated range, not as a tighter
+estimate than the File B table above.**
 
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 

@@ -1,0 +1,325 @@
+{
+  "training_csv": "checkpoints/saved_predictions/te-ml-pipeline/data/processed/featurized_ThermoelectricMaterials_2026-08-15.csv",
+  "training_csv_sha256": "e97406fa5223efa466d1e3fe4ffb2b1bc0303dc94b6adac6a824a643a9156f8d",
+  "note": "Recompute of teMatDb inventory strata (C1/C2) and composition-matched digitization agreement (C3, section N) against File A, per CLAUDE.md Canonical Dataset section (commit e1ede95). Original results (reports/tematdb_inventory/, results/20260910T123047_tematdb_external/) used File B and are preserved unchanged.",
+  "C1_doi_overlap": {
+    "n_a0": 176,
+    "n_a": 96,
+    "n_a0_parseable": 122,
+    "n_a_parseable": 62,
+    "thinned_a0_parseable": 2027,
+    "thinned_a_parseable": 903
+  },
+  "C2_cluster_overlap": {
+    "n_parsed": 184,
+    "n_failed": 88,
+    "n_unique_clusters_among_successes": 156,
+    "n_not_in_training": 36,
+    "thinned_b": 549,
+    "stratum_b_sample_ids": [
+      15,
+      32,
+      57,
+      72,
+      78,
+      91,
+      101,
+      104,
+      119,
+      141,
+      147,
+      153,
+      173,
+      201,
+      216,
+      225,
+      226,
+      228,
+      232,
+      272,
+      291,
+      302,
+      360,
+      361,
+      362,
+      364,
+      379,
+      392,
+      393,
+      396,
+      397,
+      406,
+      411,
+      418,
+      419,
+      422
+    ],
+    "stratum_b_changes": {
+      "added": [],
+      "removed": []
+    }
+  },
+  "C3_composition_matched_digitization_agreement": {
+    "N1_identity_pairing": {
+      "n_a0_samples": 176,
+      "n_a0_parseable": 122,
+      "n_candidate_pairs_doi_shared": 1161,
+      "n_candidate_pairs_ge1_comparison": 1160,
+      "n_candidate_pairs_composition_match": 197,
+      "n_samples_with_ge1_match": 96,
+      "n_samples_doi_in_training_no_match": 80,
+      "matches_per_sample_distribution": {
+        "1": 72,
+        "2": 8,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 3,
+        "7": 2,
+        "12": 1,
+        "14": 1,
+        "20": 1
+      }
+    },
+    "N2_matched_point_survival": {
+      "S": {
+        "total_considered": 1221,
+        "survived": 923,
+        "dropped_not_bracketed": 123,
+        "dropped_bracketed_but_over_5K": 175
+      },
+      "sigma": {
+        "total_considered": 1143,
+        "survived": 891,
+        "dropped_not_bracketed": 119,
+        "dropped_bracketed_but_over_5K": 133
+      },
+      "kappa": {
+        "total_considered": 1029,
+        "survived": 785,
+        "dropped_not_bracketed": 105,
+        "dropped_bracketed_but_over_5K": 139
+      },
+      "zT": {
+        "total_considered": 1192,
+        "survived": 946,
+        "dropped_not_bracketed": 119,
+        "dropped_bracketed_but_over_5K": 127
+      },
+      "zT_tep": {
+        "total_considered": 1066,
+        "survived": 898,
+        "dropped_not_bracketed": 49,
+        "dropped_bracketed_but_over_5K": 119
+      }
+    },
+    "N3_label_agreement": {
+      "S_full_range": {
+        "r2": 0.9671271919467398,
+        "rmse": 35.926745316317835,
+        "mae": 7.087317106165956,
+        "n_points": 923,
+        "n_samples": 88,
+        "n_distinct_dois": 86,
+        "r2_ci95": [
+          0.8983675883162869,
+          0.9988167024288849
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "S_300_800K": {
+        "r2": 0.963899259221547,
+        "rmse": 37.62469825768172,
+        "mae": 7.418116692012661,
+        "n_points": 835,
+        "n_samples": 87,
+        "n_distinct_dois": 85,
+        "r2_ci95": [
+          0.8879509386309328,
+          0.9988203460810148
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "sigma_full_range": {
+        "r2": 0.9844613418056601,
+        "rmse": 0.05931293313762096,
+        "mae": 0.019579262045122774,
+        "n_points": 891,
+        "n_samples": 81,
+        "n_distinct_dois": 79,
+        "r2_ci95": [
+          0.9607686362531445,
+          0.9982399604725977
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "sigma_300_800K": {
+        "r2": 0.9839656690808817,
+        "rmse": 0.05812172369140668,
+        "mae": 0.019384685548989564,
+        "n_points": 804,
+        "n_samples": 80,
+        "n_distinct_dois": 78,
+        "r2_ci95": [
+          0.9610553009742575,
+          0.9975984096261129
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "kappa_full_range": {
+        "r2": 0.982721607173084,
+        "rmse": 0.04012196837959217,
+        "mae": 0.014942702989333272,
+        "n_points": 785,
+        "n_samples": 85,
+        "n_distinct_dois": 83,
+        "r2_ci95": [
+          0.9609697713332509,
+          0.9963436981689371
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "kappa_300_800K": {
+        "r2": 0.9832620077389838,
+        "rmse": 0.038993192251677106,
+        "mae": 0.014868846574805077,
+        "n_points": 717,
+        "n_samples": 85,
+        "n_distinct_dois": 83,
+        "r2_ci95": [
+          0.9618444977050982,
+          0.9964290285352145
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_full_range": {
+        "r2": 0.9816087322024554,
+        "rmse": 0.05919443242762333,
+        "mae": 0.021661657111817445,
+        "n_points": 946,
+        "n_samples": 86,
+        "n_distinct_dois": 85,
+        "r2_ci95": [
+          0.965551830286142,
+          0.9941850075307644
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_300_800K": {
+        "r2": 0.9806887300257047,
+        "rmse": 0.05990470691303064,
+        "mae": 0.02210428816576106,
+        "n_points": 881,
+        "n_samples": 86,
+        "n_distinct_dois": 85,
+        "r2_ci95": [
+          0.963715926155676,
+          0.9941921922621116
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_tep_full_range": {
+        "r2": 0.9839362734971053,
+        "rmse": 0.05466022475442141,
+        "mae": 0.025694574553398082,
+        "n_points": 898,
+        "n_samples": 85,
+        "n_distinct_dois": 84,
+        "r2_ci95": [
+          0.9690529001143022,
+          0.994354400671028
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_tep_300_800K": {
+        "r2": 0.9838674427230542,
+        "rmse": 0.05412716275748228,
+        "mae": 0.025480000881335948,
+        "n_points": 847,
+        "n_samples": 85,
+        "n_distinct_dois": 84,
+        "r2_ci95": [
+          0.9688023129933321,
+          0.994336578603697
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      }
+    }
+  },
+  "strata_comparison_vs_fileB": {
+    "n_a0": {
+      "fileB": 176,
+      "fileA": 176
+    },
+    "n_a": {
+      "fileB": 96,
+      "fileA": 96
+    },
+    "n_a0_parseable": {
+      "fileB": 122,
+      "fileA": 122
+    },
+    "n_a_parseable": {
+      "fileB": 62,
+      "fileA": 62
+    },
+    "n_parsed": {
+      "fileB": 184,
+      "fileA": 184
+    },
+    "n_failed": {
+      "fileB": 88,
+      "fileA": 88
+    },
+    "n_unique_clusters_among_successes": {
+      "fileB": 156,
+      "fileA": 156
+    },
+    "n_not_in_training_clusters": {
+      "fileB": 36,
+      "fileA": 36
+    },
+    "stratum_b_sample_id_changes": {
+      "added": [],
+      "removed": []
+    },
+    "thinned_rows_a0": {
+      "fileB": 2027,
+      "fileA": 2027
+    },
+    "thinned_rows_a": {
+      "fileB": 903,
+      "fileA": 903
+    },
+    "thinned_rows_b": {
+      "fileB": 549,
+      "fileA": 549
+    },
+    "n1_matched_sample_denominator": {
+      "fileB": "96 of 176",
+      "fileA": "96 of 176"
+    },
+    "r2_agree_300_800K": {
+      "S": {
+        "fileB": 0.9628,
+        "fileA": 0.963899259221547
+      },
+      "sigma": {
+        "fileB": 0.9777,
+        "fileA": 0.9839656690808817
+      },
+      "kappa": {
+        "fileB": 0.9806,
+        "fileA": 0.9832620077389838
+      },
+      "zT_declared": {
+        "fileB": 0.9597,
+        "fileA": 0.9806887300257047
+      },
+      "zT_tep": {
+        "fileB": 0.9607,
+        "fileA": 0.9838674427230542
+      }
+    }
+  }
+}

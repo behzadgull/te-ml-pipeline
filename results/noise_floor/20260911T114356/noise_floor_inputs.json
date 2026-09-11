@@ -1,0 +1,117 @@
+{
+  "generated_at_utc": "2026-09-11T11:43:56",
+  "input_dataset": {
+    "path": "checkpoints\\saved_predictions\\te-ml-pipeline\\data\\processed\\cleaned_ThermoelectricMaterials_2026-08-15.csv",
+    "sha256": "0275c5088521580a1156acf2078f77f0eb7d4a8c6b4e724864f0de0875d8a393",
+    "n_rows": 280664,
+    "note": "File A's cleaned CSV, per CLAUDE.md's Canonical Dataset section (commit e1ede95). Supersedes the 20260910T134042 artifact, which used File B."
+  },
+  "confirmed_chemistry_cluster_r2_source": {
+    "checkpoint_dir": "checkpoints/saved_predictions/checkpoints/{S,sigma,kappa,zT}_chemistry/",
+    "values": {
+      "S": 0.8076,
+      "sigma": 0.76,
+      "kappa": 0.846,
+      "zT": 0.7968
+    },
+    "note": "unchanged from the 20260910T134042 artifact -- these come from File A already (the confirmed ladder), not File B, so no change needed here."
+  },
+  "results": {
+    "S": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 0.06,
+        "sigma_total": 0.9027364572265119,
+        "r2_max": 0.9955824595288895,
+        "n_used": 185409,
+        "n_dropped_nonpositive": 8
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 8.98776,
+        "sigma_total": 176.9262742185379,
+        "r2_max": 0.9974194143986357,
+        "n_used": 185417,
+        "n_dropped_nonpositive": 0
+      },
+      "paper_scale": "linear",
+      "paper_r2_max": 0.9974194143986357,
+      "confirmed_chemistry_cluster_r2": 0.8076,
+      "headroom": 0.1898194143986357
+    },
+    "sigma": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 0.08,
+        "sigma_total": 1.4084098340894011,
+        "r2_max": 0.9967735727550981,
+        "n_used": 183014,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 3622.3189180133395,
+        "sigma_total": 129589.49625371132,
+        "r2_max": 0.9992186713224676,
+        "n_used": 183014,
+        "n_dropped_nonpositive": 0
+      },
+      "paper_scale": "log",
+      "paper_r2_max": 0.9967735727550981,
+      "confirmed_chemistry_cluster_r2": 0.76,
+      "headroom": 0.23677357275509814
+    },
+    "kappa": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.11,
+        "sigma_total": 0.7363244710026082,
+        "r2_max": 0.9776824301761344,
+        "n_used": 121247,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.21979804,
+        "sigma_total": 1.9850013218678093,
+        "r2_max": 0.9877389961120653,
+        "n_used": 121247,
+        "n_dropped_nonpositive": 0
+      },
+      "paper_scale": "log",
+      "paper_r2_max": 0.9776824301761344,
+      "confirmed_chemistry_cluster_r2": 0.846,
+      "headroom": 0.13168243017613446
+    },
+    "zT": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.18,
+        "sigma_total": 1.4820758288798848,
+        "r2_max": 0.9852495876474937,
+        "n_used": 129582,
+        "n_dropped_nonpositive": 51
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.05684211,
+        "sigma_total": 0.3882153539748335,
+        "r2_max": 0.9785614718479471,
+        "n_used": 129633,
+        "n_dropped_nonpositive": 0
+      },
+      "paper_scale": "linear",
+      "paper_r2_max": 0.9785614718479471,
+      "confirmed_chemistry_cluster_r2": 0.7968,
+      "headroom": 0.1817614718479471
+    }
+  }
+}

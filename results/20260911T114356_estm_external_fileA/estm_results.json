@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "frozen_hyperparams_paths": {
+      "S": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\S.json",
+      "sigma": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\sigma.json",
+      "kappa": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\kappa.json",
+      "zT": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\zT.json"
+    },
+    "training_csv": "checkpoints/saved_predictions/te-ml-pipeline/data/processed/featurized_ThermoelectricMaterials_2026-08-15.csv",
+    "training_csv_sha256": "e97406fa5223efa466d1e3fe4ffb2b1bc0303dc94b6adac6a824a643a9156f8d",
+    "estm_file": "data\\external\\estm.xlsx",
+    "date": "2026-09-11",
+    "note": "Re-run against File A per CLAUDE.md's Canonical Dataset section (commit e1ede95). Original run (checkpoints/external_validation/estm_results.json) used File B and is preserved unchanged."
+  },
+  "training_rows_used_for_refit": {
+    "S": 185064,
+    "sigma": 182755,
+    "kappa": 121110,
+    "zT": 129419
+  },
+  "smear_factors": {
+    "sigma": 1.2821617638741443,
+    "kappa": 1.0441886457853158
+  },
+  "smear_training_oof_r2": {
+    "sigma": 0.7594434385705795,
+    "kappa": 0.8456692702450679
+  },
+  "unit_handling": "S: training microV/K, ESTM microV/K -- no conversion needed. sigma: training S/m, ESTM S/m -- no conversion needed. kappa: training W/mK, ESTM W/mK -- no conversion needed.",
+  "dedup_a_source_doi": {
+    "n_dropped": 1416,
+    "n_surviving": 3123,
+    "unique_estm_dois_overlapping_training": 69,
+    "results": {
+      "S": {
+        "r2": 0.5663886740102466,
+        "n": 3123
+      },
+      "sigma": {
+        "r2": 0.3987915829061861,
+        "n": 3123
+      },
+      "kappa": {
+        "r2": 0.6892108937178334,
+        "n": 3123
+      },
+      "zT_direct": {
+        "r2": 0.6615034638116427,
+        "n": 3123
+      },
+      "zT_derived": {
+        "r2": 0.2648498556229215,
+        "n": 3123
+      }
+    }
+  },
+  "dedup_b_chemistry_cluster": {
+    "n_dropped": 2592,
+    "n_surviving": 1947,
+    "unique_estm_clusters_overlapping_training": 401,
+    "results": {
+      "S": {
+        "r2": 0.42188215588623124,
+        "n": 1947
+      },
+      "sigma": {
+        "r2": 0.2784709226911375,
+        "n": 1947
+      },
+      "kappa": {
+        "r2": 0.6431182706303253,
+        "n": 1947
+      },
+      "zT_direct": {
+        "r2": 0.578764739368435,
+        "n": 1947
+      },
+      "zT_derived": {
+        "r2": 0.10067490829874737,
+        "n": 1947
+      }
+    }
+  },
+  "zt_is_derived_not_measured_note": "ESTM's ZT column is algebraically S^2*sigma*T/kappa (confirmed by spot check, matches to <0.6%), not an independent measurement -- the zT_direct/zT_derived numbers above are internal consistency checks, not independent external validation the way S/sigma/kappa are."
+}

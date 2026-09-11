@@ -1,0 +1,83 @@
+{
+  "provenance": {
+    "frozen_hyperparams_paths": {
+      "S": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\S.json",
+      "sigma": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\sigma.json",
+      "kappa": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\kappa.json",
+      "zT": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\zT.json"
+    },
+    "training_csv": "data/processed/featurized_ThermoelectricMaterials_2026-08-15.csv",
+    "estm_file": "data\\external\\estm.xlsx",
+    "date": "2026-09-11",
+    "note": "CONTROL RUN: reimplemented orchestration script (same one used for File A), pointed at File B (unmodified default path) to isolate dataset effect from reimplementation effect. Compare against checkpoints/external_validation/estm_results.json (the original run_full_validation()-produced result)."
+  },
+  "training_rows_used_for_refit": {
+    "S": 184803,
+    "sigma": 182530,
+    "kappa": 120894,
+    "zT": 129188
+  },
+  "smear_factors": {
+    "sigma": 1.2916327964944954,
+    "kappa": 1.044639935350741
+  },
+  "smear_training_oof_r2": {
+    "sigma": 0.7589529288643196,
+    "kappa": 0.8458853941677181
+  },
+  "unit_handling": "S: training microV/K, ESTM microV/K -- no conversion needed. sigma: training S/m, ESTM S/m -- no conversion needed. kappa: training W/mK, ESTM W/mK -- no conversion needed.",
+  "dedup_a_source_doi": {
+    "n_dropped": 1416,
+    "n_surviving": 3123,
+    "unique_estm_dois_overlapping_training": 69,
+    "results": {
+      "S": {
+        "r2": 0.5647271019625644,
+        "n": 3123
+      },
+      "sigma": {
+        "r2": 0.39858267915900736,
+        "n": 3123
+      },
+      "kappa": {
+        "r2": 0.677904437310894,
+        "n": 3123
+      },
+      "zT_direct": {
+        "r2": 0.6657658404499404,
+        "n": 3123
+      },
+      "zT_derived": {
+        "r2": 0.22326848919928755,
+        "n": 3123
+      }
+    }
+  },
+  "dedup_b_chemistry_cluster": {
+    "n_dropped": 2592,
+    "n_surviving": 1947,
+    "unique_estm_clusters_overlapping_training": 401,
+    "results": {
+      "S": {
+        "r2": 0.4216761598894261,
+        "n": 1947
+      },
+      "sigma": {
+        "r2": 0.2763849969528035,
+        "n": 1947
+      },
+      "kappa": {
+        "r2": 0.6263500357060066,
+        "n": 1947
+      },
+      "zT_direct": {
+        "r2": 0.5792695432599158,
+        "n": 1947
+      },
+      "zT_derived": {
+        "r2": -0.018805264193259452,
+        "n": 1947
+      }
+    }
+  }
+}
