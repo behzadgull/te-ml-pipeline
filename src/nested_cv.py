@@ -132,6 +132,11 @@ PROJECT = "ThermoelectricMaterials"
 FROZEN_HYPERPARAMS_DIR = Path("checkpoints") / "frozen_hyperparams"
 
 FEATURE_PREFIXES = ("MagpieData", "CBFV_")
+# Descriptor-ablation feature sets. "full" is the pre-existing, always-used
+# behavior -- kept as the default so every call site not passing feature_set
+# explicitly is unchanged.
+FEATURE_SET_PREFIXES = {"full": FEATURE_PREFIXES, "magpie": ("MagpieData",), "cbfv": ("CBFV_",)}
+FEATURE_SETS = tuple(FEATURE_SET_PREFIXES)
 TEMPERATURE_COL = "temperature_bin"
 GROUP_COL = "chemistry_cluster_id"
 
@@ -177,7 +182,7 @@ N_OPTUNA_TRIALS = 20
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 
-def get_feature_columns(df):
+def get_feature_columns(df, feature_set="full"):
     """
     All MAGPIE + CBFV feature columns in df (see src/featurization.py),
     plus TEMPERATURE_COL. Temperature is a per-row model input like any
@@ -188,8 +193,15 @@ def get_feature_columns(df):
     excluding temperature from the feature set entirely, which this
     function did until 2026-08-18 (found by comparing against the
     thesis's own feature list, which does include T_K).
+
+    feature_set (FEATURE_SETS: "full" default, "magpie", "cbfv") selects
+    which descriptor family/families to include -- temperature_bin is
+    included in every feature_set regardless. Default "full" reproduces
+    the pre-existing, unparameterized behavior exactly.
     """
-    return [c for c in df.columns if c.startswith(FEATURE_PREFIXES)] + [TEMPERATURE_COL]
+    if feature_set not in FEATURE_SET_PREFIXES:
+        raise ValueError(f"feature_set={feature_set!r} must be one of {FEATURE_SETS}")
+    return [c for c in df.columns if c.startswith(FEATURE_SET_PREFIXES[feature_set])] + [TEMPERATURE_COL]
 
 
 _CUPY_UNAVAILABLE_WARNED = False
@@ -862,7 +874,12 @@ def _check_run_config(checkpoint_dir, config):
     the existing checkpoints for every field that affects fold
     composition, data identity, or which model/scale a checkpoint's
     results belong to (target, target_scale, model_type, split_strategy,
-    seed, n_outer_folds). model_type and target_scale are fatal (not
+    seed, n_outer_folds, feature_set). model_type, target_scale, and
+    feature_set are fatal (not warn-only) even though none of them
+    strictly changes fold COMPOSITION on their own -- feature_set changes
+    which columns feed the model, the same class of silent-corruption
+    risk model_type/target_scale already guard against.
+    model_type and target_scale are fatal (not
     warn-only) even though neither affects fold COMPOSITION, specifically
     so pointing two different models -- or resuming a sigma/kappa
     checkpoint_dir predating the log10-transform decision (2026-08-20,
@@ -888,19 +905,30 @@ def _check_run_config(checkpoint_dir, config):
     with open(path, encoding="utf-8") as f:
         existing = json.load(f)
 
-    fatal_keys = ("target", "target_scale", "model_type", "split_strategy", "seed", "n_outer_folds")
+    fatal_keys = ("target", "target_scale", "model_type", "split_strategy", "seed", "n_outer_folds", "feature_set")
+    # A checkpoint_dir predating the feature_set option (added 2026-09-10)
+    # has no "feature_set" key at all; every such existing run was, in
+    # fact, a full-feature run, and "full" is feature_set's own default --
+    # so treat a missing existing feature_set as "full" for comparison
+    # purposes, not as None, so pre-existing checkpoint dirs keep resuming
+    # cleanly under the new default instead of raising on every resume.
+    existing_feature_set = existing.get("feature_set", "full")
     # existing.get(), not existing[], on BOTH sides: a checkpoint_dir predating the
     # introduction of a given fatal key (e.g. target_scale, added 2026-08-20) simply
     # lacks that key entirely -- must still raise the clean ValueError below, not a
     # bare KeyError from indexing a missing key.
-    mismatches = {k: (existing.get(k), config[k]) for k in fatal_keys if existing.get(k) != config[k]}
+    mismatches = {
+        k: (existing_feature_set if k == "feature_set" else existing.get(k), config[k])
+        for k in fatal_keys
+        if (existing_feature_set if k == "feature_set" else existing.get(k)) != config[k]
+    }
     if mismatches:
         raise ValueError(
             f"Resume parameter mismatch in {checkpoint_dir}: {mismatches}. "
-            f"target/target_scale/model_type/split_strategy/seed/n_outer_folds must match the run "
-            f"that produced the existing checkpoints, since changing any of them changes fold "
-            f"composition or which model/scale the checkpointed results belong to. Use a different "
-            f"checkpoint_dir for a genuinely new run."
+            f"target/target_scale/model_type/split_strategy/seed/n_outer_folds/feature_set must "
+            f"match the run that produced the existing checkpoints, since changing any of them "
+            f"changes fold composition or which model/scale/feature-set the checkpointed results "
+            f"belong to. Use a different checkpoint_dir for a genuinely new run."
         )
     if existing.get("n_repeats", 0) > config["n_repeats"]:
         raise ValueError(
@@ -917,6 +945,12 @@ def _check_run_config(checkpoint_dir, config):
                 f"already-completed vs. newly-run folds.",
                 flush=True,
             )
+    # Rewrites run_config.json with THIS call's config, not a merge with
+    # `existing` -- any field absent from the original run (e.g. an old
+    # checkpoint_dir resumed after feature_set was added) gets stamped in
+    # retroactively from this call's value, not left absent or carried
+    # over from `existing`. Not changed here, only documented: the checks
+    # above already gate every field that matters before this line runs.
     _write_run_config(checkpoint_dir, config)
 
 
@@ -924,6 +958,7 @@ def run_nested_cv(
     target="zT",
     model_type="xgboost",
     split_strategy="chemistry",
+    feature_set="full",
     n_repeats=None,
     n_outer_folds=N_OUTER_FOLDS,
     n_inner_folds=N_INNER_FOLDS,
@@ -945,6 +980,10 @@ def run_nested_cv(
     (5) for composition/chemistry (CLAUDE.md's group-composition-effect
     justification), N_OUTER_REPEATS_UNGROUPED (1) for random/kfold (no
     such confound). Pass explicitly to override. See module docstring.
+
+    feature_set: one of FEATURE_SETS ("full" default, "magpie", "cbfv"),
+    passed to get_feature_columns() -- see its docstring. Recorded in
+    run_config.json alongside the resolved column count (n_features).
 
     frozen_hyperparams_path: path to a tune_once() JSON output for this
     SAME model_type (mismatches raise, see _load_frozen_hyperparams).
@@ -1029,6 +1068,12 @@ def run_nested_cv(
 
     target_scale = _target_scale(target)
 
+    df = load_target_data(target)
+    feature_cols = get_feature_columns(df, feature_set=feature_set)
+    X = df[feature_cols].to_numpy(dtype=np.float64)
+    y = df[target].to_numpy(dtype=np.float64)
+    y = _transform_target(y, target)
+
     completed = {}
     if checkpoint_dir is not None:
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -1041,6 +1086,7 @@ def run_nested_cv(
                 "n_repeats": n_repeats, "n_inner_folds": n_inner_folds,
                 "n_trials": n_trials, "device": device,
                 "frozen_hyperparams_path": str(frozen_hyperparams_path) if frozen_hyperparams_path else None,
+                "feature_set": feature_set, "n_features": len(feature_cols),
             },
         )
         for record in _load_checkpoints(checkpoint_dir):
@@ -1049,12 +1095,6 @@ def run_nested_cv(
             msg = f"Resuming: {len(completed)} outer fold(s) already checkpointed in {checkpoint_dir}"
             print(msg, flush=True)
             _log_progress(checkpoint_dir, msg)
-
-    df = load_target_data(target)
-    feature_cols = get_feature_columns(df)
-    X = df[feature_cols].to_numpy(dtype=np.float64)
-    y = df[target].to_numpy(dtype=np.float64)
-    y = _transform_target(y, target)
 
     # chemistry_groups is used for two independent purposes: (a) the
     # inner hyperparameter-tuning split, always, regardless of
@@ -1261,6 +1301,12 @@ def _parse_args(argv=None):
         "Use --split-strategy kfold with --n-outer-folds 5 or 10 for those two rungs.",
     )
     parser.add_argument(
+        "--feature-set", default="full", choices=FEATURE_SETS,
+        help="Descriptor set (default: full = MagpieData + CBFV_ + temperature_bin). "
+        "'magpie'/'cbfv' restrict to that single descriptor family + temperature_bin, "
+        "for the descriptor ablation.",
+    )
+    parser.add_argument(
         "--device", default="cpu", choices=["cpu", "cuda"],
         help='Device for model_type="xgboost" (tree_method="hist", device=...); every other '
         "--model runs on CPU regardless, with a one-time warning (default: cpu; use cuda on "
@@ -1322,6 +1368,7 @@ def main(argv=None):
         target=args.target,
         model_type=args.model_type,
         split_strategy=args.split_strategy,
+        feature_set=args.feature_set,
         n_repeats=args.n_repeats,
         n_outer_folds=args.n_outer_folds,
         n_inner_folds=args.n_inner_folds,
