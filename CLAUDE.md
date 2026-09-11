@@ -15,6 +15,88 @@ implement as written.**
 
 ---
 
+## Canonical Dataset (added 2026-09-11)
+
+Two files share the filename `featurized_ThermoelectricMaterials_2026-08-15.csv`
+but are NOT the same dataset -- different SHA256, different row counts,
+from two separate Starrydata2 pulls against `src/data_acquisition.py`'s
+unpinned GitHub "latest" release tag (regenerated daily from the live
+database -- see that module's docstring). Found 2026-09-11 investigating
+why `load_target_data("S")` gives 184,803 rows locally while the frozen
+hyperparameters record `n_rows: 185064`.
+
+**File A -- CANONICAL for every Paper A confirmed result**:
+`checkpoints/saved_predictions/te-ml-pipeline/data/processed/
+featurized_ThermoelectricMaterials_2026-08-15.csv`
+- SHA256 `e97406fa5223efa466d1e3fe4ffb2b1bc0303dc94b6adac6a824a643a9156f8d`,
+  975,062,560 bytes.
+- Upstream pull dated 2026-08-22 (own `extraction_metadata.json`:
+  `extraction_timestamp_utc 2026-08-22T07:05:52Z`, `upstream_db_snapshot
+  "2026-08-22 02:00:02 UTC+0900 (JST)"`), despite the "2026-08-15"
+  filename.
+- Row counts (`load_target_data(target)`): S=185,064, sigma=182,755,
+  kappa=121,110, zT=129,419.
+- Produced: the confirmed Five-Way Ladder chemistry-cluster checkpoints
+  (`checkpoints/saved_predictions/checkpoints/{S,sigma,kappa,zT}_chemistry/`
+  -- every repeat's 5 outer test folds sum to these exact totals) and the
+  frozen hyperparameter files
+  (`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
+  {S,sigma,kappa,zT}.json`).
+- Gitignored (`checkpoints/`), local-only, not on GitHub.
+
+**File B -- used for ESTM/teMatDb external validation and the noise-floor
+inputs, NOT what produced the confirmed ladder**: `data/processed/
+featurized_ThermoelectricMaterials_2026-08-15.csv`
+- SHA256 `19c983b96a3c48265916334a0dc35f1215cbbdbc9fdd7bd31a4dd291d243c286`,
+  974,150,322 bytes.
+- Upstream pull genuinely dated 2026-08-15 (own `extraction_metadata.json`).
+- Row counts: S=184,803, sigma=182,530, kappa=120,894, zT=129,188.
+- Produced: ESTM external validation
+  (`checkpoints/external_validation/estm_results.json`, 2026-09-08) and
+  teMatDb external validation
+  (`results/20260910T123047_tematdb_external/`, 2026-09-10) -- both via
+  refit-on-100%-training using File A's frozen hyperparameters, refit
+  against File B. **Also produced the noise-floor inputs**
+  (`results/noise_floor/20260910T134042/`): `sigma_total` and every other
+  input in that artifact were computed from File B's cleaned CSV
+  (`data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv`). The
+  resulting R^2_max values were then compared, in this file's own
+  "Confirmed Results -- Noise Floor" section (already committed), against
+  a "Confirmed ceiling" computed from File A's chemistry-cluster
+  checkpoints -- i.e. that table's headroom is itself a cross-dataset
+  comparison (R^2_max from File B, the ceiling it's measured against from
+  File A).
+- Gitignored (`data/`), local-only, not on GitHub.
+
+**Raw-pull row counts (source, before cleaning), from each copy's own
+`data/raw/extraction_metadata.json`** -- the two upstream snapshots are
+visibly different at the source, not only after processing:
+
+| | papers | samples | curves |
+|---|---|---|---|
+| File A (2026-08-22 pull) | 9,494 | 55,261 | 156,101 |
+| File B (2026-08-15 pull) | 9,481 | 55,166 | 155,758 |
+
+**OPEN ITEM (2026-09-11)**: ESTM external validation, the teMatDb
+inventory and scoring, and the noise-floor inputs are all scheduled to be
+re-run against File A so that every Paper A result derives from a single
+dataset. Until that is done, the confirmed ladder and noise-floor ceiling
+derive from File A while the external-validation numbers and sigma_total
+derive from File B. The difference is under 0.2% of rows on every target
+and is not expected to move any reported value materially, but it must
+not be described as a single dataset until the re-run is complete.
+
+**Standing rule: `src/data_acquisition.py` must NOT be re-run for any
+Paper A result.** It pulls Starrydata2's GitHub "latest" release tag,
+regenerated daily from the live database, with no pin/version/date
+parameter anywhere in `acquire()` -- a fresh pull on any day other than
+2026-08-22 will not reproduce File A. If Phase 0 ever must be re-run
+(e.g. for the Kaggle bit-identity gate), save the output under a
+filename that does not reuse the "2026-08-15" label, and update this
+section rather than silently overwriting either file in place.
+
+---
+
 ## Build Order (execute top to bottom — later phases depend on earlier ones)
 
 **Phase 0 — shared foundation, run once:**
