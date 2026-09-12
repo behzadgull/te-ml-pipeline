@@ -969,6 +969,94 @@ see CAVEATS (c) above) -- treat this table's bounds as carrying that
 additional uncertainty on top of the stated range, not as a tighter
 estimate than the File B table above.**
 
+## Confirmed Results — Descriptor Ablation (2026-09-12)
+
+**Method**: chemistry-cluster split only (the honest-ceiling rung, not
+the full five-way ladder), frozen hyperparameters -- the SAME ones tuned
+once on the full 397-feature set
+(`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
+{S,sigma,kappa,zT}.json`) -- applied UNCHANGED to the 133-feature
+(MagpieData only) and 265-feature (CBFV_ only) subsets, via
+`src/nested_cv.py`'s `--feature-set` flag. **Stated explicitly as a
+methods choice**: hyperparameters are NOT retuned per feature set, so any
+R² difference between magpie/cbfv/full isolates the descriptor set's own
+effect, not a confound from re-tuning on a smaller feature space. 5
+repeats x 5 outer folds each (25 outer evaluations), identical protocol
+to the confirmed ladder.
+
+**Full table** (per-repeat pooled R² = mean +/- across-repeat SD, k=5;
+sigma/kappa scored in log10 space, S/zT in linear space, matching each
+target's own `target_scale`):
+
+| Target | magpie (133 feat) | cbfv (265 feat) | full (397 feat) |
+|---|---|---|---|
+| S | 0.8038 +/- 0.0031 | 0.8060 +/- 0.0025 | 0.8076 +/- 0.0018 |
+| sigma (log10) | 0.7497 +/- 0.0010 | 0.7585 +/- 0.0013 | 0.7600 +/- 0.0008 |
+| kappa (log10) | 0.8419 +/- 0.0009 | 0.8436 +/- 0.0013 | 0.8460 +/- 0.0011 |
+| zT | 0.7940 +/- 0.0016 | 0.7945 +/- 0.0042 | 0.7968 +/- 0.0030 |
+
+**Deltas, in absolute R², not SD units:**
+
+| Target | full - magpie | full - cbfv |
+|---|---|---|
+| S | +0.0038 | +0.0017 |
+| sigma | +0.0103 | +0.0015 |
+| kappa | +0.0042 | +0.0025 |
+| zT | +0.0028 | +0.0023 |
+
+**Do not report these as multiples of the across-repeat SD.** The SD
+here measures fold-reshuffling precision (how much the pooled R² moves
+if the same model/data is re-split into different chemistry-cluster
+folds with a different seed) -- it is a precision estimate, not an
+effect-size yardstick. At this dataset's row count (~185K-280K per
+target), the SD is small enough (0.0008-0.0031 across all three feature
+sets) that almost any systematic difference clears 2x SD: full-vs-magpie
+clears it on S/sigma/kappa (2.1x/12.6x/3.8x), full-vs-cbfv clears it only
+on kappa (2.2x). Reporting "N times the SD" alongside these small
+absolute deltas overstates how material the difference is -- it answers
+"is this distinguishable from fold-reshuffling noise" (usually yes,
+given enough rows), not "does this matter for the paper's claims" (see
+the headroom framing below instead).
+
+**Fraction-of-headroom framing** (full-minus-magpie as a percentage of
+the File A COMBINED CEILING table's headroom range, the canonical
+combined-ceiling table above -- headroom is the honest ceiling's
+remaining gap to the noise/digitization-limited ceiling, so this states
+how much of that theoretically-recoverable gap the full descriptor
+set's extra 264 features, over magpie-only, actually close):
+
+- S: 0.003840 / [0.154, 0.172] = **2.23%-2.49%**
+- sigma: 0.010292 / [0.221, 0.229] = **4.49%-4.66%**
+- kappa: 0.004184 / [0.115, 0.123] = **3.40%-3.64%**
+- zT: 0.002804 / [0.162, 0.172] (declared) or [0.166, 0.174]
+  (recomputed TEP) = **1.61%-1.73%**
+
+Full descriptor coverage over magpie-only closes under 5% of headroom
+on every target; the conclusion is the same one reached against the
+now-superseded File B combined-ceiling table (that table's parenthetical
+comparison has been dropped here rather than kept alongside the
+canonical File A numbers, to avoid inviting a reader to cite the wrong
+table).
+
+**cbfv-alone saturates too, in both directions**: full-minus-cbfv is
+0.0015-0.0025 across all four targets -- the same order of magnitude as
+full-minus-magpie's smallest value (zT, 0.0028) and well inside the
+noise-floor's own optimistic-bound caveat. Descriptor headroom in this
+dataset is small under either restriction, not only under the smaller
+(magpie) one.
+
+**Provenance**: `results/descriptor_ablation/20260912T184318/` (8 run
+directories -- `{S,sigma,kappa,zT}_chemistry_{magpie,cbfv}` -- plus
+`environment.txt`, copied from the Kaggle P100 run that produced them;
+per-row predictions saved for all 25 folds x 8 runs).
+`environment.txt` records Python 3.12.13, numpy==1.26.4,
+optuna==3.6.1, xgboost==2.0.3, scikit-learn==1.4.2, CUDA 12.8.1, Tesla
+P100-PCIE-16GB driver 580.159.04. Computation method (pooled and
+per-repeat-pooled R² from saved per-row predictions, identical code for
+magpie/cbfv/full) reported in
+`reports/descriptor_ablation/20260912T184318/ablation_table.md` and
+`ablation_metrics.json`.
+
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 
 Direct-vs-derived zT, all-four-properties-present subset (55,948 rows,
