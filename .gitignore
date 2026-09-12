@@ -20,5 +20,23 @@ venv/
 # Models / outputs
 models/
 *.ipynb_checkpoints/
-checkpoints/
+checkpoints/*
 logs/
+
+# Confirmed chemistry-cluster ladder checkpoints + their frozen
+# hyperparameters, cited as provenance throughout CLAUDE.md -- tracked
+# despite the blanket checkpoints/ ignore above. Everything else under
+# checkpoints/ (including checkpoints/saved_predictions/te-ml-pipeline/data/,
+# the 1.1 GB nested raw/processed data tree) stays ignored: git cannot
+# re-include a file whose parent directory is excluded by a bare "dir/"
+# pattern, so each ancestor level must be negated explicitly down to the
+# four target directories, and nothing else is negated.
+!checkpoints/saved_predictions/
+checkpoints/saved_predictions/*
+!checkpoints/saved_predictions/checkpoints/
+checkpoints/saved_predictions/checkpoints/*
+!checkpoints/saved_predictions/checkpoints/S_chemistry/
+!checkpoints/saved_predictions/checkpoints/sigma_chemistry/
+!checkpoints/saved_predictions/checkpoints/kappa_chemistry/
+!checkpoints/saved_predictions/checkpoints/zT_chemistry/
+!checkpoints/saved_predictions/checkpoints/frozen_hyperparams/

@@ -1,0 +1,20 @@
+{
+  "repeat": 4,
+  "fold": 0,
+  "model_type": "xgboost",
+  "split_strategy": "chemistry",
+  "target_scale": "linear",
+  "hyperparam_source": "frozen",
+  "n_train": 103535,
+  "n_test": 25884,
+  "outer_r2": 0.7958115895605324,
+  "inner_cv_r2": 0.7926783006456432,
+  "param_n_estimators": 500,
+  "param_max_depth": 9,
+  "param_learning_rate": 0.021879194372117446,
+  "param_subsample": 0.6803687069914941,
+  "param_colsample_bytree": 0.6984141242996358,
+  "param_min_child_weight": 4,
+  "param_reg_lambda": 1.7133930619789375,
+  "param_reg_alpha": 0.050328646865956124
+}
