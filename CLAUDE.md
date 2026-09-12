@@ -153,22 +153,38 @@ parameter anywhere in `acquire()` -- a fresh pull on any day other than
 filename that does not reuse the "2026-08-15" label, and update this
 section rather than silently overwriting either file in place.
 
-**SCRIPT PROVENANCE.** The original `tematdb_scoring.py` that produced
-`results/20260910T123047_tematdb_external/metrics.json` no longer exists
-on disk anywhere in this repo or its working directories -- only its
-outputs and per-row predictions survive. Its results were reproduced
-bit-exactly (see above), so nothing is lost numerically, but its exact
-bootstrap-CI implementation could not be recovered and is not reproduced.
-The new orchestration scripts used for this entry (`estm_fileA.py`,
-`tematdb_C1_C2_fileA.py`, `tematdb_C3_fileA.py`,
-`tematdb_D_scoring_fileA.py`, `estm_control_fileB.py`,
-`tematdb_D_control_fileB.py`, `noise_floor_fileA.py`) currently live only
-in this session's local scratchpad directory, not tracked in git -- the
-same failure mode that lost `tematdb_scoring.py`. **Standing rule: any
-script that produces a number cited in this document must be committed to
-git (e.g. under `scripts/`), not left in an untracked scratchpad.** Not
-yet done for the scripts above; flagged here rather than silently left
-unrecorded.
+**SCRIPT PROVENANCE -- CORRECTED AND RESOLVED 2026-09-12.** The claim
+directly below this line, in the version of this note committed
+2026-09-11, was wrong: it stated that the original `tematdb_scoring.py`
+(which produced `results/20260910T123047_tematdb_external/metrics.json`)
+"no longer exists on disk anywhere in this repo or its working
+directories." It was never actually lost -- it survived in this
+session's local scratchpad the whole time and has now been recovered and
+committed to `scripts/tematdb_scoring.py`. Its recovery also identifies,
+with certainty rather than as an unexplained artifact, why the File A and
+control-run reimplementations' bootstrap CIs did not match its CIs
+bit-for-bit (the discrepancy reported in "Reimplementation verified
+faithful" above): `tematdb_scoring.py`'s `bootstrap_r2_ci` uses
+`n_boot=1000, seed=0`; `tematdb_D_scoring_fileA.py` and
+`tematdb_D_control_fileB.py` use `N_BOOT=2000`. Every point estimate
+(R2, RMSE, MAE, n, smear factors) stays bit-exact regardless -- only the
+CI bounds are affected, exactly as already stated, now with a confirmed
+cause rather than a suspected one.
+
+Every script that produced a number cited in this document is now
+committed under `scripts/`: the original `tematdb_scoring.py`, its five
+N-section digitization-floor siblings (`tematdb_N_step1_composition_match.py`
+through `tematdb_N_step5_n4_diagnostic.py`), `per_group_breakdown.py`, and
+the seven File A/control-run orchestration scripts (`noise_floor_fileA.py`,
+`estm_fileA.py`, `tematdb_C1_C2_fileA.py`, `tematdb_C3_fileA.py`,
+`consolidate_C.py`, `tematdb_D_scoring_fileA.py`, `estm_control_fileB.py`,
+`tematdb_D_control_fileB.py`). See `scripts/README.md` for the full
+script-to-output mapping, both directions. This resolves the "not yet
+done" gap this note previously flagged.
+
+**Standing rule: any script that produces a number cited in this
+document must be committed to git (e.g. under `scripts/`), not left in
+an untracked scratchpad.**
 
 **CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
 beyond what these numbers support:**
