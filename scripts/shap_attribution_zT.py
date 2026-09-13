@@ -100,7 +100,7 @@ import numpy as np
 import xgboost as xgb
 from sklearn.metrics import r2_score
 
-REPO_ROOT = Path(r"C:\Users\choha\te-ml-pipeline")
+REPO_ROOT = Path(__file__).resolve().parent.parent  # scripts/ is one level below the repo root
 sys.path.insert(0, str(REPO_ROOT))
 
 from src.nested_cv import (  # noqa: E402
