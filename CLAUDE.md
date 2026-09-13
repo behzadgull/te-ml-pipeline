@@ -1057,6 +1057,100 @@ magpie/cbfv/full) reported in
 `reports/descriptor_ablation/20260912T184318/ablation_table.md` and
 `ablation_metrics.json`.
 
+## Confirmed Results — SHAP Attribution Comparison (2026-09-13)
+
+**Method**: zT only, chemistry-cluster split (the honest-ceiling rung) and
+random 80/20 split, repeat 0, all 5 outer folds each (10 fits total), the
+SAME frozen hyperparameters as the confirmed ladder
+(`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json`).
+Fold construction reused unchanged from `src/nested_cv.py`'s own
+`outer_splits()` (see `scripts/shap_attribution_zT.py`), not
+reimplemented. Attributions computed via native XGBoost exact TreeSHAP
+(`Booster.predict(dmatrix, pred_contribs=True)`) -- not the `shap`
+package, which requires numpy>=2 against this project's pinned
+numpy==1.26.4 -- with the trailing bias/expected-value column dropped
+before normalizing. Per fold: a fixed, seeded 20,000-row random
+subsample of that fold's own test set (seed 0 throughout; every one of
+the 10 folds had a test set larger than 20,000 rows, so the full 20,000
+was used every time, never truncated). Per-feature mean(|SHAP|) is
+normalized to shares over the full **397-feature** set (confirmed via
+`summary.json`'s `n_features` field -- 397, not 398, so the bias column
+was correctly excluded before normalizing). Device: cuda (Kaggle GPU
+runtime, xgboost==2.0.3, numpy==1.26.4, scikit-learn==1.4.2,
+optuna==3.6.1, CUDA toolkit 12.8.1, per the run's own `environment.txt`).
+
+**R² per split, pooled across the 5 folds**:
+
+| split_strategy | fold 0 | fold 1 | fold 2 | fold 3 | fold 4 | pooled |
+|---|---|---|---|---|---|---|
+| random | 0.9155 | 0.9156 | 0.9187 | 0.9188 | 0.9164 | 0.9170 |
+| chemistry | 0.8018 | 0.7791 | 0.7981 | 0.8181 | 0.7911 | 0.7973 |
+
+Pooled gap (random - chemistry) = 0.9170 - 0.7973 = **0.1197**, reproducing
+the Five-Way Ladder's own zT gap (random 80/20 0.9186 vs chemistry
+cluster 0.7968, gap 0.1218 -- see the Five-Way Ladder table above) to
+within 0.002, using an independent 5-fold refit rather than reading the
+ladder's checkpoints directly.
+
+**Coarse group comparison** (source: MagpieData / CBFV_ / temperature_bin):
+
+| group | random mean share +/- SD | chemistry mean share +/- SD | delta (chem-rand) | delta / pooled SD |
+|---|---|---|---|---|
+| cbfv | 0.5385 +/- 0.0052 | 0.5297 +/- 0.0191 | -0.0088 | -0.63 |
+| magpie | 0.2647 +/- 0.0062 | 0.2731 +/- 0.0212 | +0.0083 | +0.54 |
+| temperature | 0.1968 +/- 0.0016 | 0.1972 +/- 0.0047 | +0.0004 | +0.12 |
+
+**Fine descriptor-semantic group comparison** (see the script's
+`FINE_GROUP_MEMBERS` mapping; 0 of 397 columns fell into "other"):
+
+| group | random mean share +/- SD | chemistry mean share +/- SD | delta (chem-rand) | delta / pooled SD |
+|---|---|---|---|---|
+| atomic_radius | 0.1942 +/- 0.0042 | 0.1859 +/- 0.0164 | -0.0083 | -0.69 |
+| dft_groundstate | 0.0218 +/- 0.0014 | 0.0289 +/- 0.0146 | +0.0071 | +0.68 |
+| electronegativity | 0.0708 +/- 0.0033 | 0.0668 +/- 0.0070 | -0.0040 | -0.74 |
+| periodic_position | 0.1116 +/- 0.0024 | 0.1152 +/- 0.0071 | +0.0036 | +0.68 |
+| thermodynamic_bulk | 0.1535 +/- 0.0023 | 0.1561 +/- 0.0067 | +0.0026 | +0.52 |
+| valence_electron_config | 0.1917 +/- 0.0043 | 0.1906 +/- 0.0193 | -0.0011 | -0.08 |
+| atomic_mass | 0.0174 +/- 0.0019 | 0.0166 +/- 0.0023 | -0.0008 | -0.35 |
+| temperature | 0.1968 +/- 0.0016 | 0.1972 +/- 0.0047 | +0.0004 | +0.12 |
+| metal_class | 0.0231 +/- 0.0006 | 0.0234 +/- 0.0030 | +0.0004 | +0.16 |
+| melting_point | 0.0191 +/- 0.0008 | 0.0194 +/- 0.0014 | +0.0002 | +0.21 |
+
+**Finding, stated as negative**: no group, coarse or fine, shows a delta
+exceeding 0.74 pooled fold-SD (electronegativity's -0.74 is the largest
+magnitude of any row above). At this fold count, attribution shares are
+statistically indistinguishable between the random and chemistry-cluster
+split strategies. The ~0.12 R² inflation documented above is **not**
+accompanied by any detectable shift in which descriptor families the
+model relies on.
+
+**Interpretation**: this is consistent with the inflation being a
+property of test-set composition -- the random split's test fold
+contains near-duplicates (same or very similar chemistry_cluster_id) of
+its own training rows, which the model can score well without learning
+anything different -- rather than a change in the model's learned
+internal structure. The frozen hyperparameters and descriptor set are
+identical across both split strategies by construction; only which rows
+land in train vs. test differs.
+
+**Caveat** (verbatim from `scripts/shap_attribution_zT.py`'s own
+docstring and `summary.json`): "The random-split and chemistry-cluster
+models are trained on DIFFERENT training sets by construction, in every
+one of the 5 folds (the random-split model's training rows include
+near-duplicates of its own test rows -- that is the phenomenon under
+study). This compares two different fitted models per fold, not an
+ablation of one fixed model. Averaging over 5 folds addresses
+fold-to-fold sampling variation within each split_strategy; it does not
+eliminate this train-set-composition confound, which is inherent to
+comparing the two split strategies at all."
+
+**Provenance**: `results/shap_attribution/20260913T082733/`
+(`comparison_table.md`, `summary.json`, `shap_arrays.npz` -- per-fold,
+per-feature mean|SHAP|/share/gain arrays plus train/test/subsample
+indices, enough to rebuild a figure without refitting -- and
+`environment.txt`), copied from the Kaggle run that produced them.
+Computed by `scripts/shap_attribution_zT.py`.
+
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 
 Direct-vs-derived zT, all-four-properties-present subset (55,948 rows,
