@@ -239,7 +239,8 @@ c. **The digitization floor carries snapshot sensitivity.** With the
 
 **Phase 2 — Paper A finish:**
 8. Direct-vs-derived zT pathway, on the all-four-properties subset.
-9. Screening rediscovery test, targeted holdout only (Paper A, item 7).
+9. Screening rediscovery test, targeted holdout only (Paper A, item 7)
+   -- DROPPED 2026-09-14, see Paper A item 7 below for the reason.
 10. Temperature axis — write as ONE limitation paragraph only, do not build
     a dedicated temperature-extrapolation EXPERIMENT (cut per frozen
     decision, see below). This is a scoping decision about the
@@ -571,7 +572,14 @@ thesis-equivalent.
 
 ---
 
-## Paper A — Validation-Inflation Ladder + Descriptor Ceiling (FROZEN)
+## Paper A — Validation-Inflation Ladder + Descriptor Saturation and the Label-Noise Ceiling (FROZEN)
+
+**Renamed 2026-09-14** (from "Descriptor Ceiling"): the old name
+predates the descriptor ablation and promised a descriptor result that
+had not yet been measured at the time it was written. Both halves are
+now measured and confirmed below: descriptor saturation (the
+magpie/cbfv/full ablation) and the label-noise ceiling (the noise-floor
+COMBINED CEILING work).
 
 **Novelty framing**: the systematic multi-method quantification + noise-
 floor anchor — NOT the leakage insight itself (already stated in Jia et
@@ -730,12 +738,19 @@ preempt a reviewer citing it back).
    cluster with training) — tests chemistry transfer. Report dropped-row
    count for each. ESTM and teMatDb each touched exactly once, after the
    model is fully frozen.
-7. **Screening rediscovery, targeted holdout**: hold out ONLY specific
+7. **DROPPED (2026-09-14).** **Screening rediscovery, targeted holdout**: hold out ONLY specific
    known-good targets + their exact canonical duplicates (not all high-zT
    materials broadly) — retain other high-zT materials so the model keeps
    a performance signal to generalize from. Interpret result as caveated
    tail-extrapolation. If the high-zT region is too thin after holdout,
    report that finding directly rather than forcing a positive result.
+   **Reason dropped**: the paper's four confirmed results (the Five-Way
+   Ladder, the SHAP attribution negative control, the label-noise
+   ceiling, and descriptor saturation) plus cross-database transfer
+   (ESTM/teMatDb external validation) already constitute a full paper;
+   this coda supports none of those contributions directly. Item text
+   retained above, unedited, so the design survives if this is ever
+   revived.
 8. **Temperature axis — no dedicated extrapolation experiment; temperature
    STAYS a per-row model feature.** zT is typically non-monotonic in
    temperature (peaks then rolls over, often within 600-800K) — no
