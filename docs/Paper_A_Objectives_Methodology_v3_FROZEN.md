@@ -1,5 +1,11 @@
-# Paper A: Validation-Inflation Ladder + Descriptor Ceiling
+# Paper A: Validation-Inflation Ladder + Descriptor Saturation and the Label-Noise Ceiling
 ## v3 — FROZEN. Every open question below is a committed decision, not a discussion point.
+
+**Updated 2026-09-14, after the FROZEN marker above**: title renamed
+from "Descriptor Ceiling" and Section 4.4 (screening rediscovery) marked
+DROPPED, to match CLAUDE.md's 2026-09-14 edits. See the dated notes at
+each changed location below for the reasons; this line exists so the
+divergence from the originally-frozen v3 text is visible at a glance.
 
 **Status: closed for review. Implement as written.** This version converts
 every prior "resolution" that still had a remaining "it depends" into one
@@ -144,7 +150,15 @@ deduplicated set:
   two different, both-legitimate questions and risks shrinking the
   external set to statistical meaninglessness.
 
-### 4.4 Screening rediscovery test — targeted holdout, not blanket exclusion
+### 4.4 Screening rediscovery test — targeted holdout, not blanket exclusion — DROPPED 2026-09-14
+**Reason dropped** (same reason recorded in CLAUDE.md's Paper A item 7):
+the paper's four confirmed results (the Five-Way Ladder, the SHAP
+attribution negative control, the label-noise ceiling, and descriptor
+saturation) plus cross-database transfer (ESTM/teMatDb external
+validation) already constitute a full paper; this coda supports none of
+those contributions directly. Spec text retained below, unedited, so the
+design survives if this is ever revived.
+
 - Hold out **only the specific known-good target materials and their
   exact canonical duplicates** from training — not all high-zT materials
   broadly.
@@ -188,8 +202,8 @@ reviewer from that camp cannot dismiss as hand-waving.
 Core spine: inflation ladder (4.1) + noise-floor anchor (3.3) + two-number
 external validation (4.3). Supporting extension: direct-vs-derived pathway
 (subset-matched, per v2 Section 3.7 — unchanged). Applied coda: targeted
-screening rediscovery (4.4). Temperature extrapolation is removed per 4.5,
-not retained even as an extension.
+screening rediscovery (4.4) — **DROPPED 2026-09-14, see 4.4**. Temperature
+extrapolation is removed per 4.5, not retained even as an extension.
 
 ---
 
@@ -205,5 +219,6 @@ the cluster definition is fixed and the sensitivity table is produced.
 noise floor in log space (3.3) + two-metric external validation (4.3).
 
 **Phase 2 (finish):** direct-vs-derived on the all-four-properties subset
-(unchanged from v2) → screening as caveated coda (4.4) → temperature axis
-reduced to one paragraph (4.5) → PCA head-to-head (4.6).
+(unchanged from v2) → screening as caveated coda (4.4) — **DROPPED
+2026-09-14, see 4.4** → temperature axis reduced to one paragraph (4.5)
+→ PCA head-to-head (4.6).
