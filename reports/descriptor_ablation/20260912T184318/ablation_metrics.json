@@ -1,0 +1,271 @@
+{
+  "note": "Descriptor ablation (magpie-only 133 features, cbfv-only 265 features) vs the confirmed full-feature (397) chemistry-cluster ladder runs. All three feature sets computed by the SAME code (pooled + per-repeat-pooled R2 from saved per-row predictions), not read from CLAUDE.md. sigma/kappa scored in log10 space, S/zT in linear space, matching each target's target_scale in its own run_config.json.",
+  "source_dirs": {
+    "magpie/cbfv": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\{target}_chemistry_{magpie,cbfv}",
+    "full": "checkpoints/saved_predictions/checkpoints/{target}_chemistry"
+  },
+  "results": {
+    "S": {
+      "magpie": {
+        "n_features": 133,
+        "n_features_source": "run_config.json",
+        "target_scale": "linear",
+        "pooled_r2": 0.803807598583181,
+        "pooled_n": 925320,
+        "per_repeat_r2": [
+          0.8012749727518887,
+          0.8030517498426609,
+          0.8042821178266495,
+          0.8015052416831416,
+          0.8089239108115647
+        ],
+        "per_repeat_r2_mean": 0.8038075985831812,
+        "per_repeat_r2_std": 0.003109990656970035,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\S_chemistry_magpie"
+      },
+      "cbfv": {
+        "n_features": 265,
+        "n_features_source": "run_config.json",
+        "target_scale": "linear",
+        "pooled_r2": 0.805968819395567,
+        "pooled_n": 925320,
+        "per_repeat_r2": [
+          0.8040643529155198,
+          0.8045850593909816,
+          0.8051890865470753,
+          0.8057337734473381,
+          0.8102718246769202
+        ],
+        "per_repeat_r2_mean": 0.8059688193955671,
+        "per_repeat_r2_std": 0.002486004258245677,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\S_chemistry_cbfv"
+      },
+      "full": {
+        "n_features": 397,
+        "n_features_source": "known value (full-feature run_config.json predates the n_features field)",
+        "target_scale": "linear",
+        "pooled_r2": 0.8076475931226255,
+        "pooled_n": 925320,
+        "per_repeat_r2": [
+          0.8062149081082401,
+          0.8064421981428515,
+          0.8077063637000822,
+          0.8071001015005579,
+          0.8107743941613957
+        ],
+        "per_repeat_r2_mean": 0.8076475931226254,
+        "per_repeat_r2_std": 0.0018429357829813486,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\S_chemistry"
+      }
+    },
+    "sigma": {
+      "magpie": {
+        "n_features": 133,
+        "n_features_source": "run_config.json",
+        "target_scale": "log10",
+        "pooled_r2": 0.7497341840786438,
+        "pooled_n": 913775,
+        "per_repeat_r2": [
+          0.7501545849750482,
+          0.7505202640259097,
+          0.7506540078785393,
+          0.7487461787982257,
+          0.7485958847154959
+        ],
+        "per_repeat_r2_mean": 0.7497341840786438,
+        "per_repeat_r2_std": 0.0009890164678005033,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\sigma_chemistry_magpie"
+      },
+      "cbfv": {
+        "n_features": 265,
+        "n_features_source": "run_config.json",
+        "target_scale": "log10",
+        "pooled_r2": 0.7585029156933013,
+        "pooled_n": 913775,
+        "per_repeat_r2": [
+          0.7593311069937803,
+          0.7573686606315855,
+          0.760374998630112,
+          0.7572812623587638,
+          0.7581585498522647
+        ],
+        "per_repeat_r2_mean": 0.7585029156933013,
+        "per_repeat_r2_std": 0.0013311794206430565,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\sigma_chemistry_cbfv"
+      },
+      "full": {
+        "n_features": 397,
+        "n_features_source": "known value (full-feature run_config.json predates the n_features field)",
+        "target_scale": "log10",
+        "pooled_r2": 0.7600266209103556,
+        "pooled_n": 913775,
+        "per_repeat_r2": [
+          0.7608313932130063,
+          0.7598805664891453,
+          0.7607787660784575,
+          0.7597998434885127,
+          0.7588425352826564
+        ],
+        "per_repeat_r2_mean": 0.7600266209103557,
+        "per_repeat_r2_std": 0.0008197864782596264,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\sigma_chemistry"
+      }
+    },
+    "kappa": {
+      "magpie": {
+        "n_features": 133,
+        "n_features_source": "run_config.json",
+        "target_scale": "log10",
+        "pooled_r2": 0.8418589868491216,
+        "pooled_n": 605550,
+        "per_repeat_r2": [
+          0.8421030119416897,
+          0.84099394972308,
+          0.843062665362579,
+          0.8423326377930017,
+          0.8408026694252575
+        ],
+        "per_repeat_r2_mean": 0.8418589868491215,
+        "per_repeat_r2_std": 0.0009482656742165828,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\kappa_chemistry_magpie"
+      },
+      "cbfv": {
+        "n_features": 265,
+        "n_features_source": "run_config.json",
+        "target_scale": "log10",
+        "pooled_r2": 0.8435809176916583,
+        "pooled_n": 605550,
+        "per_repeat_r2": [
+          0.844095104869867,
+          0.8427916830783293,
+          0.8446782027718972,
+          0.8446334746386855,
+          0.8417061230995124
+        ],
+        "per_repeat_r2_mean": 0.8435809176916583,
+        "per_repeat_r2_std": 0.0012955737306209623,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\kappa_chemistry_cbfv"
+      },
+      "full": {
+        "n_features": 397,
+        "n_features_source": "known value (full-feature run_config.json predates the n_features field)",
+        "target_scale": "log10",
+        "pooled_r2": 0.8460425404003986,
+        "pooled_n": 605550,
+        "per_repeat_r2": [
+          0.8462882154980325,
+          0.8462699043136879,
+          0.8470032796950158,
+          0.8465161846233966,
+          0.8441351178718601
+        ],
+        "per_repeat_r2_mean": 0.8460425404003986,
+        "per_repeat_r2_std": 0.001106534019725624,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\kappa_chemistry"
+      }
+    },
+    "zT": {
+      "magpie": {
+        "n_features": 133,
+        "n_features_source": "run_config.json",
+        "target_scale": "linear",
+        "pooled_r2": 0.7940051816631706,
+        "pooled_n": 647095,
+        "per_repeat_r2": [
+          0.7958728679929633,
+          0.7915601757272144,
+          0.7936512803032946,
+          0.795082410140446,
+          0.7938591741519343
+        ],
+        "per_repeat_r2_mean": 0.7940051816631705,
+        "per_repeat_r2_std": 0.0016411346540936493,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\zT_chemistry_magpie"
+      },
+      "cbfv": {
+        "n_features": 265,
+        "n_features_source": "run_config.json",
+        "target_scale": "linear",
+        "pooled_r2": 0.794536571271627,
+        "pooled_n": 647095,
+        "per_repeat_r2": [
+          0.7918605275618803,
+          0.7886494213750193,
+          0.7958263605148186,
+          0.7978169015184169,
+          0.7985296453880001
+        ],
+        "per_repeat_r2_mean": 0.794536571271627,
+        "per_repeat_r2_std": 0.004188929086303249,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\kaggle_out\\descriptor_ablation\\zT_chemistry_cbfv"
+      },
+      "full": {
+        "n_features": 397,
+        "n_features_source": "known value (full-feature run_config.json predates the n_features field)",
+        "target_scale": "linear",
+        "pooled_r2": 0.7968093431799715,
+        "pooled_n": 647095,
+        "per_repeat_r2": [
+          0.7973349033076559,
+          0.7915068768875622,
+          0.7985015541475947,
+          0.7984477146313945,
+          0.7982556669256508
+        ],
+        "per_repeat_r2_mean": 0.7968093431799717,
+        "per_repeat_r2_std": 0.003001335268636562,
+        "source_dir": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\zT_chemistry"
+      }
+    }
+  },
+  "deltas_full_minus_other": {
+    "S": {
+      "magpie": {
+        "delta_full_minus_other": 0.0038399945394441692,
+        "delta_in_units_of_full_sd": 2.08362905257184,
+        "exceeds_2x_full_sd": true
+      },
+      "cbfv": {
+        "delta_full_minus_other": 0.0016787737270582692,
+        "delta_in_units_of_full_sd": 0.9109236157661925,
+        "exceeds_2x_full_sd": false
+      }
+    },
+    "sigma": {
+      "magpie": {
+        "delta_full_minus_other": 0.010292436831711882,
+        "delta_in_units_of_full_sd": 12.555021465543454,
+        "exceeds_2x_full_sd": true
+      },
+      "cbfv": {
+        "delta_full_minus_other": 0.0015237052170543608,
+        "delta_in_units_of_full_sd": 1.8586610751242512,
+        "exceeds_2x_full_sd": false
+      }
+    },
+    "kappa": {
+      "magpie": {
+        "delta_full_minus_other": 0.004183553551277086,
+        "delta_in_units_of_full_sd": 3.7807726438581972,
+        "exceeds_2x_full_sd": true
+      },
+      "cbfv": {
+        "delta_full_minus_other": 0.0024616227087402853,
+        "delta_in_units_of_full_sd": 2.2246245166060676,
+        "exceeds_2x_full_sd": true
+      }
+    },
+    "zT": {
+      "magpie": {
+        "delta_full_minus_other": 0.0028041615168011846,
+        "delta_in_units_of_full_sd": 0.9343046563655153,
+        "exceeds_2x_full_sd": false
+      },
+      "cbfv": {
+        "delta_full_minus_other": 0.0022727719083446285,
+        "delta_in_units_of_full_sd": 0.7572535904584551,
+        "exceeds_2x_full_sd": false
+      }
+    }
+  }
+}
