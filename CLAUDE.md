@@ -50,6 +50,21 @@ featurized_ThermoelectricMaterials_2026-08-15.csv`
   975,062,560 bytes). Kaggle input path:
   `/kaggle/input/datasets/muhammadbehzadgull/
   te-ml-pipeline-canonical-dataset-a/`.
+- **Mislabeled figure, do not use**:
+  `checkpoints/saved_predictions/te-ml-pipeline/figures/
+  cleaning_funnel.png`/`.pdf` sit inside File A's own directory tree but
+  render **File B's** cleaning funnel (`scripts/make_figures.py`'s
+  `CLEANING_STEPS` constant was hardcoded from the 2026-08-15 pull's
+  2026-08-17 re-run and never updated after File A became canonical).
+  Confirmed 2026-09-14: the figure's final count (280,348) does not
+  match File A's actual cleaned CSV (280,664). File A's own funnel is
+  now computed at
+  `results/cleaning_funnel/20260914T100914/funnel_counts.json`
+  (verified against File A's cleaned CSV, gate passed) and
+  `scripts/make_figures.py`'s `CLEANING_STEPS`/`RAW_CURVES` are updated
+  to match; the old File-B-sourced figure files on disk here are left in
+  place as a historical artifact, not deleted, but should never be cited
+  as File A's funnel.
 
 **File B -- used for ESTM/teMatDb external validation and the noise-floor
 inputs, NOT what produced the confirmed ladder**: `data/processed/

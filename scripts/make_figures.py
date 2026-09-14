@@ -47,14 +47,28 @@ FIG3_AXIS_LABELS = {
     "zT": "zT",
 }
 
-# Actual row counts from the run_cleaning_pipeline() run logged against
-# the 2026-08-15 ThermoelectricMaterials pull (data/processed/cleaned_
-# ThermoelectricMaterials_2026-08-15.csv), re-run 2026-08-17 after fixing
-# steps 8/9 to drop rows (not NaN-out values) and the sigma lower bound
-# (1 -> 10 S/m) to match the thesis, see CLAUDE.md's Data Cleaning
-# Pipeline section. Step 1 is an expansion (each raw curve digitizes into
+# Row counts for File A (the canonical dataset, 2026-08-22 pull -- see
+# CLAUDE.md's Canonical Dataset section), from
+# results/cleaning_funnel/20260914T100914/funnel_counts.json, produced by
+# running src/data_cleaning.py's 11 step functions individually against
+# the raw files at checkpoints/saved_predictions/te-ml-pipeline/data/raw/
+# (File A's own raw pull, confirmed via its extraction_metadata.json:
+# upstream_db_snapshot 2026-08-22, 9,494/55,261/156,101 papers/samples/
+# curves). Verified 2026-09-14: step 11's output (280,664) matches File
+# A's existing cleaned CSV on disk exactly (checkpoints/saved_predictions/
+# te-ml-pipeline/data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv),
+# confirming the pipeline is deterministic and reproduces File A's actual
+# cleaned dataset. Step 1 is an expansion (each raw curve digitizes into
 # many temperature-property points), so it is annotated separately
 # rather than folded into the monotonic funnel.
+#
+# The previous values here (see FILE B (SUPERSEDED) block below) were
+# File B's (the 2026-08-15 pull) 2026-08-17 re-run numbers, mistakenly
+# left in place after File A became canonical on 2026-09-11 -- this is
+# also what checkpoints/saved_predictions/te-ml-pipeline/figures/
+# cleaning_funnel.png (mislabeled: sits in File A's directory tree but
+# renders File B's funnel) was generated from. File A's own funnel had
+# never been computed until 2026-09-14.
 # Pooled out-of-fold R^2 under chemistry-cluster grouped CV, frozen
 # hyperparameters per (target, model_type) via nested_cv.py's tune_once,
 # see CLAUDE.md "Confirmed Results -- Five-Way Ladder" and Paper A item
@@ -95,19 +109,38 @@ LADDER_RESULTS = {
 LADDER_LEAKY_STRATEGY = "Random 80/20"
 LADDER_HONEST_STRATEGY = "Chemistry-Cluster CV"
 
-RAW_CURVES = 155_758
+# FILE B (SUPERSEDED) -- the 2026-08-15 pull's 2026-08-17 re-run funnel,
+# kept for audit/comparison, not deleted. File A is canonical for every
+# Paper A result as of 2026-09-11 (CLAUDE.md Canonical Dataset section);
+# do not use these values for the methodology figure.
+# RAW_CURVES = 155_758
+# CLEANING_STEPS = [
+#     ("1. Property extraction\n& range filtering", 1_992_138),
+#     ("2. Integration &\nconsolidation", 1_992_138),
+#     ("3. Temperature filtering\n300-800K", 1_093_377),
+#     ("4. Pivot long→wide", 397_791),
+#     ("5. Formula cleaning", 392_927),
+#     ("6. zT self-consistency\ncheck", 388_221),
+#     ("7. DFT data removal", 387_235),
+#     ("8. Multi-source\nconsistency filtering", 308_656),
+#     ("9. MAD outlier filter", 289_318),
+#     ("10. Min. temperature\ncoverage", 284_671),
+#     ("11. Smoothness filter", 280_348),
+# ]
+
+RAW_CURVES = 156_101
 CLEANING_STEPS = [
-    ("1. Property extraction\n& range filtering", 1_992_138),
-    ("2. Integration &\nconsolidation", 1_992_138),
-    ("3. Temperature filtering\n300-800K", 1_093_377),
-    ("4. Pivot long→wide", 397_791),
-    ("5. Formula cleaning", 392_927),
-    ("6. zT self-consistency\ncheck", 388_221),
-    ("7. DFT data removal", 387_235),
-    ("8. Multi-source\nconsistency filtering", 308_656),
-    ("9. MAD outlier filter", 289_318),
-    ("10. Min. temperature\ncoverage", 284_671),
-    ("11. Smoothness filter", 280_348),
+    ("1. Property extraction\n& range filtering", 1_996_047),
+    ("2. Integration &\nconsolidation", 1_996_047),
+    ("3. Temperature filtering\n300-800K", 1_096_324),
+    ("4. Pivot long→wide", 398_763),
+    ("5. Formula cleaning", 393_381),
+    ("6. zT self-consistency\ncheck", 388_669),
+    ("7. DFT data removal", 387_683),
+    ("8. Multi-source\nconsistency filtering", 308_998),
+    ("9. MAD outlier filter", 289_637),
+    ("10. Min. temperature\ncoverage", 284_987),
+    ("11. Smoothness filter", 280_664),
 ]
 
 
