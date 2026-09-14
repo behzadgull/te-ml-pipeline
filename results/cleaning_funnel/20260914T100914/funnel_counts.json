@@ -1,0 +1,60 @@
+{
+  "generated_at_utc": "20260914T100914",
+  "source_raw_data_dir": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\te-ml-pipeline\\data\\raw",
+  "raw_input_row_counts": {
+    "papers": 9494,
+    "curves": 156101
+  },
+  "funnel": [
+    {
+      "step": "1_property_extraction_range_filtering",
+      "rows": 1996047
+    },
+    {
+      "step": "2_integration_consolidation",
+      "rows": 1996047
+    },
+    {
+      "step": "3_temperature_filtering_300_800K",
+      "rows": 1096324
+    },
+    {
+      "step": "4_pivot_long_to_wide",
+      "rows": 398763
+    },
+    {
+      "step": "5_formula_cleaning",
+      "rows": 393381
+    },
+    {
+      "step": "6_zt_self_consistency",
+      "rows": 388669
+    },
+    {
+      "step": "7_dft_removal",
+      "rows": 387683
+    },
+    {
+      "step": "8_multi_source_consistency",
+      "rows": 308998
+    },
+    {
+      "step": "9_mad_outlier_filter",
+      "rows": 289637
+    },
+    {
+      "step": "10_min_temperature_coverage",
+      "rows": 284987
+    },
+    {
+      "step": "11_smoothness_filter_final",
+      "rows": 280664
+    }
+  ],
+  "verification_gate": {
+    "step11_computed_rows": 280664,
+    "file_a_existing_cleaned_csv": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\te-ml-pipeline\\data\\processed\\cleaned_ThermoelectricMaterials_2026-08-15.csv",
+    "file_a_existing_cleaned_csv_rows": 280664,
+    "match": true
+  }
+}
