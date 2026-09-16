@@ -273,12 +273,48 @@ def load_target_data(target, processed_data_dir=PROCESSED_DATA_DIR, project=PROJ
 
 def randomized_group_kfold(groups, n_splits, rng):
     """
-    One randomized grouped k-fold split. Shuffles the unique group order
-    with `rng`, then greedily bin-packs groups (sorted by descending
-    size, ties broken by the now-randomized order) into the currently-
-    smallest fold -- the same algorithm sklearn's GroupKFold uses
-    internally, minus its alphabetical, order-independent tie-breaking.
+    One randomized grouped k-fold split. Sorts groups by descending
+    size (shuffling first to break ties among equal-sized groups), then:
+      - the top n_splits groups -- the ones large enough to dominate
+        whichever fold they land in -- are each independently assigned
+        to a fold drawn uniformly at random from `rng`, WITH
+        replacement (two of the top n_splits groups can land in the
+        same fold);
+      - every remaining group is greedily bin-packed into the
+        currently-smallest fold, continuing from the running totals
+        the random top-n_splits placement left behind -- the same
+        algorithm sklearn's GroupKFold uses internally.
     Yields (train_idx, test_idx) n_splits times.
+
+    Random top-n_splits placement, not size-sort + greedy-argmin for
+    everything: an earlier version of this function sorted ALL groups
+    by descending size, then bin-packed greedily via argmin over fold
+    totals for every group including the largest. Since the top
+    n_splits groups are typically strictly larger than one another (no
+    size ties among them), the initial shuffle never affects their
+    relative order, and argmin over an all-zero fold-totals array
+    returns the first (lowest) index every time -- so the k-th largest
+    group was placed into fold k-1 in EVERY repeat, regardless of
+    `rng`. Verified directly on File A's zT rows (2026-09): the largest
+    cluster landed in fold 0 in all 5 repeats, for exactly this
+    reason, under both the pre-SNAP and SNAP(0.05) grouping -- not
+    chance. Repeats were therefore not independent partitions for the
+    rows that dominate the result, which defeats the purpose repeating
+    is documented for (CLAUDE.md Grouping Key: "[repeating] separates
+    that single-split composition effect from genuine model variance"
+    -- the across-repeat SD is supposed to measure how much the result
+    depends on which large cluster gets held out, not just ordinary
+    fit-to-fit noise). This version's random top-n_splits placement is
+    what makes repeats actually vary the fold assignment of the
+    largest clusters, so the across-repeat SD can measure what it was
+    always meant to. Verified by simulation (2026-09, 20 repeats, File
+    A zT rows, SNAP(0.05) grouping): fold-size SD stays 0.002% of the
+    mean -- identical to the old version, since the greedy remainder
+    phase still balances row counts -- while the top-5 largest groups'
+    fold assignment now varies across all 20 repeats (20/20 distinct
+    partitions, vs. 1/20 before), every one of the top 5 pairs
+    co-occurring in a fold at least once, and every partition still
+    disjoint, exhaustive, and group-respecting.
     """
     groups = np.asarray(groups)
     unique_groups, counts = np.unique(groups, return_counts=True)
@@ -291,7 +327,16 @@ def randomized_group_kfold(groups, n_splits, rng):
 
     fold_sizes = np.zeros(n_splits, dtype=int)
     group_to_fold = {}
-    for group, count in zip(unique_groups, counts):
+
+    top_k = min(n_splits, len(unique_groups))
+    top_order = rng.permutation(top_k)
+    for i in top_order:
+        group, count = unique_groups[i], counts[i]
+        fold = int(rng.integers(0, n_splits))
+        group_to_fold[group] = fold
+        fold_sizes[fold] += count
+
+    for group, count in zip(unique_groups[top_k:], counts[top_k:]):
         fold = int(np.argmin(fold_sizes))
         group_to_fold[group] = fold
         fold_sizes[fold] += count

@@ -22,6 +22,18 @@ from pymatgen.core.composition import CompositionError
 # stored as a percentage (5.0); divide by 100 before passing it here.
 DEFAULT_DOPANT_THRESHOLD_FRAC = 0.05
 
+# Relative tolerance for snapping a host amount to the nearest integer in
+# chemistry_cluster_id() -- see SNAP(T) in that function's docstring.
+# Selected by acceptance tests (2026-09): T=0.05 is the smallest tested
+# value (0.01, 0.02, 0.03, 0.05, 0.08 were evaluated) that merges
+# Pb0.97Te1 with PbTe and Co3.95Sb12 with CoSb3, while still leaving
+# Bi2Te2.7Se0.3 distinct from Bi2Te3, elemental Te distinct from
+# Sn0.24775Te1Pb0.24775-style SnPbTe alloys, elemental Fe distinct from
+# V0.0693Cr0.0776Fe0.693C0.0966-style Fe-based alloys, and
+# Hf0.167Zr0.167Ta0.167Ti0.167Nb0.167V0.167Co1Sb1 (a six-element
+# high-entropy alloy) distinct from CoSb.
+DEFAULT_SNAP_TOLERANCE = 0.05
+
 
 def parse_formula(formula):
     """
@@ -51,7 +63,11 @@ def composition_id(comp):
     return comp.reduced_formula
 
 
-def chemistry_cluster_id(comp, dopant_threshold_frac=DEFAULT_DOPANT_THRESHOLD_FRAC):
+def chemistry_cluster_id(
+    comp,
+    dopant_threshold_frac=DEFAULT_DOPANT_THRESHOLD_FRAC,
+    snap_tolerance=DEFAULT_SNAP_TOLERANCE,
+):
     """
     Chemistry-cluster identity (FROZEN definition, CLAUDE.md Grouping
     Key): the reduced host-lattice stoichiometry with dopant elements
@@ -60,9 +76,20 @@ def chemistry_cluster_id(comp, dopant_threshold_frac=DEFAULT_DOPANT_THRESHOLD_FR
     are dopants and do not split the cluster.
 
     Host elements are kept at their original (pre-dopant-removal)
-    amounts and then reduced to an integer ratio, so two formulas with
-    the same host stoichiometry but different dopant levels/species
-    collapse to the same cluster id.
+    amounts, each SNAPPED to the nearest integer if it is within
+    `snap_tolerance` (relative) of that integer -- see
+    DEFAULT_SNAP_TOLERANCE -- and otherwise left as-is, before taking
+    reduced_formula. This snap step is required: pymatgen's
+    reduced_formula does NOT, on its own, reduce near-integer host
+    amounts to an integer ratio -- an earlier version of this docstring
+    claimed it did ("reduced to an integer ratio"), which was never
+    true (Composition({"Pb": 0.97, "Te": 1.0}).reduced_formula returns
+    "Te1Pb0.97", not "TePb") and is what let that gap go undetected:
+    two rows differing only by measurement/digitization noise (e.g.
+    Pb0.97Te1 vs PbTe) received different cluster ids instead of
+    merging, fragmenting 10,222 of 12,036 clusters (79.3% of rows,
+    File A) into decimal-suffixed near-duplicates of an integer
+    neighbor. The explicit snap here is what actually merges them.
 
     Falls back to the full composition_id if every element in the
     formula falls below the threshold (e.g. a high-entropy composition
@@ -78,7 +105,14 @@ def chemistry_cluster_id(comp, dopant_threshold_frac=DEFAULT_DOPANT_THRESHOLD_FR
     }
     if not host_amounts:
         return comp.reduced_formula
-    host_comp = Composition(host_amounts)
+    snapped_amounts = {}
+    for el, amt in host_amounts.items():
+        nearest = round(amt)
+        if nearest >= 1 and abs(amt - nearest) / nearest <= snap_tolerance:
+            snapped_amounts[el] = float(nearest)
+        else:
+            snapped_amounts[el] = amt
+    host_comp = Composition(snapped_amounts)
     return host_comp.reduced_formula
 
 
