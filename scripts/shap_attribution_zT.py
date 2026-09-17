@@ -125,6 +125,7 @@ DEFAULT_FROZEN_HYPERPARAMS = (
     REPO_ROOT / "checkpoints" / "saved_predictions" / "checkpoints" / "frozen_hyperparams" / "zT.json"
 )
 DEFAULT_SEED = 0  # matches run_nested_cv's default seed and the ladder's own seed=0 runs
+DEFAULT_N_REPEATS = 5  # loop all 5 repeats rather than repeat 0 only
 DEFAULT_SHAP_N = 20_000
 DEFAULT_SHAP_SEED = 0
 
@@ -133,12 +134,13 @@ DEFAULT_SHAP_SEED = 0
 # D1: exact repeat-0, all-folds replication, reusing outer_splits unchanged.
 # ---------------------------------------------------------------------------
 
-def _build_repeat0_folds(split_strategy, n_rows, group_lookup, seed=DEFAULT_SEED, n_outer_folds=N_OUTER_FOLDS):
+def _build_all_repeat_folds(split_strategy, n_rows, group_lookup, seed=DEFAULT_SEED,
+                             n_outer_folds=N_OUTER_FOLDS, n_repeats=DEFAULT_N_REPEATS):
     """
     Reproduce run_nested_cv's exact (train_idx, test_idx) pairs for ALL
-    n_outer_folds folds of repeat=0, given `seed`, under `split_strategy`
-    -- WITHOUT calling run_nested_cv itself (which would also
-    retune/fit/checkpoint).
+    n_outer_folds folds of EVERY repeat in range(n_repeats), given `seed`,
+    under `split_strategy` -- WITHOUT calling run_nested_cv itself (which
+    would also retune/fit/checkpoint).
 
     run_nested_cv's relevant body (src/nested_cv.py, ~line 1139-1145):
         rng_master = np.random.default_rng(seed)
@@ -148,12 +150,13 @@ def _build_repeat0_folds(split_strategy, n_rows, group_lookup, seed=DEFAULT_SEED
             for fold, (train_idx, test_idx) in enumerate(fold_iter):
                 ...
 
-    For repeat=0 this is exactly: draw ONE integer from rng_master to
-    seed repeat_rng, build the SAME fold_iter generator via the SAME
-    outer_splits() call, then take all n_outer_folds splits it yields,
-    in order (fold=0..n_outer_folds-1). Nothing about how these folds
-    are produced depends on any later repeat, so this is exact, not an
-    approximation:
+    This replays that SAME outer loop across every repeat: rng_master
+    draws one integer per repeat, IN ORDER, to seed that repeat's
+    repeat_rng -- so repeat 1's seed draw depends on repeat 0's
+    rng_master state exactly as it would inside a real
+    run_nested_cv(..., n_repeats=n_repeats) call. Nothing about how any
+    one repeat's folds are produced depends on a LATER repeat, so this
+    remains exact, not an approximation, for every repeat collected:
       - split_strategy in {"chemistry", "composition"}: outer_splits
         delegates to randomized_group_kfold, which computes all
         n_outer_folds fold assignments from ONE rng.permutation call
@@ -165,12 +168,17 @@ def _build_repeat0_folds(split_strategy, n_rows, group_lookup, seed=DEFAULT_SEED
         yields n_outer_folds splits from it -- collecting all of them
         is exactly what run_nested_cv's repeat-0 fold loop receives.
 
-    Returns a list of (train_idx, test_idx) tuples, length n_outer_folds.
+    Returns a list of (repeat, fold, train_idx, test_idx) tuples, length
+    n_repeats * n_outer_folds, in (repeat, fold) order.
     """
     rng_master = np.random.default_rng(seed)
-    repeat_rng = np.random.default_rng(rng_master.integers(0, 2**32 - 1))  # repeat=0
-    fold_iter = outer_splits(split_strategy, n_rows, group_lookup, n_outer_folds, repeat_rng)
-    return list(fold_iter)  # folds 0..n_outer_folds-1, in order
+    all_folds = []
+    for repeat in range(n_repeats):
+        repeat_rng = np.random.default_rng(rng_master.integers(0, 2**32 - 1))
+        fold_iter = outer_splits(split_strategy, n_rows, group_lookup, n_outer_folds, repeat_rng)
+        for fold, (train_idx, test_idx) in enumerate(fold_iter):
+            all_folds.append((repeat, fold, train_idx, test_idx))
+    return all_folds
 
 
 # ---------------------------------------------------------------------------
@@ -319,7 +327,7 @@ def _sha256_file(path):
 # ---------------------------------------------------------------------------
 
 def _fit_and_attribute_one_fold(
-    split_strategy, fold, train_idx, test_idx, X_full, y_full, feature_cols,
+    split_strategy, repeat, fold, train_idx, test_idx, X_full, y_full, feature_cols,
     best_params, device, shap_n, shap_seed,
 ):
     """
@@ -390,6 +398,7 @@ def _fit_and_attribute_one_fold(
 
     return {
         "split_strategy": split_strategy,
+        "repeat": repeat,
         "fold": fold,
         "n_train": int(len(train_idx)),
         "n_test": int(len(test_idx)),
@@ -415,29 +424,32 @@ def _fit_and_attribute_one_fold(
 
 def fit_and_attribute_all_folds(
     split_strategy, X_full, y_full, feature_cols, group_lookup,
-    best_params, seed, n_outer_folds, device, shap_n, shap_seed,
+    best_params, seed, n_outer_folds, device, shap_n, shap_seed, n_repeats=DEFAULT_N_REPEATS,
 ):
     """
-    D1-D5 across ALL n_outer_folds folds of repeat 0 for one
-    split_strategy: builds the five folds via _build_repeat0_folds (no
-    fold logic reimplemented), fits and attributes each one via
+    D1-D5 across ALL n_repeats * n_outer_folds folds for one
+    split_strategy: builds every repeat's folds via
+    _build_all_repeat_folds (no fold logic reimplemented), fits and
+    attributes each one via
     _fit_and_attribute_one_fold, then adds the pooled out-of-fold R^2
-    across all five folds' held-out predictions -- the SAME "pooled
+    across all folds' held-out predictions -- the SAME "pooled
     out-of-fold R^2" definition run_nested_cv() itself reports as the
     ladder's primary metric (CLAUDE.md Paper A item 1), so this
     artifact's R^2 numbers are directly comparable to the ladder table.
 
-    Returns (fold_results, pooled_r2) -- fold_results is a list of five
-    per-fold dicts (see _fit_and_attribute_one_fold), in fold order.
+    Returns (fold_results, pooled_r2) -- fold_results is a list of
+    n_repeats * n_outer_folds per-fold dicts (see
+    _fit_and_attribute_one_fold), in (repeat, fold) order.
     """
     n_rows = X_full.shape[0]
-    folds = _build_repeat0_folds(split_strategy, n_rows, group_lookup, seed=seed, n_outer_folds=n_outer_folds)
+    folds = _build_all_repeat_folds(split_strategy, n_rows, group_lookup, seed=seed,
+                                     n_outer_folds=n_outer_folds, n_repeats=n_repeats)
 
     fold_results = []
-    for fold, (train_idx, test_idx) in enumerate(folds):
+    for repeat, fold, train_idx, test_idx in folds:
         fold_results.append(
             _fit_and_attribute_one_fold(
-                split_strategy, fold, train_idx, test_idx, X_full, y_full, feature_cols,
+                split_strategy, repeat, fold, train_idx, test_idx, X_full, y_full, feature_cols,
                 best_params, device, shap_n, shap_seed,
             )
         )
@@ -550,9 +562,11 @@ def _rows_to_markdown(rows, title):
 
 
 def _r2_table_markdown(results_by_strategy, pooled_r2_by_strategy):
+    any_results = next(iter(results_by_strategy.values()))
+    col_labels = [f"r{r['repeat']}f{r['fold']}" for r in any_results]
     lines = ["## Outer R^2 per fold and pooled (D2)", "", "| split_strategy | " +
-             " | ".join(f"fold {f}" for f in range(len(next(iter(results_by_strategy.values()))))) +
-             " | pooled |", "|---|" + "---|" * (len(next(iter(results_by_strategy.values()))) + 1)]
+             " | ".join(col_labels) +
+             " | pooled |", "|---|" + "---|" * (len(col_labels) + 1)]
     for strategy, fold_results in results_by_strategy.items():
         per_fold = " | ".join(f"{r['outer_r2']:.4f}" for r in fold_results)
         lines.append(f"| {strategy} | {per_fold} | {pooled_r2_by_strategy[strategy]:.4f} |")
@@ -569,6 +583,7 @@ def main(argv=None):
     parser.add_argument("--frozen-hyperparams", default=str(DEFAULT_FROZEN_HYPERPARAMS))
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--n-outer-folds", type=int, default=N_OUTER_FOLDS)
+    parser.add_argument("--n-repeats", type=int, default=DEFAULT_N_REPEATS)
     parser.add_argument("--shap-n", type=int, default=DEFAULT_SHAP_N)
     parser.add_argument("--shap-seed", type=int, default=DEFAULT_SHAP_SEED)
     parser.add_argument("--device", default="cuda", choices=["cpu", "cuda"],
@@ -607,7 +622,7 @@ def main(argv=None):
         fold_results, pooled_r2 = fit_and_attribute_all_folds(
             split_strategy, X_full, y_full, feature_cols, group_lookup,
             best_params, args.seed, args.n_outer_folds, args.device,
-            args.shap_n, args.shap_seed,
+            args.shap_n, args.shap_seed, n_repeats=args.n_repeats,
         )
         results_by_strategy[split_strategy] = fold_results
         pooled_r2_by_strategy[split_strategy] = pooled_r2
@@ -625,6 +640,7 @@ def main(argv=None):
         "n_features": len(feature_cols),
         "seed": args.seed,
         "n_outer_folds": args.n_outer_folds,
+        "n_repeats": args.n_repeats,
         "device": args.device,
         "dataset": {"path": str(dataset_path), "sha256": dataset_sha256, "n_rows": int(len(df))},
         "frozen_hyperparams": {"path": str(args.frozen_hyperparams), "best_params": best_params,
@@ -643,6 +659,7 @@ def main(argv=None):
                 "pooled_r2": pooled_r2_by_strategy[strategy],
                 "folds": [
                     {
+                        "repeat": r["repeat"],
                         "fold": r["fold"], "n_train": r["n_train"], "n_test": r["n_test"],
                         "outer_r2": r["outer_r2"], "fit_seconds": r["fit_seconds"],
                         "shap_n_requested": r["shap_n_requested"], "shap_n_used": r["shap_n_used"],
