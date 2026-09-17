@@ -1,0 +1,379 @@
+{
+  "generated_at_utc": "20260917T172251",
+  "input_dataset": {
+    "path": "checkpoints\\saved_predictions\\te-ml-pipeline\\data\\processed\\cleaned_ThermoelectricMaterials_2026-08-15.csv",
+    "sha256": "0275c5088521580a1156acf2078f77f0eb7d4a8c6b4e724864f0de0875d8a393",
+    "n_rows": 280664,
+    "note": "Same cleaned CSV as results/noise_floor/20260911T114356/ -- the snapfix regeneration only changed chemistry_cluster_id in the FEATURIZED CSV; data_cleaning.py was never rerun, so there is no separate 'snapfix cleaned' CSV. This IS the correct 'snapfix cleaned dataset' by inheritance: identical SHA256 confirms it."
+  },
+  "item1_rerun_results": {
+    "S": {
+      "log": {
+        "property": "S",
+        "scale": "log",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 0.06,
+        "sigma_total": 0.9027364572265119,
+        "r2_max": 0.9955824595288895,
+        "n_used": 185409,
+        "n_dropped_nonpositive": 8
+      },
+      "linear": {
+        "property": "S",
+        "scale": "linear",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 8.98776,
+        "sigma_total": 176.9262742185379,
+        "r2_max": 0.9974194143986357,
+        "n_used": 185417,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "sigma": {
+      "log": {
+        "property": "sigma",
+        "scale": "log",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 0.08,
+        "sigma_total": 1.4084098340894011,
+        "r2_max": 0.9967735727550981,
+        "n_used": 183014,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "property": "sigma",
+        "scale": "linear",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 3622.3189180133395,
+        "sigma_total": 129589.49625371132,
+        "r2_max": 0.9992186713224676,
+        "n_used": 183014,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "kappa": {
+      "log": {
+        "property": "kappa",
+        "scale": "log",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.11,
+        "sigma_total": 0.7363244710026082,
+        "r2_max": 0.9776824301761344,
+        "n_used": 121247,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "property": "kappa",
+        "scale": "linear",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.21979804,
+        "sigma_total": 1.9850013218678093,
+        "r2_max": 0.9877389961120653,
+        "n_used": 121247,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "zT": {
+      "log": {
+        "property": "zT",
+        "scale": "log",
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.18,
+        "sigma_total": 1.4820758288798848,
+        "r2_max": 0.9852495876474937,
+        "n_used": 129582,
+        "n_dropped_nonpositive": 51
+      },
+      "linear": {
+        "property": "zT",
+        "scale": "linear",
+        "relative_uncertainty": 0.18,
+        "sigma_noise": 0.05684211,
+        "sigma_total": 0.3882153539748335,
+        "r2_max": 0.9785614718479471,
+        "n_used": 129633,
+        "n_dropped_nonpositive": 0
+      }
+    }
+  },
+  "item1_deltas_vs_20260911T114356": {
+    "S": {
+      "log": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      },
+      "linear": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      }
+    },
+    "sigma": {
+      "log": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      },
+      "linear": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      }
+    },
+    "kappa": {
+      "log": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      },
+      "linear": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      }
+    },
+    "zT": {
+      "log": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      },
+      "linear": {
+        "sigma_noise": 0.0,
+        "sigma_total": 0.0,
+        "r2_max": 0.0
+      }
+    }
+  },
+  "item1_max_abs_delta": 0.0,
+  "item1_flag_threshold": 0.001,
+  "item1_any_flagged": false,
+  "item2_digitization_ceiling": {
+    "source": "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json, C3_composition_matched_digitization_agreement.N3_label_agreement_300_800K",
+    "values": {
+      "S": 0.963899259221547,
+      "sigma": 0.9839656690808817,
+      "kappa": 0.9832620077389838,
+      "zT_declared": 0.9806887300257047,
+      "zT_tep": 0.9838674427230542
+    }
+  },
+  "confirmed_chemistry_cluster_r2_new": {
+    "S": 0.7528,
+    "sigma": 0.702,
+    "kappa": 0.8092,
+    "zT": 0.7456
+  },
+  "confirmed_chemistry_cluster_r2_old": {
+    "S": 0.8076,
+    "sigma": 0.76,
+    "kappa": 0.846,
+    "zT": 0.7968
+  },
+  "confirmed_chemistry_cluster_r2_source_new": "reports/regen_snapfix/20260917T150000/ladder_metrics.json (per-repeat pooled R2, chemistry rung)",
+  "item3_combined_ceiling_new": [
+    {
+      "label": "S",
+      "r2_meas": 0.9974194143986357,
+      "r2_dig_lower": 0.963899259221547,
+      "r2_dig_upper": 0.9819496296107735,
+      "r2_comb_lower": 0.9613186736201826,
+      "r2_comb_upper": 0.9793690440094092,
+      "confirmed_new": 0.7528,
+      "headroom_lower": 0.20851867362018262,
+      "headroom_upper": 0.22656904400940914
+    },
+    {
+      "label": "sigma",
+      "r2_meas": 0.9967735727550981,
+      "r2_dig_lower": 0.9839656690808817,
+      "r2_dig_upper": 0.9919828345404409,
+      "r2_comb_lower": 0.9807392418359798,
+      "r2_comb_upper": 0.988756407295539,
+      "confirmed_new": 0.702,
+      "headroom_lower": 0.27873924183597987,
+      "headroom_upper": 0.2867564072955391
+    },
+    {
+      "label": "kappa",
+      "r2_meas": 0.9776824301761344,
+      "r2_dig_lower": 0.9832620077389838,
+      "r2_dig_upper": 0.9916310038694919,
+      "r2_comb_lower": 0.9609444379151182,
+      "r2_comb_upper": 0.9693134340456263,
+      "confirmed_new": 0.8092,
+      "headroom_lower": 0.15174443791511816,
+      "headroom_upper": 0.16011343404562628
+    },
+    {
+      "label": "zT (vs ZT_author_declared)",
+      "r2_meas": 0.9785614718479471,
+      "r2_dig_lower": 0.9806887300257047,
+      "r2_dig_upper": 0.9903443650128523,
+      "r2_comb_lower": 0.9592502018736517,
+      "r2_comb_upper": 0.9689058368607993,
+      "confirmed_new": 0.7456,
+      "headroom_lower": 0.2136502018736517,
+      "headroom_upper": 0.2233058368607993
+    },
+    {
+      "label": "zT (vs recomputed alpha^2*T/(rho*kappa))",
+      "r2_meas": 0.9785614718479471,
+      "r2_dig_lower": 0.9838674427230542,
+      "r2_dig_upper": 0.9919337213615271,
+      "r2_comb_lower": 0.9624289145710012,
+      "r2_comb_upper": 0.9704951932094742,
+      "confirmed_new": 0.7456,
+      "headroom_lower": 0.21682891457100117,
+      "headroom_upper": 0.22489519320947415
+    }
+  ],
+  "item4_headroom_old_vs_new": [
+    {
+      "label": "S",
+      "old_headroom": [
+        0.154,
+        0.172
+      ],
+      "new_headroom": [
+        0.2085,
+        0.2266
+      ],
+      "change_lower": 0.0545,
+      "change_upper": 0.0546
+    },
+    {
+      "label": "sigma",
+      "old_headroom": [
+        0.221,
+        0.229
+      ],
+      "new_headroom": [
+        0.2787,
+        0.2868
+      ],
+      "change_lower": 0.0577,
+      "change_upper": 0.0578
+    },
+    {
+      "label": "kappa",
+      "old_headroom": [
+        0.115,
+        0.123
+      ],
+      "new_headroom": [
+        0.1517,
+        0.1601
+      ],
+      "change_lower": 0.0367,
+      "change_upper": 0.0371
+    },
+    {
+      "label": "zT (vs ZT_author_declared)",
+      "old_headroom": [
+        0.162,
+        0.172
+      ],
+      "new_headroom": [
+        0.2137,
+        0.2233
+      ],
+      "change_lower": 0.0517,
+      "change_upper": 0.0513
+    },
+    {
+      "label": "zT (vs recomputed alpha^2*T/(rho*kappa))",
+      "old_headroom": [
+        0.166,
+        0.174
+      ],
+      "new_headroom": [
+        0.2168,
+        0.2249
+      ],
+      "change_lower": 0.0508,
+      "change_upper": 0.0509
+    }
+  ],
+  "item5_descriptor_ablation_headroom_fractions_new": [
+    {
+      "label": "S",
+      "delta": 0.0064,
+      "headroom": [
+        0.2085,
+        0.2266
+      ],
+      "fraction_pct": [
+        2.82,
+        3.07
+      ]
+    },
+    {
+      "label": "sigma",
+      "delta": 0.0101,
+      "headroom": [
+        0.2787,
+        0.2868
+      ],
+      "fraction_pct": [
+        3.52,
+        3.62
+      ]
+    },
+    {
+      "label": "kappa",
+      "delta": 0.0064,
+      "headroom": [
+        0.1517,
+        0.1601
+      ],
+      "fraction_pct": [
+        4.0,
+        4.22
+      ]
+    },
+    {
+      "label": "zT (declared)",
+      "delta": 0.005,
+      "headroom": [
+        0.2137,
+        0.2233
+      ],
+      "fraction_pct": [
+        2.24,
+        2.34
+      ]
+    },
+    {
+      "label": "zT (recomputed TEP)",
+      "delta": 0.005,
+      "headroom": [
+        0.2168,
+        0.2249
+      ],
+      "fraction_pct": [
+        2.22,
+        2.31
+      ]
+    }
+  ],
+  "item5_old_fractions_pct": {
+    "S": [
+      2.2,
+      2.5
+    ],
+    "sigma": [
+      4.5,
+      4.7
+    ],
+    "kappa": [
+      3.4,
+      3.6
+    ],
+    "zT": [
+      1.6,
+      1.7
+    ]
+  }
+}

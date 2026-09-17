@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "frozen_hyperparams_sha256": {
+      "S": {
+        "path": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\S.json",
+        "sha256": "243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b"
+      },
+      "sigma": {
+        "path": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\sigma.json",
+        "sha256": "b457b6f2f946b0ef32bb3b38f09cd2084d846d6683af6b5b91df01b9672d6f0f"
+      },
+      "kappa": {
+        "path": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\kappa.json",
+        "sha256": "883e3d0b2e62b1569473f397f00bd5ffbd055be60a54c7e4c758c11c6d129d3c"
+      },
+      "zT": {
+        "path": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\zT.json",
+        "sha256": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5"
+      }
+    },
+    "training_csv": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "training_csv_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "estm_file": "data\\external\\estm.xlsx",
+    "date": "2026-09-17",
+    "note": "Re-run against the snapfix training file (fixed chemistry_cluster_id SNAP(0.05) definition, commit c1c6873) per this task. Prior File-A pre-snapfix run (results/20260911T114356_estm_external_fileA/estm_results.json) preserved unchanged."
+  },
+  "training_rows_used_for_refit": {
+    "S": 185064,
+    "sigma": 182755,
+    "kappa": 121110,
+    "zT": 129419
+  },
+  "smear_factors": {
+    "sigma": 1.381672625807156,
+    "kappa": 1.0715385748979032
+  },
+  "smear_training_oof_r2": {
+    "sigma": 0.7043553877980457,
+    "kappa": 0.8069664470016443
+  },
+  "unit_handling": "S: training microV/K, ESTM microV/K -- no conversion needed. sigma: training S/m, ESTM S/m -- no conversion needed. kappa: training W/mK, ESTM W/mK -- no conversion needed.",
+  "dedup_a_source_doi": {
+    "n_dropped": 1416,
+    "n_surviving": 3123,
+    "unique_estm_dois_overlapping_training": 69,
+    "results": {
+      "S": {
+        "r2": 0.5663886740102466,
+        "n": 3123
+      },
+      "sigma": {
+        "r2": 0.3987915829061861,
+        "n": 3123
+      },
+      "kappa": {
+        "r2": 0.6892108937178334,
+        "n": 3123
+      },
+      "zT_direct": {
+        "r2": 0.6615034638116427,
+        "n": 3123
+      },
+      "zT_derived": {
+        "r2": 0.20638513576510154,
+        "n": 3123
+      }
+    }
+  },
+  "dedup_b_chemistry_cluster": {
+    "n_dropped": 3091,
+    "n_surviving": 1448,
+    "unique_estm_clusters_overlapping_training": 300,
+    "results": {
+      "S": {
+        "r2": 0.3535788970517916,
+        "n": 1448
+      },
+      "sigma": {
+        "r2": 0.2746283193242606,
+        "n": 1448
+      },
+      "kappa": {
+        "r2": 0.6184405021444579,
+        "n": 1448
+      },
+      "zT_direct": {
+        "r2": 0.49821514004187595,
+        "n": 1448
+      },
+      "zT_derived": {
+        "r2": -0.09585893256052636,
+        "n": 1448
+      }
+    }
+  }
+}

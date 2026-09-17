@@ -1,0 +1,480 @@
+{
+  "generated_at_utc": "20260917T122537",
+  "target": "zT",
+  "target_scale": "linear",
+  "feature_set": "full",
+  "n_features": 397,
+  "seed": 0,
+  "n_outer_folds": 5,
+  "device": "cpu",
+  "dataset": {
+    "path": "data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "n_rows": 129419
+  },
+  "frozen_hyperparams": {
+    "path": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\zT.json",
+    "best_params": {
+      "n_estimators": 500,
+      "max_depth": 9,
+      "learning_rate": 0.021879194372117446,
+      "subsample": 0.6803687069914941,
+      "colsample_bytree": 0.6984141242996358,
+      "min_child_weight": 4,
+      "reg_lambda": 1.7133930619789375,
+      "reg_alpha": 0.050328646865956124
+    },
+    "inner_cv_r2": 0.7926783006456432
+  },
+  "caveat": "The random-split and chemistry-cluster models are trained on DIFFERENT training sets by construction, in every one of the 5 folds (the random-split model's training rows include near-duplicates of its own test rows -- that is the phenomenon under study). This compares two different fitted models per fold, not an ablation of one fixed model. Averaging over 5 folds addresses fold-to-fold sampling variation within each split_strategy; it does not eliminate this train-set-composition confound, which is inherent to comparing the two split strategies at all.",
+  "per_strategy": {
+    "random": {
+      "pooled_r2": 0.9176949260438917,
+      "folds": [
+        {
+          "fold": 0,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.916503299147581,
+          "fit_seconds": 57.28222379999352,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 256.86949680000544,
+          "shap_bias_mean": 0.42648300528526306
+        },
+        {
+          "fold": 1,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.9163048569929476,
+          "fit_seconds": 88.74800699998741,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 371.14070479999646,
+          "shap_bias_mean": 0.42704927921295166
+        },
+        {
+          "fold": 2,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.9189523642276995,
+          "fit_seconds": 54.63970290000725,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 241.04743830001098,
+          "shap_bias_mean": 0.42656221985816956
+        },
+        {
+          "fold": 3,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.9189401637226833,
+          "fit_seconds": 58.604728600010276,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 234.76312000000325,
+          "shap_bias_mean": 0.4264431297779083
+        },
+        {
+          "fold": 4,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.9177539526541074,
+          "fit_seconds": 57.9999761999934,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 237.7840406000032,
+          "shap_bias_mean": 0.42720890045166016
+        }
+      ]
+    },
+    "chemistry": {
+      "pooled_r2": 0.7441896262584691,
+      "folds": [
+        {
+          "fold": 0,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.774540164162485,
+          "fit_seconds": 64.90313890000107,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 254.62606439999945,
+          "shap_bias_mean": 0.434413880109787
+        },
+        {
+          "fold": 1,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.7612697809062943,
+          "fit_seconds": 55.053358099990874,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 216.88868670001102,
+          "shap_bias_mean": 0.4191136360168457
+        },
+        {
+          "fold": 2,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.687868660172238,
+          "fit_seconds": 54.831980499991914,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 214.89557230001083,
+          "shap_bias_mean": 0.4259214699268341
+        },
+        {
+          "fold": 3,
+          "n_train": 103535,
+          "n_test": 25884,
+          "outer_r2": 0.6780208158630141,
+          "fit_seconds": 55.16515230000368,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 222.4461037000001,
+          "shap_bias_mean": 0.42069101333618164
+        },
+        {
+          "fold": 4,
+          "n_train": 103536,
+          "n_test": 25883,
+          "outer_r2": 0.8031863081930787,
+          "fit_seconds": 54.5968040000007,
+          "shap_n_requested": 20000,
+          "shap_n_used": 20000,
+          "shap_seed": 0,
+          "shap_seconds": 216.93230439999024,
+          "shap_bias_mean": 0.4323311150074005
+        }
+      ]
+    }
+  },
+  "unmapped_fine_group_count": 0,
+  "unmapped_fine_group_columns": [],
+  "coarse_group_comparison": [
+    {
+      "group": "magpie",
+      "random_mean_share": 0.26483338878944096,
+      "random_sd": 0.006406848400986405,
+      "random_fold_values": [
+        0.2566142980826953,
+        0.2608288754337309,
+        0.2668468988142081,
+        0.26644386761449823,
+        0.27343300400207227
+      ],
+      "chemistry_mean_share": 0.2800117701721348,
+      "chemistry_sd": 0.02072597923285048,
+      "chemistry_fold_values": [
+        0.26574242073866117,
+        0.3026510849448556,
+        0.28084573621293885,
+        0.2973079810982995,
+        0.25351162786591885
+      ],
+      "delta": 0.01517838138269384,
+      "pooled_sd": 0.015339718406701138,
+      "delta_in_pooled_sd_units": 0.9894823998896343
+    },
+    {
+      "group": "cbfv",
+      "random_mean_share": 0.5387370555647323,
+      "random_sd": 0.006593955162975079,
+      "random_fold_values": [
+        0.5465823117953619,
+        0.5443087464043401,
+        0.5374003100276497,
+        0.5345103316835775,
+        0.5308835779127321
+      ],
+      "chemistry_mean_share": 0.5247047364361606,
+      "chemistry_sd": 0.01989063951448932,
+      "chemistry_fold_values": [
+        0.5419743159391146,
+        0.5003435940975578,
+        0.5234688726432069,
+        0.5107763775572494,
+        0.5469605219436744
+      ],
+      "delta": -0.014032319128571724,
+      "pooled_sd": 0.014817519782114173,
+      "delta_in_pooled_sd_units": -0.9470086313304441
+    },
+    {
+      "group": "temperature",
+      "random_mean_share": 0.19642958641052247,
+      "random_sd": 0.0016167173272867044,
+      "random_fold_values": [
+        0.19680342078208923,
+        0.19486241042613983,
+        0.195752814412117,
+        0.1990458071231842,
+        0.19568347930908203
+      ],
+      "chemistry_mean_share": 0.1952834904193878,
+      "chemistry_sd": 0.0032204253900136003,
+      "chemistry_fold_values": [
+        0.1922832578420639,
+        0.19700537621974945,
+        0.19568540155887604,
+        0.1919156163930893,
+        0.1995278000831604
+      ],
+      "delta": -0.0011460959911346602,
+      "pooled_sd": 0.002548030083122383,
+      "delta_in_pooled_sd_units": -0.4497968837676446
+    }
+  ],
+  "fine_group_comparison": [
+    {
+      "group": "atomic_radius",
+      "random_mean_share": 0.19664606847909455,
+      "random_sd": 0.004836949727894931,
+      "random_fold_values": [
+        0.20066432404928491,
+        0.20170401287759887,
+        0.19748041509956238,
+        0.19270310694082582,
+        0.1906784834282007
+      ],
+      "chemistry_mean_share": 0.17534237095387653,
+      "chemistry_sd": 0.03494263725399184,
+      "chemistry_fold_values": [
+        0.22541587437081034,
+        0.14890774637569848,
+        0.16951968646753812,
+        0.1391836368420627,
+        0.19368491071327298
+      ],
+      "delta": -0.02130369752521802,
+      "pooled_sd": 0.02494377658790105,
+      "delta_in_pooled_sd_units": -0.8540686471490989
+    },
+    {
+      "group": "periodic_position",
+      "random_mean_share": 0.10915616957487373,
+      "random_sd": 0.003711402151048758,
+      "random_fold_values": [
+        0.10959039620570366,
+        0.10670839025493706,
+        0.10543999375795465,
+        0.10896383001863796,
+        0.11507823763713532
+      ],
+      "chemistry_mean_share": 0.12728935158526156,
+      "chemistry_sd": 0.03727190995103195,
+      "chemistry_fold_values": [
+        0.1034745880497212,
+        0.12855263694711994,
+        0.09988937879933246,
+        0.1909284317971469,
+        0.11360172233298726
+      ],
+      "delta": 0.018133182010387827,
+      "pooled_sd": 0.026485560002807603,
+      "delta_in_pooled_sd_units": 0.6846440856249828
+    },
+    {
+      "group": "valence_electron_config",
+      "random_mean_share": 0.19393436506444459,
+      "random_sd": 0.005424873537067559,
+      "random_fold_values": [
+        0.18691236178568715,
+        0.19064984489369863,
+        0.19921141247687046,
+        0.19352289694046476,
+        0.19937530922550195
+      ],
+      "chemistry_mean_share": 0.17611112063123358,
+      "chemistry_sd": 0.0181215869254341,
+      "chemistry_fold_values": [
+        0.18035233617956692,
+        0.16077574768156921,
+        0.2023816048676963,
+        0.15722899228035203,
+        0.17981692214698342
+      ],
+      "delta": -0.01782324443321101,
+      "pooled_sd": 0.013375746064972226,
+      "delta_in_pooled_sd_units": -1.3325046951874844
+    },
+    {
+      "group": "dft_groundstate",
+      "random_mean_share": 0.02241822302124774,
+      "random_sd": 0.0014255080495337558,
+      "random_fold_values": [
+        0.020473735450650565,
+        0.021317303613614058,
+        0.02331413430573548,
+        0.02338710669937427,
+        0.02359883503686433
+      ],
+      "chemistry_mean_share": 0.033046077293408874,
+      "chemistry_sd": 0.028445388768905636,
+      "chemistry_fold_values": [
+        0.017510317304186174,
+        0.08375425541089498,
+        0.018551428016507998,
+        0.02273441807432164,
+        0.02267996766113356
+      ],
+      "delta": 0.010627854272161133,
+      "pooled_sd": 0.020139168495911994,
+      "delta_in_pooled_sd_units": 0.5277206094342206
+    },
+    {
+      "group": "electronegativity",
+      "random_mean_share": 0.07043509114446352,
+      "random_sd": 0.002017255360410238,
+      "random_fold_values": [
+        0.07152617155952612,
+        0.07306430596509017,
+        0.07021052102209069,
+        0.06969061558629619,
+        0.0676838415893144
+      ],
+      "chemistry_mean_share": 0.06309013818172389,
+      "chemistry_sd": 0.00722686873562655,
+      "chemistry_fold_values": [
+        0.06926120666321367,
+        0.05231204704614356,
+        0.07019764148571994,
+        0.061126319829782005,
+        0.06255347588376026
+      ],
+      "delta": -0.007344952962739626,
+      "pooled_sd": 0.005305513684417388,
+      "delta_in_pooled_sd_units": -1.3843999657021324
+    },
+    {
+      "group": "thermodynamic_bulk",
+      "random_mean_share": 0.15499093108774104,
+      "random_sd": 0.003927516647482799,
+      "random_fold_values": [
+        0.15915063875581836,
+        0.15667443482197996,
+        0.15326837195607368,
+        0.15681049527483992,
+        0.1490507146299933
+      ],
+      "chemistry_mean_share": 0.1616025962663116,
+      "chemistry_sd": 0.013814659599027005,
+      "chemistry_fold_values": [
+        0.14753345800272655,
+        0.14759669111663243,
+        0.1737489775478025,
+        0.17645450789132155,
+        0.16267934677307494
+      ],
+      "delta": 0.006611665178570564,
+      "pooled_sd": 0.010155545451949972,
+      "delta_in_pooled_sd_units": 0.6510398884878266
+    },
+    {
+      "group": "metal_class",
+      "random_mean_share": 0.02174559158789009,
+      "random_sd": 0.002367964865082312,
+      "random_fold_values": [
+        0.019134071010739717,
+        0.022068150738050463,
+        0.022078657575960392,
+        0.020127267957661843,
+        0.025319810657038033
+      ],
+      "chemistry_mean_share": 0.027379762095233674,
+      "chemistry_sd": 0.009881408388312618,
+      "chemistry_fold_values": [
+        0.01833855472295909,
+        0.04371781965392074,
+        0.027605485544199837,
+        0.021015797494783328,
+        0.02622115306030537
+      ],
+      "delta": 0.005634170507343585,
+      "pooled_sd": 0.007185036163405138,
+      "delta_in_pooled_sd_units": 0.7841533959202001
+    },
+    {
+      "group": "melting_point",
+      "random_mean_share": 0.017142302853608272,
+      "random_sd": 0.0003431982914252503,
+      "random_fold_values": [
+        0.01721453452773858,
+        0.01669354965997627,
+        0.01747597816574853,
+        0.01743966645153705,
+        0.016887785463040927
+      ],
+      "chemistry_mean_share": 0.020688315178267656,
+      "chemistry_sd": 0.0026401817270933323,
+      "chemistry_fold_values": [
+        0.019664071092847735,
+        0.01866672122559976,
+        0.02060611912747845,
+        0.025239577218599152,
+        0.019265087226813193
+      ],
+      "delta": 0.003546012324659384,
+      "pooled_sd": 0.0018825972244899786,
+      "delta_in_pooled_sd_units": 1.8835746056196632
+    },
+    {
+      "group": "atomic_mass",
+      "random_mean_share": 0.0171017015408097,
+      "random_sd": 0.001245094393703342,
+      "random_fold_values": [
+        0.01853037653290812,
+        0.016257629013125552,
+        0.015767724481861478,
+        0.018309213428437943,
+        0.016643564247715403
+      ],
+      "chemistry_mean_share": 0.02016677442297805,
+      "chemistry_sd": 0.004381674938608078,
+      "chemistry_fold_values": [
+        0.02616633029174409,
+        0.01871101358483429,
+        0.02181428699987009,
+        0.01417267722717952,
+        0.019969564011262264
+      ],
+      "delta": 0.003065072882168351,
+      "pooled_sd": 0.0032209730918510942,
+      "delta_in_pooled_sd_units": 0.9515984128904512
+    },
+    {
+      "group": "temperature",
+      "random_mean_share": 0.19642958641052247,
+      "random_sd": 0.0016167173272867044,
+      "random_fold_values": [
+        0.19680342078208923,
+        0.19486241042613983,
+        0.195752814412117,
+        0.1990458071231842,
+        0.19568347930908203
+      ],
+      "chemistry_mean_share": 0.1952834904193878,
+      "chemistry_sd": 0.0032204253900136003,
+      "chemistry_fold_values": [
+        0.1922832578420639,
+        0.19700537621974945,
+        0.19568540155887604,
+        0.1919156163930893,
+        0.1995278000831604
+      ],
+      "delta": -0.0011460959911346602,
+      "pooled_sd": 0.002548030083122383,
+      "delta_in_pooled_sd_units": -0.4497968837676446
+    }
+  ]
+}

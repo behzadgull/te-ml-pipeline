@@ -1,0 +1,128 @@
+{
+  "training_csv": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+  "training_csv_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "note": "teMatDb inventory (C1/C2/C3) recomputed against the snapfix training file, fixed chemistry_cluster_id SNAP(0.05) definition (commit c1c6873). Compared against the File-A pre-snapfix run (results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json), preserved unchanged.",
+  "C1_doi_overlap": {
+    "n_a0": 176,
+    "n_a": 96,
+    "n_a0_parseable": 122,
+    "n_a_parseable": 62,
+    "thinned_a0_parseable": 2027,
+    "thinned_a_parseable": 903
+  },
+  "C2_cluster_overlap": {
+    "n_parsed": 184,
+    "n_failed": 88,
+    "n_unique_clusters_among_successes": 130,
+    "n_not_in_training": 27,
+    "thinned_b": 412,
+    "stratum_b_sample_ids": [
+      15,
+      32,
+      57,
+      72,
+      101,
+      104,
+      147,
+      153,
+      216,
+      225,
+      226,
+      228,
+      272,
+      291,
+      302,
+      360,
+      361,
+      362,
+      364,
+      392,
+      393,
+      396,
+      397,
+      411,
+      418,
+      419,
+      422
+    ],
+    "stratum_b_changes_vs_fileA_presnapfix": {
+      "added": [],
+      "removed": [
+        78,
+        91,
+        119,
+        141,
+        173,
+        201,
+        232,
+        379,
+        406
+      ]
+    }
+  },
+  "C3_composition_matched_digitization_agreement": {
+    "N3_label_agreement_300_800K": {
+      "S_300_800K": {
+        "r2": 0.963899259221547,
+        "rmse": 37.62469825768172,
+        "mae": 7.418116692012661,
+        "n_points": 835,
+        "n_samples": 87,
+        "r2_ci95": [
+          0.8879509386309328,
+          0.9988203460810148
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "sigma_300_800K": {
+        "r2": 0.9839656690808817,
+        "rmse": 0.05812172369140668,
+        "mae": 0.019384685548989564,
+        "n_points": 804,
+        "n_samples": 80,
+        "r2_ci95": [
+          0.9610553009742575,
+          0.9975984096261129
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "kappa_300_800K": {
+        "r2": 0.9832620077389838,
+        "rmse": 0.038993192251677106,
+        "mae": 0.014868846574805077,
+        "n_points": 717,
+        "n_samples": 85,
+        "r2_ci95": [
+          0.9618444977050982,
+          0.9964290285352145
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_300_800K": {
+        "r2": 0.9806887300257047,
+        "rmse": 0.05990470691303064,
+        "mae": 0.02210428816576106,
+        "n_points": 881,
+        "n_samples": 86,
+        "r2_ci95": [
+          0.963715926155676,
+          0.9941921922621116
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      },
+      "zT_tep_300_800K": {
+        "r2": 0.9838674427230542,
+        "rmse": 0.05412716275748228,
+        "mae": 0.025480000881335948,
+        "n_points": 847,
+        "n_samples": 85,
+        "r2_ci95": [
+          0.9688023129933321,
+          0.994336578603697
+        ],
+        "n_dropped_nonpositive_for_log": 0
+      }
+    },
+    "n_samples_with_composition_match": 96
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "generated_at_utc": "20260914T213553",
+  "target": "zT",
+  "split_strategy": "chemistry",
+  "grouping_column": "chemistry_cluster_id_snap (SNAP T=0.05)",
+  "feature_set": "full",
+  "n_features": 397,
+  "seed": 0,
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "frozen_hyperparams_path": "C:\\Users\\choha\\te-ml-pipeline\\checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\zT.json",
+  "n_rows": 129419,
+  "n_groups_current_unfixed": 7944,
+  "n_groups_snap": 5620,
+  "pooled_r2": 0.7447676812978762,
+  "pooled_n": 647095,
+  "per_repeat_r2": {
+    "0": 0.7470362347988974,
+    "1": 0.7420016978744868,
+    "2": 0.7445055748554645,
+    "3": 0.7494532164483674,
+    "4": 0.7408416825121646
+  },
+  "per_repeat_r2_mean": 0.7447676812978761,
+  "per_repeat_r2_std": 0.0035437764173446066,
+  "confirmed_current_grouping_mean": 0.7968,
+  "confirmed_current_grouping_sd": 0.003,
+  "difference_mean": -0.05203231870212388,
+  "elapsed_seconds": 2115.11020320002
+}

@@ -1,0 +1,24 @@
+{
+  "generated_at_utc": "20260916T085033",
+  "purpose": "device check -- original unfixed chemistry_cluster_id grouping, device=cpu",
+  "target": "zT",
+  "device": "cpu",
+  "seed": 0,
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "pooled_r2": 0.7975468244927895,
+  "pooled_n": 647095,
+  "per_repeat_r2": {
+    "0": 0.7992706540810111,
+    "1": 0.79279241720788,
+    "2": 0.798194277603613,
+    "3": 0.799075713766628,
+    "4": 0.7984010598048155
+  },
+  "per_repeat_r2_mean": 0.7975468244927895,
+  "per_repeat_r2_std": 0.0026954773691646185,
+  "confirmed_cuda_mean": 0.7968,
+  "confirmed_cuda_sd": 0.003,
+  "difference_from_confirmed_cuda": 0.0007468244927895107,
+  "elapsed_seconds": 2062.673407400027
+}

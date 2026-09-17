@@ -1,0 +1,1654 @@
+{
+  "note": "Read-only per-GROUP breakdown of the snapfix teMatDb stratum-b predictions (results/external_snapfix/20260917T160553/tematdb_b_predictions.npz). No refit, no model touch. b_intersect_a recomputed fresh (new stratum b AND DOI-not-in-training).",
+  "min_samples_for_reporting": 3,
+  "new_stratum_b_sample_ids": [
+    15,
+    32,
+    57,
+    72,
+    101,
+    104,
+    147,
+    153,
+    216,
+    225,
+    226,
+    228,
+    272,
+    291,
+    302,
+    360,
+    361,
+    362,
+    364,
+    392,
+    393,
+    396,
+    397,
+    411,
+    418,
+    419,
+    422
+  ],
+  "b_intersect_a_sample_ids": [
+    15,
+    147,
+    153,
+    216,
+    228,
+    272,
+    302,
+    360,
+    361,
+    362,
+    364,
+    392,
+    393,
+    396,
+    397,
+    411,
+    418,
+    419
+  ],
+  "item1_per_group_breakdown": {
+    "b": {
+      "S": {
+        "space": "linear",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": 0.5484,
+            "rmse": 23.5439,
+            "mae": 18.7635,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": -0.3565,
+            "rmse": 57.4791,
+            "mae": 48.1116,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": -49.4821,
+            "rmse": 199.4954,
+            "mae": 179.9881,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.9608,
+            "rmse": 42.1166,
+            "mae": 34.0745,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "sigma_log10": {
+        "space": "log10",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": -0.9499,
+            "rmse": 0.3069,
+            "mae": 0.2753,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": -0.3952,
+            "rmse": 0.4197,
+            "mae": 0.2858,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": 0.3677,
+            "rmse": 0.3534,
+            "mae": 0.3061,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.5755,
+            "rmse": 0.2875,
+            "mae": 0.2575,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "kappa_log10": {
+        "space": "log10",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": 0.8921,
+            "rmse": 0.0491,
+            "mae": 0.0377,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": -1.1666,
+            "rmse": 0.1857,
+            "mae": 0.158,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": -0.4599,
+            "rmse": 0.2049,
+            "mae": 0.1467,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.8472,
+            "rmse": 0.0683,
+            "mae": 0.0602,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_direct_vs_declared": {
+        "space": "linear",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": 0.3478,
+            "rmse": 0.3113,
+            "mae": 0.2383,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": 0.8911,
+            "rmse": 0.2047,
+            "mae": 0.1547,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": 0.4239,
+            "rmse": 0.3111,
+            "mae": 0.2338,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.1756,
+            "rmse": 0.375,
+            "mae": 0.2853,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_direct_vs_tep": {
+        "space": "linear",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": 0.3465,
+            "rmse": 0.3133,
+            "mae": 0.2379,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": 0.8935,
+            "rmse": 0.2023,
+            "mae": 0.1506,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": 0.4348,
+            "rmse": 0.3107,
+            "mae": 0.2289,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.1977,
+            "rmse": 0.3623,
+            "mae": 0.2765,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_derived_vs_declared": {
+        "space": "linear",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": -0.2674,
+            "rmse": 0.434,
+            "mae": 0.3653,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": 0.8897,
+            "rmse": 0.206,
+            "mae": 0.1813,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": -1.7647,
+            "rmse": 0.6816,
+            "mae": 0.5457,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.0209,
+            "rmse": 0.4086,
+            "mae": 0.2989,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_derived_vs_tep": {
+        "space": "linear",
+        "by_group": {
+          "Bi2Te3": {
+            "r2": -0.288,
+            "rmse": 0.4399,
+            "mae": 0.3697,
+            "n_rows": 39,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "GeTe": {
+            "r2": 0.8804,
+            "rmse": 0.2144,
+            "mae": 0.1913,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "SKD": {
+            "r2": -1.6996,
+            "rmse": 0.679,
+            "mae": 0.5402,
+            "n_rows": 67,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.0399,
+            "rmse": 0.3963,
+            "mae": 0.2897,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "HH": {
+            "n_rows": 39,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "PbTe": {
+            "n_rows": 32,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "etc": {
+            "n_rows": 11,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      }
+    },
+    "b_intersect_a": {
+      "S": {
+        "space": "linear",
+        "by_group": {
+          "GeTe": {
+            "r2": -0.3565,
+            "rmse": 57.4791,
+            "mae": 48.1116,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.9608,
+            "rmse": 42.1166,
+            "mae": 34.0745,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "sigma_log10": {
+        "space": "log10",
+        "by_group": {
+          "GeTe": {
+            "r2": -0.3952,
+            "rmse": 0.4197,
+            "mae": 0.2858,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.5755,
+            "rmse": 0.2875,
+            "mae": 0.2575,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "kappa_log10": {
+        "space": "log10",
+        "by_group": {
+          "GeTe": {
+            "r2": -1.1666,
+            "rmse": 0.1857,
+            "mae": 0.158,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.8472,
+            "rmse": 0.0683,
+            "mae": 0.0602,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_direct_vs_declared": {
+        "space": "linear",
+        "by_group": {
+          "GeTe": {
+            "r2": 0.8911,
+            "rmse": 0.2047,
+            "mae": 0.1547,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.1756,
+            "rmse": 0.375,
+            "mae": 0.2853,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_direct_vs_tep": {
+        "space": "linear",
+        "by_group": {
+          "GeTe": {
+            "r2": 0.8935,
+            "rmse": 0.2023,
+            "mae": 0.1506,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.1977,
+            "rmse": 0.3623,
+            "mae": 0.2765,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_derived_vs_declared": {
+        "space": "linear",
+        "by_group": {
+          "GeTe": {
+            "r2": 0.8897,
+            "rmse": 0.206,
+            "mae": 0.1813,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.0209,
+            "rmse": 0.4086,
+            "mae": 0.2989,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      },
+      "zT_derived_vs_tep": {
+        "space": "linear",
+        "by_group": {
+          "GeTe": {
+            "r2": 0.8804,
+            "rmse": 0.2144,
+            "mae": 0.1913,
+            "n_rows": 54,
+            "n_samples": 4,
+            "n_clusters": 4
+          },
+          "Selenide": {
+            "r2": 0.0399,
+            "rmse": 0.3963,
+            "mae": 0.2897,
+            "n_rows": 60,
+            "n_samples": 3,
+            "n_clusters": 3
+          }
+        },
+        "suppressed": {
+          "AgSbQ2": {
+            "n_rows": 14,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Bi2Te3": {
+            "n_rows": 27,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Cu2Q": {
+            "n_rows": 15,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Mg3Sb2": {
+            "n_rows": 21,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Oxide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "SKD": {
+            "n_rows": 35,
+            "n_samples": 2,
+            "n_clusters": 2,
+            "reason": "n_samples=2 < 3"
+          },
+          "Silicide": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          },
+          "Telluride": {
+            "n_rows": 20,
+            "n_samples": 1,
+            "n_clusters": 1,
+            "reason": "n_samples=1 < 3"
+          }
+        }
+      }
+    }
+  },
+  "item1_stratum_overall_reference": {
+    "b": {
+      "S": {
+        "r2": 0.6049,
+        "rmse": 112.4723,
+        "mae": 80.1726,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "sigma_log10": {
+        "r2": 0.326,
+        "rmse": 0.3708,
+        "mae": 0.2938,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "kappa_log10": {
+        "r2": 0.6605,
+        "rmse": 0.1528,
+        "mae": 0.11,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "zT_direct_vs_declared": {
+        "r2": 0.5344,
+        "rmse": 0.3246,
+        "mae": 0.2348,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "zT_direct_vs_tep": {
+        "r2": 0.5354,
+        "rmse": 0.3243,
+        "mae": 0.2331,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "zT_derived_vs_declared": {
+        "r2": -0.1334,
+        "rmse": 0.5065,
+        "mae": 0.3642,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      },
+      "zT_derived_vs_tep": {
+        "r2": -0.1381,
+        "rmse": 0.5076,
+        "mae": 0.3654,
+        "n_rows": 412,
+        "n_samples": 27,
+        "n_clusters": 27
+      }
+    },
+    "b_intersect_a": {
+      "S": {
+        "r2": 0.7844,
+        "rmse": 85.4292,
+        "mae": 61.0068,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "sigma_log10": {
+        "r2": 0.4565,
+        "rmse": 0.345,
+        "mae": 0.2723,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "kappa_log10": {
+        "r2": 0.5962,
+        "rmse": 0.1497,
+        "mae": 0.1081,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "zT_direct_vs_declared": {
+        "r2": 0.5802,
+        "rmse": 0.3395,
+        "mae": 0.234,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "zT_direct_vs_tep": {
+        "r2": 0.5818,
+        "rmse": 0.3386,
+        "mae": 0.2322,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "zT_derived_vs_declared": {
+        "r2": 0.1336,
+        "rmse": 0.4877,
+        "mae": 0.3267,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      },
+      "zT_derived_vs_tep": {
+        "r2": 0.1283,
+        "rmse": 0.4889,
+        "mae": 0.3283,
+        "n_rows": 286,
+        "n_samples": 18,
+        "n_clusters": 18
+      }
+    }
+  },
+  "item2_removed_sample_lookup": [
+    {
+      "sample_id": 78,
+      "GROUP": "PbTe",
+      "Composition_detailed": "(PbTe)98.99945(CdTe)0.01(PbI2)0.00055",
+      "old_cluster_id": "Te99.00945Pb99",
+      "new_cluster_id": "TePb",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 91,
+      "GROUP": "PbTe",
+      "Composition_detailed": "Pb0.99Na0.01Te0.92S0.08",
+      "old_cluster_id": "Te0.92Pb0.99",
+      "new_cluster_id": "Te0.92Pb1",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 119,
+      "GROUP": "SiGe",
+      "Composition_detailed": "(Si80Ge20)70(Si100B5)30",
+      "old_cluster_id": "Si43Ge7",
+      "new_cluster_id": "Si43Ge7",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 141,
+      "GROUP": "Selenide",
+      "Composition_detailed": "Ag0.016Sn0.984Se",
+      "old_cluster_id": "Sn0.984Se1",
+      "new_cluster_id": "SnSe",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 173,
+      "GROUP": "Silicide",
+      "Composition_detailed": "Ca1.96Ag0.04Si",
+      "old_cluster_id": "Ca1.96Si1",
+      "new_cluster_id": "Ca2Si",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 201,
+      "GROUP": "HH",
+      "Composition_detailed": "MgAg0.965Ni0.005Sb0.99",
+      "old_cluster_id": "Mg1Ag0.965Sb0.99",
+      "new_cluster_id": "MgAgSb",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 232,
+      "GROUP": "SKD",
+      "Composition_detailed": "Co0.92Ni0.08Sb2.97Te0.03",
+      "old_cluster_id": "Co0.92Sb2.97",
+      "new_cluster_id": "Co0.92Sb3",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 379,
+      "GROUP": "Bi2Te3",
+      "Composition_detailed": "Zn0.015Bi0.46Sb1.54Te3.015",
+      "old_cluster_id": "Bi0.46Sb1.54Te3.015",
+      "new_cluster_id": "Bi0.46Sb1.54Te3",
+      "new_cluster_id_in_training": true
+    },
+    {
+      "sample_id": 406,
+      "GROUP": "Bi2Te3",
+      "Composition_detailed": "Bi1.95Sb0.05Te2.3Se0.7",
+      "old_cluster_id": "Bi1.95Te2.3Se0.7",
+      "new_cluster_id": "Bi2Te2.3Se0.7",
+      "new_cluster_id_in_training": true
+    }
+  ],
+  "item3_sigma_error_share_new_b": {
+    "total_sse": 56.6409,
+    "ranking": [
+      {
+        "GROUP": "GeTe",
+        "sse": 9.5105,
+        "share_of_total_sse": 0.1679,
+        "cumulative_share": 0.1679,
+        "n_rows": 54,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "Silicide",
+        "sse": 9.5022,
+        "share_of_total_sse": 0.1678,
+        "cumulative_share": 0.3357,
+        "n_rows": 20,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "HH",
+        "sse": 9.3293,
+        "share_of_total_sse": 0.1647,
+        "cumulative_share": 0.5004,
+        "n_rows": 39,
+        "n_samples": 2
+      },
+      {
+        "GROUP": "SKD",
+        "sse": 8.37,
+        "share_of_total_sse": 0.1478,
+        "cumulative_share": 0.6482,
+        "n_rows": 67,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "etc",
+        "sse": 5.6077,
+        "share_of_total_sse": 0.099,
+        "cumulative_share": 0.7472,
+        "n_rows": 11,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Selenide",
+        "sse": 4.9602,
+        "share_of_total_sse": 0.0876,
+        "cumulative_share": 0.8347,
+        "n_rows": 60,
+        "n_samples": 3
+      },
+      {
+        "GROUP": "Bi2Te3",
+        "sse": 3.6731,
+        "share_of_total_sse": 0.0648,
+        "cumulative_share": 0.8996,
+        "n_rows": 39,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "Oxide",
+        "sse": 2.8469,
+        "share_of_total_sse": 0.0503,
+        "cumulative_share": 0.9498,
+        "n_rows": 20,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "AgSbQ2",
+        "sse": 1.1198,
+        "share_of_total_sse": 0.0198,
+        "cumulative_share": 0.9696,
+        "n_rows": 14,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Cu2Q",
+        "sse": 0.9174,
+        "share_of_total_sse": 0.0162,
+        "cumulative_share": 0.9858,
+        "n_rows": 15,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Mg3Sb2",
+        "sse": 0.3371,
+        "share_of_total_sse": 0.006,
+        "cumulative_share": 0.9918,
+        "n_rows": 21,
+        "n_samples": 2
+      },
+      {
+        "GROUP": "Telluride",
+        "sse": 0.2776,
+        "share_of_total_sse": 0.0049,
+        "cumulative_share": 0.9967,
+        "n_rows": 20,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "PbTe",
+        "sse": 0.1892,
+        "share_of_total_sse": 0.0033,
+        "cumulative_share": 1.0,
+        "n_rows": 32,
+        "n_samples": 2
+      }
+    ],
+    "top1_share": 0.1679,
+    "top2_share": 0.3357,
+    "top3_share": 0.5004,
+    "selenide": {
+      "GROUP": "Selenide",
+      "sse": 4.9602,
+      "share_of_total_sse": 0.0876,
+      "cumulative_share": 0.8347,
+      "n_rows": 60,
+      "n_samples": 3
+    }
+  },
+  "item3_crosscheck_old_plain_b": {
+    "total_sse": 137.009,
+    "ranking": [
+      {
+        "GROUP": "Selenide",
+        "sse": 74.1515,
+        "share_of_total_sse": 0.5412,
+        "cumulative_share": 0.5412,
+        "n_rows": 77,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "HH",
+        "sse": 9.7348,
+        "share_of_total_sse": 0.0711,
+        "cumulative_share": 0.6123,
+        "n_rows": 48,
+        "n_samples": 3
+      },
+      {
+        "GROUP": "Silicide",
+        "sse": 9.561,
+        "share_of_total_sse": 0.0698,
+        "cumulative_share": 0.6821,
+        "n_rows": 40,
+        "n_samples": 2
+      },
+      {
+        "GROUP": "GeTe",
+        "sse": 9.5105,
+        "share_of_total_sse": 0.0694,
+        "cumulative_share": 0.7515,
+        "n_rows": 54,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "SKD",
+        "sse": 8.5423,
+        "share_of_total_sse": 0.0623,
+        "cumulative_share": 0.8138,
+        "n_rows": 83,
+        "n_samples": 5
+      },
+      {
+        "GROUP": "etc",
+        "sse": 5.6077,
+        "share_of_total_sse": 0.0409,
+        "cumulative_share": 0.8547,
+        "n_rows": 11,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "PbTe",
+        "sse": 5.2994,
+        "share_of_total_sse": 0.0387,
+        "cumulative_share": 0.8934,
+        "n_rows": 66,
+        "n_samples": 4
+      },
+      {
+        "GROUP": "Bi2Te3",
+        "sse": 4.5953,
+        "share_of_total_sse": 0.0335,
+        "cumulative_share": 0.927,
+        "n_rows": 60,
+        "n_samples": 6
+      },
+      {
+        "GROUP": "SiGe",
+        "sse": 4.508,
+        "share_of_total_sse": 0.0329,
+        "cumulative_share": 0.9599,
+        "n_rows": 20,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Oxide",
+        "sse": 2.8469,
+        "share_of_total_sse": 0.0208,
+        "cumulative_share": 0.9806,
+        "n_rows": 20,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "AgSbQ2",
+        "sse": 1.1198,
+        "share_of_total_sse": 0.0082,
+        "cumulative_share": 0.9888,
+        "n_rows": 14,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Cu2Q",
+        "sse": 0.9174,
+        "share_of_total_sse": 0.0067,
+        "cumulative_share": 0.9955,
+        "n_rows": 15,
+        "n_samples": 1
+      },
+      {
+        "GROUP": "Mg3Sb2",
+        "sse": 0.3371,
+        "share_of_total_sse": 0.0025,
+        "cumulative_share": 0.998,
+        "n_rows": 21,
+        "n_samples": 2
+      },
+      {
+        "GROUP": "Telluride",
+        "sse": 0.2776,
+        "share_of_total_sse": 0.002,
+        "cumulative_share": 1.0,
+        "n_rows": 20,
+        "n_samples": 1
+      }
+    ],
+    "selenide": {
+      "GROUP": "Selenide",
+      "sse": 74.1515,
+      "share_of_total_sse": 0.5412,
+      "cumulative_share": 0.5412,
+      "n_rows": 77,
+      "n_samples": 4
+    }
+  },
+  "item4_b_intersect_a_sizes": {
+    "n_samples": 18,
+    "n_clusters": 18,
+    "thinned_rows": 286,
+    "old": {
+      "n_samples": 25,
+      "n_clusters": 25,
+      "thinned_rows": 390
+    }
+  }
+}
