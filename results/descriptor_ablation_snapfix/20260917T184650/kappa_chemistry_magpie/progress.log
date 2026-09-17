@@ -1,0 +1,34 @@
+[2026-09-17 10:47:28] target=kappa (scale=log10): model_type=xgboost, 121,110 rows, 133 features, split_strategy=chemistry (5,908 chemistry_cluster_id groups), n_repeats=5, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json), device=cuda
+[2026-09-17 10:47:34] repeat 0 fold 0: outer R^2=0.8049 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:47:39] repeat 0 fold 1: outer R^2=0.7812 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:47:45] repeat 0 fold 2: outer R^2=0.7937 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:47:51] repeat 0 fold 3: outer R^2=0.8343 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:47:56] repeat 0 fold 4: outer R^2=0.7923 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:02] repeat 1 fold 0: outer R^2=0.7821 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:07] repeat 1 fold 1: outer R^2=0.8314 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:13] repeat 1 fold 2: outer R^2=0.7823 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:18] repeat 1 fold 3: outer R^2=0.8305 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:24] repeat 1 fold 4: outer R^2=0.7807 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:30] repeat 2 fold 0: outer R^2=0.7639 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:35] repeat 2 fold 1: outer R^2=0.7958 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:41] repeat 2 fold 2: outer R^2=0.7885 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:46] repeat 2 fold 3: outer R^2=0.8105 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:52] repeat 2 fold 4: outer R^2=0.8273 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:48:57] repeat 3 fold 0: outer R^2=0.8133 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:03] repeat 3 fold 1: outer R^2=0.8037 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:09] repeat 3 fold 2: outer R^2=0.7838 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:14] repeat 3 fold 3: outer R^2=0.8045 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:20] repeat 3 fold 4: outer R^2=0.7842 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:25] repeat 4 fold 0: outer R^2=0.7900 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:31] repeat 4 fold 1: outer R^2=0.7883 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:37] repeat 4 fold 2: outer R^2=0.8179 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:42] repeat 4 fold 3: outer R^2=0.7998 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:48] repeat 4 fold 4: outer R^2=0.7972 (inner cv R^2=0.8419), n_train=96,888, n_test=24,222
+[2026-09-17 10:49:48] === kappa (xgboost, chemistry, scale=log10): repeated CV summary ===
+[2026-09-17 10:49:48] 5 repeats x 5 outer folds = 25 outer evaluations
+[2026-09-17 10:49:48] R^2 below computed in log10 space (target=kappa trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-17 10:49:48] POOLED out-of-fold R^2 = 0.8028 (n=605,550 held-out predictions) -- all repeats combined into one number
+[2026-09-17 10:49:48] PER-REPEAT pooled R^2 = 0.8028 +/- 0.0025 (n=5 repeats: [0.8048, 0.8061, 0.8011, 0.8011, 0.8009]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-17 10:49:48] mean outer R^2 = 0.7993, std = 0.0184 (per-fold macro-average, secondary/diagnostic)
+[2026-09-17 10:49:48] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json)
+[2026-09-17 10:49:48] this call's new compute time: 140.2s
