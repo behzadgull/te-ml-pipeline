@@ -230,6 +230,106 @@ c. **The digitization floor carries snapshot sensitivity.** With the
 
 ---
 
+## Grouping Fixes (added 2026-09-19)
+
+**BUG 1 -- chemistry_cluster_id did not snap near-integer host amounts.**
+After dropping sub-threshold dopants, the function called `reduced_formula`
+directly on the remaining host amounts. `reduced_formula` does not collapse
+near-integer decimals onto their integer target -- Pb0.97Te1 stayed
+Pb0.97Te1, not PbTe. Measured: 10,222 of 12,036 clusters carried decimal
+coefficients, covering 79.3% of rows. The function's own docstring claimed
+host amounts were "reduced to an integer ratio" -- that claim was never
+true. Found 2026-09-14, when a worked example in a methods draft did not
+reproduce.
+
+Fix: SNAP(0.05), commit c1c6873. After dropping dopants, each host amount
+within 5% of the nearest integer is rounded to that integer before
+`reduced_formula` is called. Acceptance tests: merges Pb0.97Te1 with PbTe
+and Co3.95Sb12 with CoSb3 (the intended collapse); leaves Bi2Te2.7Se0.3
+distinct from Bi2Te3, elemental Te distinct from SnPbTe alloys, elemental Fe
+distinct from Fe-based alloys, and a six-element high-entropy alloy distinct
+from CoSb (the intended non-collapses).
+
+Rejected alternative: rational approximation via
+`get_integer_formula_and_factor`. Over-merged in exactly the cases SNAP(0.05)
+keeps apart -- elemental Te with SnTe alloys, a high-entropy alloy with
+CoSb -- and produced non-monotonic grouping across solid-solution series
+(composition x and composition x+delta could land in different clusters
+than x and x+2*delta).
+
+**BUG 2 -- randomized_group_kfold pinned the largest n_splits groups to
+fixed fold indices.** The function sorted groups by descending size
+(shuffling first, to break ties among equal-sized groups), then greedily
+bin-packed them via `argmin` over each fold's running total. Processing the
+largest groups first, with every fold total starting at zero, means argmin
+returns the lowest empty fold index every time -- so the k-th largest group
+always landed in fold k-1, every repeat, regardless of the shuffle. The
+shuffle only ever changed which group broke a size tie; it never changed
+which fold the largest, unambiguously-ranked groups landed in. Repeats were
+therefore not independent partitions for the rows that dominate the result,
+and the across-repeat SD reported alongside every grouped number understated
+the spread it was meant to measure. Measured: 6.30% of zT rows were in this
+deterministic zone pre-SNAP, 13.57% post-SNAP (SNAP changes cluster sizes,
+which changes which clusters rank among the top n_splits).
+
+Fix: scheme S5, commit c1c6873. The top n_splits groups are each placed by
+an independent uniform random draw with replacement, before the remainder is
+greedy bin-packed exactly as before. Simulated over 20 repeats: fold-size SD
+0.002% of mean (identical to the old code -- S5 does not trade balance for
+randomness), 20 of 20 repeats gave distinct partitions where the old code
+gave 1, and CoSb3 and TePb (two of the largest clusters) co-occurred in the
+same fold in 4 of 20 repeats (never, under the old code).
+
+Rejected alternatives: randomizing the argmin tie-break, which permutes
+which fold receives which LABEL, not the partition itself, so the top groups
+would still always land together in some fold, just an unpredictable one;
+shuffling group order without sorting by size first, which cost up to 11%
+fold-size imbalance; `GroupShuffleSplit`, which does not produce a partition
+(test sets can overlap across folds, incompatible with pooled out-of-fold
+R^2).
+
+**CONSEQUENCE.** Both fixes make the honest anchor stricter, never looser --
+so every previously reported grouped number was optimistic, and every gap
+against an ungrouped rung was a lower bound on the true gap. The chemistry
+rung dropped 0.037 to 0.058 across the four targets once the regeneration
+was complete (see the Five-Way Ladder section for the new per-target
+values). The regeneration required a NEW featurized CSV, not just a code
+fix: `chemistry_cluster_id` is a column stored in the featurized CSV at
+canonicalization time, not a value `src/nested_cv.py` computes at run time --
+fixing the function alone does not change any number until the column
+itself is regenerated from it. See the Canonical Dataset section for the
+snapfix CSV this produced.
+
+**Three regeneration failures found along the way, recorded because they
+share one shape: an input was silently stale, and nothing raised an
+error.**
+- The first regeneration attempt reran the ladder against the still-stale
+  `chemistry_cluster_id` column (the fixed function had not yet been used
+  to regenerate it) and reproduced the old, pre-fix numbers almost exactly
+  -- no error, no warning, just a number that looked plausible and was
+  wrong.
+- `src/direct_vs_derived_zt.py`'s `_fold_path` ignored the `checkpoint_dir`
+  argument `run_direct_vs_derived()` accepted, and resolved every fold's
+  checkpoint path against the old module-level constant instead. Passing a
+  new checkpoint directory silently reused the pre-fix checkpoints from the
+  old one and reported success.
+- The same script loaded zT's hyperparameters from an untracked, ephemeral
+  cache (`checkpoints/frozen_hyperparams/zT_xgboost.json`) rather than the
+  canonical, git-tracked file -- that cache held a hyperparameter set tuned
+  against File B, in August, before File A became canonical, silently
+  different from every other confirmed result in this project.
+
+**Standing rule this implies**: a regeneration must be verified by a value
+that MUST differ if the inputs changed, not by the absence of an error --
+absence of an error is exactly what all three failures above produced. The
+REGENERATION GATE line added to `run_direct_vs_derived()` in commit fabc532
+is the pattern to follow elsewhere: it prints the resolved checkpoint
+directory, the resolved hyperparameters file path and its SHA256, and the
+input subset's row count and unique group count, every run, so a rerun
+against different inputs cannot print the identical line by accident.
+
+---
+
 ## Build Order (execute top to bottom — later phases depend on earlier ones)
 
 **Phase 0 — shared foundation, run once:**
