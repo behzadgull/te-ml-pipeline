@@ -917,7 +917,7 @@ reproduced or audited after the fact. Going forward, a result is not
 (local path, or frozen-hyperparameter file) is named alongside it, so
 an orphaned headline number cannot be created again.
 
-## Confirmed Results — Five-Way Ladder (Paper A item 1, FINAL)
+## Confirmed Results — Five-Way Ladder (Paper A item 1, FINAL, updated 2026-09-19)
 
 Pooled out-of-fold R², frozen hyperparameters per target (tuned once via
 `tune_once`, reused unchanged across all five rungs), 397 features
@@ -935,6 +935,28 @@ Grouping Key section — no repeat-to-repeat spread to report there).
 | sigma (log10) | 0.9152 | 0.9150 | 0.9175 | 0.7772 ± 0.0019 | 0.7600 ± 0.0008 |
 | kappa (log10) | 0.9442 | 0.9444 | 0.9459 | 0.8562 ± 0.0010 | 0.8460 ± 0.0011 |
 | zT | 0.9186 | 0.9184 | 0.9196 | 0.8174 ± 0.0019 | 0.7968 ± 0.0030 |
+
+**SUPERSEDED 2026-09-19: the composition and chemistry-cluster columns
+above.** Regenerated after two grouping-code fixes (SNAP(0.05)
+`chemistry_cluster_id`, S5 `randomized_group_kfold`, both commit c1c6873)
+and the resulting snapfix featurized CSV -- see the Grouping Fixes section
+above. The random 80/20, 5-fold, and 10-fold columns are unaffected and
+unchanged: they never call `chemistry_cluster_id` or
+`randomized_group_kfold`, verified directly. Replacement table:
+
+| Target | random 80/20 | 5-fold | 10-fold | composition | chemistry cluster |
+|---|---|---|---|---|---|
+| S | 0.9588 | 0.9588 | 0.9595 | 0.8322 ± 0.0044 | 0.7528 ± 0.0050 |
+| sigma (log10) | 0.9152 | 0.9150 | 0.9175 | 0.7762 ± 0.0015 | 0.7020 ± 0.0020 |
+| kappa (log10) | 0.9442 | 0.9444 | 0.9459 | 0.8565 ± 0.0013 | 0.8092 ± 0.0021 |
+| zT | 0.9186 | 0.9184 | 0.9196 | 0.8178 ± 0.0009 | 0.7456 ± 0.0045 |
+
+Provenance: `results/ladder_regen_snapfix/20260917T150000/
+{S,sigma,kappa,zT}_chemistry_full/` (chemistry) and the same directory's
+`{S,sigma,kappa,zT}_composition_full/` (composition), tabulated in
+`reports/regen_snapfix/20260917T150000/ladder_metrics.json`. Random 80/20,
+5-fold, and 10-fold columns carried over unchanged from the 2026-08-22
+provenance below.
 
 **All 20 cells are reproducible, provenance-cited, 2026-08-22.** Every
 cell above comes from a checkpointed run with a surviving
@@ -961,9 +983,15 @@ The three ungrouped rungs (random/5-fold/10-fold) cluster tightly
 within ~0.001-0.003 of each other for every target, then drop sharply
 at composition-level grouping and drop again, more modestly, at the
 chemistry-cluster anchor — the honest ceiling this project reports.
-The ungrouped-to-chemistry-cluster gap (random 80/20 minus chemistry
+**SUPERSEDED 2026-09-19** (pre-regeneration gap, see the replacement table
+above): the ungrouped-to-chemistry-cluster gap (random 80/20 minus chemistry
 cluster) is largest for sigma (0.9152 to 0.7600, 15.5 points) and
 smallest for kappa (0.9442 to 0.8460, 9.8 points).
+
+Updated 2026-09-19, against the regenerated chemistry column: the gap
+ranges from 0.135 (kappa) to 0.213 (sigma) across the four targets, mean
+0.182 -- same ordering as before (largest for sigma, smallest for kappa),
+substantially wider gap.
 
 **Discrepancy diagnosis (2026-08-22): H1 (scale mismatch) is
 UNRESOLVABLE, not rejected.** Tested whether the orphaned run's
@@ -1009,6 +1037,28 @@ confirming chemistry-cluster grouping is a measurably stricter honest-
 ceiling anchor, not just numerically different by chance or repeat-to-
 repeat noise.
 
+**SUPERSEDED 2026-09-19.** Computed against the pre-fix composition/
+chemistry rungs. Regenerated against the fixed grouping (SNAP(0.05)
+`chemistry_cluster_id`, S5 `randomized_group_kfold`, both commit c1c6873)
+and the snapfix featurized CSV -- see the Five-Way Ladder table's
+2026-09-19 update above. Replacement table, same method:
+
+| Target | mean diff (comp − chem) | t | df | p |
+|---|---|---|---|---|
+| S | +0.0793 | 29.178 | 4 | <0.001 |
+| sigma | +0.0742 | 41.511 | 4 | <0.001 |
+| kappa | +0.0473 | 28.949 | 4 | <0.001 |
+| zT | +0.0722 | 24.360 | 4 | <0.001 |
+
+**Report the mean-diff effect size as the headline number, not t.** At
+df=4 (k=5 repeats), the Nadeau-Bengio corrected t-statistic is unstable,
+and a large t is not on its own remarkable -- a small number of repeats
+lets t grow large without the underlying effect being any more
+physically meaningful. The mean diff (composition minus chemistry,
++0.047 to +0.079 above) is the number that carries physical meaning; t
+and p establish that the direction is not noise, not how large the
+effect is.
+
 ## Confirmed Results — Noise Floor (Paper A item 3, FINAL)
 
 R²_max computed per-property matched space (log10 for sigma/kappa,
@@ -1038,6 +1088,34 @@ this repeat-to-repeat spread. This table is FINAL: its only dependency
 (the chemistry-cluster ceiling) is now reproducible and provenance-clean
 — unlike the Five-Way Ladder table above, which stays non-final until
 its four orphaned rungs are regenerated.
+
+**R²_max column verified unchanged, 2026-09-19.** R²_max depends only on
+the cleaned dataset's own property variance and the Alleno et al. noise
+reference, neither of which the grouping fixes touch. Rerun directly
+against the identical cleaned CSV (byte-identical SHA256): exactly zero
+delta on every property/space cell
+(`results/noise_floor/20260917T172251/`). The R²_max column above is
+unaffected and remains current.
+
+**SUPERSEDED 2026-09-19: the Confirmed ceiling and Headroom columns
+above, and the FINAL claim's stated dependency.** Both were tied to the
+chemistry-cluster ladder, itself superseded by the grouping fixes
+(SNAP(0.05) `chemistry_cluster_id`, S5 `randomized_group_kfold`, commit
+c1c6873) -- see the Five-Way Ladder table's 2026-09-19 update.
+Replacement table:
+
+| Target | Scale | R²_max | Confirmed ceiling | Headroom |
+|---|---|---|---|---|
+| S | linear | 0.9974 | 0.7528 | 0.245 |
+| sigma | log10 | 0.9968 | 0.7020 | 0.295 |
+| kappa | log10 | 0.9776 | 0.8092 | 0.168 |
+| zT | linear | 0.9785 | 0.7456 | 0.233 |
+
+Confirmed ceiling = the chemistry-cluster mean from
+`results/ladder_regen_snapfix/20260917T150000/
+{S,sigma,kappa,zT}_chemistry_full/` (see the Five-Way Ladder section's
+2026-09-19 update). Headroom's ceiling-side across-repeat SD: S ±0.0050,
+sigma ±0.0020, kappa ±0.0021, zT ±0.0045.
 
 R²_max is a best-case upper bound: Alleno et al. is a single-compound
 (skutterudite) round-robin measurement excluding digitization error, so
@@ -1079,6 +1157,11 @@ database, so it overstates the penalty and the combined ceiling is
 conservative. Both terms remain lower bounds on total label noise: neither
 captures synthesis-to-synthesis variation.
 
+**Also SUPERSEDED 2026-09-19** (Confirmed/Headroom columns, same reason
+as the table below): see the replacement table after the File A/UPDATED
+table below, which supersedes both this table's and that one's
+Confirmed/Headroom columns identically.
+
 **COMBINED CEILING, UPDATED 2026-09-11 (File A digitization values).**
 
 | Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
@@ -1098,6 +1181,35 @@ alone moves by up to +/-0.02 between File A and File B (largest for zT,
 see CAVEATS (c) above) -- treat this table's bounds as carrying that
 additional uncertainty on top of the stated range, not as a tighter
 estimate than the File B table above.**
+
+**R2_max and Digitization ceiling columns verified unchanged, 2026-09-19.**
+Neither depends on `chemistry_cluster_id` or `randomized_group_kfold`:
+R2_max comes from the cleaned dataset's own property variance (confirmed
+byte-identical rerun, exact zero delta -- see the simple Noise Floor
+table's 2026-09-19 update above); Digitization ceiling comes from
+composition-matched teMatDb-vs-Starrydata2 label agreement
+(`composition_id`-based, confirmed byte-identical to 4 decimals in
+`results/external_snapfix/20260917T160553/`). The Combined column, being
+derived from only these two, is therefore also unchanged.
+
+**SUPERSEDED 2026-09-19: the Confirmed and Headroom columns above** (both
+in this table and in the File B digitization table before it) --
+superseded by the fixed grouping's chemistry rung, see the Five-Way
+Ladder table's 2026-09-19 update. Replacement table:
+
+| Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
+|---|---|---|---|---|---|
+| S | 0.9974 | 0.964-0.982 | 0.961-0.979 | 0.7528 | 0.2085-0.2266 |
+| sigma | 0.9968 | 0.984-0.992 | 0.981-0.989 | 0.7020 | 0.2787-0.2868 |
+| kappa | 0.9776 | 0.983-0.992 | 0.961-0.969 | 0.8092 | 0.1517-0.1601 |
+| zT (vs ZT_author_declared) | 0.9785 | 0.981-0.990 | 0.959-0.969 | 0.7456 | 0.2137-0.2233 |
+| zT (vs recomputed alpha^2*T/(rho*kappa)) | 0.9785 | 0.984-0.992 | 0.962-0.971 | 0.7456 | 0.2168-0.2249 |
+
+Confirmed = the chemistry-cluster mean from
+`results/ladder_regen_snapfix/20260917T150000/`. Full arithmetic and
+provenance in
+`results/noise_floor/20260917T172251/noise_floor_inputs.json` and
+`results/noise_floor/20260917T172251/combined_ceiling_snapfix.md`.
 
 ## Confirmed Results — Descriptor Ablation (2026-09-12)
 
