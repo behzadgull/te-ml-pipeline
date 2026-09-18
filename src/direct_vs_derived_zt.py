@@ -23,6 +23,7 @@ tuned model. Every fit uses the full search space (see nested_cv.py's
 _xgb_search_space); nothing here caps it for local-runtime convenience.
 """
 
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -46,6 +47,15 @@ from src.nested_cv import (
 )
 
 CHECKPOINT_DIR = Path("checkpoints") / "direct_vs_derived_zt"
+
+
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
 
 # S/zT stay linear; sigma/kappa are trained in log10 space, matching
 # nested_cv.py's LOG_TRANSFORM_TARGETS -- the derived-zT formula below
@@ -79,20 +89,22 @@ def get_or_tune_zt_hyperparams(model_type="xgboost", device="cpu", **tune_kwargs
     run); otherwise run tune_once(target="zT", ...) now and save it
     there, so a later `nested_cv.py --frozen-hyperparams` run for the
     production five-way ladder can reuse the identical file rather than
-    silently duplicating the search. Returns (best_params, inner_cv_r2).
+    silently duplicating the search. Returns (best_params, inner_cv_r2, path).
     """
     path = FROZEN_HYPERPARAMS_DIR / f"zT_{model_type}.json"
     if path.exists():
         print(f"Reusing existing frozen zT hyperparameters: {path}", flush=True)
-        return _load_frozen_hyperparams(path, expected_model_type=model_type)
+        best_params, inner_cv_r2 = _load_frozen_hyperparams(path, expected_model_type=model_type)
+        return best_params, inner_cv_r2, path
 
     print(f"No frozen zT hyperparameters found at {path}; running tune_once now.", flush=True)
     tune_once(target="zT", model_type=model_type, device=device, output_path=path, **tune_kwargs)
-    return _load_frozen_hyperparams(path, expected_model_type=model_type)
+    best_params, inner_cv_r2 = _load_frozen_hyperparams(path, expected_model_type=model_type)
+    return best_params, inner_cv_r2, path
 
 
-def _fold_path(repeat, fold):
-    return CHECKPOINT_DIR / f"repeat{repeat}_fold{fold}.npz"
+def _fold_path(repeat, fold, checkpoint_dir=CHECKPOINT_DIR):
+    return Path(checkpoint_dir) / f"repeat{repeat}_fold{fold}.npz"
 
 
 def _fit_predict(X_train, y_train, X_test, params, model_type, device):
@@ -138,7 +150,7 @@ def run_direct_vs_derived(
     }
     y_zt_actual = subset["zT"].to_numpy(dtype=np.float64)
 
-    best_params, inner_cv_r2 = get_or_tune_zt_hyperparams(model_type=model_type, device=device)
+    best_params, inner_cv_r2, hyperparams_path = get_or_tune_zt_hyperparams(model_type=model_type, device=device)
 
     n_groups = len(np.unique(groups))
     print(
@@ -152,6 +164,14 @@ def run_direct_vs_derived(
         checkpoint_dir = Path(checkpoint_dir)
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
+    print(
+        f"REGENERATION GATE -- checkpoint_dir={checkpoint_dir}, "
+        f"hyperparams_path={hyperparams_path} (sha256={_sha256_file(hyperparams_path)}), "
+        f"subset_n_rows={len(subset):,}, subset_n_chemistry_clusters={n_groups:,}. "
+        f"A rerun against different inputs must print a different value here.",
+        flush=True,
+    )
+
     pooled = {k: {"y_true": [], "y_pred": []} for k in COMPONENT_KEYS}
     derived_true, derived_pred = [], []
 
@@ -164,7 +184,7 @@ def run_direct_vs_derived(
         fold_iter = randomized_group_kfold(groups, n_outer_folds, repeat_rng)
         for fold, (train_idx, test_idx) in enumerate(fold_iter):
             fold_num += 1
-            fold_path = _fold_path(repeat, fold) if checkpoint_dir is not None else None
+            fold_path = _fold_path(repeat, fold, checkpoint_dir) if checkpoint_dir is not None else None
 
             if fold_path is not None and fold_path.exists():
                 data = np.load(fold_path)
