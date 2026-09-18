@@ -40,3 +40,9 @@ checkpoints/saved_predictions/checkpoints/*
 !checkpoints/saved_predictions/checkpoints/kappa_chemistry/
 !checkpoints/saved_predictions/checkpoints/zT_chemistry/
 !checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
+
+# Direct-vs-derived zT regeneration checkpoints (per-fold predictions,
+# regenerated against both grouping fixes, the snapfix CSV, and the
+# canonical zT frozen hyperparameters) -- tracked despite the blanket
+# checkpoints/ ignore above, same rationale as the ladder checkpoints.
+!checkpoints/direct_vs_derived_zt_snapfix_canonical/
