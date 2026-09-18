@@ -15,11 +15,17 @@ identical chemistry-cluster grouped CV splits for both pathways:
       values, not a bin index).
 
 Both pathways, and all three component models, reuse ONE frozen
-hyperparameter set from a single chemistry-cluster tune_once() run on
-zT -- deliberately, so the comparison isolates "does going through three
-intermediate models and combining formulaically lose accuracy," without
-also confounding it with each property getting its own independently-
-tuned model. Every fit uses the full search space (see nested_cv.py's
+hyperparameter set: zT's CANONICAL frozen hyperparameters
+(checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json --
+the same file every confirmed result in CLAUDE.md cites) -- deliberately,
+so the comparison isolates "does going through three intermediate models
+and combining formulaically lose accuracy," without also confounding it
+with each property getting its own independently-tuned model. This module
+CONSUMES that canonical file; it does not tune. (A prior version loaded
+from nested_cv.py's ephemeral tune_once cache instead, which had silently
+drifted to a stale, pre-File-A hyperparameter set -- see
+load_zt_frozen_hyperparams's docstring.) Every fit uses the full search
+space the canonical file was tuned with (see nested_cv.py's
 _xgb_search_space); nothing here caps it for local-runtime convenience.
 """
 
@@ -33,7 +39,6 @@ import pandas as pd
 from sklearn.metrics import r2_score
 
 from src.nested_cv import (
-    FROZEN_HYPERPARAMS_DIR,
     GROUP_COL,
     MODEL_REGISTRY,
     N_OUTER_FOLDS,
@@ -43,10 +48,16 @@ from src.nested_cv import (
     _load_frozen_hyperparams,
     get_feature_columns,
     randomized_group_kfold,
-    tune_once,
 )
 
 CHECKPOINT_DIR = Path("checkpoints") / "direct_vs_derived_zt"
+
+# Duplicated from src.external_validation.FROZEN_HYPERPARAMS_DIR rather than
+# imported from there: importing it here would create a circular import
+# (external_validation -> backtransform_check -> direct_vs_derived_zt ->
+# external_validation). Keep this value in sync with that module's constant
+# if it ever changes -- both must point at the same canonical directory.
+CANONICAL_FROZEN_HYPERPARAMS_DIR = Path("checkpoints/saved_predictions/checkpoints/frozen_hyperparams")
 
 
 def _sha256_file(path):
@@ -82,23 +93,35 @@ def load_all_four_subset(processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT)
     return subset, candidates[-1]
 
 
-def get_or_tune_zt_hyperparams(model_type="xgboost", device="cpu", **tune_kwargs):
+def load_zt_frozen_hyperparams(model_type="xgboost"):
     """
-    Load zT's frozen hyperparameters from FROZEN_HYPERPARAMS_DIR if
-    already tuned (e.g. by a prior nested_cv.py --tune-once --target zT
-    run); otherwise run tune_once(target="zT", ...) now and save it
-    there, so a later `nested_cv.py --frozen-hyperparams` run for the
-    production five-way ladder can reuse the identical file rather than
-    silently duplicating the search. Returns (best_params, inner_cv_r2, path).
-    """
-    path = FROZEN_HYPERPARAMS_DIR / f"zT_{model_type}.json"
-    if path.exists():
-        print(f"Reusing existing frozen zT hyperparameters: {path}", flush=True)
-        best_params, inner_cv_r2 = _load_frozen_hyperparams(path, expected_model_type=model_type)
-        return best_params, inner_cv_r2, path
+    Load zT's CANONICAL frozen hyperparameters
+    (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json)
+    -- the same file every confirmed result in CLAUDE.md cites, produced
+    once by `nested_cv.py --tune-once --target zT`. This function is a
+    consumer of that canonical file, not a producer: a missing file raises
+    FileNotFoundError rather than silently tuning a fresh, uncommitted
+    substitute and writing it into an untracked cache.
 
-    print(f"No frozen zT hyperparameters found at {path}; running tune_once now.", flush=True)
-    tune_once(target="zT", model_type=model_type, device=device, output_path=path, **tune_kwargs)
+    That silent-tune-and-cache path was the source of a prior bug: this
+    module used to load from nested_cv.py's ephemeral tune_once cache
+    (checkpoints/frozen_hyperparams/zT_xgboost.json) instead of this
+    canonical file. That cache held a stale hyperparameter set tuned
+    before File A became canonical (129,188 rows, File B's row count, not
+    File A's 129,419) -- silently different from every other confirmed
+    result in this project, undetected until an explicit audit compared
+    the two paths.
+
+    Returns (best_params, inner_cv_r2, path).
+    """
+    path = CANONICAL_FROZEN_HYPERPARAMS_DIR / "zT.json"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Canonical zT frozen hyperparameters not found at {path}. This script consumes the "
+            f"canonical frozen hyperparameters and does not tune -- run "
+            f"`python src/nested_cv.py --tune-once --target zT` first if this file is genuinely missing."
+        )
+    print(f"Loading canonical frozen zT hyperparameters: {path}", flush=True)
     best_params, inner_cv_r2 = _load_frozen_hyperparams(path, expected_model_type=model_type)
     return best_params, inner_cv_r2, path
 
@@ -127,7 +150,7 @@ def run_direct_vs_derived(
     repeat count/randomization CLAUDE.md's Grouping Key section requires
     for any grouped CV rung), fitting four models per fold (direct zT,
     S, sigma_log10, kappa_log10) with ONE shared frozen hyperparameter
-    set from zT's tune_once. Each fold's four (y_true, y_pred) arrays are
+    set: zT's canonical frozen hyperparameters. Each fold's four (y_true, y_pred) arrays are
     checkpointed to checkpoint_dir immediately, so an interrupted run
     resumes instead of restarting; pass checkpoint_dir=None to disable.
 
@@ -150,7 +173,7 @@ def run_direct_vs_derived(
     }
     y_zt_actual = subset["zT"].to_numpy(dtype=np.float64)
 
-    best_params, inner_cv_r2, hyperparams_path = get_or_tune_zt_hyperparams(model_type=model_type, device=device)
+    best_params, inner_cv_r2, hyperparams_path = load_zt_frozen_hyperparams(model_type=model_type)
 
     n_groups = len(np.unique(groups))
     print(
@@ -244,7 +267,7 @@ def run_direct_vs_derived(
     results["model_type"] = model_type
     results["n_repeats"] = n_repeats
     results["n_outer_folds"] = n_outer_folds
-    results["frozen_hyperparams_source"] = "zT tune_once (shared across all four models)"
+    results["frozen_hyperparams_source"] = "zT canonical frozen hyperparameters (shared across all four models)"
     results["frozen_hyperparams_inner_cv_r2"] = inner_cv_r2
     results["best_params"] = best_params
 
