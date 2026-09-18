@@ -1,0 +1,56 @@
+{
+  "checkpoint_dir_read": "checkpoints\\direct_vs_derived_zt_snapfix_canonical",
+  "n": 280440,
+  "r2_direct": 0.7262417955460967,
+  "r2_derived_uncorrected": 0.5244094086966701,
+  "r2_derived_corrected": 0.5279052944833015,
+  "smear_sigma": 1.3234135774390412,
+  "smear_kappa": 1.055683875173407,
+  "residual_distribution_stats": {
+    "direct": {
+      "mean": 0.010564823750336664,
+      "std": 0.2022423461848138,
+      "median": -0.004616789613933567,
+      "p1": -0.508189649069275,
+      "p99": 0.6783632503024688,
+      "max_abs": 3.49088497630755,
+      "sse": 11501.848961659982,
+      "top1pct_sse_share": 0.22954408388491318,
+      "top5pct_sse_share": 0.5126230371143637
+    },
+    "derived": {
+      "mean": 0.09794308230477054,
+      "std": 0.24831153809003054,
+      "median": 0.040674216817516956,
+      "p1": -0.41691653944205237,
+      "p99": 0.969857967852823,
+      "max_abs": 3.8958184149604085,
+      "sse": 19981.761495219605,
+      "top1pct_sse_share": 0.21315949085995492,
+      "top5pct_sse_share": 0.515597168970896
+    }
+  },
+  "residual_correlation_matrix": [
+    [
+      0.9999999999999998,
+      -0.07869070702395739,
+      -0.07913362618635417
+    ],
+    [
+      -0.07869070702395739,
+      1.0,
+      0.43046364190293296
+    ],
+    [
+      -0.07913362618635418,
+      0.4304636419029329,
+      1.0
+    ]
+  ],
+  "residual_correlation_labels": [
+    "S",
+    "sigma (log10)",
+    "kappa (log10)"
+  ],
+  "duan_verdict": "COLLAPSES -- back-transform artifact"
+}

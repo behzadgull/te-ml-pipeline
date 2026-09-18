@@ -1,0 +1,39 @@
+{
+  "zT_direct": {
+    "pooled_r2": 0.7262417955460967,
+    "n": 280440
+  },
+  "S": {
+    "pooled_r2": 0.8171677067071441,
+    "n": 280440
+  },
+  "sigma_log10": {
+    "pooled_r2": 0.6855559121594483,
+    "n": 280440
+  },
+  "kappa_log10": {
+    "pooled_r2": 0.8221343902597429,
+    "n": 280440
+  },
+  "zT_derived": {
+    "pooled_r2": 0.5244094086966701,
+    "n": 280440
+  },
+  "subset_n_rows": 56088,
+  "subset_n_chemistry_clusters": 4139,
+  "model_type": "xgboost",
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "frozen_hyperparams_source": "zT canonical frozen hyperparameters (shared across all four models)",
+  "frozen_hyperparams_inner_cv_r2": 0.7926783006456432,
+  "best_params": {
+    "n_estimators": 500,
+    "max_depth": 9,
+    "learning_rate": 0.021879194372117446,
+    "subsample": 0.6803687069914941,
+    "colsample_bytree": 0.6984141242996358,
+    "min_child_weight": 4,
+    "reg_lambda": 1.7133930619789375,
+    "reg_alpha": 0.050328646865956124
+  }
+}
