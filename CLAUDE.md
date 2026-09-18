@@ -406,6 +406,9 @@ threshold are dopants and do not split the cluster.
   singletons) -- that is the intended behavior of the 5 at% definition,
   not a bug, and it should not be conflated with Paper B's coarser family
   count.
+  **SUPERSEDED 2026-09-19: "12,454".** Measured pre-fix. Under the fixed
+  grouping (SNAP(0.05), commit c1c6873) and the snapfix featurized CSV:
+  8,908 groups (`reports/grouping_key_remeasure/20260918T000232/`).
 - **chemistry_cluster_id vs. the thesis's "parent chemical system"
   (sorted element set, no stoichiometry, no dopant threshold): not a
   finer/coarser pair of the same grouping, they cross-cut each other.**
@@ -419,6 +422,15 @@ threshold are dopants and do not split the cluster.
   cluster (780 samples, see the repeated-CV note below), splits into 69
   different parent_system groups** purely because its filler/dopant
   species varies (La, Ce, Yb, Ba, In, Ga, Tl, K, Na, Br, I, Sn, O, ...).
+  **SUPERSEDED 2026-09-19: the parent_system/chemistry_cluster_id counts
+  and the CoSb3 figures in this bullet.** Remeasured against the fixed
+  grouping and the snapfix CSV's 17,977 unique formulas: 3,909
+  parent_system groups vs. 8,908 chemistry_cluster_id groups; 1,285 of
+  8,908 (14.4%) span more than one parent_system; CoSb3 now has 959
+  samples (grew 23%) and splits into 139 parent_system groups. The
+  qualitative argument is unchanged (the two definitions still cross-cut,
+  chemistry_cluster_id is still the more defensible anchor) -- only these
+  counts moved.
   Under parent_system, a La-doped CoSb3 sample and a Yb-doped CoSb3
   sample -- chemically near-identical host-lattice measurements, the
   exact near-duplicate leakage case chemistry_cluster_id's 5 at%
@@ -445,7 +457,20 @@ threshold are dopants and do not split the cluster.
   entirely in one fold, so the single largest cluster (CoSb3, skutterudite,
   780 samples / 9,898 rows) makes up 14.5% of whichever fold it lands in,
   and the next-largest (Ca3Co4O9, 548 samples / 5,027 rows) makes up 7.4%
-  of its fold. A single grouped split is one arbitrary draw of which large,
+  of its fold.
+  **SUPERSEDED 2026-09-19: the fold-row-count range and both named
+  clusters' figures.** Remeasured against the fixed grouping and the
+  snapfix CSV (`reports/grouping_key_remeasure/20260918T000232/`): fold
+  row counts 56,034-56,035 (still balanced to <0.01% of the mean -- the
+  qualitative claim holds). **This comparison is confounded by a dataset
+  change, not a clean grouping-only comparison**: 68,166 x 5 =~340,830
+  matches this document's own pre-step8/9-fix cleaned-dataset row count,
+  not the snapfix CSV's 280,173 rows -- do not read the row-count shift
+  itself as a grouping effect. CoSb3 now has 959 samples / 13,185 rows,
+  23.5% of its fold (grew 23% in sample count); Ca3Co4O9 now has 281
+  samples / 3,239 rows, 5.8% of its fold (shrank 49% in sample count,
+  the opposite direction from CoSb3 -- not investigated further here).
+  A single grouped split is one arbitrary draw of which large,
   chemically distinct cluster gets held out in which fold; that fold's R^2
   is then partly a referendum on "how well does the model generalize to
   this one specific chemistry" rather than a representative average.
@@ -1237,6 +1262,18 @@ target's own `target_scale`):
 | kappa (log10) | 0.8419 +/- 0.0009 | 0.8436 +/- 0.0013 | 0.8460 +/- 0.0011 |
 | zT | 0.7940 +/- 0.0016 | 0.7945 +/- 0.0042 | 0.7968 +/- 0.0030 |
 
+**SUPERSEDED 2026-09-19: the full table above.** Computed against the
+pre-fix chemistry rung. Regenerated against the fixed grouping (SNAP(0.05)
+`chemistry_cluster_id`, S5 `randomized_group_kfold`, commit c1c6873) and
+the snapfix featurized CSV. Replacement table:
+
+| Target | magpie (133 feat) | cbfv (265 feat) | full (397 feat) |
+|---|---|---|---|
+| S | 0.7464 +/- 0.0039 | 0.7502 +/- 0.0029 | 0.7528 +/- 0.0050 |
+| sigma (log10) | 0.6919 +/- 0.0011 | 0.7018 +/- 0.0020 | 0.7020 +/- 0.0020 |
+| kappa (log10) | 0.8028 +/- 0.0025 | 0.8048 +/- 0.0026 | 0.8092 +/- 0.0021 |
+| zT | 0.7406 +/- 0.0024 | 0.7443 +/- 0.0042 | 0.7456 +/- 0.0045 |
+
 **Deltas, in absolute R², not SD units:**
 
 | Target | full - magpie | full - cbfv |
@@ -1245,6 +1282,10 @@ target's own `target_scale`):
 | sigma | +0.0103 | +0.0015 |
 | kappa | +0.0042 | +0.0025 |
 | zT | +0.0028 | +0.0023 |
+
+**SUPERSEDED 2026-09-19: full-minus-magpie deltas above** (same reason).
+New full-minus-magpie deltas: S +0.0065, sigma +0.0101, kappa +0.0064,
+zT +0.0049.
 
 **Do not report these as multiples of the across-repeat SD.** The SD
 here measures fold-reshuffling precision (how much the pooled R² moves
@@ -1273,6 +1314,13 @@ set's extra 264 features, over magpie-only, actually close):
 - zT: 0.002804 / [0.162, 0.172] (declared) or [0.166, 0.174]
   (recomputed TEP) = **1.61%-1.73%**
 
+**SUPERSEDED 2026-09-19: the fraction-of-headroom figures above.** Both
+the delta (full-minus-magpie) and the headroom denominator changed --
+see the Five-Way Ladder and COMBINED CEILING tables' 2026-09-19 updates.
+New fractions, against the NEW headroom: S 2.86%-3.10%, sigma
+3.52%-3.63%, kappa 3.97%-4.19%, zT 2.21%-2.31% (declared) or
+2.20%-2.28% (recomputed TEP).
+
 Full descriptor coverage over magpie-only closes under 5% of headroom
 on every target; the conclusion is the same one reached against the
 now-superseded File B combined-ceiling table (that table's parenthetical
@@ -1298,6 +1346,14 @@ per-repeat-pooled R² from saved per-row predictions, identical code for
 magpie/cbfv/full) reported in
 `reports/descriptor_ablation/20260912T184318/ablation_table.md` and
 `ablation_metrics.json`.
+
+**SUPERSEDED 2026-09-19: the provenance above, for the new table/deltas/
+fractions only** (the OLD 2026-09-12 provenance remains accurate for the
+OLD, superseded numbers it always described). New provenance:
+`reports/ablation_snapfix/20260918T000111/ablation_table.md` and
+`ablation_metrics.json`, computed from the snapfix descriptor ablation at
+`results/descriptor_ablation_snapfix/20260917T184650/` and the snapfix
+chemistry rung at `results/ladder_regen_snapfix/20260917T150000/`.
 
 ## Confirmed Results — SHAP Attribution Comparison (2026-09-13)
 
@@ -1334,6 +1390,16 @@ cluster 0.7968, gap 0.1218 -- see the Five-Way Ladder table above) to
 within 0.002, using an independent 5-fold refit rather than reading the
 ladder's checkpoints directly.
 
+**SUPERSEDED 2026-09-19.** Computed under the pre-fix grouping, 5 folds
+(repeat 0 only). Regenerated against the fixed grouping (SNAP(0.05)
+`chemistry_cluster_id`, S5 `randomized_group_kfold`, commit c1c6873), the
+snapfix CSV, and generalized to all 25 folds (5 repeats), since repeat 0
+alone left several attribution deltas too close to the fold-SD noise
+floor to call -- see below. Pooled R2: random 0.9180, chemistry 0.7456,
+gap 0.1724, reproducing the Five-Way Ladder's own new zT gap (0.9186 vs
+0.7456, gap 0.1730 -- see the Five-Way Ladder table's 2026-09-19 update)
+to within 0.0006.
+
 **Coarse group comparison** (source: MagpieData / CBFV_ / temperature_bin):
 
 | group | random mean share +/- SD | chemistry mean share +/- SD | delta (chem-rand) | delta / pooled SD |
@@ -1341,6 +1407,14 @@ ladder's checkpoints directly.
 | cbfv | 0.5385 +/- 0.0052 | 0.5297 +/- 0.0191 | -0.0088 | -0.63 |
 | magpie | 0.2647 +/- 0.0062 | 0.2731 +/- 0.0212 | +0.0083 | +0.54 |
 | temperature | 0.1968 +/- 0.0016 | 0.1972 +/- 0.0047 | +0.0004 | +0.12 |
+
+**SUPERSEDED 2026-09-19** (same reason). New coarse shares, 25 folds:
+
+| group | random mean share +/- SD | chemistry mean share +/- SD | delta (chem-rand) | delta / pooled SD |
+|---|---|---|---|---|
+| magpie | 0.2654 +/- 0.0056 | 0.2759 +/- 0.0228 | +0.0105 | +0.63 |
+| cbfv | 0.5377 +/- 0.0049 | 0.5288 +/- 0.0251 | -0.0089 | -0.49 |
+| temperature | 0.1969 +/- 0.0014 | 0.1953 +/- 0.0058 | -0.0015 | -0.36 |
 
 **Fine descriptor-semantic group comparison** (see the script's
 `FINE_GROUP_MEMBERS` mapping; 0 of 397 columns fell into "other"):
@@ -1358,6 +1432,21 @@ ladder's checkpoints directly.
 | metal_class | 0.0231 +/- 0.0006 | 0.0234 +/- 0.0030 | +0.0004 | +0.16 |
 | melting_point | 0.0191 +/- 0.0008 | 0.0194 +/- 0.0014 | +0.0002 | +0.21 |
 
+**SUPERSEDED 2026-09-19** (same reason). New fine-group shares, 25 folds:
+
+| group | random mean share +/- SD | chemistry mean share +/- SD | delta (chem-rand) | delta / pooled SD |
+|---|---|---|---|---|
+| valence_electron_config | 0.1939 +/- 0.0051 | 0.1814 +/- 0.0219 | -0.0125 | -0.78 |
+| atomic_radius | 0.1945 +/- 0.0046 | 0.1802 +/- 0.0277 | -0.0143 | -0.72 |
+| electronegativity | 0.0700 +/- 0.0026 | 0.0671 +/- 0.0058 | -0.0029 | -0.64 |
+| melting_point | 0.0185 +/- 0.0009 | 0.0199 +/- 0.0025 | +0.0014 | +0.76 |
+| periodic_position | 0.1120 +/- 0.0021 | 0.1257 +/- 0.0337 | +0.0137 | +0.57 |
+| metal_class | 0.0226 +/- 0.0010 | 0.0250 +/- 0.0058 | +0.0024 | +0.57 |
+| dft_groundstate | 0.0206 +/- 0.0022 | 0.0277 +/- 0.0184 | +0.0071 | +0.54 |
+| thermodynamic_bulk | 0.1533 +/- 0.0036 | 0.1587 +/- 0.0160 | +0.0053 | +0.46 |
+| atomic_mass | 0.0177 +/- 0.0015 | 0.0189 +/- 0.0042 | +0.0012 | +0.37 |
+| temperature | 0.1969 +/- 0.0014 | 0.1953 +/- 0.0058 | -0.0015 | -0.36 |
+
 **Finding, stated as negative**: no group, coarse or fine, shows a delta
 exceeding 0.74 pooled fold-SD (electronegativity's -0.74 is the largest
 magnitude of any row above). At this fold count, attribution shares are
@@ -1365,6 +1454,25 @@ statistically indistinguishable between the random and chemistry-cluster
 split strategies. The ~0.12 R² inflation documented above is **not**
 accompanied by any detectable shift in which descriptor families the
 model relies on.
+
+**SUPERSEDED 2026-09-19, in a way worth stating carefully rather than
+just replacing the number.** A 5-fold-per-arm regeneration against the
+fixed grouping (repeat 0 only, `results/shap_attribution/20260917T122537/`)
+found THREE groups above 1 pooled fold-SD (melting_point +1.88,
+electronegativity -1.38, valence_electron_config -1.33) -- the null
+result did not hold at 5 folds. That run was underpowered, not wrong: at
+k=5 the SD estimate itself is noisy. Generalizing to all 25 folds (5
+repeats per arm, `results/shap_attribution/20260917T134930/`) resolved
+it -- max |delta| is 0.78 pooled fold-SD (valence_electron_config),
+nothing approaches 1 SD, the null result the 2026-09-13 run originally
+reported holds again, on a firmer footing (25 observations, not 5).
+
+**Secondary finding, new**: the chemistry arm's fold-to-fold SD runs 2x
+to 16x the random arm's SD, across every coarse and fine group, and does
+NOT narrow as fold count increases from 5 to 25 -- because grouped CV's
+fold composition genuinely varies more than row-random CV's does (which
+groups, and how many rows each carries, differs every repeat), not
+because of an estimation artifact that more folds would average away.
 
 **Interpretation**: this is consistent with the inflation being a
 property of test-set composition -- the random split's test fold
@@ -1393,6 +1501,13 @@ indices, enough to rebuild a figure without refitting -- and
 `environment.txt`), copied from the Kaggle run that produced them.
 Computed by `scripts/shap_attribution_zT.py`.
 
+**SUPERSEDED 2026-09-19: the provenance above, for the numbers this
+section now supersedes.** New provenance: `results/shap_attribution/
+20260917T122537/` (5-fold-per-arm intermediate, underpowered, see above)
+and `results/shap_attribution/20260917T134930/` (25-fold-per-arm,
+current), both computed by `scripts/shap_attribution_zT.py` after it was
+generalized to loop all repeats in commit 25507a8.
+
 ## Confirmed Results — Direct-vs-Derived zT (Paper A item 5, FINAL)
 
 Direct-vs-derived zT, all-four-properties-present subset (55,948 rows,
@@ -1405,6 +1520,21 @@ not per-property tuning. Implemented in `src/direct_vs_derived_zt.py`.
 - Derived S²σT/κ: pooled R² = 0.6659
 - Gap: 0.127 (direct beats derived)
 
+**SUPERSEDED 2026-09-19: subset size and all R2 values above.** This
+section also used the WRONG hyperparameters until commit 37506aa:
+`get_or_tune_zt_hyperparams()` loaded from an untracked, ephemeral
+`tune_once` cache (`checkpoints/frozen_hyperparams/zT_xgboost.json`,
+tuned against File B's row count in August, before File A became
+canonical) instead of the canonical, git-tracked frozen hyperparameters
+every other confirmed result in this document cites -- found by audit,
+fixed to load the canonical file, `_fold_path`'s checkpoint_dir bug fixed
+alongside it (commit fabc532). New subset: 56,088 rows, 4,139 chemistry
+clusters (both the fixed grouping AND the snapfix CSV changed cluster
+membership; see the Grouping Fixes section). New pooled R2, canonical
+hyperparameters: direct zT = 0.7262, derived S2*sigma*T/kappa = 0.5244,
+gap = 0.2018 (direct beats derived, same ordering, substantially larger
+gap).
+
 Component models feeding the derived pathway, same subset/splits/frozen
 hyperparameters: S = 0.8735, sigma (log10) = 0.7719, kappa (log10) =
 0.8693. Each component model is individually decent on its own, but
@@ -1412,6 +1542,11 @@ combining three imperfect predictions through S²σT/κ compounds their
 errors multiplicatively rather than additively — direct prediction
 clearly wins. Consistent with Paper A item 5's requirement to report
 component-error correlation structure rather than assume independence.
+
+**SUPERSEDED 2026-09-19** (same reason). New component models: S =
+0.8172, sigma (log10) = 0.6856, kappa (log10) = 0.8221. Same qualitative
+picture: each is individually decent, direct prediction still clearly
+wins.
 
 **Back-transform bias check (Duan smearing correction, 2026-08-22)**:
 sigma and kappa are predicted in log10 space then exponentiated back for
@@ -1431,6 +1566,36 @@ Implemented in `src/backtransform_check.py`; figure at
   do not cancel, they compound.
 - **Conclusion: the 0.127 gap is genuine multiplicative error
   propagation, not a back-transform artifact.**
+
+**SUPERSEDED 2026-09-19: this whole back-transform check block, and its
+conclusion.** The claim that the gap "survives Duan correction" no
+longer holds cleanly. New numbers (canonical hyperparameters, fixed
+grouping): corrected derived R2 = 0.5279 vs uncorrected 0.5244 -- a
+difference of 0.0035, and the two land on OPPOSITE sides of each other
+in the two most recent runs, which differ only in which hyperparameters
+were used (the wrong-hyperparameter snapfix run gave corrected 0.5239 <
+uncorrected 0.5379; the canonical-hyperparameter rerun gives corrected
+0.5279 > uncorrected 0.5244). New tail-SSE shares: direct 23.0% vs
+derived 21.3% (top 1% of rows) -- still nearly identical, no concentrated
+outlier blow-up. New sigma/kappa residual correlation = 0.4305 (moderate,
+positive, essentially unchanged from 0.42).
+
+**Replacement claim**: the direct-derived gap is roughly 0.20 either way
+(0.2018 uncorrected here), and the Duan smearing correction moves
+derived-zT by under 0.005 in a direction that is not consistent across
+runs -- it neither explains the gap as a back-transform artifact nor
+rescues the derived pathway. The gap is best read as genuine
+multiplicative error propagation, same conclusion as before, but the
+specific "survives correction" framing should be dropped: at this
+magnitude the correction is noise relative to hyperparameter choice, not
+a directional finding.
+
+**Provenance**: `results/direct_vs_derived_snapfix/20260918T200058/`
+(`direct_vs_derived_results.json`, `backtransform_check_results.json`)
+and `checkpoints/direct_vs_derived_zt_snapfix_canonical/` (25 per-fold
+predictions, git-tracked). Superseded intermediate (wrong hyperparameters,
+same fixed grouping): `results/direct_vs_derived_snapfix/20260918T103933/`,
+kept locally, not committed.
 
 ## Confirmed Results — External Validation, ESTM (Paper A item 6, ESTM COMPLETE)
 
@@ -1465,6 +1630,21 @@ estm_predictions_pass{a,b}.npz` (per-row predictions, both passes).
 | (a) source-DOI | 1,416 | 3,123 | 505 |
 | (b) composition-cluster | 2,592 | 1,947 | 359 |
 
+**SUPERSEDED 2026-09-19: pass (b)'s row/cluster counts.** Pass (a) is
+DOI-based, unaffected by the grouping fix: rows unchanged (1,416 dropped,
+3,123 surviving), but the SAME rows' chemistry_cluster_id labels changed
+under SNAP(0.05), so their own cluster-diversity count moves from 505 to
+357 (recomputed directly from the saved per-row predictions). Pass (b)'s
+dedup is itself chemistry-cluster-based, so its row set changes: 3,091
+dropped (not 2,592), 1,448 surviving (not 1,947), 228 unique clusters
+among survivors (not 359), 300 unique ESTM clusters overlapping training
+(not 401). Replacement table:
+
+| Pass | Dropped rows | Surviving rows | Unique chemistry clusters surviving |
+|---|---|---|---|
+| (a) source-DOI | 1,416 | 3,123 | 357 |
+| (b) composition-cluster | 3,091 | 1,448 | 228 |
+
 **Per-property R², full-set vs. in-distribution** (in-distribution =
 within training's per-property support on S, sigma, kappa, and
 temperature simultaneously):
@@ -1481,6 +1661,27 @@ temperature simultaneously):
 | b | kappa | 0.6264 | 1,947 | 0.6870 | 1,655 | 3.7% |
 | b | zT_direct | 0.5793 | 1,947 | 0.6053 | 1,655 | — |
 | b | zT_derived | −0.0188 | 1,947 | −0.0070 | 1,655 | — |
+
+**SUPERSEDED 2026-09-19: pass (b)'s full-set row, and both passes'
+zT_derived full-set cell.** Pass (a)'s direct-prediction full-set cells
+(S, sigma, kappa, zT_direct) are BIT-IDENTICAL, confirmed directly --
+chemistry_cluster_id is not a model feature, and pass (a)'s row set is
+unaffected. New full-set values: pass (a) zT_derived R2 = 0.2064, n=3,123
+(smear-factor dependency only, row set unchanged); pass (b) S=0.3536,
+sigma=0.2746, kappa=0.6184, zT_direct=0.4982, zT_derived=-0.0959, all
+n=1,448.
+
+**Open gap, not recomputed in this pass: the In-dist R2/n columns above.**
+"In-distribution" restricts to rows within training's per-property
+support (S, sigma, kappa, temperature simultaneously) -- the exact bounds
+used to produce the original 0.6124/0.4471/0.6870/0.6053 figures were
+never committed as a reusable script, only the resulting numbers. Rather
+than reconstruct a bounds definition that might silently differ from the
+original and produce a false-comparable number, this is flagged as an
+open item: the saved per-row predictions
+(`results/external_snapfix/20260917T160553/estm_predictions_pass{a,b}.npz`)
+support this recompute whenever the original bounds definition is
+located or re-derived.
 
 Temperature contributes 0% OOD in either pass — `step3_filter_temperature`
 enforces training's exact 300-800K window on ESTM before anything else
@@ -1501,6 +1702,20 @@ chemistry-cluster grouped CV:
 | sigma | 0.7600 | 0.4471 | 0.3129 |
 | kappa | 0.8460 | 0.6870 | 0.1590 |
 | zT_direct | 0.7968 | 0.6053 | 0.1915 |
+
+**SUPERSEDED 2026-09-19: the Internal grouped CV column.** Replacement,
+from the fixed-grouping chemistry rung:
+
+| Property | Internal grouped CV | ESTM pass (b), in-distribution | Drop |
+|---|---|---|---|
+| S | 0.7528 | 0.6124 (unverified, see open gap above) | pending |
+| sigma | 0.7020 | 0.4471 (unverified, see open gap above) | pending |
+| kappa | 0.8092 | 0.6870 (unverified, see open gap above) | pending |
+| zT_direct | 0.7456 | 0.6053 (unverified, see open gap above) | pending |
+
+The Drop column cannot be recomputed until the ESTM-side in-distribution
+column is -- both sides of the subtraction must be current at once, not
+mixed old-ESTM/new-ladder.
 
 Even chemistry-cluster grouped CV — this project's own honest ceiling,
 already measurably stricter than composition/random/k-fold per the
@@ -1524,6 +1739,14 @@ near-insulating composition it never trained on. **State explicitly:
 the model does not extrapolate below its training conductivity floor
 of ~958 S/m — this is a scope limitation, not a silent failure mode.**
 
+**SUPERSEDED 2026-09-19, not independently recomputed: this whole
+paragraph.** Every figure here (0.4471, 263 sub-floor rows, 79.8% SSE
+share, -2.04 mean log-residual) is pass-(b)-in-distribution-specific and
+shares the open gap above -- pass (b)'s surviving row set changed
+(1,947 -> 1,448), so these figures must be recomputed against the new
+surviving set once the in-distribution bounds definition is available,
+not silently carried forward.
+
 **zT_derived: report the protocol-consistent frozen-smear number,
 −0.0070 (pass b, in-distribution), as the result — NOT the naive
 +0.1681 figure.** Frozen smear factors (smear_sigma=1.2916,
@@ -1544,6 +1767,15 @@ and does not transfer across databases, so a smear factor honestly
 calibrated without touching test labels will not be optimally
 calibrated for the test distribution. State this trade-off explicitly
 rather than silently reporting whichever number looks better.
+
+**SUPERSEDED 2026-09-19: the smear factors, and the -0.0070/+0.1681
+pass-b-in-distribution result.** New smear factors (chemistry-cluster
+GroupKFold OOF pass, fixed grouping, snapfix training):
+smear_sigma=1.3817, smear_kappa=1.0715 -- both larger than before
+(1.2916, 1.0446), consistent with the chemistry-cluster fold assignment
+itself changing under S5. The pass-b-in-distribution zT_derived result
+this paragraph reports shares the open gap above and needs the same
+in-distribution recompute before restating.
 
 **ESTM external validation: COMPLETE.** teMatDb: PENDING — a separate
 dataset, not yet downloaded (item 6 requires both, each touched exactly
