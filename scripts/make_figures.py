@@ -69,6 +69,24 @@ FIG3_AXIS_LABELS = {
 # cleaning_funnel.png (mislabeled: sits in File A's directory tree but
 # renders File B's funnel) was generated from. File A's own funnel had
 # never been computed until 2026-09-14.
+# STALE (flagged 2026-09-19, values NOT changed): this entire table
+# predates BOTH grouping fixes (SNAP(0.05) chemistry_cluster_id, S5
+# randomized_group_kfold, commit c1c6873) and the reproducible 2026-08-22
+# checkpoint set -- every cell, including the XGBoost row, is from the
+# orphaned pre-2026-08-22 run CLAUDE.md's Five-Way Ladder section
+# describes as "none of which could be verified or reproduced" (XGBoost
+# row here == that section's quoted orphaned values: S=0.8083,
+# sigma=0.7522, kappa=0.8226, zT=0.7965). It is therefore two
+# regenerations behind the current snapfix ladder, not one. Regenerating
+# this figure for real needs LightGBM/Random Forest/Ridge chemistry-
+# cluster refits against the snapfix CSV (tune_once + 5 repeats x 5 outer
+# folds each per model, via nested_cv.py's --model flag and the
+# six-command workflow in CLAUDE.md's Paper A item 1) -- only XGBoost's
+# cell could be swapped in today (from results/ladder_regen_snapfix/
+# 20260917T150000/), so nothing below is touched rather than partially
+# updated. See the make_figures.py task report for the compute-cost
+# estimate of the full rerun.
+#
 # Pooled out-of-fold R^2 under chemistry-cluster grouped CV, frozen
 # hyperparameters per (target, model_type) via nested_cv.py's tune_once,
 # see CLAUDE.md "Confirmed Results -- Five-Way Ladder" and Paper A item
@@ -94,17 +112,72 @@ MODEL_COMPARISON_CEILING_MODEL = "XGBoost"
 # XGBoost hyperparameters reused unchanged across all five rungs -- see
 # CLAUDE.md "Confirmed Results -- Five-Way Ladder" (Paper A item 1).
 # sigma/kappa in log10 space, S/zT linear, same as MODEL_COMPARISON_RESULTS.
+#
+# Composition and Chemistry-Cluster CV rows: results/ladder_regen_snapfix/
+# 20260917T150000/{S,sigma,kappa,zT}_{composition,chemistry}_full/,
+# tabulated in reports/regen_snapfix/20260917T150000/ladder_metrics.json
+# -- regenerated against the fixed grouping (SNAP(0.05)
+# chemistry_cluster_id, S5 randomized_group_kfold, commit c1c6873) and the
+# snapfix featurized CSV. Point estimates only (bar heights below); each
+# also carries an across-5-repeat SD in CLAUDE.md's Five-Way Ladder table
+# (composition: S +/-0.0044, sigma +/-0.0015, kappa +/-0.0013, zT
+# +/-0.0009; chemistry: S +/-0.0050, sigma +/-0.0020, kappa +/-0.0021, zT
+# +/-0.0045) not plotted here, since this figure draws single bar heights
+# with no error-bar mechanism.
+#
+# Random 80/20, 5-Fold, and 10-Fold rows: checkpoints/ladder_regen_dl/
+# {target}_{composition,kfold,random}_f{5,10,20}/ (folder-name suffix is
+# outer-fold count, e.g. sigma_random_f20, kappa_kfold_f10), each with a
+# run_config.json confirming target_scale=log10 (sigma/kappa), seed=0,
+# and the canonical frozen-hyperparameters path. Pooled R^2 recomputed
+# directly from these checkpoints' *_predictions.npz files matches
+# CLAUDE.md's confirmed ungrouped row to 4 decimals on every target.
+# These rungs are unaffected by the SNAP(0.05)/S5 grouping fix for a
+# structural reason, not just a code-path one: the snapfix featurized CSV
+# differs from File A only in the chemistry_cluster_id column (see
+# CLAUDE.md's Grouping Fixes section), and the ungrouped split code path
+# never reads that column, so re-running it against the snapfix CSV
+# cannot change its output.
+#
+# RESOLVED 2026-09-22: the previous values here (S=0.9586, sigma=0.9539,
+# kappa=0.9615, zT=0.9138 for random 80/20, etc.) were NOT a log10-vs-
+# linear scale mismatch -- both this row and the current one use log10
+# for sigma/kappa. They were the orphaned pre-2026-08-22 run's ungrouped
+# cells (found verbatim, all three rows, in checkpoints/saved_predictions/
+# te-ml-pipeline/CLAUDE.md, a stale in-tree snapshot of an earlier
+# CLAUDE.md whose own Five-Way Ladder table -- itself explicitly log10-
+# space -- matches this file's old LADDER_RESULTS on all five rungs) --
+# the same run current CLAUDE.md already calls out as superseded and
+# unreproducible for its composition/chemistry cells. No run_config.json
+# for that orphaned run exists anywhere on disk. See the PRE-FIX
+# (SUPERSEDED) block below for the old values, kept for audit.
 LADDER_PROPERTIES = ["S", "sigma", "kappa", "zT"]
 LADDER_PROPERTY_LABELS = [
     "S", "$\\sigma$ (log$_{10}$)", "$\\kappa$ (log$_{10}$)", "zT",
 ]
 LADDER_STRATEGIES = ["Random 80/20", "5-Fold CV", "10-Fold CV", "Composition CV", "Chemistry-Cluster CV"]
+
+# PRE-FIX (SUPERSEDED 2026-09-19, ungrouped rows added 2026-09-22) -- all
+# five rows below are the orphaned pre-2026-08-22 run (same origin as
+# MODEL_COMPARISON_RESULTS's stale table above). Composition/chemistry
+# were superseded twice over (the reproducible 2026-08-22 checkpoint set,
+# then the SNAP(0.05)/S5 grouping fix); random/5-fold/10-fold are
+# superseded once (by the reproducible 2026-08-22 checkpoint set only --
+# the grouping fix does not touch them, see the comment above). Kept for
+# audit, not deleted -- see CLAUDE.md's Five-Way Ladder section,
+# "SUPERSEDED 2026-09-19" entries.
+# "Random 80/20":         {"S": 0.9586, "sigma": 0.9539, "kappa": 0.9615, "zT": 0.9138},
+# "5-Fold CV":            {"S": 0.9585, "sigma": 0.9533, "kappa": 0.9611, "zT": 0.9132},
+# "10-Fold CV":           {"S": 0.9594, "sigma": 0.9550, "kappa": 0.9625, "zT": 0.9148},
+# "Composition CV":       {"S": 0.8314, "sigma": 0.7791, "kappa": 0.8380, "zT": 0.8164},
+# "Chemistry-Cluster CV": {"S": 0.8083, "sigma": 0.7522, "kappa": 0.8226, "zT": 0.7965},
+
 LADDER_RESULTS = {
-    "Random 80/20":         {"S": 0.9586, "sigma": 0.9539, "kappa": 0.9615, "zT": 0.9138},
-    "5-Fold CV":            {"S": 0.9585, "sigma": 0.9533, "kappa": 0.9611, "zT": 0.9132},
-    "10-Fold CV":           {"S": 0.9594, "sigma": 0.9550, "kappa": 0.9625, "zT": 0.9148},
-    "Composition CV":       {"S": 0.8314, "sigma": 0.7791, "kappa": 0.8380, "zT": 0.8164},
-    "Chemistry-Cluster CV": {"S": 0.8083, "sigma": 0.7522, "kappa": 0.8226, "zT": 0.7965},
+    "Random 80/20":         {"S": 0.9588, "sigma": 0.9152, "kappa": 0.9442, "zT": 0.9186},
+    "5-Fold CV":            {"S": 0.9588, "sigma": 0.9150, "kappa": 0.9444, "zT": 0.9184},
+    "10-Fold CV":           {"S": 0.9595, "sigma": 0.9175, "kappa": 0.9459, "zT": 0.9196},
+    "Composition CV":       {"S": 0.8322, "sigma": 0.7762, "kappa": 0.8565, "zT": 0.8178},
+    "Chemistry-Cluster CV": {"S": 0.7528, "sigma": 0.7020, "kappa": 0.8092, "zT": 0.7456},
 }
 LADDER_LEAKY_STRATEGY = "Random 80/20"
 LADDER_HONEST_STRATEGY = "Chemistry-Cluster CV"
