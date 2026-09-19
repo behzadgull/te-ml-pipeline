@@ -197,6 +197,18 @@ the seven File A/control-run orchestration scripts (`noise_floor_fileA.py`,
 script-to-output mapping, both directions. This resolves the "not yet
 done" gap this note previously flagged.
 
+**Addendum, 2026-09-19: `scripts/tematdb_scoring.py`'s `TRAINING_BOUNDS`
+constant is computed from File B, not File A.** Found while reconstructing
+the ESTM in-distribution bounds (see the External Validation section):
+`TRAINING_BOUNDS` is populated by calling `load_training_data()` with no
+override, which defaults to `src/external_validation.py`'s `TRAINING_CSV`
+constant -- File B's path, not File A's. Confirmed directly: this
+constant's sigma lower bound is 957.6, versus 958.78 computed fresh from
+the snapfix (File A-derived) training set. teMatDb's own OOD tail is
+0.12%, so the practical effect there is negligible -- but the constant
+itself is wrong for File A and should not be reused elsewhere without
+recomputing it against the correct training file.
+
 **Standing rule: any script that produces a number cited in this
 document must be committed to git (e.g. under `scripts/`), not left in
 an untracked scratchpad.**
@@ -1683,12 +1695,52 @@ open item: the saved per-row predictions
 support this recompute whenever the original bounds definition is
 located or re-derived.
 
+**RESOLVED 2026-09-19.** Bounds reconstructed from the snapfix training
+set's own per-property min/max, joint across S/sigma/kappa simultaneously
+plus the 300-800K temperature window: S (-461.0258, 562.5), sigma
+(958.7831, 1656678.2772), kappa (0.2830364, 13.7753). **Validated, not
+just assumed defensible**: this reconstruction yields exactly n=2,709
+in-distribution rows for pass (a) -- bit-identical to the original
+table's row count above, despite being derived independently via a
+different path (this session never located the original bounds script;
+see the SCRIPT PROVENANCE addendum below). The resulting R2 values differ
+from the original in-distribution figures by 0.004 to 0.01 (e.g. pass a
+S: 0.7404 new vs 0.7501 old) -- attributed to the training set and
+grouping having changed (fixed chemistry_cluster_id, snapfix CSV, see the
+Grouping Fixes section), not to the bounds rule itself, since the row
+COUNT match this precisely implies a materially identical bounds
+definition. Replacement table (joint in-distribution, all three
+properties + temperature simultaneously):
+
+| Pass | Property | Full R² | n | In-dist R² | n | OOD fraction |
+|---|---|---|---|---|---|---|
+| a | S | 0.5664 | 3,123 | 0.7404 | 2,709 | 2.37% |
+| a | sigma | 0.3988 | 3,123 | 0.6132 | 2,709 | 11.98% |
+| a | kappa | 0.6892 | 3,123 | 0.7314 | 2,709 | 2.91% |
+| a | zT_direct | 0.6615 | 3,123 | 0.6686 | 2,709 | — |
+| a | zT_derived | 0.2064 | 3,123 | 0.3286 | 2,709 | — |
+| b | S | 0.3536 | 1,448 | 0.5115 | 1,196 | 2.28% |
+| b | sigma | 0.2746 | 1,448 | 0.4085 | 1,196 | 15.54% |
+| b | kappa | 0.6184 | 1,448 | 0.6565 | 1,196 | 4.49% |
+| b | zT_direct | 0.4982 | 1,448 | 0.5343 | 1,196 | — |
+| b | zT_derived | -0.0959 | 1,448 | -0.0814 | 1,196 | — |
+
+OOD fractions above are per-property, independent. Joint OOD (all three
+properties + temperature simultaneously, the actual denominator behind
+the In-dist n column): pass (a) 13.26% (2,709 of 3,123 survive), pass
+(b) 17.40% (1,196 of 1,448 survive).
+
 Temperature contributes 0% OOD in either pass — `step3_filter_temperature`
 enforces training's exact 300-800K window on ESTM before anything else
 runs, so no temperature-driven exclusion happens later. Sigma is the
 dominant OOD contributor (12.0% pass a, 13.5% pass b) — ESTM's sigma
 tail reaches down to 4e-4 S/m, far below training's cleaned floor of
 ~958 S/m.
+
+**SUPERSEDED 2026-09-19: the sigma OOD figures in the sentence above.**
+New independent per-property OOD fractions: sigma 11.98% (pass a), 15.54%
+(pass b) -- still the dominant OOD contributor by a wide margin over S
+(2.37%/2.28%) and kappa (2.91%/4.49%), same qualitative finding.
 
 **Headline finding: a second, distinct inflation gap, beyond the
 random-vs-grouped gap the Five-Way Ladder already documents.** Pass
@@ -1716,6 +1768,16 @@ from the fixed-grouping chemistry rung:
 The Drop column cannot be recomputed until the ESTM-side in-distribution
 column is -- both sides of the subtraction must be current at once, not
 mixed old-ESTM/new-ladder.
+
+**RESOLVED 2026-09-19**, now that the ESTM-side in-distribution gap above
+is closed. Replacement table, both sides current:
+
+| Property | Internal grouped CV | ESTM pass (b), in-distribution | Drop |
+|---|---|---|---|
+| S | 0.7528 | 0.5115 | 0.2413 |
+| sigma | 0.7020 | 0.4085 | 0.2935 |
+| kappa | 0.8092 | 0.6565 | 0.1527 |
+| zT_direct | 0.7456 | 0.5343 | 0.2113 |
 
 Even chemistry-cluster grouped CV — this project's own honest ceiling,
 already measurably stricter than composition/random/k-fold per the
@@ -1747,6 +1809,22 @@ shares the open gap above -- pass (b)'s surviving row set changed
 surviving set once the in-distribution bounds definition is available,
 not silently carried forward.
 
+**RESOLVED 2026-09-19, in part.** The R2 split is now closed: sigma's
+full-set R2 (0.27-0.40 across the two passes: pass b 0.2746, pass a
+0.3988) improves to 0.41-0.61 in-distribution (pass b 0.4085, pass a
+0.6132, see the replacement table above) -- meaning a LARGE SHARE of
+sigma's apparent external-validation failure is extrapolation below the
+training conductivity floor, not a failure to generalize to
+chemistries/regimes the model could in principle handle. The split IS
+materially informative for ESTM: joint OOD is 13.26% (pass a) / 17.40%
+(pass b), two orders of magnitude larger than teMatDb's 0.12% OOD tail
+(which was correctly judged negligible and not worth reporting there) --
+this one should not be dropped the same way. The finer sub-floor-row/SSE-
+share diagnostic (263 rows, 79.8% SSE, -2.04 mean log-residual) is a
+narrower, separate item, NOT recomputed here against the new pass-b
+surviving set -- still open, smaller in scope than the R2 split this
+resolves.
+
 **zT_derived: report the protocol-consistent frozen-smear number,
 −0.0070 (pass b, in-distribution), as the result — NOT the naive
 +0.1681 figure.** Frozen smear factors (smear_sigma=1.2916,
@@ -1776,6 +1854,14 @@ smear_sigma=1.3817, smear_kappa=1.0715 -- both larger than before
 itself changing under S5. The pass-b-in-distribution zT_derived result
 this paragraph reports shares the open gap above and needs the same
 in-distribution recompute before restating.
+
+**RESOLVED 2026-09-19.** New pass-b, in-distribution, frozen-smear
+zT_derived R2 = -0.0814 (n=1,196; see the replacement table above) --
+still clearly worse than direct-zT's in-distribution 0.5343, so the
+pathway conclusion (direct beats derived) is unchanged. The naive
+(uncorrected back-transform) comparison point is not recomputed here;
+only the protocol-consistent frozen-smear number this section reports as
+the result.
 
 **ESTM external validation: COMPLETE.** teMatDb: PENDING — a separate
 dataset, not yet downloaded (item 6 requires both, each touched exactly
