@@ -15,7 +15,7 @@ TODO: Affiliation
 
 
 
-Machine learning models predicting thermoelectric transport properties from composition are routinely reported with cross-validated R² above 0.9. We show that this figure is largely an artefact of validation protocol. On a pinned snapshot of the Starrydata2 database, with hyperparameters held fixed throughout, moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.135 to 0.213 across the Seebeck coefficient, electrical conductivity, thermal conductivity and figure of merit. k-fold cross-validation provides no protection: five-fold and ten-fold results are indistinguishable from a single random split. A feature-attribution control shows that the model relies on the same descriptors under both protocols, locating the inflation in test-set composition rather than in learned structure.
+Machine learning models predicting thermoelectric transport properties from composition are routinely reported with cross-validated R² above 0.9. We show that this figure is largely an artefact of validation protocol. On a pinned snapshot of the Starrydata2 database, with hyperparameters held fixed throughout, moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.134 to 0.213 across the Seebeck coefficient, electrical conductivity, thermal conductivity and figure of merit. k-fold cross-validation provides no protection: five-fold and ten-fold results are indistinguishable from repeated random 80/20 holdout. A feature-attribution control shows that the model relies on the same descriptors under both protocols, locating the inflation in test-set composition rather than in learned structure.
 
 
 
@@ -51,7 +51,7 @@ This paper addresses both questions on a single pinned snapshot of Starrydata2, 
 
 
 
-We make three contributions. First, we quantify validation inflation across five protocols and four properties, finding that grouping by chemistry lowers reported R² by 0.135 to 0.213 relative to ungrouped validation, and that k-fold cross-validation provides no protection whatever. Second, we show through a feature-attribution control that this inflation reflects test-set composition rather than a change in what the model learns: the same function is applied to an easier test set. Third, we construct a label-noise ceiling from two independently measured components, show that honest performance sits 0.15 to 0.29 below it, and demonstrate by ablation that this gap is not a descriptor-count problem: tripling the number of descriptors closes at most 4.2% of it.
+We make three contributions. First, we quantify validation inflation across five protocols and four properties, finding that grouping by chemistry lowers reported R² by 0.134 to 0.213 relative to ungrouped validation, and that k-fold cross-validation provides no protection whatever. Second, we show through a feature-attribution control that this inflation reflects test-set composition rather than a change in what the model learns: the same function is applied to an easier test set. Third, we construct a label-noise ceiling from two independently measured components, show that honest performance sits 0.15 to 0.29 below it, and demonstrate by ablation that this gap is not a descriptor-count problem: tripling the number of descriptors closes at most 4.2% of it.
 
 
 
@@ -111,11 +111,11 @@ The Seebeck coefficient and figure of merit are modelled in linear space; electr
 
 
 
-Five protocols are compared. A single random 80/20 split, five-fold and ten-fold cross-validation impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 2): elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃.
+Five protocols are compared. Twenty independent random 80/20 holdout draws, pooled, together with five-fold and ten-fold cross-validation, impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 2): elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃.
 
 
 
-Grouped protocols are run as five repeats of five-fold cross-validation. Because the group-size distribution is heavy-tailed, the assignment of the largest clusters to folds is randomised between repeats rather than fixed, so that the across-repeat standard deviation reflects which chemistries are held out and not only residual model variance. Reported values are the mean and standard deviation of per-repeat pooled R². The ungrouped protocols are single-pass by construction and report one pooled value.
+Grouped protocols are run as five repeats of five-fold cross-validation. Because the group-size distribution is heavy-tailed, the assignment of the largest clusters to folds is randomised between repeats rather than fixed, so that the across-repeat standard deviation reflects which chemistries are held out and not only residual model variance. Reported values are the mean and standard deviation of per-repeat pooled R². The random 80/20 protocol pools twenty independent holdout draws into one value; five-fold and ten-fold cross-validation are each a single partition and likewise report one pooled value.
 
 
 
@@ -159,7 +159,7 @@ The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparame
 
 
 
-\### 3.1 Grouped validation lowers reported accuracy by 0.14 to 0.21
+\### 3.1 Grouped validation lowers reported accuracy by 0.13 to 0.21
 
 
 
@@ -167,25 +167,25 @@ Table 1 gives pooled out-of-fold R² for four thermoelectric properties under fi
 
 
 
-\*\*Table 1.\*\* Pooled out-of-fold R² by validation protocol. Grouped rungs report mean ± across-repeat standard deviation over five repeats; ungrouped rungs are single-pass.
+\*\*Table 1.\*\* Pooled out-of-fold R² by validation protocol. Grouped rungs and random 80/20 report mean ± standard deviation across repeats or draws (five repeats for the grouped rungs, twenty independent holdout draws for random 80/20); five-fold and ten-fold each report a single partition's pooled R² ± its across-fold standard deviation.
 
 
 
-| Target | random 80/20 | 5-fold | 10-fold | composition | chemistry cluster | gap |
+| Target | random 80/20 (20 draws) | 5-fold | 10-fold | composition | chemistry cluster | gap |
 
 |---|---|---|---|---|---|---|
 
-| S | 0.9588 | 0.9588 | 0.9595 | 0.8322 ± 0.0044 | 0.7528 ± 0.0050 | 0.206 |
+| S | 0.9582 ± 0.0013 | 0.9585 ± 0.0013 | 0.9595 ± 0.0014 | 0.8322 ± 0.0044 | 0.7528 ± 0.0050 | 0.205 |
 
-| σ (log10) | 0.9152 | 0.9150 | 0.9175 | 0.7762 ± 0.0015 | 0.7020 ± 0.0020 | 0.213 |
+| σ (log10) | 0.9150 ± 0.0009 | 0.9152 ± 0.0009 | 0.9174 ± 0.0024 | 0.7762 ± 0.0015 | 0.7020 ± 0.0020 | 0.213 |
 
-| κ (log10) | 0.9442 | 0.9444 | 0.9459 | 0.8565 ± 0.0013 | 0.8092 ± 0.0021 | 0.135 |
+| κ (log10) | 0.9434 ± 0.0012 | 0.9436 ± 0.0013 | 0.9455 ± 0.0021 | 0.8565 ± 0.0013 | 0.8092 ± 0.0021 | 0.134 |
 
-| zT | 0.9186 | 0.9184 | 0.9196 | 0.8178 ± 0.0009 | 0.7456 ± 0.0045 | 0.173 |
+| zT | 0.9180 ± 0.0014 | 0.9181 ± 0.0029 | 0.9193 ± 0.0032 | 0.8178 ± 0.0009 | 0.7456 ± 0.0045 | 0.172 |
 
 
 
-Three ungrouped protocols produce nearly identical estimates. A single random 80/20 split, five-fold and ten-fold cross-validation give 0.9588, 0.9588 and 0.9595 for the Seebeck coefficient; the largest spread across the four properties is 0.0025, for electrical conductivity. Increasing the number of folds does not change the picture. Whatever these protocols measure, they measure it consistently.
+Three ungrouped protocols produce nearly identical estimates. Twenty independent random 80/20 holdout draws, pooled, five-fold and ten-fold cross-validation give 0.9582, 0.9585 and 0.9595 for the Seebeck coefficient; the largest spread across the four properties is 0.0024, for electrical conductivity. Increasing the number of folds does not change the picture. Whatever these protocols measure, they measure it consistently.
 
 
 
@@ -193,7 +193,7 @@ Grouping changes the picture substantially. Requiring that no exact composition 
 
 
 
-The gap between the ungrouped and chemistry-cluster rungs ranges from \*\*0.135 for thermal conductivity to 0.213 for electrical conductivity\*\*, with a mean of 0.182 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped rungs are single-pass estimates with no repeat structure to pair against. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above.
+The gap between the ungrouped and chemistry-cluster rungs ranges from \*\*0.134 for thermal conductivity to 0.213 for electrical conductivity\*\*, with a mean of 0.181 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped and grouped rungs use different resampling structures that cannot be paired. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above.
 
 
 
@@ -201,11 +201,11 @@ The narrower comparison between the two grouped rungs does warrant a test. Compo
 
 
 
-The practically important observation is that \*\*k-fold cross-validation offers no protection\*\*. Five-fold and ten-fold sit with the random split, not with the grouped rungs, because the leakage they fail to prevent is not fold-count dependent: it arises from the same material appearing, at different temperatures or under different dopant labels, on both sides of the split. A practitioner who moves from a single random split to ten-fold cross-validation in the belief that this makes the estimate more honest gains nothing.
+The practically important observation is that \*\*k-fold cross-validation offers no protection\*\*. Five-fold and ten-fold sit with the random split, not with the grouped rungs, because the leakage they fail to prevent is not fold-count dependent: it arises from the same material appearing, at different temperatures or under different dopant labels, on both sides of the split. A practitioner who moves from repeated random 80/20 holdout to ten-fold cross-validation in the belief that this makes the estimate more honest gains nothing.
 
 
 
-Thermal conductivity inflates least, at 0.135. It is also the property that transfers best across databases (Section 3.5), consistent with κ being the most genuinely predictable of the four from composition alone.
+Thermal conductivity inflates least, at 0.134. It is also the property that transfers best across databases (Section 3.5), consistent with κ being the most genuinely predictable of the four from composition alone.
 
 
 
@@ -477,7 +477,7 @@ The same ordering holds on both external databases and on every stratum. Direct 
 
 
 
-The practical implication is direct. Thermoelectric property models evaluated by random splitting or k-fold cross-validation report R² values 0.135 to 0.213 higher than the same models evaluated under chemistry-cluster grouping, with the gap averaging 0.182 across the four properties. Increasing the number of folds does not reduce it. A reader encountering a reported R² above 0.9 for a composition-based thermoelectric model has no way to tell, from the number alone, whether it reflects predictive capability or the fact that the same material appears on both sides of the split at different temperatures.
+The practical implication is direct. Thermoelectric property models evaluated by random splitting or k-fold cross-validation report R² values 0.134 to 0.213 higher than the same models evaluated under chemistry-cluster grouping, with the gap averaging 0.181 across the four properties. Increasing the number of folds does not reduce it. A reader encountering a reported R² above 0.9 for a composition-based thermoelectric model has no way to tell, from the number alone, whether it reflects predictive capability or the fact that the same material appears on both sides of the split at different temperatures.
 
 
 
@@ -533,7 +533,7 @@ The second concerned fold assignment. Groups were bin-packed by descending size 
 
 
 
-Both defects inflated reported grouped performance. Correcting them lowered the chemistry-cluster rung by 0.037 to 0.058 across the four properties and widened the validation gap correspondingly, from a mean of 0.132 to 0.182. Every number we had previously computed was optimistic; every gap was a lower bound.
+Both defects inflated reported grouped performance. Correcting them lowered the chemistry-cluster rung by 0.037 to 0.058 across the four properties and widened the validation gap correspondingly, from a mean of 0.131 to 0.181 -- both figures now computed on the same rows, since the pre-fix chemistry-cluster checkpoint and the post-fix ungrouped rerun both use File A's row set. Every number we had previously computed was optimistic; every gap was a lower bound.
 
 
 
@@ -571,7 +571,7 @@ Finally, the external chemistry-disjoint strata are small. teMatDb's contains 27
 
 
 
-Reported accuracy for composition-based thermoelectric property prediction depends heavily on the validation protocol. Moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.135 to 0.213 across the four transport properties, and increasing the number of folds in an ungrouped protocol does not reduce the gap at all. Feature attributions are indistinguishable between the two protocols, which locates the effect in how the data is partitioned rather than in what the model learns.
+Reported accuracy for composition-based thermoelectric property prediction depends heavily on the validation protocol. Moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.134 to 0.213 across the four transport properties, and increasing the number of folds in an ungrouped protocol does not reduce the gap at all. Feature attributions are indistinguishable between the two protocols, which locates the effect in how the data is partitioned rather than in what the model learns.
 
 
 
