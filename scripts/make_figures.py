@@ -13,6 +13,7 @@ from pathlib import Path
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import LogNorm
 import pandas as pd
 from sklearn.metrics import r2_score
 
@@ -661,6 +662,11 @@ HEADROOM_SEGMENT_PALETTE_KEY = {
 }
 HEADROOM_SEGMENT_COLORS = {name: PALETTE[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
 HEADROOM_SEGMENT_HATCHES = {name: HATCH[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
+# headroom-only emphasis: denser hatch and a bolder edge than every other
+# segment (including the shared HATCH["kfold"] value, left untouched for
+# the ladder figure) -- see the drawing loop's comment for why.
+HEADROOM_SEGMENT_HATCH_OVERRIDE = {"headroom": "..."}
+HEADROOM_SEGMENT_EDGE_LINEWIDTH = {"headroom": 2.2}
 
 
 def load_headroom_data(
@@ -768,10 +774,19 @@ def make_headroom_decomposition(
         ]
         for name, left, right in segments:
             label = HEADROOM_SEGMENT_DISPLAY_NAMES[name] if name not in segment_labeled else None
+            # Okabe-Ito yellow ("headroom") is the lowest-contrast colour
+            # in the palette on white -- without extra emphasis it reads
+            # as flatter than the achieved segment's dense dark-blue
+            # crosshatch, even though headroom is this figure's main
+            # point. Denser hatching and a bolder edge, on this segment
+            # only, fix that without changing its colour or touching the
+            # shared HATCH["kfold"] entry the ladder figure also uses.
+            hatch = HEADROOM_SEGMENT_HATCH_OVERRIDE.get(name, HEADROOM_SEGMENT_HATCHES[name])
+            linewidth = HEADROOM_SEGMENT_EDGE_LINEWIDTH.get(name, 0.6)
             ax.barh(
                 y, right - left, left=left, height=bar_height,
-                color=HEADROOM_SEGMENT_COLORS[name], hatch=HEADROOM_SEGMENT_HATCHES[name],
-                edgecolor="black", linewidth=0.6, label=label, zorder=2,
+                color=HEADROOM_SEGMENT_COLORS[name], hatch=hatch,
+                edgecolor="black", linewidth=linewidth, label=label, zorder=2,
             )
             segment_labeled.add(name)
 
@@ -1183,6 +1198,96 @@ def make_actual_vs_predicted(out_path, checkpoint_dir=FIG3_CHECKPOINT_DIR):
     plt.close(fig)
 
 
+# zT parity, random vs chemistry-cluster grouping, shown directly rather
+# than only as a summary R^2. Per-row out-of-fold predictions:
+#   - random 80/20: checkpoints/ladder_regen_dl/zT_random_f20/
+#     (20 outer folds, the same checkpoint directory CLAUDE.md's Five-Way
+#     Ladder table cites for the confirmed 0.9186 ungrouped zT value)
+#   - chemistry-cluster (snapfix grouping): results/ladder_regen_snapfix/
+#     20260917T150000/zT_chemistry_full/ (25 outer folds = 5 repeats x 5
+#     folds, the checkpoint directory behind the confirmed 0.7456
+#     chemistry-cluster zT value after the SNAP(0.05)/S5 grouping fix)
+# Both R^2 values are recomputed here from the raw predictions (not
+# copied from CLAUDE.md), so this figure is self-verifying; see the
+# printed report in the task response for the exact match confirmation.
+ZT_PARITY_RANDOM_CHECKPOINT_DIR = Path("checkpoints/ladder_regen_dl/zT_random_f20")
+ZT_PARITY_CHEMISTRY_CHECKPOINT_DIR = Path("results/ladder_regen_snapfix/20260917T150000/zT_chemistry_full")
+
+
+def load_zt_parity_predictions(checkpoint_dir):
+    """Pool every repeat*_fold*_predictions.npz under checkpoint_dir into one (y_true, y_pred) pair."""
+    npz_paths = sorted(Path(checkpoint_dir).glob("repeat*_fold*_predictions.npz"))
+    if not npz_paths:
+        raise FileNotFoundError(f"No repeat*_fold*_predictions.npz files in {checkpoint_dir}")
+    y_true_parts, y_pred_parts = [], []
+    for npz_path in npz_paths:
+        data = np.load(npz_path)
+        y_true_parts.append(data["y_true"])
+        y_pred_parts.append(data["y_pred"])
+    return np.concatenate(y_true_parts), np.concatenate(y_pred_parts), len(npz_paths)
+
+
+def make_zt_parity(
+    out_path,
+    random_checkpoint_dir=ZT_PARITY_RANDOM_CHECKPOINT_DIR,
+    chemistry_checkpoint_dir=ZT_PARITY_CHEMISTRY_CHECKPOINT_DIR,
+):
+    """
+    Two hexbin parity panels for zT, random 80/20 (left) vs
+    chemistry-cluster (right), identical axis limits and identical
+    (shared, log-scaled) colour scale on both, so the difference in
+    prediction spread -- not an artifact of differing color normalization
+    -- is the dominant visual. Identity line on both. Each panel is
+    labelled with its split-type name in that split's PALETTE colour
+    (random_split / chemistry_cluster) rather than a generic a/b letter,
+    and annotated with its own recomputed pooled R^2 and n.
+    """
+    yt_r, yp_r, n_files_r = load_zt_parity_predictions(random_checkpoint_dir)
+    yt_c, yp_c, n_files_c = load_zt_parity_predictions(chemistry_checkpoint_dir)
+    r2_r = r2_score(yt_r, yp_r)
+    r2_c = r2_score(yt_c, yp_c)
+
+    lo = min(yt_r.min(), yp_r.min(), yt_c.min(), yp_c.min())
+    hi = max(yt_r.max(), yp_r.max(), yt_c.max(), yp_c.max())
+    pad = (hi - lo) * 0.03
+    lo, hi = lo - pad, hi + pad
+
+    fig, (ax_left, ax_right) = plt.subplots(
+        1, 2, figsize=get_figsize(1, 2, panel_width=5.2, panel_height=5.0), constrained_layout=True,
+    )
+
+    hb_left = ax_left.hexbin(yt_r, yp_r, gridsize=60, extent=(lo, hi, lo, hi), cmap="viridis", norm=LogNorm(), mincnt=1)
+    hb_right = ax_right.hexbin(yt_c, yp_c, gridsize=60, extent=(lo, hi, lo, hi), cmap="viridis", norm=LogNorm(), mincnt=1)
+    vmax = max(hb_left.get_array().max(), hb_right.get_array().max())
+    shared_norm = LogNorm(vmin=1, vmax=vmax)
+    hb_left.set_norm(shared_norm)
+    hb_right.set_norm(shared_norm)
+
+    panels = [
+        (ax_left, hb_left, "Random 80/20", PALETTE["random_split"], r2_r, len(yt_r)),
+        (ax_right, hb_right, "Chemistry-Cluster CV", PALETTE["chemistry_cluster"], r2_c, len(yt_c)),
+    ]
+    for ax, hb, split_name, color, r2, n in panels:
+        ax.plot([lo, hi], [lo, hi], color="black", linestyle="--", linewidth=1.2, zorder=5)
+        ax.set_xlim(lo, hi)
+        ax.set_ylim(lo, hi)
+        ax.set_aspect("equal", adjustable="box")
+        ax.set_xlabel("Actual zT")
+        ax.set_ylabel("Predicted zT")
+        ax.text(
+            0.04, 0.96, split_name, transform=ax.transAxes, ha="left", va="top",
+            fontsize=12, fontweight="bold", color=color,
+        )
+        ax.text(
+            0.04, 0.87, f"$R^2$={r2:.4f}\nn={n:,}", transform=ax.transAxes, ha="left", va="top",
+            fontsize=9.5, bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5),
+        )
+
+    fig.colorbar(hb_right, ax=[ax_left, ax_right], label="Rows per hexbin (log scale)", shrink=0.85)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
 def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -1213,6 +1318,9 @@ def main():
 
     make_descriptor_ablation(FIGURES_DIR / "descriptor_ablation")
     print("Saved descriptor_ablation.png / .pdf")
+
+    make_zt_parity(FIGURES_DIR / "zt_parity_random_vs_grouped")
+    print("Saved zt_parity_random_vs_grouped.png / .pdf")
 
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
