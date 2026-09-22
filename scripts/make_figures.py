@@ -527,6 +527,210 @@ def make_validation_ladder(out_path):
     plt.close(fig)
 
 
+# Figure 5: headroom decomposition. Reads both source artifacts directly at
+# call time -- no hardcoded R^2, SD, or ceiling values -- per the task
+# instruction not to hardcode numbers.
+#   - grouped (chemistry-cluster) R^2 and across-repeat SD:
+#     reports/regen_snapfix/20260917T150000/ladder_metrics.json
+#     ("<target>_chemistry_full" runs, per_repeat_r2_mean/_std)
+#   - ungrouped random 80/20 R^2: LADDER_RESULTS above (already the
+#     confirmed CLAUDE.md value, corrected 2026-09-22)
+#   - measurement-only ceiling (R^2_max) and combined (measurement +
+#     digitization) ceiling: results/noise_floor/20260917T172251/
+#     noise_floor_inputs.json ("item3_combined_ceiling_new")
+# Combined ceiling uses the LOWER bound (r2_comb_lower), which gives the
+# smallest headroom and is therefore the conservative choice for the
+# paper's claim -- the upper bound would overstate how much of the gap to
+# perfect prediction is theoretically closeable. For zT, the
+# "zT (vs ZT_author_declared)" row is used, not the recomputed-TEP row.
+HEADROOM_LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics.json")
+HEADROOM_NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260917T172251/noise_floor_inputs.json")
+HEADROOM_PROPERTIES = ["S", "sigma", "kappa", "zT"]
+HEADROOM_PROPERTY_LABELS = [
+    "S", "$\\sigma$ (log$_{10}$)", "$\\kappa$ (log$_{10}$)", "zT",
+]
+HEADROOM_ZT_COMBINED_LABEL = "zT (vs ZT_author_declared)"
+
+HEADROOM_SEGMENT_ORDER = ["achieved", "headroom", "digitization", "measurement"]
+HEADROOM_SEGMENT_DISPLAY_NAMES = {
+    "achieved": "Achieved (chemistry-cluster grouped R$^2$)",
+    "headroom": "Headroom to combined ceiling",
+    "digitization": "Digitization noise",
+    "measurement": "Measurement noise",
+}
+# Greyscale, hatched fills -- distinguishable without color, per the print
+# constraint -- darkest for the real, achieved signal, lightening toward
+# the unreachable measurement-noise segment.
+HEADROOM_SEGMENT_COLORS = {
+    "achieved": "#4d4d4d",
+    "headroom": "#999999",
+    "digitization": "#cccccc",
+    "measurement": "#eaeaea",
+}
+HEADROOM_SEGMENT_HATCHES = {
+    "achieved": None,
+    "headroom": "//",
+    "digitization": "xx",
+    "measurement": "..",
+}
+
+
+def load_headroom_data(
+    ladder_metrics_path=HEADROOM_LADDER_METRICS_PATH,
+    noise_floor_inputs_path=HEADROOM_NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    Assemble the four segment boundaries (achieved / headroom /
+    digitization noise / measurement noise) per property from the two
+    committed artifacts named in the module-level HEADROOM_* comment
+    above. Returns {property: {grouped_r2, grouped_sd, ungrouped_r2,
+    r2_comb_lower, r2_meas, headroom_width, digitization_width,
+    measurement_width}}.
+
+    The achieved/headroom boundary and headroom_width are read directly
+    from noise_floor_inputs.json's own confirmed_new/headroom_lower
+    fields rather than recomputed as r2_comb_lower - grouped_r2 here:
+    that JSON's headroom_lower was itself computed against the rounded
+    4-decimal confirmed R^2 (CLAUDE.md's own convention), and re-deriving
+    it from ladder_metrics.json's full-precision grouped_r2 instead lands
+    S on the opposite side of a rounding boundary (0.2085 raw -> 0.208
+    displayed, vs 0.209 in CLAUDE.md's COMBINED CEILING table) purely
+    from a precision mismatch between the two source files, not a real
+    data difference. A sanity check below confirms the two files agree
+    to 4 decimals before trusting either.
+    """
+    with open(ladder_metrics_path, encoding="utf-8") as f:
+        ladder_metrics = json.load(f)
+    with open(noise_floor_inputs_path, encoding="utf-8") as f:
+        noise_floor = json.load(f)
+
+    combined_by_label = {
+        entry["label"]: entry for entry in noise_floor["item3_combined_ceiling_new"]
+    }
+
+    data = {}
+    for prop in HEADROOM_PROPERTIES:
+        run = ladder_metrics["runs"][f"{prop}_chemistry_full"]
+        grouped_r2 = run["per_repeat_r2_mean"]
+        grouped_sd = run["per_repeat_r2_std"]
+
+        ungrouped_r2 = LADDER_RESULTS["Random 80/20"][prop]
+
+        combined_label = HEADROOM_ZT_COMBINED_LABEL if prop == "zT" else prop
+        combined_entry = combined_by_label[combined_label]
+        r2_comb_lower = combined_entry["r2_comb_lower"]
+        r2_meas = combined_entry["r2_meas"]
+        confirmed_r2 = combined_entry["confirmed_new"]
+
+        if round(grouped_r2, 4) != confirmed_r2:
+            raise ValueError(
+                f"{prop}: ladder_metrics.json grouped R^2 ({grouped_r2:.4f}) does not "
+                f"match noise_floor_inputs.json's confirmed_new ({confirmed_r2}) -- "
+                f"the two source artifacts have diverged, do not trust either silently."
+            )
+
+        data[prop] = {
+            "grouped_r2": grouped_r2,
+            "grouped_sd": grouped_sd,
+            "ungrouped_r2": ungrouped_r2,
+            "r2_comb_lower": r2_comb_lower,
+            "r2_meas": r2_meas,
+            "achieved_width": confirmed_r2,
+            "headroom_width": combined_entry["headroom_lower"],
+            "digitization_width": r2_meas - r2_comb_lower,
+            "measurement_width": 1.0 - r2_meas,
+        }
+    return data
+
+
+def make_headroom_decomposition(
+    out_path,
+    ladder_metrics_path=HEADROOM_LADDER_METRICS_PATH,
+    noise_floor_inputs_path=HEADROOM_NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    Figure 5: one horizontal stacked bar per property (S, sigma, kappa,
+    zT), spanning R^2 = 0 to 1.0, decomposed left to right into achieved
+    (chemistry-cluster grouped R^2), headroom to the combined label-noise
+    ceiling, digitization noise, and measurement noise. An error bar on
+    the achieved/headroom boundary shows the grouped R^2's across-repeat
+    SD; a dashed marker shows where the ungrouped random 80/20 R^2 falls,
+    so the reader sees how much apparent performance is validation
+    artefact rather than real headroom closed. See the module-level
+    HEADROOM_* comment for data provenance and the ceiling-bound choice.
+    """
+    data = load_headroom_data(ladder_metrics_path, noise_floor_inputs_path)
+
+    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=10.0, panel_height=5.1))
+    y_pos = np.arange(len(HEADROOM_PROPERTIES))[::-1]
+    bar_height = 0.55
+
+    segment_labeled = set()
+    marker_labeled = False
+    for y, prop in zip(y_pos, HEADROOM_PROPERTIES):
+        d = data[prop]
+        achieved_end = d["achieved_width"]
+        headroom_end = achieved_end + d["headroom_width"]
+        digitization_end = headroom_end + d["digitization_width"]
+        segments = [
+            ("achieved", 0.0, achieved_end),
+            ("headroom", achieved_end, headroom_end),
+            ("digitization", headroom_end, digitization_end),
+            ("measurement", digitization_end, 1.0),
+        ]
+        for name, left, right in segments:
+            label = HEADROOM_SEGMENT_DISPLAY_NAMES[name] if name not in segment_labeled else None
+            ax.barh(
+                y, right - left, left=left, height=bar_height,
+                color=HEADROOM_SEGMENT_COLORS[name], hatch=HEADROOM_SEGMENT_HATCHES[name],
+                edgecolor="black", linewidth=0.6, label=label, zorder=2,
+            )
+            segment_labeled.add(name)
+
+        # Headroom segment width label, placed above the bar so it never
+        # collides with the ungrouped-R^2 marker line, which falls inside
+        # the headroom segment for every property here.
+        headroom_center = (achieved_end + headroom_end) / 2
+        ax.text(
+            headroom_center, y + bar_height / 2 + 0.10, f"$\\Delta$={d['headroom_width']:.3f}",
+            ha="center", va="bottom", fontsize=8.5, fontweight="bold", zorder=4,
+        )
+
+        ax.errorbar(
+            achieved_end, y, xerr=d["grouped_sd"], color="black",
+            capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
+        )
+
+        marker_label = "Ungrouped random 80/20 R$^2$" if not marker_labeled else None
+        ax.plot(
+            [d["ungrouped_r2"], d["ungrouped_r2"]],
+            [y - bar_height / 2 - 0.04, y + bar_height / 2 + 0.04],
+            color="black", linestyle="--", linewidth=1.8, zorder=6, label=marker_label,
+        )
+        marker_labeled = True
+
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(HEADROOM_PROPERTY_LABELS, fontsize=11)
+    ax.set_xlim(0, 1.0)
+    ax.set_ylim(y_pos.min() - 0.55, y_pos.max() + 0.55)
+    ax.set_xlabel("R$^2$ (per-property matched space)")
+
+    # Legend placed on the FIGURE (not the axes), at a fixed
+    # figure-fraction position, with subplots_adjust reserving room below
+    # the axes for both the xlabel and the legend -- ax.legend() with a
+    # large negative bbox_to_anchor plus tight_layout(rect=...) fought
+    # each other and put the legend box on top of the xlabel text.
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(
+        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
+        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
+        columnspacing=1.2, handletextpad=0.6,
+    )
+    fig.subplots_adjust(bottom=0.32)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
 def load_fig3_predictions(target, checkpoint_dir=FIG3_CHECKPOINT_DIR):
     """
     Load and pool every repeatN_foldM_predictions.npz for `target` under
@@ -643,6 +847,9 @@ def main():
 
     make_validation_ladder(FIGURES_DIR / "fig2_validation_ladder")
     print("Saved fig2_validation_ladder.png / .pdf")
+
+    make_headroom_decomposition(FIGURES_DIR / "fig5_headroom")
+    print("Saved fig5_headroom.png / .pdf")
 
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
