@@ -1344,6 +1344,363 @@ def make_zt_parity(
     plt.close(fig)
 
 
+# =====================================================================
+# External transfer: full-set vs in-support R^2, ESTM (2 dedup passes)
+# and teMatDb (DOI-disjoint only). Sources:
+#   - internal chemistry-cluster R^2: LADDER_METRICS_PATH
+#     ("<target>_chemistry_full" runs, per_repeat_r2_mean) -- same
+#     numbers as every other figure's "honest ceiling".
+#   - ESTM full-set R^2: EXTERNAL_SNAPFIX_DIR/estm_results.json
+#     (dedup_a_source_doi = DOI-disjoint, dedup_b_chemistry_cluster =
+#     cluster-disjoint).
+#   - ESTM in-support R^2 and OOD fractions: recomputed here directly
+#     from EXTERNAL_SNAPFIX_DIR/estm_predictions_pass{a,b}.npz, using
+#     the joint S/sigma/kappa/temperature bounds CLAUDE.md documents as
+#     reconstructed from the snapfix training set's own min/max
+#     (ESTM_TRAINING_BOUNDS below) -- no committed script produces these
+#     numbers (CLAUDE.md's own "RESOLVED 2026-09-19" note says so), but
+#     the bounds and resulting n/R^2 are fully documented and were
+#     validated there against an exact n=2,709 row-count match; recomputing
+#     here reproduces that table exactly (verified before rendering).
+#   - teMatDb: EXTERNAL_SNAPFIX_DIR/tematdb_D_scoring_snapfix.json,
+#     stratum "a" (61 samples / 903 rows / 49 clusters) -- confirmed to
+#     be the DOI-disjoint stratum by matching its R^2 values to CLAUDE.md's
+#     documented teMatDb DOI-disjoint figures (S=0.699, sigma=0.175,
+#     kappa=0.653, zT=0.496). Stratum "b" (cluster-disjoint) is NOT
+#     plotted: 27 samples across 27 distinct clusters cannot support a
+#     meaningful R^2 (one row per cluster on average), and CLAUDE.md's
+#     own caveats already warn against quoting stratum-b R^2 precisely.
+#     teMatDb has no in-support/full-set split here: its OOD tail is
+#     0.12% (see CLAUDE.md), too small to be worth splitting on.
+# zT_derived is excluded from every panel: CLAUDE.md documents it as
+# numerically ill-conditioned (a 0.7% smear-factor change swung ESTM
+# pass-b zT_derived R^2 from -0.019 to +0.101), so only the direct-vs-
+# derived ORDERING is stable enough to report, not this pathway's
+# point value sitting alongside direct zT as if equally trustworthy.
+EXTERNAL_SNAPFIX_DIR = Path("results/external_snapfix/20260917T160553")
+EXTERNAL_TRANSFER_PROPERTIES = ["S", "sigma", "kappa", "zT_direct"]
+EXTERNAL_TRANSFER_PROPERTY_LABELS = {
+    "S": "S", "sigma": "$\\sigma$ (log$_{10}$)", "kappa": "$\\kappa$ (log$_{10}$)", "zT_direct": "zT",
+}
+# Reconstructed from the snapfix training CSV's own per-property min/max
+# (300-800K rows only), joint across S/sigma/kappa -- see CLAUDE.md's
+# External Validation section, "RESOLVED 2026-09-19".
+ESTM_TRAINING_BOUNDS = {
+    "S": (-461.0258, 562.5),
+    "sigma": (958.7831, 1656678.2772),
+    "kappa": (0.2830364, 13.7753),
+}
+
+
+def load_internal_chemistry_r2(ladder_metrics_path=LADDER_METRICS_PATH):
+    """Internal chemistry-cluster R^2 per property, keyed to match EXTERNAL_TRANSFER_PROPERTIES."""
+    with open(ladder_metrics_path, encoding="utf-8") as f:
+        ladder_metrics = json.load(f)
+    return {
+        "S": ladder_metrics["runs"]["S_chemistry_full"]["per_repeat_r2_mean"],
+        "sigma": ladder_metrics["runs"]["sigma_chemistry_full"]["per_repeat_r2_mean"],
+        "kappa": ladder_metrics["runs"]["kappa_chemistry_full"]["per_repeat_r2_mean"],
+        "zT_direct": ladder_metrics["runs"]["zT_chemistry_full"]["per_repeat_r2_mean"],
+    }
+
+
+def load_estm_pass_transfer(pass_letter, external_dir=EXTERNAL_SNAPFIX_DIR):
+    """
+    Full-set and in-support R^2, plus marginal and joint OOD fractions,
+    for one ESTM dedup pass ("a" = DOI-disjoint, "b" = cluster-disjoint).
+    Computed directly from estm_predictions_pass<letter>.npz using
+    ESTM_TRAINING_BOUNDS; not read from any precomputed field, since none
+    exists on disk for this quantity.
+    """
+    data = np.load(external_dir / f"estm_predictions_pass{pass_letter}.npz", allow_pickle=True)
+    in_support = np.ones(len(data["S_true"]), dtype=bool)
+    marginal_ood_pct = {}
+    for prop in ["S", "sigma", "kappa"]:
+        values = data[f"{prop}_true"]
+        lo, hi = ESTM_TRAINING_BOUNDS[prop]
+        prop_in_support = (values >= lo) & (values <= hi)
+        marginal_ood_pct[prop] = 100 * (1 - prop_in_support.mean())
+        in_support &= prop_in_support
+    in_support &= (data["temperature"] >= 300) & (data["temperature"] <= 800)
+
+    pred_keys = {
+        "S": ("S_true", "S_pred"),
+        "sigma": ("sigma_log_true", "sigma_log_pred"),
+        "kappa": ("kappa_log_true", "kappa_log_pred"),
+        "zT_direct": ("zT_true", "zT_direct_pred"),
+    }
+    result = {"joint_ood_pct": 100 * (1 - in_support.mean()), "marginal_ood_pct": marginal_ood_pct}
+    for prop, (true_key, pred_key) in pred_keys.items():
+        yt, yp = data[true_key], data[pred_key]
+        result[prop] = {
+            "full_r2": r2_score(yt, yp), "full_n": len(yt),
+            "insupport_r2": r2_score(yt[in_support], yp[in_support]), "insupport_n": int(in_support.sum()),
+        }
+    return result
+
+
+def load_tematdb_doi_disjoint(scoring_path=EXTERNAL_SNAPFIX_DIR / "tematdb_D_scoring_snapfix.json"):
+    """teMatDb stratum 'a' (DOI-disjoint) R^2 per property; stratum 'b' (cluster-disjoint, 27 clusters) is not loaded here -- see module comment."""
+    with open(scoring_path, encoding="utf-8") as f:
+        scoring = json.load(f)
+    metrics = scoring["strata"]["a"]["metrics"]
+    return {
+        "S": metrics["S"]["r2"], "sigma": metrics["sigma_log10"]["r2"],
+        "kappa": metrics["kappa_log10"]["r2"], "zT_direct": metrics["zT_direct_vs_declared"]["r2"],
+    }
+
+
+def make_external_transfer(out_path, ladder_metrics_path=LADDER_METRICS_PATH, external_dir=EXTERNAL_SNAPFIX_DIR):
+    """
+    Three panels: ESTM DOI-disjoint, ESTM cluster-disjoint, teMatDb
+    DOI-disjoint. Each shows grouped bars per property (S, sigma, kappa,
+    zT direct): internal chemistry-cluster R^2, external full-set R^2,
+    and (ESTM only) external in-support R^2. OOD fraction annotated
+    above each property group -- the property's own marginal OOD % for
+    S/sigma/kappa, and the joint OOD % for zT (which has no bound of its
+    own; its in-support subset is the same joint one used for S/sigma/
+    kappa together). teMatDb has no in-support bar (0.12% OOD, judged
+    negligible in CLAUDE.md) and is not annotated.
+    """
+    internal = load_internal_chemistry_r2(ladder_metrics_path)
+    estm_a = load_estm_pass_transfer("a", external_dir)
+    estm_b = load_estm_pass_transfer("b", external_dir)
+    tematdb = load_tematdb_doi_disjoint()
+
+    fig, axes = plt.subplots(1, 3, figsize=get_figsize(1, 3, panel_width=5.3, panel_height=5.0))
+    props = EXTERNAL_TRANSFER_PROPERTIES
+    labels = [EXTERNAL_TRANSFER_PROPERTY_LABELS[p] for p in props]
+    n_props = len(props)
+    group_centers = np.arange(n_props)
+
+    def draw_panel(ax, bars, ood_pct=None):
+        n_bars = len(bars)
+        bar_width = 0.8 / n_bars
+        offsets = (np.arange(n_bars) - (n_bars - 1) / 2) * bar_width
+        for i, (bar_label, color, hatch, values) in enumerate(bars):
+            heights = [values[p] for p in props]
+            x = group_centers + offsets[i]
+            rects = ax.bar(
+                x, heights, width=bar_width * 0.92, color=color, hatch=hatch,
+                edgecolor="black", linewidth=0.5, label=bar_label, zorder=2,
+            )
+            for rect, h in zip(rects, heights):
+                ax.text(rect.get_x() + rect.get_width() / 2, h + 0.02, f"{h:.2f}",
+                        ha="center", va="bottom", fontsize=7, rotation=90 if h < 0.3 else 0)
+        if ood_pct is not None:
+            for j, p in enumerate(props):
+                ax.text(group_centers[j], 1.05, f"OOD {ood_pct[p]:.1f}%", ha="center", va="bottom", fontsize=7.5)
+        ax.set_xticks(group_centers)
+        ax.set_xticklabels(labels)
+        ax.set_ylim(-0.15, 1.18)
+        ax.axhline(0, color="black", linewidth=0.6, zorder=1)
+
+    ood_a = {**estm_a["marginal_ood_pct"], "zT_direct": estm_a["joint_ood_pct"]}
+    draw_panel(axes[0], [
+        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
+        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"],
+         {p: estm_a[p]["full_r2"] for p in props}),
+        ("External, in-support", PALETTE["external_insupport"], HATCH["external_insupport"],
+         {p: estm_a[p]["insupport_r2"] for p in props}),
+    ], ood_pct=ood_a)
+    axes[0].set_ylabel("R$^2$")
+    add_panel_label(axes[0], "a")
+
+    ood_b = {**estm_b["marginal_ood_pct"], "zT_direct": estm_b["joint_ood_pct"]}
+    draw_panel(axes[1], [
+        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
+        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"],
+         {p: estm_b[p]["full_r2"] for p in props}),
+        ("External, in-support", PALETTE["external_insupport"], HATCH["external_insupport"],
+         {p: estm_b[p]["insupport_r2"] for p in props}),
+    ], ood_pct=ood_b)
+    add_panel_label(axes[1], "b")
+
+    draw_panel(axes[2], [
+        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
+        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"], tematdb),
+    ])
+    axes[2].text(
+        0.5, 1.12, "OOD tail 0.12% (not split)", transform=axes[2].transAxes,
+        ha="center", va="bottom", fontsize=7.5, style="italic",
+    )
+    add_panel_label(axes[2], "c")
+
+    handles, hlabels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles, hlabels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
+        bbox_transform=fig.transFigure, ncol=3, framealpha=0.9, columnspacing=1.2, handletextpad=0.6,
+    )
+    fig.subplots_adjust(bottom=0.22, top=0.85, wspace=0.3)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
+# =====================================================================
+# Electrical conductivity extrapolation: training vs ESTM cluster-
+# disjoint (pass b) log10(sigma) distributions, with training's cleaned
+# floor and the ESTM mass extrapolating below it. Sources:
+#   - training sigma: the snapfix featurized CSV's own "sigma" column
+#     (non-null rows) -- SIGMA_EXTRAPOLATION_TRAINING_CSV.
+#   - ESTM sigma: EXTERNAL_SNAPFIX_DIR/estm_predictions_passb.npz's
+#     sigma_true (pass b = cluster-disjoint, chosen because its sigma
+#     OOD fraction, ~15.5%, is the one CLAUDE.md reports and cross-checks
+#     against; pass a's is ~12.0%, a different number).
+# Floor = ESTM_TRAINING_BOUNDS["sigma"][0] (958.7831 S/m), the same
+# bound load_estm_pass_transfer uses for the in-support split above.
+SIGMA_EXTRAPOLATION_TRAINING_CSV = Path("data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv")
+
+
+def load_sigma_extrapolation_data(
+    training_csv=SIGMA_EXTRAPOLATION_TRAINING_CSV, external_dir=EXTERNAL_SNAPFIX_DIR, n_bins=50,
+):
+    """
+    Returns log10(sigma) arrays for training and ESTM pass-b, shared bin
+    edges spanning both, per-array histogram counts, the training floor
+    in log10 space, and the fraction of ESTM mass below it.
+    """
+    train_df = pd.read_csv(training_csv, usecols=["sigma"])
+    train_log_sigma = np.log10(train_df["sigma"].dropna().to_numpy())
+    train_log_sigma = train_log_sigma[np.isfinite(train_log_sigma)]
+
+    estm_data = np.load(external_dir / "estm_predictions_passb.npz", allow_pickle=True)
+    estm_sigma = estm_data["sigma_true"]
+    estm_log_sigma = np.log10(estm_sigma[estm_sigma > 0])
+
+    floor = ESTM_TRAINING_BOUNDS["sigma"][0]
+    log_floor = np.log10(floor)
+
+    lo = min(train_log_sigma.min(), estm_log_sigma.min())
+    hi = max(train_log_sigma.max(), estm_log_sigma.max())
+    bin_edges = np.linspace(lo, hi, n_bins + 1)
+    train_counts, _ = np.histogram(train_log_sigma, bins=bin_edges)
+    estm_counts, _ = np.histogram(estm_log_sigma, bins=bin_edges)
+
+    frac_below_floor = float((estm_log_sigma < log_floor).mean())
+    return {
+        "train_log_sigma": train_log_sigma, "estm_log_sigma": estm_log_sigma,
+        "bin_edges": bin_edges, "train_counts": train_counts, "estm_counts": estm_counts,
+        "floor": floor, "log_floor": log_floor, "frac_below_floor": frac_below_floor,
+    }
+
+
+def make_sigma_extrapolation(out_path, training_csv=SIGMA_EXTRAPOLATION_TRAINING_CSV, external_dir=EXTERNAL_SNAPFIX_DIR):
+    """
+    Overlaid density histograms of log10(sigma): training (snapfix CSV)
+    vs ESTM cluster-disjoint rows. Vertical line at training's cleaned
+    conductivity floor; the ESTM mass below it (extrapolation, not
+    interpolation, per CLAUDE.md's External Validation section) is
+    shaded and its fraction annotated.
+    """
+    d = load_sigma_extrapolation_data(training_csv, external_dir)
+
+    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=8.0, panel_height=5.0))
+    ax.hist(
+        d["train_log_sigma"], bins=d["bin_edges"], density=True, color=PALETTE["internal"],
+        alpha=0.55, label="Training (snapfix)", zorder=2,
+    )
+    ax.hist(
+        d["estm_log_sigma"], bins=d["bin_edges"], density=True, color=PALETTE["external_fullset"],
+        alpha=0.55, label="ESTM, cluster-disjoint", zorder=3,
+    )
+    ax.axvspan(
+        d["bin_edges"][0], d["log_floor"], color="black", alpha=0.08, zorder=1,
+        label=f"ESTM below training floor ({100 * d['frac_below_floor']:.1f}%)",
+    )
+    ax.axvline(d["log_floor"], color="black", linestyle="--", linewidth=1.4, zorder=4)
+    ax.set_xlabel("log$_{10}(\\sigma$, S/m)")
+    ax.set_ylabel("Density")
+    ax.legend(loc="upper right", framealpha=0.9, fontsize=9.5)
+    fig.tight_layout()
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
+# =====================================================================
+# Direct-vs-derived zT parity, both pathways from the identical
+# all-four-properties-present subset (56,088 rows, chemistry-cluster
+# grouped CV, canonical frozen hyperparameters -- see CLAUDE.md's
+# Direct-vs-Derived zT section). Source:
+# checkpoints/direct_vs_derived_zt_snapfix_canonical/repeat*_fold*.npz
+# (5 repeats x 5 outer folds = 25 files). R^2 is pooled across ALL 25
+# files (not per-repeat-then-averaged): this matches CLAUDE.md's own
+# reported method for this specific result (direct=0.7262,
+# derived=0.5244), confirmed by reproducing those exact values below --
+# a different convention from the Five-Way Ladder's per-repeat-mean
+# reporting, which is a different result computed a different way.
+DIRECT_VS_DERIVED_CHECKPOINT_DIR = Path("checkpoints/direct_vs_derived_zt_snapfix_canonical")
+
+
+def load_direct_vs_derived_predictions(checkpoint_dir=DIRECT_VS_DERIVED_CHECKPOINT_DIR):
+    """Pool every repeat*_fold*.npz's direct and derived zT true/pred arrays."""
+    npz_paths = sorted(Path(checkpoint_dir).glob("repeat*_fold*.npz"))
+    if not npz_paths:
+        raise FileNotFoundError(f"No repeat*_fold*.npz files in {checkpoint_dir}")
+    direct_true, direct_pred, derived_true, derived_pred = [], [], [], []
+    for npz_path in npz_paths:
+        data = np.load(npz_path)
+        direct_true.append(data["zT_direct_true"]); direct_pred.append(data["zT_direct_pred"])
+        derived_true.append(data["zT_derived_true"]); derived_pred.append(data["zT_derived_pred"])
+    return {
+        "direct_true": np.concatenate(direct_true), "direct_pred": np.concatenate(direct_pred),
+        "derived_true": np.concatenate(derived_true), "derived_pred": np.concatenate(derived_pred),
+        "n_files": len(npz_paths),
+    }
+
+
+def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPOINT_DIR):
+    """
+    Two hexbin parity panels for zT: direct prediction (left) vs derived
+    S^2*sigma*T/kappa (right), identical axis limits and a shared
+    log-scaled colour scale, identity line on both. Panel labels use
+    plain bold text with two existing PALETTE hues for contrast (direct/
+    derived is not one of the shared PALETTE concepts; direct reuses
+    "chemistry_cluster" -- the pathway this project treats as the honest
+    number everywhere else -- and derived reuses "full_feature_set",
+    chosen for visual contrast rather than shared semantics).
+    """
+    d = load_direct_vs_derived_predictions(checkpoint_dir)
+    r2_direct = r2_score(d["direct_true"], d["direct_pred"])
+    r2_derived = r2_score(d["derived_true"], d["derived_pred"])
+
+    lo = min(d["direct_true"].min(), d["direct_pred"].min(), d["derived_true"].min(), d["derived_pred"].min())
+    hi = max(d["direct_true"].max(), d["direct_pred"].max(), d["derived_true"].max(), d["derived_pred"].max())
+    pad = (hi - lo) * 0.03
+    lo, hi = lo - pad, hi + pad
+
+    fig, (ax_left, ax_right) = plt.subplots(
+        1, 2, figsize=get_figsize(1, 2, panel_width=5.2, panel_height=5.0), constrained_layout=True,
+    )
+    hb_left = ax_left.hexbin(d["direct_true"], d["direct_pred"], gridsize=60, extent=(lo, hi, lo, hi),
+                              cmap="viridis", norm=LogNorm(), mincnt=1)
+    hb_right = ax_right.hexbin(d["derived_true"], d["derived_pred"], gridsize=60, extent=(lo, hi, lo, hi),
+                                cmap="viridis", norm=LogNorm(), mincnt=1)
+    vmax = max(hb_left.get_array().max(), hb_right.get_array().max())
+    shared_norm = LogNorm(vmin=1, vmax=vmax)
+    hb_left.set_norm(shared_norm)
+    hb_right.set_norm(shared_norm)
+
+    panels = [
+        (ax_left, "Direct", PALETTE["chemistry_cluster"], r2_direct, len(d["direct_true"])),
+        (ax_right, "Derived (S$^2\\sigma T/\\kappa$)", PALETTE["full_feature_set"], r2_derived, len(d["derived_true"])),
+    ]
+    for ax, label, color, r2, n in panels:
+        ax.plot([lo, hi], [lo, hi], color="black", linestyle="--", linewidth=1.2, zorder=5)
+        ax.set_xlim(lo, hi)
+        ax.set_ylim(lo, hi)
+        ax.set_aspect("equal", adjustable="box")
+        ax.set_xlabel("Actual zT")
+        ax.set_ylabel("Predicted zT")
+        ax.text(0.04, 0.96, label, transform=ax.transAxes, ha="left", va="top",
+                fontsize=12, fontweight="bold", color=color)
+        ax.text(0.04, 0.87, f"$R^2$={r2:.4f}\nn={n:,}", transform=ax.transAxes, ha="left", va="top",
+                fontsize=9.5, bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5))
+
+    fig.colorbar(hb_right, ax=[ax_left, ax_right], label="Rows per hexbin (log scale)", shrink=0.85)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
 def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -1377,6 +1734,15 @@ def main():
 
     make_zt_parity(FIGURES_DIR / "zt_parity_random_vs_grouped")
     print("Saved zt_parity_random_vs_grouped.png / .pdf")
+
+    make_external_transfer(FIGURES_DIR / "external_transfer")
+    print("Saved external_transfer.png / .pdf")
+
+    make_sigma_extrapolation(FIGURES_DIR / "sigma_extrapolation")
+    print("Saved sigma_extrapolation.png / .pdf")
+
+    make_zt_direct_vs_derived(FIGURES_DIR / "zt_direct_vs_derived")
+    print("Saved zt_direct_vs_derived.png / .pdf")
 
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
