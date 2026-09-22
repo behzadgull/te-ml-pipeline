@@ -147,7 +147,7 @@ For external testing, models are refit on 100% of the training data with frozen 
 
 
 
-The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparameters and analysis scripts are version-controlled and archived, and software environments for every run are recorded. As a check on the stability of the pipeline, the primary result was regenerated three weeks after its original run, on a different software environment, and reproduced every held-out prediction bit-for-bit.
+The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparameters and analysis scripts are version-controlled and archived, and software environments for every run are recorded. As a check on pipeline determinism, one grouped cross-validation run was regenerated three weeks after its original execution, on a different software environment, and reproduced every held-out prediction bit-for-bit.
 
 
 
@@ -159,7 +159,7 @@ The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparame
 
 
 
-\### 3.1 Validation strategy sets reported accuracy more than model choice does
+\### 3.1 Grouped validation lowers reported accuracy by 0.14 to 0.21
 
 
 
@@ -571,7 +571,7 @@ Finally, the external chemistry-disjoint strata are small. teMatDb's contains 27
 
 
 
-Reported accuracy for composition-based thermoelectric property prediction depends more on the validation protocol than on the model. Moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.135 to 0.213 across the four transport properties, and increasing the number of folds in an ungrouped protocol does not reduce the gap at all. Feature attributions are indistinguishable between the two protocols, which locates the effect in how the data is partitioned rather than in what the model learns.
+Reported accuracy for composition-based thermoelectric property prediction depends heavily on the validation protocol. Moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.135 to 0.213 across the four transport properties, and increasing the number of folds in an ungrouped protocol does not reduce the gap at all. Feature attributions are indistinguishable between the two protocols, which locates the effect in how the data is partitioned rather than in what the model learns.
 
 
 
