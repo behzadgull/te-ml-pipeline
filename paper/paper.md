@@ -39,7 +39,13 @@ Thermoelectric materials convert heat to electricity, and their performance is s
 
 
 
-Such models are routinely reported with cross-validated R² above 0.9. The figure is arrived at honestly in the sense that the reported protocol is followed, but the protocol itself is usually a random split or k-fold cross-validation over rows, and rows in thermoelectric databases are not independent. A single material contributes a measurement at every temperature on its curve, and a doped series contributes one row per composition per temperature. Under random splitting, the same specimen appears on both sides of the split at different temperatures, and near duplicates of it appear under different dopant labels. The model is asked to interpolate within a curve it has already seen.
+Such models are routinely reported with cross-validated R² above 0.9. The figure is arrived at honestly in the sense that the reported protocol is followed, but the protocol itself is usually a random split or k-fold cross-validation over rows, and rows in thermoelectric databases are not independent. A single material contributes a measurement at every temperature on its curve, and a doped series contributes one row per composition per temperature. Under random splitting, the same specimen appears on both sides of the split at different temperatures, and near duplicates of it appear under different dopant labels (Figure 1). The model is asked to interpolate within a curve it has already seen.
+
+
+
+![Figure 1](figures/fig1_leakage_schematic.png)
+
+*Figure 1. PLACEHOLDER -- file pending. Schematic of within-curve and near-duplicate leakage: a single material's temperature curve contributes one row per bin, and a doped series shares its host lattice across dopant labels, so rows that appear independent under random row-level splitting are not.*
 
 
 
@@ -79,7 +85,13 @@ Training data comes from Starrydata2, a community-curated database of thermoelec
 
 
 
-Digitized curves are converted to model-ready rows through eleven stages (Figure 1). Each curve's digitized points are first expanded into individual temperature-property observations and screened against physical bounds, giving 1,996,047 observations. Resistivity is inverted to conductivity and merged with directly reported conductivity. Observations outside 300 to 800 K are discarded and the remainder binned at 25 K, leaving 1,096,324. Pivoting to one row per material and temperature bin, averaging where multiple digitized points fall in the same bin, gives 398,763 rows.
+Digitized curves are converted to model-ready rows through eleven stages (Figure 2). Each curve's digitized points are first expanded into individual temperature-property observations and screened against physical bounds, giving 1,996,047 observations. Resistivity is inverted to conductivity and merged with directly reported conductivity. Observations outside 300 to 800 K are discarded and the remainder binned at 25 K, leaving 1,096,324. Pivoting to one row per material and temperature bin, averaging where multiple digitized points fall in the same bin, gives 398,763 rows.
+
+
+
+![Figure 2](figures/cleaning_funnel.png)
+
+*Figure 2. Row count through the eleven-stage cleaning pipeline, from 1,996,047 property observations after range filtering to 280,664 rows in the final cleaned dataset.*
 
 
 
@@ -111,7 +123,13 @@ The Seebeck coefficient and figure of merit are modelled in linear space; electr
 
 
 
-Five protocols are compared. Twenty independent random 80/20 holdout draws, pooled, together with five-fold and ten-fold cross-validation, impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 2): elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃.
+Five protocols are compared. Twenty independent random 80/20 holdout draws, pooled, together with five-fold and ten-fold cross-validation, impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 3): elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃.
+
+
+
+![Figure 3](figures/fig3_grouping_rule_schematic.png)
+
+*Figure 3. PLACEHOLDER -- file pending. The chemistry-cluster grouping rule: elements below 5 atomic percent are treated as dopants and collapsed into the host lattice, and host amounts within 5% of an integer are snapped to that integer before reduction, so Pb0.97Te and (PbTe)0.97(SrTe)0.02(Na2Te)0.01 both group with PbTe while Bi2Te2.7Se0.3 (Se at 6.0 at%) remains distinct from Bi2Te3.*
 
 
 
@@ -163,11 +181,17 @@ The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparame
 
 
 
-Table 1 gives pooled out-of-fold R² for four thermoelectric properties under five validation protocols, with hyperparameters tuned once per target and held fixed across every rung, so that differences between rungs reflect the validation protocol alone.
+Table 1 gives pooled out-of-fold R² for four thermoelectric properties under five validation protocols (Figure 4), with hyperparameters tuned once per target and held fixed across every rung, so that differences between rungs reflect the validation protocol alone.
 
 
 
-\*\*Table 1.\*\* Pooled out-of-fold R² by validation protocol. Grouped rungs and random 80/20 report mean ± standard deviation across repeats or draws (five repeats for the grouped rungs, twenty independent holdout draws for random 80/20); five-fold and ten-fold each report a single partition's pooled R² ± its across-fold standard deviation.
+![Figure 4](figures/fig2_validation_ladder.png)
+
+*Figure 4. Pooled out-of-fold R² by validation protocol and property (Table 1), with error bars showing each rung's own across-repeat, across-fold or across-draw standard deviation and brackets giving the random-80/20-to-chemistry-cluster gap.*
+
+
+
+\*\*Table 1.\*\* Pooled out-of-fold R² by validation protocol. Composition and chemistry cluster report mean ± standard deviation across five independent repeats. Random 80/20, 5-fold and 10-fold report mean ± standard deviation across that rung's own folds or draws within a single pass (twenty draws for random 80/20, five or ten folds for k-fold), not across independent repeats. These two kinds of standard deviation are not directly comparable: one measures repeat-to-repeat spread under a newly drawn held-out partition each time, the other measures fold-to-fold or draw-to-draw spread within one partition.
 
 
 
@@ -193,7 +217,13 @@ Grouping changes the picture substantially. Requiring that no exact composition 
 
 
 
-The gap between the ungrouped and chemistry-cluster rungs ranges from \*\*0.134 for thermal conductivity to 0.213 for electrical conductivity\*\*, with a mean of 0.181 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped and grouped rungs use different resampling structures that cannot be paired. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above.
+The gap between the ungrouped and chemistry-cluster rungs ranges from \*\*0.134 for thermal conductivity to 0.213 for electrical conductivity\*\*, with a mean of 0.181 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped and grouped rungs use different resampling structures that cannot be paired. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above. Figure 5 shows the random-versus-chemistry-cluster gap directly, as predicted-versus-actual zT under both protocols.
+
+
+
+![Figure 5](figures/zt_parity_random_vs_grouped.png)
+
+*Figure 5. Predicted versus actual zT under random 80/20 (R² = 0.9180, n = 517,680) and chemistry-cluster (R² = 0.7456, n = 647,095) validation, identical axes and colour scale, showing the spread difference directly.*
 
 
 
@@ -221,7 +251,13 @@ These are distinguishable through feature attribution. If the first mechanism op
 
 
 
-We fit the figure-of-merit model under both random and chemistry-cluster splits across all twenty-five folds of five repeats, with identical hyperparameters, and computed exact TreeSHAP attributions on a fixed 20,000-row subsample of each fold's held-out set. Attributions were normalised to shares of each model's total, since the two models have different prediction variances and raw magnitudes are not comparable. Shares were aggregated to descriptor families, which is robust to the arbitrary splitting of credit among correlated features that individual feature rankings suffer from.
+We fit the figure-of-merit model under both random and chemistry-cluster splits across all twenty-five folds of five repeats, with identical hyperparameters, and computed exact TreeSHAP attributions on a fixed 20,000-row subsample of each fold's held-out set. Attributions were normalised to shares of each model's total, since the two models have different prediction variances and raw magnitudes are not comparable. Shares were aggregated to descriptor families, which is robust to the arbitrary splitting of credit among correlated features that individual feature rankings suffer from (Figure 6).
+
+
+
+![Figure 6](figures/shap_attribution.png)
+
+*Figure 6. TreeSHAP attribution shares for zT, random versus chemistry-cluster splits, twenty-five folds per protocol: (a) three coarse descriptor families, (b) ten fine semantic groups sorted by mean share. Every pair overlaps within its across-fold standard deviation; the largest group difference (valence electron configuration) is 0.78 pooled fold-SD.*
 
 
 
@@ -289,7 +325,13 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 
-\*\*Combined.\*\* The two components are independent — the round-robin measures inter-laboratory scatter on physical specimens and explicitly excludes figure-reading error — so their noise fractions add: (1 − R²comb) = (1 − R²meas) + (1 − R²dig). Table 3 gives the result.
+\*\*Combined.\*\* The two components are independent — the round-robin measures inter-laboratory scatter on physical specimens and explicitly excludes figure-reading error — so their noise fractions add: (1 − R²comb) = (1 − R²meas) + (1 − R²dig). Table 3 gives the result (Figure 7).
+
+
+
+![Figure 7](figures/fig5_headroom.png)
+
+*Figure 7. Decomposition of each property's R² = 0 to 1 range into achieved (chemistry-cluster grouped R²), headroom to the combined label-noise ceiling, digitization noise and measurement noise, with the ungrouped random-80/20 R² marked to show how much apparent performance is validation artefact rather than real headroom closed.*
 
 
 
@@ -329,7 +371,13 @@ A natural explanation for the headroom in Section 3.3 is that the descriptor set
 
 
 
-To test this we refit each target under chemistry-cluster grouped CV using three feature sets: MAGPIE alone (133 features including temperature), CBFV alone (265), and the full combination (397). Hyperparameters were those tuned on the full feature set and were not retuned for the subsets, so that any difference reflects the descriptors rather than the tuning. All other settings, including folds, seeds and repeat structure, were held identical to the ladder.
+To test this we refit each target under chemistry-cluster grouped CV using three feature sets: MAGPIE alone (133 features including temperature), CBFV alone (265), and the full combination (397). Hyperparameters were those tuned on the full feature set and were not retuned for the subsets, so that any difference reflects the descriptors rather than the tuning. All other settings, including folds, seeds and repeat structure, were held identical to the ladder (Figure 8).
+
+
+
+![Figure 8](figures/descriptor_ablation.png)
+
+*Figure 8. Chemistry-cluster grouped R² at 133 (MAGPIE), 265 (CBFV) and 397 (full) features, one panel per property, against the combined label-noise ceiling band; the full-minus-MAGPIE gain closes 2.2 to 4.2% of the remaining headroom on every property.*
 
 
 
@@ -417,11 +465,23 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-\*\*Transfer degrades substantially on both databases.\*\* On ESTM, for samples whose chemistry cluster is absent from training, R² falls to 0.354 for the Seebeck coefficient, 0.275 for electrical conductivity, 0.618 for thermal conductivity and 0.498 for the figure of merit, against internal grouped values of 0.753, 0.702, 0.809 and 0.746. teMatDb degrades comparably on samples from publications absent from training: 0.699, 0.175, 0.653 and 0.496. A second gap therefore exists beyond the one Section 3.1 measures, of similar or larger magnitude.
+\*\*Transfer degrades substantially on both databases.\*\* On ESTM, for samples whose chemistry cluster is absent from training, R² falls to 0.354 for the Seebeck coefficient, 0.275 for electrical conductivity, 0.618 for thermal conductivity and 0.498 for the figure of merit, against internal grouped values of 0.753, 0.702, 0.809 and 0.746. teMatDb degrades comparably on samples from publications absent from training: 0.699, 0.175, 0.653 and 0.496. A second gap therefore exists beyond the one Section 3.1 measures, of similar or larger magnitude (Figure 9).
 
 
 
-\*\*A large share of that loss is extrapolation, not failure to generalise.\*\* External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties. Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
+![Figure 9](figures/external_transfer.png)
+
+*Figure 9. Internal chemistry-cluster, external full-set and external in-support R² by property: (a) ESTM DOI-disjoint, (b) ESTM cluster-disjoint, (c) teMatDb DOI-disjoint (no in-support split; out-of-support tail 0.12%). Out-of-support fraction annotated above each property group; zT derived is excluded as numerically unstable. teMatDb's 27-cluster chemistry-disjoint stratum is not shown.*
+
+
+
+\*\*A large share of that loss is extrapolation, not failure to generalise.\*\* External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties (Figure 10). Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
+
+
+
+![Figure 10](figures/sigma_extrapolation.png)
+
+*Figure 10. Density of log10(electrical conductivity) for the training set and for ESTM's cluster-disjoint rows, with training's cleaned conductivity floor (≈959 S m⁻¹) marked; 15.5% of ESTM cluster-disjoint mass falls below it.*
 
 
 
@@ -449,7 +509,13 @@ Finally, the chemistry-cluster rule collapses dopants below 5 at% but not alloy 
 
 
 
-The figure of merit can be predicted directly or assembled from separately predicted S, σ and κ via S²σT/κ. We compare both on the subset where all four properties are reported, 56,088 rows across 4,139 chemistry clusters, under the same grouped protocol and hyperparameters.
+The figure of merit can be predicted directly or assembled from separately predicted S, σ and κ via S²σT/κ. We compare both on the subset where all four properties are reported, 56,088 rows across 4,139 chemistry clusters, under the same grouped protocol and hyperparameters (Figure 11).
+
+
+
+![Figure 11](figures/zt_direct_vs_derived.png)
+
+*Figure 11. Predicted versus actual zT, direct prediction (R² = 0.7262) versus reconstruction from S, σ and κ via S²σT/κ (R² = 0.5244), identical axes and colour scale, n = 280,440 pooled across five repeats of the 56,088-row subset.*
 
 
 
