@@ -1,0 +1,19 @@
+[2026-09-22 09:06:48] target=zT (scale=linear): model_type=xgboost, 129,419 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json), device=cuda
+[2026-09-22 09:07:06] repeat 0 fold 0: outer R^2=0.9160 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:07:25] repeat 0 fold 1: outer R^2=0.9181 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:07:43] repeat 0 fold 2: outer R^2=0.9219 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:08:01] repeat 0 fold 3: outer R^2=0.9257 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:08:19] repeat 0 fold 4: outer R^2=0.9228 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:08:38] repeat 0 fold 5: outer R^2=0.9180 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:08:56] repeat 0 fold 6: outer R^2=0.9169 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:09:14] repeat 0 fold 7: outer R^2=0.9156 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:09:33] repeat 0 fold 8: outer R^2=0.9185 (inner cv R^2=0.7927), n_train=116,477, n_test=12,942
+[2026-09-22 09:09:51] repeat 0 fold 9: outer R^2=0.9195 (inner cv R^2=0.7927), n_train=116,478, n_test=12,941
+[2026-09-22 09:09:51] === zT (xgboost, kfold, scale=linear): repeated CV summary ===
+[2026-09-22 09:09:51] 1 repeats x 10 outer folds = 10 outer evaluations
+[2026-09-22 09:09:51] R^2 below computed in linear (raw) space.
+[2026-09-22 09:09:51] POOLED out-of-fold R^2 = 0.9193 (n=129,419 held-out predictions) -- all repeats combined into one number
+[2026-09-22 09:09:51] PER-REPEAT pooled R^2 = 0.9193 +/- nan (n=1 repeats: [0.9193]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-22 09:09:51] mean outer R^2 = 0.9193, std = 0.0032 (per-fold macro-average, secondary/diagnostic)
+[2026-09-22 09:09:51] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json)
+[2026-09-22 09:09:51] this call's new compute time: 183.3s

@@ -42,6 +42,21 @@ featurized_ThermoelectricMaterials_2026-08-15.csv`
   frozen hyperparameter files
   (`checkpoints/saved_predictions/checkpoints/frozen_hyperparams/
   {S,sigma,kappa,zT}.json`).
+  **Correction, 2026-09-22: this bullet was correct, but the "CANONICAL
+  for every Paper A confirmed result" framing above it was read too
+  broadly.** Only the chemistry-cluster rung was ever actually verified
+  against File A's row counts (S=185,064 etc., matched exactly, as
+  stated). The Five-Way Ladder's other four rungs at the time --
+  composition, random 80/20, 5-fold, 10-fold, all produced from
+  `checkpoints/ladder_regen_dl/` -- were never checked against File A's
+  row counts at all, and turned out NOT to match them: 185,844 / 183,246
+  / 121,535 / 129,851 rows (S/sigma/kappa/zT), a fourth, unidentified
+  dataset snapshot with no recorded path or SHA256, larger than both File
+  A and File B. Found 2026-09-22; see the Five-Way Ladder section's
+  SUPERSEDED note for the correction and the rerun that fixed it
+  (`results/ungrouped_snapfix/20260922T093243/`). As of that rerun, all
+  five ladder rungs derive from the snapfix CSV (File A plus the fixed
+  `chemistry_cluster_id` column, identical row counts to File A).
 - Gitignored (`checkpoints/`), local-only, not on GitHub.
 - Backed up as a private Kaggle dataset:
   `muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a`, verified
@@ -964,7 +979,14 @@ space. Composition and chemistry-cluster report mean ± across-repeat SD
 (5 repeats, per-repeat pooled R², see the per-repeat pooling note
 above); random 80/20 and 5-fold/10-fold report the single pooled R²
 (n_repeats=1 for ungrouped rungs, per the frozen decision in the
-Grouping Key section — no repeat-to-repeat spread to report there).
+Grouping Key section — no OUTER-repeat-to-repeat spread to report
+there). **Corrected 2026-09-22**: this does not mean no spread at all —
+random 80/20 pools 20 independent `ShuffleSplit` draws, and 5-fold/
+10-fold each have their own per-fold spread; the tables below now
+report that per-draw/per-fold SD alongside the pooled value. See the
+SUPERSEDED note after the replacement table for why this section's
+ungrouped columns needed regenerating, separately from the composition/
+chemistry-cluster fix.
 
 | Target | random 80/20 | 5-fold | 10-fold | composition | chemistry cluster |
 |---|---|---|---|---|---|
@@ -995,6 +1017,50 @@ Provenance: `results/ladder_regen_snapfix/20260917T150000/
 5-fold, and 10-fold columns carried over unchanged from the 2026-08-22
 provenance below.
 
+**SUPERSEDED 2026-09-22: the random 80/20, 5-fold, and 10-fold columns
+above, and the "carried over unchanged" / "provenance-cited, 2026-08-22"
+claims below for those three columns.** The `checkpoints/ladder_regen_dl/`
+directory those columns actually came from has no recorded CSV path or
+SHA256 anywhere in it (`progress.log` logs only row counts and per-fold
+R², never a source file) — despite being described here as
+"provenance-cited". Its row counts (S 185,844 / sigma 183,246 / kappa
+121,535 / zT 129,851) do not match File A/snapfix (S 185,064 / sigma
+182,755 / kappa 121,110 / zT 129,419) on any target, and are larger than
+File B's too — an unidentified fourth dataset snapshot, not File A. The
+composition column it also produced is superseded above already (by the
+snapfix regeneration); only random 80/20, 5-fold, and 10-fold still
+carried this stale, unidentified-dataset provenance until now. See the
+Canonical Dataset section's correction to the "File A produced the whole
+ladder" claim.
+
+Rerun on the snapfix CSV (`ungrouped_snapfix.zip`, verified row counts
+S 185,064 / sigma 182,755 / kappa 121,110 / zT 129,419 — File A's own
+counts, confirmed against `load_target_data`). No run's pooled-vs-
+per-fold-mean difference exceeds 0.0005; pooled R² reported below for
+consistency with composition/chemistry's convention, with the per-fold/
+per-draw SD shown alongside (previously omitted for these three columns
+entirely). Replacement table, all five rungs now from the snapfix
+dataset:
+
+| Target | random 80/20 (20 draws) | 5-fold | 10-fold | composition | chemistry cluster |
+|---|---|---|---|---|---|
+| S | 0.9582 ± 0.0013 | 0.9585 ± 0.0013 | 0.9595 ± 0.0014 | 0.8322 ± 0.0044 | 0.7528 ± 0.0050 |
+| sigma (log10) | 0.9150 ± 0.0009 | 0.9152 ± 0.0009 | 0.9174 ± 0.0024 | 0.7762 ± 0.0015 | 0.7020 ± 0.0020 |
+| kappa (log10) | 0.9434 ± 0.0012 | 0.9436 ± 0.0013 | 0.9455 ± 0.0021 | 0.8565 ± 0.0013 | 0.8092 ± 0.0021 |
+| zT | 0.9180 ± 0.0014 | 0.9181 ± 0.0029 | 0.9193 ± 0.0032 | 0.8178 ± 0.0009 | 0.7456 ± 0.0045 |
+
+Provenance: `results/ungrouped_snapfix/20260922T093243/
+{S,sigma,kappa,zT}_{random_f20,kfold_f5,kfold_f10}/`, tabulated in
+`reports/ungrouped_snapfix/20260922T093243/metrics.json` and `table1.md`.
+The random rung is **20 independent, overlapping 80/20 holdout draws via
+sklearn `ShuffleSplit`, pooled** — not a single split; this description
+applies everywhere the random rung is reported in this document, per the
+Grouping Key section's own (already-correct) note on this point. Deltas
+from the superseded `ladder_regen_dl` values are small (|delta| <=
+0.0008 on every cell) and do not change any qualitative conclusion —
+the dataset mismatch was real but its effect on the ungrouped rungs
+specifically was negligible; see the report for the full delta table.
+
 **All 20 cells are reproducible, provenance-cited, 2026-08-22.** Every
 cell above comes from a checkpointed run with a surviving
 `run_config.json` (seed=0, n_outer_folds/n_repeats as described above,
@@ -1008,6 +1074,21 @@ to git):
   ladder_regen_dl/{S,sigma,kappa,zT}_{composition,random,kfold,kfold}
   _{f5,f20,f5,f10}/` (folder-name suffix is outer-fold count, e.g.
   `sigma_random_f20`, `kappa_kfold_f10`)
+
+**SUPERSEDED 2026-09-22: the "provenance-cited" claim above, for the
+`ladder_regen_dl` bullet only.** This was overstated: a `run_config.json`
+existing and being internally self-consistent is not the same as the
+underlying dataset being identified. Only the chemistry-cluster bullet
+(File A, `checkpoints/saved_predictions/checkpoints/`) was genuinely
+verified against a known, hashed dataset at the time. The
+`ladder_regen_dl` bullet's random/5-fold/10-fold/composition runs had a
+`run_config.json` (seed, fold count, hyperparameters path) but never a
+dataset path or hash — "reproducible" was true in the narrow sense that
+rerunning gave the same numbers, not in the sense that the dataset
+itself could be identified or confirmed to be File A. It has since been
+superseded by `results/ungrouped_snapfix/20260922T093243/` for the three
+ungrouped columns; the composition column was already superseded by the
+snapfix regeneration above.
 
 This replaces every orphaned point estimate from the lost-config run
 (prior chemistry-cluster: S=0.8083, sigma=0.7522, kappa=0.8226,
@@ -1029,6 +1110,16 @@ Updated 2026-09-19, against the regenerated chemistry column: the gap
 ranges from 0.135 (kappa) to 0.213 (sigma) across the four targets, mean
 0.182 -- same ordering as before (largest for sigma, smallest for kappa),
 substantially wider gap.
+
+**SUPERSEDED 2026-09-22: the gap figures immediately above.** The random
+80/20 side of that comparison was still the unidentified-dataset
+`ladder_regen_dl` value at the time. Recomputed against the
+`results/ungrouped_snapfix/20260922T093243/` rerun (same rows as the
+chemistry-cluster column on both sides now): the gap ranges from
+**0.134 (kappa) to 0.213 (sigma)**, mean **0.181** -- same ordering,
+essentially unchanged, since the dataset mismatch moved the ungrouped
+side by at most 0.0008 per target (see the replacement table's
+provenance note above for the per-target deltas).
 
 **Discrepancy diagnosis (2026-08-22): H1 (scale mismatch) is
 UNRESOLVABLE, not rejected.** Tested whether the orphaned run's

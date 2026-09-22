@@ -1,0 +1,19 @@
+[2026-09-22 08:55:55] target=kappa (scale=log10): model_type=xgboost, 121,110 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json), device=cuda
+[2026-09-22 08:56:08] repeat 0 fold 0: outer R^2=0.9462 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:56:21] repeat 0 fold 1: outer R^2=0.9452 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:56:35] repeat 0 fold 2: outer R^2=0.9500 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:56:48] repeat 0 fold 3: outer R^2=0.9449 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:57:02] repeat 0 fold 4: outer R^2=0.9480 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:57:15] repeat 0 fold 5: outer R^2=0.9426 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:57:28] repeat 0 fold 6: outer R^2=0.9447 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:57:41] repeat 0 fold 7: outer R^2=0.9449 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:57:54] repeat 0 fold 8: outer R^2=0.9443 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:58:08] repeat 0 fold 9: outer R^2=0.9446 (inner cv R^2=0.8419), n_train=108,999, n_test=12,111
+[2026-09-22 08:58:08] === kappa (xgboost, kfold, scale=log10): repeated CV summary ===
+[2026-09-22 08:58:08] 1 repeats x 10 outer folds = 10 outer evaluations
+[2026-09-22 08:58:08] R^2 below computed in log10 space (target=kappa trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-22 08:58:08] POOLED out-of-fold R^2 = 0.9455 (n=121,110 held-out predictions) -- all repeats combined into one number
+[2026-09-22 08:58:08] PER-REPEAT pooled R^2 = 0.9455 +/- nan (n=1 repeats: [0.9455]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-22 08:58:08] mean outer R^2 = 0.9455, std = 0.0021 (per-fold macro-average, secondary/diagnostic)
+[2026-09-22 08:58:08] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/kappa.json)
+[2026-09-22 08:58:08] this call's new compute time: 132.9s

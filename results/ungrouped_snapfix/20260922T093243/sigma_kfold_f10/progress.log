@@ -1,0 +1,19 @@
+[2026-09-22 08:44:32] target=sigma (scale=log10): model_type=xgboost, 182,755 rows, 397 features, split_strategy=kfold (ungrouped), n_repeats=1, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/sigma.json), device=cuda
+[2026-09-22 08:45:00] repeat 0 fold 0: outer R^2=0.9184 (inner cv R^2=0.7490), n_train=164,479, n_test=18,276
+[2026-09-22 08:45:28] repeat 0 fold 1: outer R^2=0.9168 (inner cv R^2=0.7490), n_train=164,479, n_test=18,276
+[2026-09-22 08:45:56] repeat 0 fold 2: outer R^2=0.9193 (inner cv R^2=0.7490), n_train=164,479, n_test=18,276
+[2026-09-22 08:46:24] repeat 0 fold 3: outer R^2=0.9179 (inner cv R^2=0.7490), n_train=164,479, n_test=18,276
+[2026-09-22 08:46:53] repeat 0 fold 4: outer R^2=0.9180 (inner cv R^2=0.7490), n_train=164,479, n_test=18,276
+[2026-09-22 08:47:21] repeat 0 fold 5: outer R^2=0.9163 (inner cv R^2=0.7490), n_train=164,480, n_test=18,275
+[2026-09-22 08:47:48] repeat 0 fold 6: outer R^2=0.9129 (inner cv R^2=0.7490), n_train=164,480, n_test=18,275
+[2026-09-22 08:48:16] repeat 0 fold 7: outer R^2=0.9207 (inner cv R^2=0.7490), n_train=164,480, n_test=18,275
+[2026-09-22 08:48:44] repeat 0 fold 8: outer R^2=0.9142 (inner cv R^2=0.7490), n_train=164,480, n_test=18,275
+[2026-09-22 08:49:12] repeat 0 fold 9: outer R^2=0.9192 (inner cv R^2=0.7490), n_train=164,480, n_test=18,275
+[2026-09-22 08:49:12] === sigma (xgboost, kfold, scale=log10): repeated CV summary ===
+[2026-09-22 08:49:12] 1 repeats x 10 outer folds = 10 outer evaluations
+[2026-09-22 08:49:12] R^2 below computed in log10 space (target=sigma trained on log10-transformed y, see LOG_TRANSFORM_TARGETS).
+[2026-09-22 08:49:12] POOLED out-of-fold R^2 = 0.9174 (n=182,755 held-out predictions) -- all repeats combined into one number
+[2026-09-22 08:49:12] PER-REPEAT pooled R^2 = 0.9174 +/- nan (n=1 repeats: [0.9174]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-22 08:49:12] mean outer R^2 = 0.9174, std = 0.0024 (per-fold macro-average, secondary/diagnostic)
+[2026-09-22 08:49:12] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/sigma.json)
+[2026-09-22 08:49:12] this call's new compute time: 281.0s

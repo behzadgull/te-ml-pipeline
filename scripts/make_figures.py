@@ -34,6 +34,7 @@ LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics
 NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260917T172251/noise_floor_inputs.json")
 DESCRIPTOR_ABLATION_METRICS_PATH = Path("reports/ablation_snapfix/20260918T000111/ablation_metrics.json")
 SHAP_ATTRIBUTION_DIR = Path("results/shap_attribution/20260917T134930")
+UNGROUPED_SNAPFIX_DIR = Path("results/ungrouped_snapfix/20260922T093243")
 ZT_COMBINED_CEILING_LABEL = "zT (vs ZT_author_declared)"
 ZT_HEADROOM_FRACTION_LABEL = "zT (declared)"
 
@@ -183,32 +184,47 @@ MODEL_COMPARISON_CEILING_MODEL = "XGBoost"
 # +/-0.0045) not plotted here, since this figure draws single bar heights
 # with no error-bar mechanism.
 #
-# Random 80/20, 5-Fold, and 10-Fold rows: checkpoints/ladder_regen_dl/
-# {target}_{composition,kfold,random}_f{5,10,20}/ (folder-name suffix is
-# outer-fold count, e.g. sigma_random_f20, kappa_kfold_f10), each with a
-# run_config.json confirming target_scale=log10 (sigma/kappa), seed=0,
-# and the canonical frozen-hyperparameters path. Pooled R^2 recomputed
-# directly from these checkpoints' *_predictions.npz files matches
-# CLAUDE.md's confirmed ungrouped row to 4 decimals on every target.
-# These rungs are unaffected by the SNAP(0.05)/S5 grouping fix for a
-# structural reason, not just a code-path one: the snapfix featurized CSV
-# differs from File A only in the chemistry_cluster_id column (see
-# CLAUDE.md's Grouping Fixes section), and the ungrouped split code path
-# never reads that column, so re-running it against the snapfix CSV
-# cannot change its output.
+# Random 80/20, 5-Fold, and 10-Fold rows: results/ungrouped_snapfix/
+# 20260922T093243/{target}_{random_f20,kfold_f5,kfold_f10}/, tabulated in
+# reports/ungrouped_snapfix/20260922T093243/metrics.json and table1.md.
 #
-# RESOLVED 2026-09-22: the previous values here (S=0.9586, sigma=0.9539,
-# kappa=0.9615, zT=0.9138 for random 80/20, etc.) were NOT a log10-vs-
-# linear scale mismatch -- both this row and the current one use log10
-# for sigma/kappa. They were the orphaned pre-2026-08-22 run's ungrouped
-# cells (found verbatim, all three rows, in checkpoints/saved_predictions/
-# te-ml-pipeline/CLAUDE.md, a stale in-tree snapshot of an earlier
-# CLAUDE.md whose own Five-Way Ladder table -- itself explicitly log10-
-# space -- matches this file's old LADDER_RESULTS on all five rungs) --
-# the same run current CLAUDE.md already calls out as superseded and
-# unreproducible for its composition/chemistry cells. No run_config.json
-# for that orphaned run exists anywhere on disk. See the PRE-FIX
-# (SUPERSEDED) block below for the old values, kept for audit.
+# CORRECTED 2026-09-22: the claim that previously stood here -- that
+# checkpoints/ladder_regen_dl/ was File A's rows, unaffected by the
+# grouping fix "for a structural reason" -- was FALSE for the row-set
+# claim specifically (the structural argument about chemistry_cluster_id
+# not being read by the ungrouped split path remains true, but it does
+# not establish which dataset was used, only that the grouping fix
+# wouldn't change the answer within whatever dataset was used).
+# checkpoints/ladder_regen_dl/ has no recorded CSV path or SHA256
+# anywhere in it, and its row counts (S=185,844, sigma=183,246,
+# kappa=121,535, zT=129,851) do not match File A/snapfix (S=185,064,
+# sigma=182,755, kappa=121,110, zT=129,419) on any target -- a fourth,
+# unidentified dataset snapshot. Found 2026-09-22; see CLAUDE.md's
+# Five-Way Ladder and Canonical Dataset sections for the full
+# correction. Rerun on the verified snapfix CSV
+# (results/ungrouped_snapfix/20260922T093243/, row counts confirmed
+# against load_target_data): deltas from the old ladder_regen_dl values
+# are small (|delta| <= 0.0008 per cell) and do not change any
+# qualitative conclusion, but the provenance claim was wrong and is
+# corrected here rather than left standing.
+#
+# The random rung is 20 independent, OVERLAPPING 80/20 holdout draws via
+# sklearn ShuffleSplit, pooled -- not a single split (see
+# load_ladder_ungrouped_sd below, and CLAUDE.md's Grouping Key section).
+#
+# RESOLVED 2026-09-22 (unrelated to the above): the previous values here
+# (S=0.9586, sigma=0.9539, kappa=0.9615, zT=0.9138 for random 80/20,
+# etc.) were NOT a log10-vs-linear scale mismatch -- both this row and
+# the current one use log10 for sigma/kappa. They were the orphaned
+# pre-2026-08-22 run's ungrouped cells (found verbatim, all three rows,
+# in checkpoints/saved_predictions/te-ml-pipeline/CLAUDE.md, a stale
+# in-tree snapshot of an earlier CLAUDE.md whose own Five-Way Ladder
+# table -- itself explicitly log10-space -- matches this file's old
+# LADDER_RESULTS on all five rungs) -- the same run current CLAUDE.md
+# already calls out as superseded and unreproducible for its
+# composition/chemistry cells. No run_config.json for that orphaned run
+# exists anywhere on disk. See the PRE-FIX (SUPERSEDED) block below for
+# the old values, kept for audit.
 LADDER_PROPERTIES = ["S", "sigma", "kappa", "zT"]
 LADDER_PROPERTY_LABELS = [
     "S", "$\\sigma$ (log$_{10}$)", "$\\kappa$ (log$_{10}$)", "zT",
@@ -230,10 +246,18 @@ LADDER_STRATEGIES = ["Random 80/20", "5-Fold CV", "10-Fold CV", "Composition CV"
 # "Composition CV":       {"S": 0.8314, "sigma": 0.7791, "kappa": 0.8380, "zT": 0.8164},
 # "Chemistry-Cluster CV": {"S": 0.8083, "sigma": 0.7522, "kappa": 0.8226, "zT": 0.7965},
 
+# UNIDENTIFIED-DATASET (SUPERSEDED 2026-09-22) -- ladder_regen_dl values,
+# correct relative to the orphaned run above but sourced from a dataset
+# that was never identified (see the correction comment above). Kept for
+# audit, not deleted.
+# "Random 80/20": {"S": 0.9588, "sigma": 0.9152, "kappa": 0.9442, "zT": 0.9186},
+# "5-Fold CV":    {"S": 0.9588, "sigma": 0.9150, "kappa": 0.9444, "zT": 0.9184},
+# "10-Fold CV":   {"S": 0.9595, "sigma": 0.9175, "kappa": 0.9459, "zT": 0.9196},
+
 LADDER_RESULTS = {
-    "Random 80/20":         {"S": 0.9588, "sigma": 0.9152, "kappa": 0.9442, "zT": 0.9186},
-    "5-Fold CV":            {"S": 0.9588, "sigma": 0.9150, "kappa": 0.9444, "zT": 0.9184},
-    "10-Fold CV":           {"S": 0.9595, "sigma": 0.9175, "kappa": 0.9459, "zT": 0.9196},
+    "Random 80/20":         {"S": 0.9582, "sigma": 0.9150, "kappa": 0.9434, "zT": 0.9180},
+    "5-Fold CV":            {"S": 0.9585, "sigma": 0.9152, "kappa": 0.9436, "zT": 0.9181},
+    "10-Fold CV":           {"S": 0.9595, "sigma": 0.9174, "kappa": 0.9455, "zT": 0.9193},
     "Composition CV":       {"S": 0.8322, "sigma": 0.7762, "kappa": 0.8565, "zT": 0.8178},
     "Chemistry-Cluster CV": {"S": 0.7528, "sigma": 0.7020, "kappa": 0.8092, "zT": 0.7456},
 }
@@ -501,12 +525,9 @@ def make_model_comparison(out_path):
 
 def load_ladder_grouped_sd(ladder_metrics_path=LADDER_METRICS_PATH):
     """
-    Across-repeat SD for the composition and chemistry-cluster rungs
-    only (the two grouped rungs with a real repeat structure -- random
-    80/20/5-fold/10-fold run at n_repeats=1, per the frozen decision in
-    CLAUDE.md's Grouping Key section, so there is no spread to report
-    for them). Read from LADDER_METRICS_PATH's own per_repeat_r2_std
-    field, not hardcoded. Returns {"Composition CV": {prop: sd},
+    Across-repeat SD for the composition and chemistry-cluster rungs.
+    Read from LADDER_METRICS_PATH's own per_repeat_r2_std field, not
+    hardcoded. Returns {"Composition CV": {prop: sd},
     "Chemistry-Cluster CV": {prop: sd}}.
     """
     with open(ladder_metrics_path, encoding="utf-8") as f:
@@ -518,7 +539,39 @@ def load_ladder_grouped_sd(ladder_metrics_path=LADDER_METRICS_PATH):
     return sd
 
 
-def make_validation_ladder(out_path, ladder_metrics_path=LADDER_METRICS_PATH):
+LADDER_UNGROUPED_STRATEGY_DIRS = {
+    "Random 80/20": "random_f20", "5-Fold CV": "kfold_f5", "10-Fold CV": "kfold_f10",
+}
+
+
+def load_ladder_ungrouped_sd(ungrouped_dir=UNGROUPED_SNAPFIX_DIR):
+    """
+    Per-draw (random 80/20, 20 draws) or per-fold (5-fold/10-fold) SD for
+    the three ungrouped rungs, computed directly from
+    results/ungrouped_snapfix/20260922T093243/'s saved predictions --
+    not hardcoded, and not read from a precomputed field, since none of
+    these three rungs write one. These runs replaced the
+    unidentified-dataset checkpoints/ladder_regen_dl/ runs on 2026-09-22
+    (see CLAUDE.md's Five-Way Ladder and Canonical Dataset corrections).
+    Returns {"Random 80/20": {prop: sd}, "5-Fold CV": {prop: sd},
+    "10-Fold CV": {prop: sd}}.
+    """
+    sd = {strategy: {} for strategy in LADDER_UNGROUPED_STRATEGY_DIRS}
+    for strategy, dir_suffix in LADDER_UNGROUPED_STRATEGY_DIRS.items():
+        for prop in LADDER_PROPERTIES:
+            run_dir = Path(ungrouped_dir) / f"{prop}_{dir_suffix}"
+            npz_paths = sorted(run_dir.glob("repeat0_fold*_predictions.npz"))
+            per_fold_r2 = []
+            for npz_path in npz_paths:
+                data = np.load(npz_path)
+                per_fold_r2.append(r2_score(data["y_true"], data["y_pred"]))
+            sd[strategy][prop] = float(np.std(per_fold_r2, ddof=1))
+    return sd
+
+
+def make_validation_ladder(
+    out_path, ladder_metrics_path=LADDER_METRICS_PATH, ungrouped_dir=UNGROUPED_SNAPFIX_DIR,
+):
     """
     Figure 2: five-way validation-inflation ladder, grouped bar chart,
     one group per target (S, sigma, kappa, zT), five validation
@@ -529,20 +582,22 @@ def make_validation_ladder(out_path, ladder_metrics_path=LADDER_METRICS_PATH):
     shared PALETTE/HATCH dicts: random 80/20 gets its own concept
     colour, 5-fold and 10-fold both use the "kfold" concept (identical
     colour+hatch), so the three ungrouped rungs still read as "the same,
-    indistinguishable number" (they differ by <0.002) while random 80/20
+    indistinguishable number" (they differ by <0.003) while random 80/20
     is individually addressable (it reappears as a marker in the
-    headroom figure). Composition and chemistry-cluster get their own
-    distinct colours and carry error bars (across-repeat SD, from
-    load_ladder_grouped_sd -- the two ungrouped-adjacent rungs never had
-    error bars before this revision; the three single-pass ungrouped
-    rungs still don't, since n_repeats=1 for them gives no spread to
-    show). A bracket to the right of each group annotates the inflation
-    gap: random 80/20 minus chemistry-cluster, the headline number this
+    headroom figure). All five rungs now carry error bars: composition/
+    chemistry-cluster get across-repeat SD from load_ladder_grouped_sd,
+    random 80/20/5-fold/10-fold get per-draw/per-fold SD from
+    load_ladder_ungrouped_sd (added 2026-09-22 alongside the
+    unidentified-dataset correction -- these three rungs never had error
+    bars before, not because there was no spread to show, but because
+    the per-draw/per-fold structure that produces it wasn't being read).
+    A bracket to the right of each group annotates the inflation gap:
+    random 80/20 minus chemistry-cluster, the headline number this
     ladder exists to report.
     """
     n_props = len(LADDER_PROPERTIES)
     n_strategies = len(LADDER_STRATEGIES)
-    grouped_sd = load_ladder_grouped_sd(ladder_metrics_path)
+    all_sd = {**load_ladder_grouped_sd(ladder_metrics_path), **load_ladder_ungrouped_sd(ungrouped_dir)}
 
     bar_colors = [
         PALETTE["random_split"], PALETTE["kfold"], PALETTE["kfold"],
@@ -572,12 +627,11 @@ def make_validation_ladder(out_path, ladder_metrics_path=LADDER_METRICS_PATH):
                 rect.get_x() + rect.get_width() / 2, h + 0.015, f"{h:.2f}",
                 ha="center", va="bottom", fontsize=7.5, rotation=0,
             )
-        if strategy in grouped_sd:
-            errs = [grouped_sd[strategy][prop] for prop in LADDER_PROPERTIES]
-            ax.errorbar(
-                x, heights, yerr=errs, fmt="none", color="black",
-                capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
-            )
+        errs = [all_sd[strategy][prop] for prop in LADDER_PROPERTIES]
+        ax.errorbar(
+            x, heights, yerr=errs, fmt="none", color="black",
+            capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
+        )
 
     # Inflation-gap bracket: placed clear of the bars, in the gap before
     # the next group, so it never collides with the tightly-packed
@@ -1200,9 +1254,11 @@ def make_actual_vs_predicted(out_path, checkpoint_dir=FIG3_CHECKPOINT_DIR):
 
 # zT parity, random vs chemistry-cluster grouping, shown directly rather
 # than only as a summary R^2. Per-row out-of-fold predictions:
-#   - random 80/20: checkpoints/ladder_regen_dl/zT_random_f20/
-#     (20 outer folds, the same checkpoint directory CLAUDE.md's Five-Way
-#     Ladder table cites for the confirmed 0.9186 ungrouped zT value)
+#   - random 80/20: results/ungrouped_snapfix/20260922T093243/
+#     zT_random_f20/ (20 outer folds, the snapfix-dataset rerun -- see
+#     CLAUDE.md's Five-Way Ladder correction. Previously pointed at
+#     checkpoints/ladder_regen_dl/zT_random_f20/, an unidentified,
+#     non-File-A dataset snapshot; corrected 2026-09-22.)
 #   - chemistry-cluster (snapfix grouping): results/ladder_regen_snapfix/
 #     20260917T150000/zT_chemistry_full/ (25 outer folds = 5 repeats x 5
 #     folds, the checkpoint directory behind the confirmed 0.7456
@@ -1210,7 +1266,7 @@ def make_actual_vs_predicted(out_path, checkpoint_dir=FIG3_CHECKPOINT_DIR):
 # Both R^2 values are recomputed here from the raw predictions (not
 # copied from CLAUDE.md), so this figure is self-verifying; see the
 # printed report in the task response for the exact match confirmation.
-ZT_PARITY_RANDOM_CHECKPOINT_DIR = Path("checkpoints/ladder_regen_dl/zT_random_f20")
+ZT_PARITY_RANDOM_CHECKPOINT_DIR = Path("results/ungrouped_snapfix/20260922T093243/zT_random_f20")
 ZT_PARITY_CHEMISTRY_CHECKPOINT_DIR = Path("results/ladder_regen_snapfix/20260917T150000/zT_chemistry_full")
 
 
