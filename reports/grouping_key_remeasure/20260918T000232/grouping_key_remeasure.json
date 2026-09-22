@@ -1,0 +1,71 @@
+{
+  "generated_at_utc": "20260918T000232",
+  "source_csv": "C:\\Users\\choha\\te-ml-pipeline\\data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+  "n_rows_total": 280173,
+  "total_chemistry_clusters": {
+    "old": 12454,
+    "new": 8908
+  },
+  "unique_formulas": {
+    "old": 17207,
+    "new": 17977
+  },
+  "parent_system_groups": {
+    "old": 3921,
+    "new": 3909
+  },
+  "chemistry_cluster_groups_over_unique_formulas": {
+    "old": 12024,
+    "new": 8908
+  },
+  "crosscutting_clusters": {
+    "old": {
+      "n": 1399,
+      "of": 12024,
+      "pct": 11.6
+    },
+    "new": {
+      "n": 1285,
+      "of": 8908,
+      "pct": 14.4
+    }
+  },
+  "CoSb3": {
+    "old": {
+      "samples": 780,
+      "rows": 9898,
+      "pct_of_fold": 14.5,
+      "parent_systems": 69
+    },
+    "new": {
+      "n_samples": 959,
+      "n_rows": 13185
+    }
+  },
+  "Ca3Co4O9": {
+    "old": {
+      "samples": 548,
+      "rows": 5027,
+      "pct_of_fold": 7.4
+    },
+    "new": {
+      "n_samples": 281,
+      "n_rows": 3239
+    }
+  },
+  "fold_row_counts": {
+    "old_range": [
+      68165,
+      68167
+    ],
+    "new_sizes": [
+      56035,
+      56035,
+      56035,
+      56034,
+      56034
+    ],
+    "new_mean": 56034.6,
+    "new_std": 0.5477225575051661
+  }
+}
