@@ -10,6 +10,7 @@ import json
 import sys
 from pathlib import Path
 
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -26,6 +27,62 @@ from src.plotting_style import (
 )
 
 FIGURES_DIR = Path("figures")
+
+# Shared provenance paths, referenced by more than one figure below.
+LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics.json")
+NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260917T172251/noise_floor_inputs.json")
+DESCRIPTOR_ABLATION_METRICS_PATH = Path("reports/ablation_snapfix/20260918T000111/ablation_metrics.json")
+SHAP_ATTRIBUTION_DIR = Path("results/shap_attribution/20260917T134930")
+ZT_COMBINED_CEILING_LABEL = "zT (vs ZT_author_declared)"
+ZT_HEADROOM_FRACTION_LABEL = "zT (declared)"
+
+# Shared colour-blind-safe palette (Okabe-Ito, the same set as
+# COLORBLIND_PALETTE in src/plotting_style.py) and hatch patterns, one
+# assignment per concept, used identically across every figure in this
+# file so the same concept always reads as the same colour+hatch
+# wherever it appears. Only 7 non-black Okabe-Ito colours are usable as
+# fills (black is reserved project-wide for reference lines/markers, per
+# the convention already set by MODEL_COMPARISON's ceiling line and this
+# figure set's other markers) -- 13 concepts need colours, so 6 concepts
+# below deliberately reuse another concept's colour+hatch pair wholesale.
+# Every reuse is annotated with why it is safe: either the two concepts
+# never appear in the same panel, or (internal/chemistry_cluster) they
+# are literally the same underlying quantity and sharing a colour is the
+# correct read, not a collision.
+PALETTE = {
+    # Primary assignments -- one Okabe-Ito hue each.
+    "random_split": "#56B4E9",        # sky blue
+    "kfold": "#F0E442",               # yellow
+    "composition": "#E69F00",         # orange
+    "chemistry_cluster": "#0072B2",   # blue
+    "magpie": "#CC79A7",              # reddish purple
+    "cbfv": "#009E73",                # bluish green
+    "full_feature_set": "#D55E00",    # vermillion
+    # Reused assignments -- safe because the reused-from concept never
+    # appears in the same panel as this one (or, for "internal", because
+    # it IS chemistry_cluster's quantity under another name).
+    "measurement_noise": "#009E73",   # = cbfv (never co-plotted)
+    "digitization_noise": "#CC79A7",  # = magpie (never co-plotted)
+    "headroom": "#F0E442",            # = kfold (never co-plotted)
+    "internal": "#0072B2",            # = chemistry_cluster (same quantity)
+    "external_fullset": "#E69F00",    # = composition (never co-plotted)
+    "external_insupport": "#D55E00",  # = full_feature_set (never co-plotted)
+}
+HATCH = {
+    "random_split": None,
+    "kfold": "..",
+    "composition": "//",
+    "chemistry_cluster": "xx",
+    "magpie": "\\\\",
+    "cbfv": "||",
+    "full_feature_set": "++",
+    "measurement_noise": "||",        # = cbfv's hatch, paired with its colour reuse
+    "digitization_noise": "\\\\",     # = magpie's hatch, paired with its colour reuse
+    "headroom": "..",                 # = kfold's hatch, paired with its colour reuse
+    "internal": "xx",                 # = chemistry_cluster's hatch (same quantity)
+    "external_fullset": "//",         # = composition's hatch, paired with its colour reuse
+    "external_insupport": "++",       # = full_feature_set's hatch, paired with its colour reuse
+}
 
 # Figure 3: actual-vs-predicted scatter, chemistry-cluster CV, XGBoost.
 # Reads pooled out-of-fold predictions checkpointed from the real Kaggle
@@ -441,29 +498,59 @@ def make_model_comparison(out_path):
     plt.close(fig)
 
 
-def make_validation_ladder(out_path):
+def load_ladder_grouped_sd(ladder_metrics_path=LADDER_METRICS_PATH):
+    """
+    Across-repeat SD for the composition and chemistry-cluster rungs
+    only (the two grouped rungs with a real repeat structure -- random
+    80/20/5-fold/10-fold run at n_repeats=1, per the frozen decision in
+    CLAUDE.md's Grouping Key section, so there is no spread to report
+    for them). Read from LADDER_METRICS_PATH's own per_repeat_r2_std
+    field, not hardcoded. Returns {"Composition CV": {prop: sd},
+    "Chemistry-Cluster CV": {prop: sd}}.
+    """
+    with open(ladder_metrics_path, encoding="utf-8") as f:
+        ladder_metrics = json.load(f)
+    sd = {"Composition CV": {}, "Chemistry-Cluster CV": {}}
+    for prop in LADDER_PROPERTIES:
+        sd["Composition CV"][prop] = ladder_metrics["runs"][f"{prop}_composition_full"]["per_repeat_r2_std"]
+        sd["Chemistry-Cluster CV"][prop] = ladder_metrics["runs"][f"{prop}_chemistry_full"]["per_repeat_r2_std"]
+    return sd
+
+
+def make_validation_ladder(out_path, ladder_metrics_path=LADDER_METRICS_PATH):
     """
     Figure 2: five-way validation-inflation ladder, grouped bar chart,
     one group per target (S, sigma, kappa, zT), five validation
     strategies per group (random 80/20, 5-fold, 10-fold, composition,
     chemistry-cluster), pooled out-of-fold R^2, frozen hyperparameters
     reused unchanged across every rung -- see CLAUDE.md "Confirmed
-    Results -- Five-Way Ladder". The three ungrouped rungs (random/
-    5-fold/10-fold) are shaded with similar grays to visually read as
-    "the same, indistinguishable number" (they differ by <0.002);
-    composition and chemistry-cluster get distinct, increasingly bold
-    colors to mark the two real drops. A bracket to the right of each
-    group annotates the inflation gap: random 80/20 minus chemistry-
-    cluster, the headline number this ladder exists to report.
+    Results -- Five-Way Ladder". Colours and hatches come from the
+    shared PALETTE/HATCH dicts: random 80/20 gets its own concept
+    colour, 5-fold and 10-fold both use the "kfold" concept (identical
+    colour+hatch), so the three ungrouped rungs still read as "the same,
+    indistinguishable number" (they differ by <0.002) while random 80/20
+    is individually addressable (it reappears as a marker in the
+    headroom figure). Composition and chemistry-cluster get their own
+    distinct colours and carry error bars (across-repeat SD, from
+    load_ladder_grouped_sd -- the two ungrouped-adjacent rungs never had
+    error bars before this revision; the three single-pass ungrouped
+    rungs still don't, since n_repeats=1 for them gives no spread to
+    show). A bracket to the right of each group annotates the inflation
+    gap: random 80/20 minus chemistry-cluster, the headline number this
+    ladder exists to report.
     """
     n_props = len(LADDER_PROPERTIES)
     n_strategies = len(LADDER_STRATEGIES)
+    grouped_sd = load_ladder_grouped_sd(ladder_metrics_path)
 
-    # Grays for the three statistically-indistinguishable ungrouped
-    # rungs, then a distinct orange for composition, then blue for
-    # chemistry-cluster (same blue MODEL_COMPARISON_RESULTS uses for
-    # XGBoost's honest number, tying the two figures together).
-    bar_colors = ["#c7c7c7", "#999999", "#636363", "#E69F00", "#0072B2"]
+    bar_colors = [
+        PALETTE["random_split"], PALETTE["kfold"], PALETTE["kfold"],
+        PALETTE["composition"], PALETTE["chemistry_cluster"],
+    ]
+    bar_hatches = [
+        HATCH["random_split"], HATCH["kfold"], HATCH["kfold"],
+        HATCH["composition"], HATCH["chemistry_cluster"],
+    ]
 
     fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=11.5, panel_height=5.5))
 
@@ -476,12 +563,19 @@ def make_validation_ladder(out_path):
         x = group_centers + offsets[i]
         bars = ax.bar(
             x, heights, width=bar_width * 0.92,
-            color=bar_colors[i], label=strategy, edgecolor="white", linewidth=0.5,
+            color=bar_colors[i], hatch=bar_hatches[i], label=strategy,
+            edgecolor="black", linewidth=0.5, zorder=2,
         )
         for rect, h in zip(bars, heights):
             ax.text(
                 rect.get_x() + rect.get_width() / 2, h + 0.015, f"{h:.2f}",
                 ha="center", va="bottom", fontsize=7.5, rotation=0,
+            )
+        if strategy in grouped_sd:
+            errs = [grouped_sd[strategy][prop] for prop in LADDER_PROPERTIES]
+            ax.errorbar(
+                x, heights, yerr=errs, fmt="none", color="black",
+                capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
             )
 
     # Inflation-gap bracket: placed clear of the bars, in the gap before
@@ -531,25 +625,26 @@ def make_validation_ladder(out_path):
 # call time -- no hardcoded R^2, SD, or ceiling values -- per the task
 # instruction not to hardcode numbers.
 #   - grouped (chemistry-cluster) R^2 and across-repeat SD:
-#     reports/regen_snapfix/20260917T150000/ladder_metrics.json
-#     ("<target>_chemistry_full" runs, per_repeat_r2_mean/_std)
+#     LADDER_METRICS_PATH ("<target>_chemistry_full" runs,
+#     per_repeat_r2_mean/_std)
 #   - ungrouped random 80/20 R^2: LADDER_RESULTS above (already the
 #     confirmed CLAUDE.md value, corrected 2026-09-22)
 #   - measurement-only ceiling (R^2_max) and combined (measurement +
-#     digitization) ceiling: results/noise_floor/20260917T172251/
-#     noise_floor_inputs.json ("item3_combined_ceiling_new")
+#     digitization) ceiling: NOISE_FLOOR_INPUTS_PATH
+#     ("item3_combined_ceiling_new")
 # Combined ceiling uses the LOWER bound (r2_comb_lower), which gives the
 # smallest headroom and is therefore the conservative choice for the
 # paper's claim -- the upper bound would overstate how much of the gap to
 # perfect prediction is theoretically closeable. For zT, the
 # "zT (vs ZT_author_declared)" row is used, not the recomputed-TEP row.
-HEADROOM_LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics.json")
-HEADROOM_NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260917T172251/noise_floor_inputs.json")
+# Colours/hatches: "achieved" reuses the "internal" palette concept (it IS
+# the internal chemistry-cluster R^2), "headroom"/"digitization_noise"/
+# "measurement_noise" use their own PALETTE/HATCH entries -- see the
+# module-level PALETTE comment for why these are safe colour reuses.
 HEADROOM_PROPERTIES = ["S", "sigma", "kappa", "zT"]
 HEADROOM_PROPERTY_LABELS = [
     "S", "$\\sigma$ (log$_{10}$)", "$\\kappa$ (log$_{10}$)", "zT",
 ]
-HEADROOM_ZT_COMBINED_LABEL = "zT (vs ZT_author_declared)"
 
 HEADROOM_SEGMENT_ORDER = ["achieved", "headroom", "digitization", "measurement"]
 HEADROOM_SEGMENT_DISPLAY_NAMES = {
@@ -558,26 +653,19 @@ HEADROOM_SEGMENT_DISPLAY_NAMES = {
     "digitization": "Digitization noise",
     "measurement": "Measurement noise",
 }
-# Greyscale, hatched fills -- distinguishable without color, per the print
-# constraint -- darkest for the real, achieved signal, lightening toward
-# the unreachable measurement-noise segment.
-HEADROOM_SEGMENT_COLORS = {
-    "achieved": "#4d4d4d",
-    "headroom": "#999999",
-    "digitization": "#cccccc",
-    "measurement": "#eaeaea",
+HEADROOM_SEGMENT_PALETTE_KEY = {
+    "achieved": "internal",
+    "headroom": "headroom",
+    "digitization": "digitization_noise",
+    "measurement": "measurement_noise",
 }
-HEADROOM_SEGMENT_HATCHES = {
-    "achieved": None,
-    "headroom": "//",
-    "digitization": "xx",
-    "measurement": "..",
-}
+HEADROOM_SEGMENT_COLORS = {name: PALETTE[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
+HEADROOM_SEGMENT_HATCHES = {name: HATCH[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
 
 
 def load_headroom_data(
-    ladder_metrics_path=HEADROOM_LADDER_METRICS_PATH,
-    noise_floor_inputs_path=HEADROOM_NOISE_FLOOR_INPUTS_PATH,
+    ladder_metrics_path=LADDER_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
 ):
     """
     Assemble the four segment boundaries (achieved / headroom /
@@ -616,7 +704,7 @@ def load_headroom_data(
 
         ungrouped_r2 = LADDER_RESULTS["Random 80/20"][prop]
 
-        combined_label = HEADROOM_ZT_COMBINED_LABEL if prop == "zT" else prop
+        combined_label = ZT_COMBINED_CEILING_LABEL if prop == "zT" else prop
         combined_entry = combined_by_label[combined_label]
         r2_comb_lower = combined_entry["r2_comb_lower"]
         r2_meas = combined_entry["r2_meas"]
@@ -645,8 +733,8 @@ def load_headroom_data(
 
 def make_headroom_decomposition(
     out_path,
-    ladder_metrics_path=HEADROOM_LADDER_METRICS_PATH,
-    noise_floor_inputs_path=HEADROOM_NOISE_FLOOR_INPUTS_PATH,
+    ladder_metrics_path=LADDER_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
 ):
     """
     Figure 5: one horizontal stacked bar per property (S, sigma, kappa,
@@ -705,7 +793,8 @@ def make_headroom_decomposition(
         ax.plot(
             [d["ungrouped_r2"], d["ungrouped_r2"]],
             [y - bar_height / 2 - 0.04, y + bar_height / 2 + 0.04],
-            color="black", linestyle="--", linewidth=1.8, zorder=6, label=marker_label,
+            color=PALETTE["random_split"], linestyle="--", linewidth=2.2, zorder=6,
+            path_effects=[pe.withStroke(linewidth=3.6, foreground="black")], label=marker_label,
         )
         marker_labeled = True
 
@@ -727,6 +816,274 @@ def make_headroom_decomposition(
         columnspacing=1.2, handletextpad=0.6,
     )
     fig.subplots_adjust(bottom=0.32)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
+# SHAP attribution shares: random vs chemistry-cluster split, coarse (3)
+# and fine (10) descriptor-semantic groups. Source: SHAP_ATTRIBUTION_DIR
+# ("results/shap_attribution/20260917T134930/summary.json"), the 25-fold
+# (5 repeats x 5 outer folds per arm) regeneration -- see CLAUDE.md's SHAP
+# Attribution Comparison section. Reads summary.json's own
+# coarse_group_comparison/fine_group_comparison lists directly (mean
+# share, across-fold SD, and delta_in_pooled_sd_units per group); nothing
+# here is hardcoded. random_split/chemistry_cluster colours from PALETTE,
+# used identically to the ladder and headroom figures.
+SHAP_COARSE_ORDER = ["cbfv", "magpie", "temperature"]
+SHAP_COARSE_LABELS = {"cbfv": "CBFV", "magpie": "MAGPIE", "temperature": "Temperature"}
+
+
+def load_shap_group_data(shap_dir=SHAP_ATTRIBUTION_DIR):
+    """
+    Load coarse and fine SHAP attribution-share group comparisons from
+    summary.json. Returns (coarse_rows, fine_rows, max_delta_row), each
+    row a dict with group/random_mean_share/random_sd/
+    chemistry_mean_share/chemistry_sd/delta_in_pooled_sd_units. fine_rows
+    is sorted by descending mean of the two arms' shares. max_delta_row
+    is the fine-group row with the largest |delta_in_pooled_sd_units|.
+    """
+    with open(shap_dir / "summary.json", encoding="utf-8") as f:
+        summary = json.load(f)
+
+    coarse_by_group = {row["group"]: row for row in summary["coarse_group_comparison"]}
+    coarse_rows = [coarse_by_group[g] for g in SHAP_COARSE_ORDER]
+
+    fine_rows = sorted(
+        summary["fine_group_comparison"],
+        key=lambda row: (row["random_mean_share"] + row["chemistry_mean_share"]) / 2,
+        reverse=True,
+    )
+    max_delta_row = max(fine_rows, key=lambda row: abs(row["delta_in_pooled_sd_units"]))
+    return coarse_rows, fine_rows, max_delta_row
+
+
+def _plot_shap_paired_bars(ax, rows, group_labels, horizontal):
+    """Shared paired-bar drawing for both SHAP panels (random vs chemistry)."""
+    n = len(rows)
+    positions = np.arange(n)
+    bar_width = 0.36
+    random_vals = [row["random_mean_share"] for row in rows]
+    random_errs = [row["random_sd"] for row in rows]
+    chemistry_vals = [row["chemistry_mean_share"] for row in rows]
+    chemistry_errs = [row["chemistry_sd"] for row in rows]
+
+    if horizontal:
+        ax.barh(
+            positions + bar_width / 2, random_vals, height=bar_width, xerr=random_errs,
+            color=PALETTE["random_split"], hatch=HATCH["random_split"], edgecolor="black",
+            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Random 80/20",
+        )
+        ax.barh(
+            positions - bar_width / 2, chemistry_vals, height=bar_width, xerr=chemistry_errs,
+            color=PALETTE["chemistry_cluster"], hatch=HATCH["chemistry_cluster"], edgecolor="black",
+            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Chemistry-Cluster CV",
+        )
+        ax.set_yticks(positions)
+        ax.set_yticklabels(group_labels)
+        ax.set_xlabel("Mean |SHAP| share")
+    else:
+        ax.bar(
+            positions - bar_width / 2, random_vals, width=bar_width, yerr=random_errs,
+            color=PALETTE["random_split"], hatch=HATCH["random_split"], edgecolor="black",
+            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Random 80/20",
+        )
+        ax.bar(
+            positions + bar_width / 2, chemistry_vals, width=bar_width, yerr=chemistry_errs,
+            color=PALETTE["chemistry_cluster"], hatch=HATCH["chemistry_cluster"], edgecolor="black",
+            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Chemistry-Cluster CV",
+        )
+        ax.set_xticks(positions)
+        ax.set_xticklabels(group_labels)
+        ax.set_ylabel("Mean |SHAP| share")
+
+
+def make_shap_attribution(out_path, shap_dir=SHAP_ATTRIBUTION_DIR):
+    """
+    SHAP attribution shares, random vs chemistry-cluster split. Left
+    panel: three coarse families (CBFV, MAGPIE, temperature), paired
+    vertical bars. Right panel: ten fine semantic groups, paired
+    horizontal bars sorted by mean share. Error bars are across-fold SD
+    (25 folds per arm). No significance stars -- the visual point is
+    that every pair overlaps within its error bars, i.e. attribution
+    shares are indistinguishable between split strategies despite the
+    large R^2 gap the ladder figure shows. The largest fine-group delta
+    (valence_electron_config) is annotated in pooled fold-SD units.
+    """
+    coarse_rows, fine_rows, max_delta_row = load_shap_group_data(shap_dir)
+
+    fig, (ax_left, ax_right) = plt.subplots(
+        1, 2, figsize=get_figsize(1, 2, panel_width=6.0, panel_height=5.2),
+    )
+
+    coarse_labels = [SHAP_COARSE_LABELS[row["group"]] for row in coarse_rows]
+    _plot_shap_paired_bars(ax_left, coarse_rows, coarse_labels, horizontal=False)
+    add_panel_label(ax_left, "a")
+
+    fine_labels = [row["group"].replace("_", " ") for row in fine_rows]
+    _plot_shap_paired_bars(ax_right, fine_rows, fine_labels, horizontal=True)
+    ax_right.invert_yaxis()
+    add_panel_label(ax_right, "b")
+
+    max_delta_idx = fine_rows.index(max_delta_row)
+    y_pos = max_delta_idx
+    ax_right.annotate(
+        f"Largest group delta: {max_delta_row['group'].replace('_', ' ')},\n"
+        f"{abs(max_delta_row['delta_in_pooled_sd_units']):.2f} pooled fold-SD",
+        xy=(max(max_delta_row["random_mean_share"], max_delta_row["chemistry_mean_share"]), y_pos),
+        xytext=(0.60, y_pos - 2.0 if y_pos < len(fine_rows) - 2 else y_pos + 1.5),
+        textcoords="data", fontsize=8, ha="left", va="center",
+        arrowprops=dict(arrowstyle="-", color="black", lw=0.8),
+    )
+
+    handles, labels = ax_left.get_legend_handles_labels()
+    fig.legend(
+        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
+        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
+        columnspacing=1.2, handletextpad=0.6,
+    )
+    fig.subplots_adjust(bottom=0.16, wspace=0.35)
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
+# Descriptor ablation against the label-noise ceiling. 2x2 panels, one per
+# target (S, sigma, kappa, zT). Sources:
+#   - per-feature-set R^2 (magpie/cbfv/full) and across-repeat SD:
+#     DESCRIPTOR_ABLATION_METRICS_PATH
+#     ("<target>.<magpie|cbfv|full>.per_repeat_r2_mean/_std")
+#   - combined ceiling band and the full-minus-magpie headroom fraction:
+#     NOISE_FLOOR_INPUTS_PATH ("item3_combined_ceiling_new" for the
+#     band, "item5_descriptor_ablation_headroom_fractions_new" for the
+#     delta and fraction-of-headroom-closed annotation -- both read
+#     directly rather than recomputed here, since the latter already
+#     encodes the same rounded-confirmed-R^2 convention the headroom
+#     figure's load_headroom_data had to reconcile by hand). zT uses the
+#     "zT (vs ZT_author_declared)" combined-ceiling row and the
+#     "zT (declared)" fraction row, matching the headroom figure's choice.
+DESCRIPTOR_ABLATION_PROPERTIES = ["S", "sigma", "kappa", "zT"]
+DESCRIPTOR_ABLATION_PROPERTY_LABELS = {
+    "S": "S", "sigma": "$\\sigma$ (log$_{10}$)", "kappa": "$\\kappa$ (log$_{10}$)", "zT": "zT",
+}
+DESCRIPTOR_ABLATION_FEATURE_SETS = ["magpie", "cbfv", "full"]
+DESCRIPTOR_ABLATION_FEATURE_COUNTS = {"magpie": 133, "cbfv": 265, "full": 397}
+
+
+def load_descriptor_ablation_data(
+    ablation_metrics_path=DESCRIPTOR_ABLATION_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    Assemble per-target feature-count/R^2/SD triples, the combined-
+    ceiling band, and the full-minus-magpie delta/headroom-fraction
+    annotation, from the two committed artifacts named in the
+    module-level comment above. Returns {property: {feature_counts,
+    r2_values, r2_sd, band_lower, band_upper, delta, fraction_pct}}.
+
+    delta and fraction_pct are NOT read from noise_floor_inputs.json's
+    own item5_descriptor_ablation_headroom_fractions_new field -- that
+    field's delta values (S=0.0064, zT=0.0050) don't match
+    ablation_metrics.json's own deltas_full_minus_magpie (S=0.0065,
+    zT=0.0049), which do match CLAUDE.md's published deltas exactly.
+    Instead, delta comes from ablation_metrics.json directly, and
+    fraction_pct is recomputed from that delta against item3's own
+    headroom_lower/headroom_upper bounds (the same bounds the band uses)
+    -- this reproduces CLAUDE.md's published fraction ranges (e.g. S
+    2.86%-3.10%) exactly, where item5's stale field does not.
+    """
+    with open(ablation_metrics_path, encoding="utf-8") as f:
+        ablation = json.load(f)
+    with open(noise_floor_inputs_path, encoding="utf-8") as f:
+        noise_floor = json.load(f)
+
+    combined_by_label = {
+        entry["label"]: entry for entry in noise_floor["item3_combined_ceiling_new"]
+    }
+    deltas_full_minus_magpie = ablation["deltas_full_minus_magpie"]
+
+    data = {}
+    for prop in DESCRIPTOR_ABLATION_PROPERTIES:
+        entry = ablation[prop]
+        r2_values = [entry[fs]["per_repeat_r2_mean"] for fs in DESCRIPTOR_ABLATION_FEATURE_SETS]
+        r2_sd = [entry[fs]["per_repeat_r2_std"] for fs in DESCRIPTOR_ABLATION_FEATURE_SETS]
+
+        combined_label = ZT_COMBINED_CEILING_LABEL if prop == "zT" else prop
+        combined_entry = combined_by_label[combined_label]
+        delta = deltas_full_minus_magpie[prop]
+        headroom_lower = combined_entry["headroom_lower"]
+        headroom_upper = combined_entry["headroom_upper"]
+
+        data[prop] = {
+            "feature_counts": [DESCRIPTOR_ABLATION_FEATURE_COUNTS[fs] for fs in DESCRIPTOR_ABLATION_FEATURE_SETS],
+            "r2_values": r2_values,
+            "r2_sd": r2_sd,
+            "band_lower": combined_entry["r2_comb_lower"],
+            "band_upper": combined_entry["r2_comb_upper"],
+            "delta": delta,
+            "fraction_pct": (100 * delta / headroom_upper, 100 * delta / headroom_lower),
+        }
+    return data
+
+
+def make_descriptor_ablation(
+    out_path,
+    ablation_metrics_path=DESCRIPTOR_ABLATION_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    2x2 panels, one per target. Each panel: three points (magpie=133,
+    cbfv=265, full=397 features) with across-repeat SD error bars,
+    connected by a line (chemistry_cluster/"internal" colour, since
+    every point here is a chemistry-cluster grouped R^2), plus a shaded
+    horizontal band at the combined label-noise ceiling range
+    ("headroom" colour). Y axis spans from just below the lowest point
+    to 1.0, so the gap between the points and the band -- the dominant
+    visual -- is what the reader sees. Each panel is annotated with the
+    full-minus-magpie delta and the fraction of headroom it closes.
+    """
+    data = load_descriptor_ablation_data(ablation_metrics_path, noise_floor_inputs_path)
+
+    fig, axes = plt.subplots(2, 2, figsize=get_figsize(2, 2, panel_width=4.6, panel_height=4.0))
+    panel_letters = ["a", "b", "c", "d"]
+
+    for ax, prop, letter in zip(axes.flat, DESCRIPTOR_ABLATION_PROPERTIES, panel_letters):
+        d = data[prop]
+        x = d["feature_counts"]
+
+        ax.axhspan(
+            d["band_lower"], d["band_upper"], color=PALETTE["headroom"], alpha=0.35,
+            zorder=1, label="Combined ceiling range" if prop == "S" else None,
+        )
+        ax.errorbar(
+            x, d["r2_values"], yerr=d["r2_sd"], color=PALETTE["chemistry_cluster"],
+            marker="o", markersize=5, linewidth=1.6, capsize=3, elinewidth=1.1, capthick=1.1,
+            zorder=3, label="Chemistry-cluster R$^2$" if prop == "S" else None,
+        )
+
+        y_low = min(d["r2_values"]) - max(d["r2_sd"]) - 0.02
+        ax.set_ylim(y_low, 1.0)
+        ax.set_xlim(min(x) - 40, max(x) + 40)
+        ax.set_xticks(x)
+        ax.set_xlabel("Number of features")
+        ax.set_ylabel(f"R$^2$ ({DESCRIPTOR_ABLATION_PROPERTY_LABELS[prop]})")
+
+        fraction_lo, fraction_hi = d["fraction_pct"]
+        annotation_y = (max(d["r2_values"]) + d["band_lower"]) / 2
+        ax.text(
+            sum(x) / len(x), annotation_y,
+            f"full - magpie = {d['delta']:.4f}\ncloses {fraction_lo:.1f}-{fraction_hi:.1f}% of headroom",
+            ha="center", va="center", fontsize=8,
+            bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5, alpha=0.9),
+            zorder=4,
+        )
+        add_panel_label(ax, letter)
+
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    fig.legend(
+        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
+        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
+        columnspacing=1.2, handletextpad=0.6,
+    )
+    fig.subplots_adjust(bottom=0.13, hspace=0.38, wspace=0.35)
     save_figure(fig, out_path)
     plt.close(fig)
 
@@ -850,6 +1207,12 @@ def main():
 
     make_headroom_decomposition(FIGURES_DIR / "fig5_headroom")
     print("Saved fig5_headroom.png / .pdf")
+
+    make_shap_attribution(FIGURES_DIR / "shap_attribution")
+    print("Saved shap_attribution.png / .pdf")
+
+    make_descriptor_ablation(FIGURES_DIR / "descriptor_ablation")
+    print("Saved descriptor_ablation.png / .pdf")
 
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
