@@ -313,7 +313,7 @@ Honest grouped performance of 0.70 to 0.81 is only interpretable against some no
 
 
 
-\*\*Measurement noise.\*\* Alleno et al. report relative uncertainties from a round-robin in which the same specimen was measured by multiple laboratories: approximately 6% for the Seebeck coefficient, 8% for electrical conductivity, 11% for thermal conductivity and 17 to 19% for the figure of merit. Converting each to a noise variance and dividing by this dataset's own property variance in the matched space gives R²max = 1 − σ²noise/σ²total: 0.9974 for S, 0.9968 for σ, 0.9777 for κ and 0.9786 for zT. This estimate rests on a single skutterudite compound and excludes any error introduced by reading values from published figures.
+\*\*Measurement noise.\*\* Alleno et al. report relative uncertainties from a round-robin in which the same specimen was measured by multiple laboratories: approximately 6% for the Seebeck coefficient, 8% for electrical conductivity, 11% for thermal conductivity and 19% for the figure of merit. Converting each to a noise variance and dividing by this dataset's own property variance in the matched space gives R²max = 1 − σ²noise/σ²total: 0.9974 for S, 0.9968 for σ, 0.9777 for κ and 0.9761 for zT. This estimate rests on a single skutterudite compound and excludes any error introduced by reading values from published figures.
 
 
 
@@ -349,9 +349,9 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 | κ | 0.9777 | 0.9833–0.9916 | 0.9609–0.9693 | 0.8092 | 0.152–0.160 |
 
-| zT (declared) | 0.9786 | 0.9807–0.9903 | 0.9593–0.9689 | 0.7456 | 0.214–0.223 |
+| zT (declared) | 0.9761 | 0.9807–0.9903 | 0.9568–0.9665 | 0.7456 | 0.211–0.221 |
 
-| zT (recomputed) | 0.9786 | 0.9839–0.9919 | 0.9624–0.9705 | 0.7456 | 0.217–0.225 |
+| zT (recomputed) | 0.9761 | 0.9839–0.9919 | 0.9600–0.9680 | 0.7456 | 0.214–0.222 |
 
 
 

@@ -6,7 +6,7 @@ four properties) and in linear space (all four properties too, added so
 S/zT can be compared apples-to-apples against their linear-space
 confirmed R^2 -- see PAPER_SCALE), using the Alleno et al. 2015
 round-robin uncertainties as the noise reference (S ~6%, sigma ~8%,
-kappa ~11%, zT ~17-19%) and this dataset's actual property variance
+kappa ~11%, zT 19%) and this dataset's actual property variance
 (log or raw, matching scale) for sigma_total. report() prints both
 scales for every property, plus a "paper" column selecting whichever
 scale matches how each property's confirmed chemistry-cluster R^2 was
@@ -27,13 +27,15 @@ PROPERTIES = ["S", "sigma", "kappa", "zT"]
 # Round-robin relative measurement uncertainties from ONE skutterudite
 # compound -- used here as an inference/lower-bound analogy for this
 # dataset's noise floor, not a direct per-dataset measurement (see
-# CLAUDE.md Paper A item 3). zT is reported as a 17-19% range; the
-# midpoint 0.18 is used as the point estimate.
+# CLAUDE.md Paper A item 3). zT's value corrected 2026-09-23: Alleno et
+# al. report a single temperature-averaged value of 19% for zT at 68%
+# confidence over 300-700 K, not a 17-19% range -- that range had no
+# support in the source and is removed.
 RELATIVE_UNCERTAINTY = {
     "S": 0.06,
     "sigma": 0.08,
     "kappa": 0.11,
-    "zT": 0.18,
+    "zT": 0.19,
 }
 
 # Frozen chemistry-cluster pooled out-of-fold R^2, read directly from the

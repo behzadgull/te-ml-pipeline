@@ -1239,6 +1239,25 @@ Replacement table:
 | kappa | log10 | 0.9776 | 0.8092 | 0.168 |
 | zT | linear | 0.9785 | 0.7456 | 0.233 |
 
+**SUPERSEDED 2026-09-23: the zT row above, and the R²_max-verified-
+unchanged claim as it applies to zT.** `src/noise_floor.py`'s
+`RELATIVE_UNCERTAINTY["zT"]` was 0.18, justified by a comment claiming
+Alleno et al. report zT as a "17-19% range" with 0.18 as its midpoint.
+That range has no support in the source: Alleno et al. 2015 (Rev. Sci.
+Instrum. 86:011301) report a single temperature-averaged value of 19%
+for zT at 68% confidence over 300-700K, not a range. Corrected to 0.19.
+S, sigma, and kappa's uncertainties (6%/8%/11%) were already correct and
+are untouched; rerun confirmed their R²_max cells are bit-identical to
+the row above (`results/noise_floor/20260923T093313/
+noise_floor_inputs.json`, `item1_deltas_vs_20260917T172251` all exactly
+0.0 for S/sigma/kappa). Only zT's R²_max moves, from a cause unrelated
+to the grouping fixes the "verified unchanged, 2026-09-19" note above
+was about. Replacement zT row:
+
+| Target | Scale | R²_max | Confirmed ceiling | Headroom |
+|---|---|---|---|---|
+| zT | linear | 0.9761 | 0.7456 | 0.231 |
+
 Confirmed ceiling = the chemistry-cluster mean from
 `results/ladder_regen_snapfix/20260917T150000/
 {S,sigma,kappa,zT}_chemistry_full/` (see the Five-Way Ladder section's
@@ -1339,6 +1358,22 @@ provenance in
 `results/noise_floor/20260917T172251/noise_floor_inputs.json` and
 `results/noise_floor/20260917T172251/combined_ceiling_snapfix.md`.
 
+**SUPERSEDED 2026-09-23: the two zT rows above.** `src/noise_floor.py`
+used relative_uncertainty=0.18 for zT, sourced from a comment claiming
+Alleno et al. report zT as a "17-19% range" -- unsupported by the
+source, which gives a single value, 19% (temperature-averaged, 68%
+confidence, 300-700K). Corrected to 0.19; S, sigma and kappa are
+untouched (6%/8%/11%, already correct, rerun confirmed bit-identical).
+R2_max(measurement) for zT: 0.9785 -> 0.9761. Replacement rows:
+
+| Target | R2_max (Alleno, measurement) | Digitization ceiling | Combined | Confirmed | Headroom |
+|---|---|---|---|---|---|
+| zT (vs ZT_author_declared) | 0.9761 | 0.981-0.990 | 0.957-0.966 | 0.7456 | 0.2112-0.2209 |
+| zT (vs recomputed alpha^2*T/(rho*kappa)) | 0.9761 | 0.984-0.992 | 0.960-0.968 | 0.7456 | 0.2144-0.2224 |
+
+Full arithmetic and provenance in
+`results/noise_floor/20260923T093313/noise_floor_inputs.json`.
+
 ## Confirmed Results — Descriptor Ablation (2026-09-12)
 
 **Method**: chemistry-cluster split only (the honest-ceiling rung, not
@@ -1423,6 +1458,14 @@ see the Five-Way Ladder and COMBINED CEILING tables' 2026-09-19 updates.
 New fractions, against the NEW headroom: S 2.86%-3.10%, sigma
 3.52%-3.63%, kappa 3.97%-4.19%, zT 2.21%-2.31% (declared) or
 2.20%-2.28% (recomputed TEP).
+
+**SUPERSEDED 2026-09-23: the zT fraction above.** The zT headroom
+denominator moved (COMBINED CEILING table's 2026-09-23 correction to
+zT's Alleno relative uncertainty, 18%->19%); the delta (full-minus-
+magpie, +0.0049) is unchanged, since it doesn't depend on the
+noise-floor uncertainty at all. New zT fraction: **2.24%-2.34%
+(declared) or 2.22%-2.30% (recomputed TEP)**. S/sigma/kappa fractions
+above are unaffected (that constant only covers zT) and remain current.
 
 Full descriptor coverage over magpie-only closes under 5% of headroom
 on every target; the conclusion is the same one reached against the

@@ -31,7 +31,7 @@ FIGURES_DIR = Path("figures")
 
 # Shared provenance paths, referenced by more than one figure below.
 LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics.json")
-NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260917T172251/noise_floor_inputs.json")
+NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260923T093313/noise_floor_inputs.json")
 DESCRIPTOR_ABLATION_METRICS_PATH = Path("reports/ablation_snapfix/20260918T000111/ablation_metrics.json")
 SHAP_ATTRIBUTION_DIR = Path("results/shap_attribution/20260917T134930")
 UNGROUPED_SNAPFIX_DIR = Path("results/ungrouped_snapfix/20260922T093243")
