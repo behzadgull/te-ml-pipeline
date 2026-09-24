@@ -1,0 +1,277 @@
+{
+  "generated_at_utc": "2026-09-23T20:25:51Z",
+  "purpose": "Row-alignment fix, 2026-09-24: src/noise_floor.py's sigma_total (and sigma_noise_linear's median) now computed per-target from load_aligned_target_values() -- the featurized CSV via src.nested_cv.load_target_data(), exactly the rows the chemistry-cluster ladder rung scored (n asserted equal to LADDER_N_ROWS) -- not the cleaned CSV's own slightly larger notna/positive row set. Also fixes: (a) CONFIRMED_CHEMISTRY_CLUSTER_R2 was stale pre-grouping-fix values, now matches CLAUDE.md's current chemistry-cluster column; (b) the prior (20260923T093313) artifact's item5 delta sub-field was the 4-decimal-rounded ablation delta for S/sigma/kappa, not the full-precision value from ablation_metrics.json -- this shifted the displayed fraction range across a rounding boundary for S and kappa. Net numeric effect of the row-alignment itself: <=0.0001 on every R2max cell, <=0.0003 percentage points on every ablation fraction -- see item1_deltas and item5 below.",
+  "input_dataset": {
+    "cleaned_csv": "checkpoints/saved_predictions/te-ml-pipeline/data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv",
+    "cleaned_csv_sha256": "0275c5088521580a1156acf2078f77f0eb7d4a8c6b4e724864f0de0875d8a393",
+    "featurized_csv_for_alignment": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "featurized_csv_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "ladder_n_rows": {
+      "S": 185064,
+      "sigma": 182755,
+      "kappa": 121110,
+      "zT": 129419
+    }
+  },
+  "item1_rerun_results": {
+    "S": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 0.06,
+        "sigma_total": 0.9021649747700596,
+        "r2_max": 0.9955768611149716,
+        "n_used": 185056,
+        "n_dropped_nonpositive": 8
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.06,
+        "sigma_noise": 8.988,
+        "sigma_total": 176.90127662980115,
+        "r2_max": 0.9974185471721926,
+        "n_used": 185064,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "sigma": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 0.08,
+        "sigma_total": 1.4081551063598385,
+        "r2_max": 0.9967724053626453,
+        "n_used": 182755,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.08,
+        "sigma_noise": 3620.9384000000005,
+        "sigma_total": 129513.75688929699,
+        "r2_max": 0.9992183533510339,
+        "n_used": 182755,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "kappa": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.11,
+        "sigma_total": 0.7363143538511433,
+        "r2_max": 0.9776818168734485,
+        "n_used": 121110,
+        "n_dropped_nonpositive": 0
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.11,
+        "sigma_noise": 0.2196917525,
+        "sigma_total": 1.9831879781322261,
+        "r2_max": 0.9877284408713296,
+        "n_used": 121110,
+        "n_dropped_nonpositive": 0
+      }
+    },
+    "zT": {
+      "log": {
+        "scale": "log",
+        "relative_uncertainty": 0.19,
+        "sigma_noise": 0.19,
+        "sigma_total": 1.4790716598035027,
+        "r2_max": 0.9834982968435654,
+        "n_used": 129368,
+        "n_dropped_nonpositive": 51
+      },
+      "linear": {
+        "scale": "linear",
+        "relative_uncertainty": 0.19,
+        "sigma_noise": 0.06004,
+        "sigma_total": 0.3882403237062859,
+        "r2_max": 0.9760844657896228,
+        "n_used": 129419,
+        "n_dropped_nonpositive": 0
+      }
+    }
+  },
+  "item1_deltas_vs_20260923T093313": {
+    "S": -8.672264431019983e-07,
+    "sigma": -1.1673924528166069e-06,
+    "kappa": -6.133026859700408e-07,
+    "zT": -2.8779077997143077e-05
+  },
+  "item1_max_abs_delta": 2.8779077997143077e-05,
+  "item1_note": "Row-alignment vs the prior (already zT-corrected) run -- all deltas at or below the noise floor's own display precision.",
+  "item2_digitization_ceiling": {
+    "source": "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json, C3_composition_matched_digitization_agreement.N3_label_agreement_300_800K",
+    "values": {
+      "S": 0.963899259221547,
+      "sigma": 0.9839656690808817,
+      "kappa": 0.9832620077389838,
+      "zT_declared": 0.9806887300257047,
+      "zT_tep": 0.9838674427230542
+    }
+  },
+  "confirmed_chemistry_cluster_r2_new": {
+    "S": 0.7528,
+    "sigma": 0.702,
+    "kappa": 0.8092,
+    "zT": 0.7456
+  },
+  "confirmed_chemistry_cluster_r2_old": {
+    "S": 0.8076,
+    "sigma": 0.76,
+    "kappa": 0.846,
+    "zT": 0.7968
+  },
+  "confirmed_chemistry_cluster_r2_source_new": "reports/regen_snapfix/20260917T150000/ladder_metrics.json (per-repeat pooled R2, chemistry rung)",
+  "item3_combined_ceiling_new": [
+    {
+      "label": "S",
+      "r2_meas": 0.9974185471721926,
+      "r2_dig_lower": 0.963899259221547,
+      "r2_dig_upper": 0.9819496296107735,
+      "r2_comb_lower": 0.9613178063937395,
+      "r2_comb_upper": 0.9793681767829661,
+      "confirmed_new": 0.7528,
+      "headroom_lower": 0.2085178063937395,
+      "headroom_upper": 0.22656817678296604
+    },
+    {
+      "label": "sigma",
+      "r2_meas": 0.9967724053626453,
+      "r2_dig_lower": 0.9839656690808817,
+      "r2_dig_upper": 0.9919828345404409,
+      "r2_comb_lower": 0.980738074443527,
+      "r2_comb_upper": 0.9887552399030862,
+      "confirmed_new": 0.702,
+      "headroom_lower": 0.27873807444352705,
+      "headroom_upper": 0.28675523990308627
+    },
+    {
+      "label": "kappa",
+      "r2_meas": 0.9776818168734485,
+      "r2_dig_lower": 0.9832620077389838,
+      "r2_dig_upper": 0.9916310038694919,
+      "r2_comb_lower": 0.9609438246124322,
+      "r2_comb_upper": 0.9693128207429403,
+      "confirmed_new": 0.8092,
+      "headroom_lower": 0.1517438246124322,
+      "headroom_upper": 0.1601128207429403
+    },
+    {
+      "label": "zT (vs ZT_author_declared)",
+      "r2_meas": 0.9760844657896228,
+      "r2_dig_lower": 0.9806887300257047,
+      "r2_dig_upper": 0.9903443650128523,
+      "r2_comb_lower": 0.9567731958153275,
+      "r2_comb_upper": 0.9664288308024751,
+      "confirmed_new": 0.7456,
+      "headroom_lower": 0.21117319581532745,
+      "headroom_upper": 0.22082883080247506
+    },
+    {
+      "label": "zT (vs recomputed alpha^2*T/(rho*kappa))",
+      "r2_meas": 0.9760844657896228,
+      "r2_dig_lower": 0.9838674427230542,
+      "r2_dig_upper": 0.9919337213615271,
+      "r2_comb_lower": 0.959951908512677,
+      "r2_comb_upper": 0.96801818715115,
+      "confirmed_new": 0.7456,
+      "headroom_lower": 0.21435190851267694,
+      "headroom_upper": 0.22241818715114992
+    }
+  ],
+  "item3_note": "S/sigma/kappa entries carried over unchanged from results/noise_floor/20260917T172251/ (unaffected by the zT-only uncertainty fix). Only the two zT entries were recomputed, using the new r2_meas=0.97611324486762 (was 0.9785614718479471).",
+  "item4_headroom_old_vs_new_this_fix": [
+    {
+      "label": "zT (vs ZT_author_declared)",
+      "pre_fix_headroom": [
+        0.2112,
+        0.2209
+      ],
+      "post_fix_headroom": [
+        0.2112,
+        0.2208
+      ],
+      "change_lower": -0.0,
+      "change_upper": -0.0
+    },
+    {
+      "label": "zT (vs recomputed alpha^2*T/(rho*kappa))",
+      "pre_fix_headroom": [
+        0.2144,
+        0.2224
+      ],
+      "post_fix_headroom": [
+        0.2144,
+        0.2224
+      ],
+      "change_lower": -0.0,
+      "change_upper": -0.0
+    }
+  ],
+  "item5_descriptor_ablation_headroom_fractions_new": [
+    {
+      "label": "S",
+      "delta": 0.006472028502249816,
+      "headroom": [
+        0.2085,
+        0.2266
+      ],
+      "fraction_pct": [
+        2.86,
+        3.1
+      ]
+    },
+    {
+      "label": "sigma",
+      "delta": 0.010104997333114318,
+      "headroom": [
+        0.2787,
+        0.2868
+      ],
+      "fraction_pct": [
+        3.52,
+        3.63
+      ]
+    },
+    {
+      "label": "kappa",
+      "delta": 0.006358850080473877,
+      "headroom": [
+        0.1517,
+        0.1601
+      ],
+      "fraction_pct": [
+        3.97,
+        4.19
+      ]
+    },
+    {
+      "label": "zT (declared)",
+      "delta": 0.004939939272867733,
+      "headroom": [
+        0.2112,
+        0.2208
+      ],
+      "fraction_pct": [
+        2.24,
+        2.34
+      ]
+    },
+    {
+      "label": "zT (recomputed TEP)",
+      "delta": 0.004939939272867733,
+      "headroom": [
+        0.2144,
+        0.2224
+      ],
+      "fraction_pct": [
+        2.22,
+        2.3
+      ]
+    }
+  ]
+}

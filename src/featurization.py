@@ -240,17 +240,23 @@ def featurize_dataset(cleaned_df, formula_col="composition_id"):
     return featurized_df, failures_df, timing
 
 
-def run_featurization(processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT, extraction_date=None):
+def run_featurization(cleaned_path, processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT, extraction_date=None):
     """
-    Load the most recent cleaned_<project>_*.csv, featurize it, save the
-    featurized dataset and a failures log to data/processed/, and print
-    a summary report.
+    Featurize the cleaned CSV at cleaned_path, save the featurized
+    dataset and a failures log to processed_data_dir, and print a
+    summary report.
+
+    cleaned_path is explicit, not glob-discovered as "the most recently
+    written cleaned_<project>_*.csv" -- that pattern silently resolved
+    to the wrong cleaned CSV more than once in this project (see
+    CLAUDE.md's Canonical Dataset section on File A vs File B vs a
+    stale third cleaned CSV in data/processed/); the caller must now
+    say which cleaned CSV they mean.
     """
+    cleaned_path = Path(cleaned_path)
     processed_data_dir = Path(processed_data_dir)
-    candidates = sorted(processed_data_dir.glob(f"cleaned_{project}_*.csv"))
-    if not candidates:
-        raise FileNotFoundError(f"No cleaned_{project}_*.csv in {processed_data_dir}; run src/data_cleaning.py first")
-    cleaned_path = candidates[-1]
+    if not cleaned_path.exists():
+        raise FileNotFoundError(f"{cleaned_path} does not exist; run src/data_cleaning.py first")
     cleaned_df = pd.read_csv(cleaned_path)
     print(f"Loaded {len(cleaned_df):,} rows from {cleaned_path}")
 
@@ -299,4 +305,6 @@ if __name__ == "__main__":
     with open("config.yaml", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
-    run_featurization(extraction_date=config["extraction"]["starrydata2_date"])
+    extraction_date = config["extraction"]["starrydata2_date"]
+    cleaned_path = PROCESSED_DATA_DIR / f"cleaned_{PROJECT}_{extraction_date}.csv"
+    run_featurization(cleaned_path, extraction_date=extraction_date)

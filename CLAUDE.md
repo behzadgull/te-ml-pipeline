@@ -104,6 +104,33 @@ featurized_ThermoelectricMaterials_2026-08-15.csv`
   comparison (R^2_max from File B, the ceiling it's measured against from
   File A).
 - Gitignored (`data/`), local-only, not on GitHub.
+- **`data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv` renamed
+  2026-09-24**, to `cleaned_ThermoelectricMaterials_2026-08-15.STALE_2a1af8b8.csv`
+  (not deleted). Found during a glob audit of every `cleaned_{project}_*.csv`
+  call site: `src/noise_floor.py`, `src/featurization.py`, and
+  `scripts/make_figures.py` all defaulted to globbing "most recent
+  cleaned CSV in `data/processed/`" and silently resolved to this file --
+  it is what the two lines directly above call "File B's cleaned CSV",
+  but no SHA256 was ever recorded for it here, and `src/noise_floor.py`'s
+  default in particular meant any run that did not override the path
+  (including the 2026-09-10 run, `results/noise_floor/20260910T134042/`)
+  depended on an unverified file. SHA256 now recorded:
+  `2a1af8b87e35e5e99c6c8684208a57e83169351237cef56c0fdaac10ad34f376`,
+  33,736,367 bytes, mtime 2026-08-17 (local). **Provenance: evidenced, not
+  cryptographically proven.** Its row count (280,348) matches this
+  document's own, already-committed "2026-08-15 pull... 2026-08-17
+  re-run" post-step8/9-fix funnel figure (see the Data Cleaning Pipeline
+  section's funnel table and the "Mislabeled figure" bullet above, both
+  independently stating 280,348 for that run), and its mtime (Aug 17, two
+  days after File B's Aug 15 11:22 UTC raw pull in `data/raw/
+  extraction_metadata.json`) is consistent with being cleaned from that
+  pull -- but no surviving `data_cleaning.py` run log or hash chain ties
+  this exact file to that exact raw pull directly; the match is via row
+  count and timing, not a cryptographic or logged link. Treat it as "very
+  likely File B's cleaned CSV, not proven" on that basis. `src/noise_floor.py`
+  no longer globs this directory by default (see the Confirmed Results --
+  Noise Floor section's 2026-09-24 row-alignment fix); a stale glob hit
+  now raises `FileNotFoundError` instead of silently resolving here.
 
 **Raw-pull row counts (source, before cleaning), from each copy's own
 `data/raw/extraction_metadata.json`** -- the two upstream snapshots are
@@ -863,6 +890,14 @@ preempt a reviewer citing it back).
    is a lower bound on true database noise (excludes digitization error),
    so computed headroom is conservative/optimistic-in-the-paper's-favor —
    state this direction explicitly.
+   **Amendment, 2026-09-24:** zT relative uncertainty is 0.19 (Alleno et al. 2015:
+   temperature-averaged per-measurement standard uncertainty at 68% confidence,
+   300-700 K). The "17-19%" range above conflated this with the 17% expanded (95%)
+   uncertainty on the mean of ZT; corrected in code at 2b2d07f. In log space the
+   code uses the first-order approximation sd(ln y) ~ eps (natural log; R2 ratios
+   are base-invariant). The exact lognormal value sqrt(ln(1+eps^2)) = 0.188 for
+   eps = 0.19; the difference is negligible at reported precision. The "~0.17"
+   above is superseded.
    **Decision (2026-08-20): sigma and kappa are trained on log10-
    transformed targets, not just evaluated in log space post-hoc.**
    sigma spans ~10³–10⁶⁺ S/m and kappa ~0.05–25 W/mK, both multiple
@@ -1373,6 +1408,34 @@ R2_max(measurement) for zT: 0.9785 -> 0.9761. Replacement rows:
 
 Full arithmetic and provenance in
 `results/noise_floor/20260923T093313/noise_floor_inputs.json`.
+
+**SUPERSEDED 2026-09-24: `results/noise_floor/20260923T093313/` as the
+provenance artifact for every noise-floor number above, by
+`results/noise_floor/20260923T202312/noise_floor_inputs.json`.** Two
+defects in the 20260923T093313 artifact, neither of which changes a
+published number: (1) its rows were not aligned to the ladder --
+`sigma_total` and the linear-space noise median were computed on the
+cleaned CSV's own notna/positive rows (n_used S 185,417 / sigma 183,014 /
+kappa 121,247 / zT 129,633), a slightly larger set than the
+chemistry-cluster rung scored; (2) its `item5` `delta` sub-field held
+the 4-decimal-rounded ablation delta for S/sigma/kappa (0.0064 / 0.0101 /
+0.0064) instead of the full-precision values in `ablation_metrics.json`
+(0.006472 / 0.010105 / 0.006359), which is why an `item5` fraction for S
+and kappa differed from the fractions published here (2.86-3.10% and
+3.97-4.19%, which were correct all along). The 20260923T202312 rerun
+computes each target on `load_aligned_target_values()` (featurized snapfix
+CSV, n asserted equal to 185,064 / 182,755 / 121,110 / 129,419), the
+File A cleaned CSV is SHA256-checked, and `item5` is full precision.
+Measured effect of the row alignment: R2_max moves by at most 2.9e-5
+(zT, linear), every ablation fraction by under 0.0005 percentage points;
+no table above needs a new value. `src/noise_floor.py`'s
+`CONFIRMED_CHEMISTRY_CLUSTER_R2` constant, which still held the
+pre-grouping-fix values (0.8076 / 0.7600 / 0.8460 / 0.7968), was
+corrected to 0.7528 / 0.7020 / 0.8092 / 0.7456 in the same change; every
+headroom that module's `report()` printed between 2026-09-19 and
+2026-09-24 used the stale denominator (the tables above never did; they
+were computed against the correct values by hand). The older artifact is
+retained for audit, not deleted.
 
 ## Confirmed Results — Descriptor Ablation (2026-09-12)
 

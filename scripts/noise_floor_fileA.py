@@ -1,3 +1,17 @@
+# HISTORICAL, NOT RUNNABLE as of 2026-09-24 (row-alignment/SHA256 commit).
+# Produced results/noise_floor/20260911T114356/noise_floor_inputs.json;
+# that output is unaffected and still current for its own audit purposes.
+# Re-running this script will now raise TypeError: src/noise_floor.py's
+# load_cleaned_dataset(processed_data_dir=..., project=...) became
+# load_cleaned_dataset(path=..., expected_sha256=...) -- it no longer
+# globs a directory, it loads and SHA256-verifies one explicit File A
+# path -- and compute_all(df) became compute_all(properties=...), no
+# longer taking a shared df (see src/noise_floor.py's module docstring).
+# Kept for provenance per CLAUDE.md's "every script that produced a
+# number cited in this document must be committed" rule, not because
+# it still runs. Update it to the new signatures before reusing it.
+#
+# Original header:
 # Re-runs src/noise_floor.py's compute_all() against File A's cleaned CSV
 # (no src/ edit -- load_cleaned_dataset's existing processed_data_dir
 # parameter is passed directly). Produced

@@ -6,6 +6,7 @@ distribution that motivates repeated grouped CV. Reads the cleaned CSV
 written by src/data_cleaning.py; run that first.
 """
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -19,6 +20,7 @@ from sklearn.metrics import r2_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.noise_floor import load_aligned_target_values
 from src.plotting_style import (
     COLORBLIND_PALETTE,
     add_panel_label,
@@ -29,9 +31,21 @@ from src.plotting_style import (
 
 FIGURES_DIR = Path("figures")
 
+# The snapfix featurized CSV's chemistry_cluster_id, NOT File A's cleaned
+# CSV. File A's cleaned CSV predates the 2026-09-19 SNAP(0.05)/S5
+# grouping fixes (commit c1c6873) and its own chemistry_cluster_id column
+# is still the pre-fix, buggy one (12,036 clusters, decimal-coefficient
+# formulas like "Ca1Mn0.9O3" left unsnapped -- see CLAUDE.md's Grouping
+# Fixes section, BUG 1); src.noise_floor.load_cleaned_dataset() drops
+# that column entirely for exactly this reason (see its docstring). Only
+# the snapfix featurized CSV has the corrected column (8,908 clusters).
+# make_cluster_size_distribution() must load cluster membership from here.
+SNAPFIX_FEATURIZED_CSV = Path("data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv")
+SNAPFIX_FEATURIZED_CSV_SHA256 = "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489"
+
 # Shared provenance paths, referenced by more than one figure below.
 LADDER_METRICS_PATH = Path("reports/regen_snapfix/20260917T150000/ladder_metrics.json")
-NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260923T093313/noise_floor_inputs.json")
+NOISE_FLOOR_INPUTS_PATH = Path("results/noise_floor/20260923T202312/noise_floor_inputs.json")
 DESCRIPTOR_ABLATION_METRICS_PATH = Path("reports/ablation_snapfix/20260918T000111/ablation_metrics.json")
 SHAP_ATTRIBUTION_DIR = Path("results/shap_attribution/20260917T134930")
 UNGROUPED_SNAPFIX_DIR = Path("results/ungrouped_snapfix/20260922T093243")
@@ -299,14 +313,23 @@ CLEANING_STEPS = [
 ]
 
 
-def load_cleaned_dataset(processed_data_dir="data/processed", project="ThermoelectricMaterials"):
-    """Load the most recently written cleaned_<project>_<date>.csv."""
-    candidates = sorted(Path(processed_data_dir).glob(f"cleaned_{project}_*.csv"))
-    if not candidates:
-        raise FileNotFoundError(
-            f"No cleaned_{project}_*.csv found in {processed_data_dir}; run src/data_cleaning.py first"
+def load_snapfix_cluster_columns(
+    path=SNAPFIX_FEATURIZED_CSV, expected_sha256=SNAPFIX_FEATURIZED_CSV_SHA256
+):
+    """
+    Load only sample_id/chemistry_cluster_id from the snapfix featurized
+    CSV, verifying its SHA256 first. Used by make_cluster_size_distribution
+    -- see the SNAPFIX_FEATURIZED_CSV module comment for why File A's
+    cleaned CSV is not a substitute for cluster membership.
+    """
+    path = Path(path)
+    actual_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise ValueError(
+            f"{path} has SHA256 {actual_sha256}, expected {expected_sha256} (snapfix). "
+            "Refusing to compute cluster sizes against an unverified dataset."
         )
-    return pd.read_csv(candidates[-1]), candidates[-1]
+    return pd.read_csv(path, usecols=["sample_id", "chemistry_cluster_id"])
 
 
 def make_cleaning_funnel(out_path):
@@ -357,7 +380,7 @@ def make_cleaning_funnel(out_path):
     plt.close(fig)
 
 
-def make_property_distributions(df, out_path):
+def make_property_distributions(out_path):
     """
     2x2 panel of histograms for S, sigma, kappa, zT after cleaning.
     sigma and kappa use log10-scale x-axes and log-spaced bins,
@@ -366,8 +389,14 @@ def make_property_distributions(df, out_path):
     floor decision); S and zT stay linear, matching their training
     space too. Each panel is annotated with its non-null sample size n
     and arithmetic mean, both in the panel's native (raw, not log)
-    units, matching the Reference final-dataset per-property statistics
-    table in CLAUDE.md.
+    units.
+
+    Each property's values come from load_aligned_target_values() (the
+    same ladder-aligned, featurized-CSV loader src.noise_floor.compute_all
+    uses), not a single shared cleaned-CSV df -- so n in each panel is
+    185,064 / 182,755 / 121,110 / 129,419 (S/sigma/kappa/zT), matching
+    both LADDER_N_ROWS and paper.md's own stated per-target row counts,
+    not the cleaned CSV's own slightly larger notna count.
     """
     panels = [
         ("S", "Seebeck coefficient (μV/K)", False),
@@ -381,7 +410,7 @@ def make_property_distributions(df, out_path):
     hist_color = COLORBLIND_PALETTE[5]
 
     for ax, (col, xlabel, log_scale), letter in zip(axes.flat, panels, panel_letters):
-        values = df[col].dropna()
+        values = load_aligned_target_values(col)
         n = len(values)
         mean = values.mean()
         if col == "sigma":
@@ -1049,15 +1078,18 @@ def load_descriptor_ablation_data(
     r2_values, r2_sd, band_lower, band_upper, delta, fraction_pct}}.
 
     delta and fraction_pct are NOT read from noise_floor_inputs.json's
-    own item5_descriptor_ablation_headroom_fractions_new field -- that
-    field's delta values (S=0.0064, zT=0.0050) don't match
-    ablation_metrics.json's own deltas_full_minus_magpie (S=0.0065,
-    zT=0.0049), which do match CLAUDE.md's published deltas exactly.
-    Instead, delta comes from ablation_metrics.json directly, and
-    fraction_pct is recomputed from that delta against item3's own
-    headroom_lower/headroom_upper bounds (the same bounds the band uses)
-    -- this reproduces CLAUDE.md's published fraction ranges (e.g. S
-    2.86%-3.10%) exactly, where item5's stale field does not.
+    own item5_descriptor_ablation_headroom_fractions_new field, even
+    though that field is now full-precision-correct as of the
+    2026-09-24 row-alignment rerun (it previously stored the 4-decimal-
+    rounded ablation delta for S/sigma/kappa, e.g. S=0.0064 instead of
+    the full-precision 0.006472, which shifted the displayed fraction
+    range across a rounding boundary -- CLAUDE.md's published S/kappa
+    fractions were never actually wrong, only this field's own delta
+    was). Kept reading delta from ablation_metrics.json directly and
+    recomputing fraction_pct against item3's headroom bounds regardless,
+    since that path is correct independent of which noise-floor artifact
+    is loaded and needs no future audit to confirm it still agrees with
+    item5.
     """
     with open(ablation_metrics_path, encoding="utf-8") as f:
         ablation = json.load(f)
@@ -1705,16 +1737,15 @@ def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-    df, source_path = load_cleaned_dataset()
-    print(f"Loaded {len(df):,} rows from {source_path}")
-
     make_cleaning_funnel(FIGURES_DIR / "cleaning_funnel")
     print("Saved cleaning_funnel.png / .pdf")
 
-    make_property_distributions(df, FIGURES_DIR / "fig_property_distributions")
+    make_property_distributions(FIGURES_DIR / "fig_property_distributions")
     print("Saved fig_property_distributions.png / .pdf")
 
-    make_cluster_size_distribution(df, FIGURES_DIR / "cluster_size_distribution")
+    cluster_df = load_snapfix_cluster_columns()
+    print(f"Loaded {len(cluster_df):,} rows from {SNAPFIX_FEATURIZED_CSV} for cluster sizes")
+    make_cluster_size_distribution(cluster_df, FIGURES_DIR / "cluster_size_distribution")
     print("Saved cluster_size_distribution.png / .pdf")
 
     make_model_comparison(FIGURES_DIR / "fig1_model_comparison")

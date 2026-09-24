@@ -11,15 +11,58 @@ kappa ~11%, zT 19%) and this dataset's actual property variance
 scales for every property, plus a "paper" column selecting whichever
 scale matches how each property's confirmed chemistry-cluster R^2 was
 actually scored.
+
+sigma_total is computed on exactly the rows the chemistry-cluster ladder
+rung scored for that target (load_aligned_target_values, via
+src.nested_cv.load_target_data on the featurized CSV), not on the
+cleaned CSV's own notna/positive column, which is a slightly larger row
+set (featurization drops a small number of rows per target that fail
+descriptor computation -- see CLAUDE.md's Data Cleaning Pipeline step 5
+TODO). load_cleaned_dataset() is kept for the module's own row-count
+banner and for callers that want the unaligned full cleaned CSV, and
+now defaults to File A's cleaned CSV with a SHA256 check, not the
+"data/processed" glob default that silently resolved to a different,
+older cleaned CSV (see CLAUDE.md's Canonical Dataset section).
 """
 
+import hashlib
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from src.nested_cv import load_target_data  # noqa: E402
+
 PROCESSED_DATA_DIR = "data/processed"
 PROJECT = "ThermoelectricMaterials"
+
+# File A's cleaned CSV (CLAUDE.md's Canonical Dataset section) -- the
+# "data/processed" glob default used to resolve to a different, older
+# cleaned CSV that is neither File A nor File B (SHA256 2a1af8b8...,
+# now renamed to cleaned_ThermoelectricMaterials_2026-08-15.STALE_2a1af8b8.csv
+# so a stale glob hit raises FileNotFoundError instead of silently
+# loading the wrong file).
+FILE_A_CLEANED_CSV = Path(
+    "checkpoints/saved_predictions/te-ml-pipeline/data/processed/"
+    "cleaned_ThermoelectricMaterials_2026-08-15.csv"
+)
+FILE_A_CLEANED_CSV_SHA256 = "0275c5088521580a1156acf2078f77f0eb7d4a8c6b4e724864f0de0875d8a393"
+
+# Per-target row count the chemistry-cluster ladder rung actually scored
+# (n_rows_header, i.e. the single-pass row count BEFORE pooling across
+# the 5 repeats/5 outer folds -- pooled_n = 5 * n_rows_header, verified
+# directly for every target). Source:
+# reports/regen_snapfix/20260917T150000/ladder_metrics.json, the same
+# snapfix chemistry-cluster rung CLAUDE.md's Five-Way Ladder table cites.
+LADDER_N_ROWS = {
+    "S": 185064,
+    "sigma": 182755,
+    "kappa": 121110,
+    "zT": 129419,
+}
 
 PROPERTIES = ["S", "sigma", "kappa", "zT"]
 
@@ -38,19 +81,21 @@ RELATIVE_UNCERTAINTY = {
     "zT": 0.19,
 }
 
-# Frozen chemistry-cluster pooled out-of-fold R^2, read directly from the
-# reproducible 2026-08-22 checkpoint set (25 repeat/fold predictions.npz
-# files per property, pooled) at checkpoints/saved_predictions/checkpoints/
-# {S,sigma,kappa,zT}_chemistry/ -- matches CLAUDE.md's "Confirmed Results --
-# Five-Way Ladder" table exactly (verified 2026-09-10). Do not restore the
-# prior values (S 0.8083, sigma 0.7522, kappa 0.8226, zT 0.7965) -- those
-# were the discarded orphaned run CLAUDE.md's ladder section documents as
-# superseded; this constant had drifted from them and was corrected here.
+# Frozen chemistry-cluster pooled out-of-fold R^2. Corrected 2026-09-24:
+# this constant still held the PRE-grouping-fix values (S 0.8076, sigma
+# 0.7600, kappa 0.8460, zT 0.7968) from the 2026-08-22 checkpoint set --
+# superseded 2026-09-19 by the SNAP(0.05)/S5 grouping fixes (commit
+# c1c6873) and the resulting snapfix featurized CSV, per CLAUDE.md's
+# Five-Way Ladder table. Found auditing this module's row-alignment fix;
+# every headroom this module ever printed after 2026-09-19 was computed
+# against a stale confirmed-R^2 denominator. Now matches CLAUDE.md's
+# current chemistry-cluster column exactly: results/ladder_regen_snapfix/
+# 20260917T150000/{S,sigma,kappa,zT}_chemistry_full/.
 CONFIRMED_CHEMISTRY_CLUSTER_R2 = {
-    "S": 0.8076,
-    "sigma": 0.7600,
-    "kappa": 0.8460,
-    "zT": 0.7968,
+    "S": 0.7528,
+    "sigma": 0.7020,
+    "kappa": 0.8092,
+    "zT": 0.7456,
 }
 
 # Which R2_max scale is apples-to-apples with each property's confirmed
@@ -192,29 +237,79 @@ def compute_r2_max_linear(property_name, values):
     }
 
 
-def compute_all(df, properties=PROPERTIES):
+def load_aligned_target_values(target, expected_n_rows=None):
+    """
+    Load one target's column from exactly the row set the chemistry-
+    cluster ladder rung scored for it: src.nested_cv.load_target_data(target),
+    which reads the featurized CSV and filters to df[target].notna() --
+    the identical loader and filter the ladder itself uses.
+
+    Asserts the resulting row count equals LADDER_N_ROWS[target] (or
+    expected_n_rows, if given) so a silent row-set drift between this
+    module and the ladder raises instead of producing a headroom number
+    computed against the wrong denominator.
+    """
+    expected = LADDER_N_ROWS[target] if expected_n_rows is None else expected_n_rows
+    df = load_target_data(target)
+    n_rows = len(df)
+    if n_rows != expected:
+        raise ValueError(
+            f"{target}: loaded {n_rows:,} rows via load_target_data, expected "
+            f"{expected:,} (LADDER_N_ROWS[{target!r}], from the chemistry-cluster "
+            "ladder rung's n_rows_header). Row sets have diverged -- do not "
+            "compute sigma_total against this without finding out why."
+        )
+    return df[target]
+
+
+def compute_all(properties=PROPERTIES):
     """
     Run both compute_r2_max_log and compute_r2_max_linear for every
-    property in `properties`. Returns {property: {"log": {...},
+    property in `properties`, each against its own row-aligned column
+    (load_aligned_target_values) rather than a single shared cleaned-CSV
+    df -- so sigma_total for each target is computed on exactly the rows
+    the chemistry-cluster ladder rung scored for that target, not the
+    slightly larger row set the cleaned CSV's own notna/positive filter
+    gives (see module docstring). Returns {property: {"log": {...},
     "linear": {...}}}.
     """
     return {
         prop: {
-            "log": compute_r2_max_log(prop, df[prop]),
-            "linear": compute_r2_max_linear(prop, df[prop]),
+            "log": compute_r2_max_log(prop, load_aligned_target_values(prop)),
+            "linear": compute_r2_max_linear(prop, load_aligned_target_values(prop)),
         }
         for prop in properties
     }
 
 
-def load_cleaned_dataset(processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT):
-    """Load the most recently written cleaned_<project>_<date>.csv."""
-    candidates = sorted(Path(processed_data_dir).glob(f"cleaned_{project}_*.csv"))
-    if not candidates:
-        raise FileNotFoundError(
-            f"No cleaned_{project}_*.csv found in {processed_data_dir}; run src/data_cleaning.py first"
+def load_cleaned_dataset(path=FILE_A_CLEANED_CSV, expected_sha256=FILE_A_CLEANED_CSV_SHA256):
+    """
+    Load File A's cleaned CSV, verifying its SHA256 before returning it.
+
+    Drops chemistry_cluster_id: File A's cleaned CSV predates the
+    2026-09-19 SNAP(0.05)/S5 grouping fixes (commit c1c6873) and its
+    column is still the pre-fix, buggy one (12,036 clusters, unsnapped
+    decimal-coefficient formulas -- see CLAUDE.md's Grouping Fixes
+    section, BUG 1). Dropping it here, at the source, means a caller
+    cannot silently consume the stale column through this loader --
+    the exact trap make_cluster_size_distribution (scripts/make_figures.py)
+    would have fallen into otherwise; it now loads cluster membership
+    from the snapfix featurized CSV instead.
+
+    Not used by compute_all() any more (see load_aligned_target_values);
+    kept for the module's own row-count banner in main() and for callers
+    that want the unaligned full cleaned CSV rather than one target's
+    aligned column.
+    """
+    path = Path(path)
+    actual_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise ValueError(
+            f"{path} has SHA256 {actual_sha256}, expected {expected_sha256} (File A). "
+            "Refusing to compute the noise floor against an unverified dataset."
         )
-    return pd.read_csv(candidates[-1]), candidates[-1]
+    df = pd.read_csv(path)
+    return df.drop(columns=["chemistry_cluster_id"]), path
 
 
 def report(results, confirmed=CONFIRMED_CHEMISTRY_CLUSTER_R2, paper_scale=PAPER_SCALE):
@@ -275,8 +370,9 @@ def report(results, confirmed=CONFIRMED_CHEMISTRY_CLUSTER_R2, paper_scale=PAPER_
 
 def main():
     df, source_path = load_cleaned_dataset()
-    print(f"Loaded {len(df):,} rows from {source_path}\n")
-    results = compute_all(df)
+    print(f"Loaded {len(df):,} rows from {source_path} (unaligned cleaned CSV, informational only)")
+    print("sigma_total below is computed per-target from the ladder-aligned featurized CSV, not this file.\n")
+    results = compute_all()
     report(results)
 
 
