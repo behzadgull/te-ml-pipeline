@@ -1,0 +1,34 @@
+[2026-09-16 12:50:42] target=zT (scale=linear): model_type=xgboost, 129,419 rows, 265 features, split_strategy=chemistry (7,944 chemistry_cluster_id groups), n_repeats=5, hyperparameters=frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json), device=cuda
+[2026-09-16 12:50:56] repeat 0 fold 0: outer R^2=0.8063 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:51:09] repeat 0 fold 1: outer R^2=0.7859 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:51:22] repeat 0 fold 2: outer R^2=0.8024 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:51:35] repeat 0 fold 3: outer R^2=0.7870 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:51:48] repeat 0 fold 4: outer R^2=0.7934 (inner cv R^2=0.7927), n_train=103,536, n_test=25,883
+[2026-09-16 12:52:01] repeat 1 fold 0: outer R^2=0.8127 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:52:14] repeat 1 fold 1: outer R^2=0.7785 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:52:28] repeat 1 fold 2: outer R^2=0.7678 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:52:41] repeat 1 fold 3: outer R^2=0.8215 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:52:54] repeat 1 fold 4: outer R^2=0.7907 (inner cv R^2=0.7927), n_train=103,536, n_test=25,883
+[2026-09-16 12:53:07] repeat 2 fold 0: outer R^2=0.7796 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:53:20] repeat 2 fold 1: outer R^2=0.7958 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:53:33] repeat 2 fold 2: outer R^2=0.8009 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:53:46] repeat 2 fold 3: outer R^2=0.8106 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:53:59] repeat 2 fold 4: outer R^2=0.7963 (inner cv R^2=0.7927), n_train=103,536, n_test=25,883
+[2026-09-16 12:54:12] repeat 3 fold 0: outer R^2=0.8192 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:54:25] repeat 3 fold 1: outer R^2=0.8094 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:54:38] repeat 3 fold 2: outer R^2=0.8143 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:54:51] repeat 3 fold 3: outer R^2=0.7883 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:55:04] repeat 3 fold 4: outer R^2=0.7739 (inner cv R^2=0.7927), n_train=103,536, n_test=25,883
+[2026-09-16 12:55:18] repeat 4 fold 0: outer R^2=0.7738 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:55:30] repeat 4 fold 1: outer R^2=0.8019 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:55:44] repeat 4 fold 2: outer R^2=0.8209 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:55:57] repeat 4 fold 3: outer R^2=0.7950 (inner cv R^2=0.7927), n_train=103,535, n_test=25,884
+[2026-09-16 12:56:10] repeat 4 fold 4: outer R^2=0.7806 (inner cv R^2=0.7927), n_train=103,536, n_test=25,883
+[2026-09-16 12:56:10] === zT (xgboost, chemistry, scale=linear): repeated CV summary ===
+[2026-09-16 12:56:10] 5 repeats x 5 outer folds = 25 outer evaluations
+[2026-09-16 12:56:10] R^2 below computed in linear (raw) space.
+[2026-09-16 12:56:10] POOLED out-of-fold R^2 = 0.7965 (n=647,095 held-out predictions) -- all repeats combined into one number
+[2026-09-16 12:56:10] PER-REPEAT pooled R^2 = 0.7965 +/- 0.0030 (n=5 repeats: [0.7949, 0.7942, 0.7970, 0.8015, 0.7948]) -- PRIMARY ladder metric (mean +/- across-repeat SD), CLAUDE.md Paper A item 1
+[2026-09-16 12:56:10] mean outer R^2 = 0.7963, std = 0.0157 (per-fold macro-average, secondary/diagnostic)
+[2026-09-16 12:56:10] hyperparameters: frozen (checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json)
+[2026-09-16 12:56:10] this call's new compute time: 327.8s

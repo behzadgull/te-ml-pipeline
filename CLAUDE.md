@@ -255,6 +255,27 @@ recomputing it against the correct training file.
 document must be committed to git (e.g. under `scripts/`), not left in
 an untracked scratchpad.**
 
+**Standing rule (2026-09-24): every run config records the input
+dataset's SHA256, the code commit (`git rev-parse HEAD`) and whether the
+working tree was clean.** A run's `run_config.json` (and the equivalent
+for any script that reads a CSV) must carry the SHA256 and byte size of
+the exact file it read, not only a path or a row count, the commit of the
+code that ran, and `tree_clean` (true when `git status --porcelain` is
+empty; a commit hash alone does not identify code that had uncommitted
+edits). Found 2026-09-24 while
+identifying what `kaggle_out/regen_postfix/` and the 2026-08-22 baseline
+ran on: none of their configs or logs records a path or a hash, so
+pre- versus post-snapfix could only be inferred from the
+`chemistry_cluster_id` group count in each run's first log line (S:
+10,679 pre-fix, 7,810 post-fix), because the snapfix CSV has File A's
+exact row counts. The same gap made `checkpoints/ladder_regen_dl/` an
+unidentifiable fourth snapshot (see the 2026-09-22 correction above). A
+row count is not an identity. The code commit is missing for the same
+reason: `regen_postfix`'s use of the corrected fold code (commit c1c6873)
+is inferred from its fold-level R2 and its start time, not recorded. Not
+yet implemented in `src/nested_cv.py`; every existing run violates this
+rule and its dataset and code identity remain inferential.
+
 **CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
 beyond what these numbers support:**
 
@@ -342,9 +363,15 @@ fold-size imbalance; `GroupShuffleSplit`, which does not produce a partition
 (test sets can overlap across folds, incompatible with pooled out-of-fold
 R^2).
 
-**CONSEQUENCE.** Both fixes make the honest anchor stricter, never looser --
-so every previously reported grouped number was optimistic, and every gap
-against an ungrouped rung was a lower bound on the true gap. The chemistry
+**CONSEQUENCE.** Taken together, the two fixes make the honest anchor
+stricter: every previously reported chemistry-cluster number was
+optimistic, and every gap against an ungrouped rung was a lower bound on
+the true gap. The fold-assignment fix alone is not one-directional (control
+run, `results/regen_postfix/20260916T161906/`: the rung moved by -0.0022 to
++0.0011 with no consistent sign, zT rising); the decrease appeared only
+once the snapped identifier was introduced. The reverse control (original
+fold assignment with the snapped identifier) was not run, so an
+interaction between the two fixes is not separated. The chemistry
 rung dropped 0.037 to 0.058 across the four targets once the regeneration
 was complete (see the Five-Way Ladder section for the new per-target
 values). The regeneration required a NEW featurized CSV, not just a code
@@ -362,6 +389,11 @@ error.**
   to regenerate it) and reproduced the old, pre-fix numbers almost exactly
   -- no error, no warning, just a number that looked plausible and was
   wrong.
+  Kept as a control, `results/regen_postfix/20260916T161906/` (README
+  there): it tests the fold-code correction on the original cluster
+  identifiers (rung moved by at most 0.0022 in absolute value, mixed
+  sign; the remaining change, grouping key plus any interaction, is 0.035
+  to 0.056), see `scripts/grouping_fix_effect.py`.
 - `src/direct_vs_derived_zt.py`'s `_fold_path` ignored the `checkpoint_dir`
   argument `run_direct_vs_derived()` accepted, and resolved every fold's
   checkpoint path against the old module-level constant instead. Passing a

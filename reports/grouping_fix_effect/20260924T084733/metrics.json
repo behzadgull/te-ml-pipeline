@@ -1,0 +1,69 @@
+{
+  "generated_at_utc": "20260924T084733",
+  "per_target": {
+    "S": {
+      "prefix": 0.8076475931226254,
+      "prefix_sd": 0.0018429357829813486,
+      "control_sd": 0.002040272829004729,
+      "postfix_sd": 0.005012245487145292,
+      "control": 0.8064007236220831,
+      "postfix": 0.7528277096072298,
+      "random": 0.9582192646651164,
+      "total_drop": 0.05481988351539557,
+      "fold_code_effect": -0.0012468695005422026,
+      "remaining_change": -0.05357301401485337,
+      "gap_prefix": 0.15057167154249107,
+      "gap_postfix": 0.20539155505788664
+    },
+    "sigma": {
+      "prefix": 0.7600266209103557,
+      "prefix_sd": 0.0008197864782596264,
+      "control_sd": 0.0011692527844865892,
+      "postfix_sd": 0.002049428848010081,
+      "control": 0.7578670717009819,
+      "postfix": 0.7020363725994354,
+      "random": 0.9150186308098633,
+      "total_drop": 0.057990248310920256,
+      "fold_code_effect": -0.002159549209373779,
+      "remaining_change": -0.05583069910154648,
+      "gap_prefix": 0.15499200989950768,
+      "gap_postfix": 0.21298225821042793
+    },
+    "kappa": {
+      "prefix": 0.8460425404003986,
+      "prefix_sd": 0.001106534019725624,
+      "control_sd": 0.0009189974672644008,
+      "postfix_sd": 0.0021095480639005603,
+      "control": 0.8441022312843204,
+      "postfix": 0.8091878096537959,
+      "random": 0.9433822230711002,
+      "total_drop": 0.036854730746602726,
+      "fold_code_effect": -0.0019403091160782315,
+      "remaining_change": -0.034914421630524495,
+      "gap_prefix": 0.09733968267070159,
+      "gap_postfix": 0.13419441341730431
+    },
+    "zT": {
+      "prefix": 0.7968093431799717,
+      "prefix_sd": 0.003001335268636562,
+      "control_sd": 0.0024234093386402977,
+      "postfix_sd": 0.0045261557306728,
+      "control": 0.7979316271364827,
+      "postfix": 0.745575941057879,
+      "random": 0.9179519231748723,
+      "total_drop": 0.0512334021220926,
+      "fold_code_effect": 0.0011222839565110387,
+      "remaining_change": -0.052355686078603636,
+      "gap_prefix": 0.12114257999490063,
+      "gap_postfix": 0.17237598211699323
+    }
+  },
+  "mean_gap_prefix": 0.13101148602690024,
+  "mean_gap_postfix": 0.18123605220065303,
+  "inputs": {
+    "prefix_dir": "checkpoints/saved_predictions/checkpoints/{t}_chemistry",
+    "control": "reports/regen_postfix/20260916T161906/regen_metrics.json",
+    "postfix": "reports/regen_snapfix/20260917T150000/ladder_metrics.json",
+    "random": "reports/ungrouped_snapfix/20260922T093243/metrics.json"
+  }
+}

@@ -587,7 +587,7 @@ Transfer is also heterogeneous between databases. ESTM degrades most on the Seeb
 
 
 
-During preparation of this manuscript we found two defects in the grouping implementation, both of which made the honest anchor less strict than its stated definition. We report them because the direction of the error is instructive and because the paper's central claim is precisely that this class of mistake is easy to make and hard to notice.
+During preparation of this manuscript we found two defects in the grouping implementation. The cluster-identifier defect made the honest anchor less strict than its stated definition; the fold-assignment defect broke the independence of the repeats. We report them because the direction of the cluster-identifier error is instructive and because the paper's central claim is precisely that this class of mistake is easy to make and hard to notice.
 
 
 
@@ -595,11 +595,15 @@ The first concerned the cluster identifier. After removing sub-threshold dopants
 
 
 
-The second concerned fold assignment. Groups were bin-packed by descending size into the fold with the smallest running total, which meant the largest group was always assigned to the first fold, the second largest to the second, and so on, regardless of the per-repeat shuffle. Repeats were therefore not independent partitions for exactly the rows that dominate the result, and the across-repeat standard deviation measured less than it was intended to.
+The second concerned fold assignment. Groups were bin-packed by descending size into the fold with the smallest running total, which meant the largest group was always assigned to the first fold, the second largest to the second, and so on, regardless of the per-repeat shuffle. Repeats were therefore not independent partitions for exactly the rows that dominate the result.
 
 
 
-Both defects inflated reported grouped performance. Correcting them lowered the chemistry-cluster rung by 0.037 to 0.058 across the four properties and widened the validation gap correspondingly, from a mean of 0.131 to 0.181 -- both figures now computed on the same rows, since the pre-fix chemistry-cluster checkpoint and the post-fix ungrouped rerun both use File A's row set. Every number we had previously computed was optimistic; every gap was a lower bound.
+To check how much of the change came from fold assignment alone, we reran the chemistry-cluster rung with the corrected fold assignment and the original cluster identifier. Across the four properties the rung moved by −0.0022 to +0.0011, with no consistent sign, and the across-repeat standard deviation changed by less than 0.001. The decrease appeared only once the snapped identifier was introduced. We did not run the reverse control (original fold assignment with the snapped identifier), so an interaction between the two corrections, which would act mainly through the large clusters the snapped identifier creates, is not separated.
+
+
+
+Together, the two corrections lowered the chemistry-cluster rung by 0.037 to 0.058 across the four properties and widened the validation gap correspondingly, from a mean of 0.131 to 0.181, both figures computed on the same rows, since the pre-fix chemistry-cluster checkpoint and the post-fix ungrouped rerun both use File A's row set. Every chemistry-cluster number we had previously computed was therefore optimistic, and every gap measured against one was a lower bound.
 
 
 

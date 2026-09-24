@@ -46,3 +46,10 @@ checkpoints/saved_predictions/checkpoints/*
 # canonical zT frozen hyperparameters) -- tracked despite the blanket
 # checkpoints/ ignore above, same rationale as the ladder checkpoints.
 !checkpoints/direct_vs_derived_zt_snapfix_canonical/
+
+# Raw Kaggle output staging copy. Every file is either byte-identical to a
+# tracked file (results/, checkpoints/saved_predictions/checkpoints/) or
+# archived off-machine: results/archive_manifests/kaggle_out_unmatched.sha256
+# (per-file SHA256) and results/regen_postfix/20260916T161906/README.md
+# (tar SHA256 and location). 430 MB, mostly .npz.
+kaggle_out/
