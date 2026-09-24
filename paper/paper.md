@@ -3,6 +3,14 @@ title: "Validation Inflation, Descriptor Saturation, and the Label-Noise Ceiling
 author:
   - Muhammad Behzad Gull
 affiliation: "TODO: Affiliation"
+corresponding-author: "Muhammad Behzad Gull, TODO: email"
+keywords:
+  - validation leakage
+  - grouped cross-validation
+  - label noise
+  - thermoelectric materials
+  - machine learning
+  - Starrydata2
 bibliography: refs.bib
 ---
 
@@ -34,7 +42,7 @@ Such models are routinely reported with R² between 0.90 and 0.98 [@athar2026bey
 
 
 
-![Figure 1](figures/fig1_leakage_schematic.png)
+![Figure 1](figures/fig1_leakage_schematic.png){width=100%}
 
 *Figure 1. Schematic of within-curve and near-duplicate leakage: a single material's temperature curve contributes one row per bin, and a doped series shares its host lattice across dopant labels, so rows that appear independent under random row-level splitting are not. Values are illustrative.*
 
@@ -80,7 +88,7 @@ Digitized curves are converted to model-ready rows through eleven stages (Figure
 
 
 
-![Figure 2](figures/cleaning_funnel.png)
+![Figure 2](figures/cleaning_funnel.png){width=100%}
 
 *Figure 2. Row count through the eleven-stage cleaning pipeline, from 1,996,047 property observations after range filtering to 280,664 rows in the final cleaned dataset.*
 
@@ -118,7 +126,7 @@ Five protocols are compared. Twenty independent random 80/20 holdout draws, pool
 
 
 
-![Figure 3](figures/fig3_grouping_rule_schematic.png)
+![Figure 3](figures/fig3_grouping_rule_schematic.png){width=100%}
 
 *Figure 3. The chemistry-cluster grouping rule: elements below 5 atomic percent are treated as dopants and collapsed into the host lattice, and host amounts within 5% of an integer are snapped to that integer before reduction, so Pb0.97Te and (PbTe)0.97(SrTe)0.02(Na2Te)0.01 both group with PbTe while Bi2Te2.7Se0.3 (Se at 6.0 at%) remains distinct from Bi2Te3.*
 
@@ -172,7 +180,7 @@ Table 1 gives pooled out-of-fold R² for four thermoelectric properties under fi
 
 
 
-![Figure 4](figures/fig2_validation_ladder.png)
+![Figure 4](figures/fig2_validation_ladder.png){width=100%}
 
 *Figure 4. Pooled out-of-fold R² by validation protocol and property (Table 1), with error bars showing each rung's own across-repeat, across-fold or across-draw standard deviation and brackets giving the random-80/20-to-chemistry-cluster gap.*
 
@@ -183,15 +191,10 @@ Table 1 gives pooled out-of-fold R² for four thermoelectric properties under fi
 
 
 | Target | random 80/20 (20 draws) | 5-fold | 10-fold | composition | chemistry cluster | gap |
-
 |---|---|---|---|---|---|---|
-
 | S | 0.9582 ± 0.0013 | 0.9585 ± 0.0013 | 0.9595 ± 0.0014 | 0.8322 ± 0.0044 | 0.7528 ± 0.0050 | 0.205 |
-
 | σ (log10) | 0.9150 ± 0.0009 | 0.9152 ± 0.0009 | 0.9174 ± 0.0024 | 0.7762 ± 0.0015 | 0.7020 ± 0.0020 | 0.213 |
-
 | κ (log10) | 0.9434 ± 0.0012 | 0.9436 ± 0.0013 | 0.9455 ± 0.0021 | 0.8565 ± 0.0013 | 0.8092 ± 0.0021 | 0.134 |
-
 | zT | 0.9180 ± 0.0014 | 0.9181 ± 0.0029 | 0.9193 ± 0.0032 | 0.8178 ± 0.0009 | 0.7456 ± 0.0045 | 0.172 |
 
 
@@ -208,7 +211,7 @@ The gap between the ungrouped and chemistry-cluster rungs ranges from **0.134 fo
 
 
 
-![Figure 5](figures/zt_parity_random_vs_grouped.png)
+![Figure 5](figures/zt_parity_random_vs_grouped.png){width=100%}
 
 *Figure 5. Predicted versus actual zT under random 80/20 (R² = 0.9180, n = 517,680) and chemistry-cluster (R² = 0.7456, n = 647,095) validation, identical axes and colour scale, showing the spread difference directly.*
 
@@ -242,7 +245,7 @@ We fit the figure-of-merit model under both random and chemistry-cluster splits 
 
 
 
-![Figure 6](figures/shap_attribution.png)
+![Figure 6](figures/shap_attribution.png){width=100%}
 
 *Figure 6. TreeSHAP attribution shares for zT, random versus chemistry-cluster splits, twenty-five folds per protocol: (a) three coarse descriptor families, (b) ten fine semantic groups sorted by mean share. Every pair overlaps within its across-fold standard deviation; the largest group difference (valence electron configuration) is 0.78 pooled fold-SD.*
 
@@ -257,13 +260,9 @@ The two protocols reproduce the expected R² gap: 0.9180 pooled under random spl
 
 
 | Family | random | chemistry cluster | Δ | Δ / pooled fold-SD |
-
 |---|---|---|---|---|
-
 | CBFV | 0.5377 ± 0.0049 | 0.5288 ± 0.0251 | −0.0089 | −0.49 |
-
 | MAGPIE | 0.2654 ± 0.0056 | 0.2759 ± 0.0228 | +0.0105 | +0.63 |
-
 | temperature | 0.1969 ± 0.0014 | 0.1953 ± 0.0058 | −0.0015 | −0.36 |
 
 
@@ -316,7 +315,7 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 
-![Figure 7](figures/fig5_headroom.png)
+![Figure 7](figures/fig5_headroom.png){width=100%}
 
 *Figure 7. Decomposition of each property's R² = 0 to 1 range into achieved (chemistry-cluster grouped R²), headroom to the combined label-noise ceiling, digitization noise and measurement noise, with the ungrouped random-80/20 R² marked to show how much apparent performance is validation artefact rather than real headroom closed.*
 
@@ -327,17 +326,11 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 | Target | R²max (measurement) | Digitization ceiling | Combined | Grouped R² | Headroom |
-
 |---|---|---|---|---|---|
-
 | S | 0.9974 | 0.9639–0.9819 | 0.9613–0.9794 | 0.7528 | 0.209–0.227 |
-
 | σ | 0.9968 | 0.9840–0.9920 | 0.9807–0.9888 | 0.7020 | 0.279–0.287 |
-
 | κ | 0.9777 | 0.9833–0.9916 | 0.9609–0.9693 | 0.8092 | 0.152–0.160 |
-
 | zT (declared) | 0.9761 | 0.9807–0.9903 | 0.9568–0.9665 | 0.7456 | 0.211–0.221 |
-
 | zT (recomputed) | 0.9761 | 0.9839–0.9919 | 0.9600–0.9680 | 0.7456 | 0.214–0.222 |
 
 
@@ -362,7 +355,7 @@ To test this we refit each target under chemistry-cluster grouped CV using three
 
 
 
-![Figure 8](figures/descriptor_ablation.png)
+![Figure 8](figures/descriptor_ablation.png){width=100%}
 
 *Figure 8. Chemistry-cluster grouped R² at 133 (MAGPIE), 265 (CBFV) and 397 (full) features, one panel per property, against the combined label-noise ceiling band; the full-minus-MAGPIE gain closes 2.2 to 4.2% of the remaining headroom on every property.*
 
@@ -373,15 +366,10 @@ To test this we refit each target under chemistry-cluster grouped CV using three
 
 
 | Target | MAGPIE (133) | CBFV (265) | Full (397) | Δ full−MAGPIE | % of headroom |
-
 |---|---|---|---|---|---|
-
 | S | 0.7464 ± 0.0039 | 0.7502 ± 0.0029 | 0.7528 ± 0.0050 | +0.0065 | 2.9–3.1 |
-
 | σ | 0.6919 ± 0.0011 | 0.7018 ± 0.0020 | 0.7020 ± 0.0020 | +0.0101 | 3.5–3.6 |
-
 | κ | 0.8028 ± 0.0025 | 0.8048 ± 0.0026 | 0.8092 ± 0.0021 | +0.0064 | 4.0–4.2 |
-
 | zT | 0.7406 ± 0.0024 | 0.7443 ± 0.0042 | 0.7456 ± 0.0045 | +0.0049 | 2.2–2.3 |
 
 
@@ -427,27 +415,16 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 | Stratum | Property | Full R² | n | In-support R² | n | OOD fraction |
-
 |---|---|---|---|---|---|---|
-
 | DOI-disjoint | S | 0.5664 | 3,123 | 0.7404 | 2,709 | 2.4% |
-
 | DOI-disjoint | σ | 0.3988 | 3,123 | 0.6132 | 2,709 | 12.0% |
-
 | DOI-disjoint | κ | 0.6892 | 3,123 | 0.7314 | 2,709 | 2.9% |
-
 | DOI-disjoint | zT direct | 0.6615 | 3,123 | 0.6686 | 2,709 | — |
-
 | DOI-disjoint | zT derived | 0.2064 | 3,123 | 0.3286 | 2,709 | — |
-
 | cluster-disjoint | S | 0.3536 | 1,448 | 0.5115 | 1,196 | 2.3% |
-
 | cluster-disjoint | σ | 0.2746 | 1,448 | 0.4085 | 1,196 | 15.5% |
-
 | cluster-disjoint | κ | 0.6184 | 1,448 | 0.6565 | 1,196 | 4.5% |
-
 | cluster-disjoint | zT direct | 0.4982 | 1,448 | 0.5343 | 1,196 | — |
-
 | cluster-disjoint | zT derived | −0.0959 | 1,448 | −0.0814 | 1,196 | — |
 
 
@@ -456,7 +433,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-![Figure 9](figures/external_transfer.png)
+![Figure 9](figures/external_transfer.png){width=100%}
 
 *Figure 9. Internal chemistry-cluster, external full-set and external in-support R² by property: (a) ESTM DOI-disjoint, (b) ESTM cluster-disjoint, (c) teMatDb DOI-disjoint (no in-support split; out-of-support tail 0.12%). Out-of-support fraction annotated above each property group; zT derived is excluded as numerically unstable. teMatDb's 27-cluster chemistry-disjoint stratum is not shown.*
 
@@ -466,7 +443,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-![Figure 10](figures/sigma_extrapolation.png)
+![Figure 10](figures/sigma_extrapolation.png){width=100%}
 
 *Figure 10. Density of log10(electrical conductivity) for the training set and for ESTM's cluster-disjoint rows, with training's cleaned conductivity floor (≈959 S m⁻¹) marked; 15.5% of ESTM cluster-disjoint mass falls below it.*
 
@@ -500,7 +477,7 @@ The figure of merit can be predicted directly or assembled from separately predi
 
 
 
-![Figure 11](figures/zt_direct_vs_derived.png)
+![Figure 11](figures/zt_direct_vs_derived.png){width=100%}
 
 *Figure 11. Predicted versus actual zT, direct prediction (R² = 0.7267) versus reconstruction from S, σ and κ via S²σT/κ (R² = 0.5403), identical axes and colour scale, n = 280,440 pooled across five repeats of the 56,088-row subset.*
 
@@ -643,3 +620,34 @@ Transfer to independent databases degrades further, though between a third and a
 
 
 For practitioners, the recommendation is specific: report grouped cross-validation, state the grouping rule, and report the fraction of any external evaluation that falls outside the training range. For the field, the implication is that current composition-based models are further from the achievable limit than published figures suggest, and that closing the remaining distance will require representations that encode structure and processing rather than larger sets of composition-derived features.
+
+
+## Data availability
+
+The Starrydata2 snapshot used in this study (pulled 22 August 2026) is identified by its SHA-256 hash and archived with the analysis outputs. ESTM and teMatDb are publicly available from their original sources [@na2022public; @ryu2025tematdb]. Per-row predictions, model checkpoints and all intermediate results are available in the project repository.
+
+## Code availability
+
+All code for data cleaning, featurization, model training, validation and figure generation is available at https://github.com/behzadgull/te-ml-pipeline (commit TODO at submission). An archived release with a DOI will be deposited at submission.
+
+## Author contributions
+
+TODO: to be agreed with the supervisor.
+
+## Competing interests
+
+The authors declare no competing interests.
+
+## Funding
+
+TODO
+
+## Acknowledgements
+
+TODO
+
+## Use of AI tools
+
+Claude (Anthropic), including the Claude Code agent, was used to assist with writing and reviewing analysis code, checking numerical results against stored outputs, verifying references, and editing the manuscript text. All scientific decisions, analyses and conclusions were made and verified by the authors, who take full responsibility for the content.
+
+## References
