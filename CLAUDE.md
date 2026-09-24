@@ -2176,9 +2176,10 @@ restricting ESTM's cluster-disjoint stratum to in-support rows "recovers 15
 to 40% of the loss, depending on property" comes from
 `scripts/insupport_share.py`, which reads the saved per-row predictions
 (`results/external_snapfix/20260917T160553/estm_predictions_pass{a,b}.npz`)
-and writes `reports/insupport_share/<UTC timestamp>/` (the latest folder,
-produced from a clean tree, is the source; earlier folders are dirty-tree
-runs and were deleted). Measure: (R2 in-support - R2 full) / (internal
+and writes `reports/insupport_share/<UTC timestamp>/`. The source is
+`reports/insupport_share/20260924T194948Z/`, produced from a clean tree at
+commit 48915cc (`tree_clean` true in its `run_config.json`); the earlier
+dirty-tree folder was deleted. Measure: (R2 in-support - R2 full) / (internal
 chemistry-cluster R2 - R2 full): S 39.6%, sigma 31.3%, kappa 20.0%, zT
 14.6%. The in-support rows are a different subset from the full set, so
 this compares row sets rather than decomposing the loss. It replaces the

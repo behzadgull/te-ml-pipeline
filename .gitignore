@@ -56,3 +56,6 @@ kaggle_out/
 
 # rendered manuscript (pandoc output, regenerated from paper/paper.md)
 paper/build/
+
+# superseded run (File B hyperparameter cache); documented in CLAUDE.md; kept locally only
+results/direct_vs_derived_snapfix/20260918T103933/
