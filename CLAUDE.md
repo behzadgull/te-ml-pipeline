@@ -2356,7 +2356,29 @@ test" without this qualifier.
   file's folder) and `.` (for `figures/`); its separator is `;` on
   Windows and `:` elsewhere (the `.sh` uses `:`, verified only by
   `bash -n`, not run on Linux). Output goes to `paper/build/`, gitignored.
-- Figures 1 and 3 (`fig1_leakage_schematic`, `fig3_grouping_rule_schematic`) are
+- **Figure numbering in paper.md (2026-09-24):** Figure 1 is the leakage
+  schematic (`fig1_leakage_schematic`), Figure 2 the study overview
+  (`fig0_study_overview`, start of Section 2), Figure 3 the cleaning funnel,
+  Figure 4 the grouping-rule schematic (`fig3_grouping_rule_schematic`),
+  and so on to Figure 12; figure FILE names do not track paper numbers.
+  Figures must be numbered in order of first mention in the text.
+- **Study overview (`make_study_overview`):** every count and section number
+  is read from a committed artifact and asserted before drawing (papers,
+  curves, cleaned rows from `results/cleaning_funnel/20260914T100914/
+  funnel_counts.json`; per-target rows and 397 features from the ladder
+  metrics; the 132 MAGPIE + 264 CBFV + T split from the descriptor-ablation
+  metrics, whose feature-set sizes 133/265/397 each include
+  `temperature_bin`; the 56,088-row subset from the per_target
+  `results.json`; section numbers from paper.md's headings; the snapshot
+  date from `results/raw_pull_metadata/extraction_metadata.json`, SHA256
+  `d101d6675ceb15190a435da19783b9bbdba616caebb46009275ca1429653c1e3`, a
+  byte-exact committed copy of the gitignored raw pull record, marked
+  `-text` in `.gitattributes` so line endings cannot change its bytes). It
+  also asserts that each text block fits its box. It reads no gitignored
+  input and was verified in a fresh clone (byte-identical PNG). The
+  snapshot date "22 August 2026" is the source database's own JST snapshot
+  label and also the UTC pull date; 02:00 JST is 21 August 17:00 UTC.
+- Figures 1 and 4 (`fig1_leakage_schematic`, `fig3_grouping_rule_schematic`) are
   schematics drawn by `scripts/make_figures.py` with no data files read; the
   placeholder warnings are gone and the build must be warning-free.
   `make_grouping_rule_schematic` gets every ID from `chemistry_cluster_id`,

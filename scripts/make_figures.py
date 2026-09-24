@@ -8,6 +8,7 @@ written by src/data_cleaning.py; run that first.
 
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -2023,6 +2024,241 @@ def make_grouping_rule_schematic(out_path):
     return traces
 
 
+# ---------------------------------------------------------------------------
+# Study-overview workflow figure (paper Figure 1). Every count is read from a
+# committed artifact or the featurized CSV header and asserted before drawing;
+# section numbers are read from paper.md's headings.
+# ---------------------------------------------------------------------------
+
+FUNNEL_COUNTS_PATH = Path("results/cleaning_funnel/20260914T100914/funnel_counts.json")
+# committed copy of the raw pull record (README beside it: original path and SHA256)
+RAW_PULL_METADATA_PATH = Path("results/raw_pull_metadata/extraction_metadata.json")
+RAW_PULL_METADATA_SHA256 = "d101d6675ceb15190a435da19783b9bbdba616caebb46009275ca1429653c1e3"
+PAPER_MD_PATH = Path("paper/paper.md")
+OVERVIEW_TARGETS = ["S", "sigma", "kappa", "zT"]
+OVERVIEW_TARGET_SYMBOLS = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
+# heading keyword -> analysis key; each must match exactly one "## 3.x" heading in paper.md
+OVERVIEW_SECTION_KEYWORDS = {
+    "ladder": "Grouped validation lowers",
+    "attribution": "test-set composition",
+    "ceiling": "measured ceiling",
+    "ablation": "Tripling the descriptor count",
+    "external": "Transfer to independent databases",
+    "direct_vs_derived": "Predicting zT directly",
+}
+
+
+def _sha256_file(path, chunk=1 << 22):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for block in iter(lambda: f.read(chunk), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def load_study_overview_facts():
+    """
+    Gather and assert every number and section label the overview figure shows.
+
+    Sources, all committed (no gitignored input is read, so this runs from a fresh clone): funnel_counts.json
+    (papers, curves, cleaned rows, stage count, verification gate); the ladder metrics (per-target rows, feature
+    count); the descriptor-ablation metrics (feature-set sizes; every set includes temperature_bin, see
+    nested_cv.get_feature_columns, so MAGPIE = 133 - 1 and CBFV = 265 - 1); results/raw_pull_metadata (the raw
+    pull's own record: snapshot date and raw counts, SHA256-checked); paper.md (section numbers from headings).
+    Each value is also checked against the sentence in paper.md that states it, so the figure and the text
+    cannot drift.
+    """
+    paper = PAPER_MD_PATH.read_text(encoding="utf-8")
+    facts = {}
+
+    funnel = json.loads(FUNNEL_COUNTS_PATH.read_text(encoding="utf-8"))
+    assert len(funnel["funnel"]) == 11, len(funnel["funnel"])
+    assert funnel["verification_gate"]["match"] is True
+    facts["papers"] = funnel["raw_input_row_counts"]["papers"]
+    facts["curves"] = funnel["raw_input_row_counts"]["curves"]
+    facts["cleaned_rows"] = funnel["funnel"][-1]["rows"]
+    assert funnel["funnel"][-1]["step"].startswith("11_"), funnel["funnel"][-1]["step"]
+    assert facts["cleaned_rows"] == funnel["verification_gate"]["step11_computed_rows"]
+    assert facts["cleaned_rows"] == CLEANING_STEPS[-1][1] and facts["curves"] == RAW_CURVES
+
+    ladder = json.loads(LADDER_METRICS_PATH.read_text(encoding="utf-8"))["runs"]
+    n_features = set()
+    facts["target_rows"] = {}
+    for t in OVERVIEW_TARGETS:
+        runs = {k: v for k, v in ladder.items() if v["target"] == t}
+        assert runs, t
+        rows = {v["n_rows_header"] for v in runs.values()}
+        assert len(rows) == 1, (t, rows)
+        facts["target_rows"][t] = rows.pop()
+        n_features |= {v["n_features"] for k, v in runs.items() if v["feature_set"] == "full"}
+    assert len(n_features) == 1, n_features
+    facts["n_features_ladder"] = n_features.pop()
+
+    ablation = json.loads(DESCRIPTOR_ABLATION_METRICS_PATH.read_text(encoding="utf-8"))
+    per_set = {}
+    for name in ("magpie", "cbfv", "full"):
+        vals = {ablation[t][name]["n_features"] for t in OVERVIEW_TARGETS}
+        assert len(vals) == 1, (name, vals)
+        per_set[name] = vals.pop()
+    facts["n_temperature"] = 1                                   # temperature_bin is in every feature set
+    facts["n_magpie"] = per_set["magpie"] - facts["n_temperature"]
+    facts["n_cbfv"] = per_set["cbfv"] - facts["n_temperature"]
+    assert per_set["full"] == facts["n_features_ladder"]
+    assert facts["n_magpie"] + facts["n_cbfv"] + facts["n_temperature"] == facts["n_features_ladder"], facts
+
+    # snapshot date: the raw pull's own record (committed copy), not a filename
+    from datetime import datetime
+
+    raw_meta_path = RAW_PULL_METADATA_PATH
+    assert _sha256_file(raw_meta_path) == RAW_PULL_METADATA_SHA256, f"{raw_meta_path} does not match its recorded SHA256"
+    meta = json.loads(raw_meta_path.read_text(encoding="utf-8"))
+    assert meta["files"]["papers"]["counted_row_count"] == facts["papers"]
+    assert meta["files"]["curves"]["counted_row_count"] == facts["curves"]
+    pulled = datetime.fromisoformat(meta["extraction_timestamp_utc"])
+    assert meta["upstream_db_snapshot"].startswith(pulled.strftime("%Y-%m-%d")), meta["upstream_db_snapshot"]
+    facts["snapshot_date"] = f"{pulled.day} {pulled:%b %Y}"
+    facts["snapshot_date_long"] = f"{pulled.day} {pulled:%B %Y}"
+    facts["snapshot_source"] = f"{raw_meta_path} (extraction_timestamp_utc {meta['extraction_timestamp_utc']}; upstream_db_snapshot {meta['upstream_db_snapshot']})"
+
+    dvd = json.loads((DIRECT_VS_DERIVED_CHECKPOINT_DIR / "results.json").read_text(encoding="utf-8"))
+    dvd_cfg = json.loads((DIRECT_VS_DERIVED_CHECKPOINT_DIR / "run_config.json").read_text(encoding="utf-8"))
+    assert dvd["hyperparams_mode"] == "per_target" and dvd["subset_n_rows"] == dvd_cfg["subset_n_rows"]
+    facts["dvd_subset_rows"] = dvd["subset_n_rows"]
+
+    headings = re.findall(r"^## (3\.\d+) (.*)$", paper, flags=re.M)
+    facts["sections"] = {}
+    for key, kw in OVERVIEW_SECTION_KEYWORDS.items():
+        hits = [num for num, title in headings if kw in title]
+        assert len(hits) == 1, (key, kw, hits)
+        facts["sections"][key] = hits[0]
+
+    # the same numbers, as written in paper.md
+    def paper_has(*needles):
+        for n in needles:
+            assert n in paper, f"paper.md does not contain {n!r}"
+    paper_has(f"{facts['papers']:,} publications", f"{facts['curves']:,} digitized property curves",
+              f"{facts['cleaned_rows']:,} rows", f"{facts['n_features_ladder']} features",
+              f"{facts['n_magpie']} MAGPIE", f"{facts['n_cbfv']} CBFV")
+    paper_has(*[f"{v:,}" for v in facts["target_rows"].values()])
+    paper_has(f"taken on {facts['snapshot_date_long']}", f"{facts['dvd_subset_rows']:,}")
+    return facts
+
+
+def make_study_overview(out_path):
+    """
+    Study-overview workflow figure: data pipeline on top, five analyses below, and the shared model box
+    spanning them. Drawn at 16 cm width with all text at 8 pt or larger; no colour carries meaning
+    (analyses are labelled A to E and carry their section number). After drawing, every text block is
+    checked to lie inside its box, so an overflow fails the run instead of shipping.
+    """
+    from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+    f = load_study_overview_facts()
+    sec = f["sections"]
+    tr = f["target_rows"]
+    sym = OVERVIEW_TARGET_SYMBOLS
+
+    W = 16.0                               # cm
+    top_w, top_h, gap = 3.4, 2.75, 0.8
+    a_h, a_y, b_h = 7.35, 1.85, 1.35
+    H = a_y + a_h + 1.1 + top_h + 0.2
+    fs, fs_title = 8.0, 8.0                # points; the minimum size is 8
+    # save_figure crops with bbox_inches='tight' and its 0.1 in pad on each side (0.508 cm in total), so the canvas is
+    # made that much narrower: the saved PNG is 16.0 cm wide at its natural size, and 8 pt text stays 8 pt at 16 cm
+    fig, ax = plt.subplots(figsize=((W - 0.508) / 2.54, H / 2.54))
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)          # axes fill the figure
+    ax.set_xlim(-0.1, W + 0.1)
+    ax.set_ylim(0, H)
+    ax.axis("off")
+    checks = []                            # (text artist, (x0, y0, x1, y1) of its box)
+
+    def box(x, y, w, h, head, body, face="white"):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.0,rounding_size=0.12",
+                                    fc=face, ec="0.15", lw=0.9))
+        t1 = ax.text(x + w / 2, y + h - 0.15, head, ha="center", va="top", fontsize=fs_title,
+                     fontweight="bold", color="0.1", linespacing=1.3)
+        fig.canvas.draw()                  # place the body just below the rendered heading, whatever its line count
+        head_bottom = ax.transData.inverted().transform((0, t1.get_window_extent(fig.canvas.get_renderer()).y0))[1]
+        t2 = ax.text(x + w / 2, head_bottom - 0.3, body, ha="center", va="top",
+                     fontsize=fs, color="0.1", linespacing=1.3)
+        checks.extend([(t1, (x, y, x + w, y + h)), (t2, (x, y, x + w, y + h))])
+
+    def arrow(p0, p1):
+        ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=9, lw=0.9, color="0.25",
+                                     shrinkA=0, shrinkB=0))
+
+    # ---- top row: data pipeline
+    top_y = H - 0.2 - top_h
+    xs = [i * (top_w + gap) for i in range(4)]
+    box(xs[0], top_y, top_w, top_h, "Starrydata2\nsnapshot",
+        f"{f['snapshot_date']}\n{f['papers']:,} papers\n{f['curves']:,} curves")
+    box(xs[1], top_y, top_w, top_h, "Cleaning", f"11 stages\n{f['cleaned_rows']:,} rows")
+    box(xs[2], top_y, top_w, top_h, "Featurization",
+        f"{f['n_magpie']} MAGPIE\n+ {f['n_cbfv']} CBFV\n+ T\n= {f['n_features_ladder']} features")
+    per_target = "\n".join(f"{sym[t]}  {tr[t]:,}" for t in OVERVIEW_TARGETS)
+    box(xs[3], top_y, top_w, top_h, "Per-target\ndatasets", per_target)
+    for i in range(3):
+        arrow((xs[i] + top_w + 0.03, top_y + top_h / 2), (xs[i + 1] - 0.03, top_y + top_h / 2))
+
+    # ---- five analysis boxes (line breaks are explicit so the maths string stays intact)
+    n, a_gap = 5, 0.3
+    a_w = (W - a_gap * (n - 1)) / n
+    analyses = [
+        (f"(A)  \u00a7{sec['ladder']}\nValidation\nladder",
+         "ungrouped:\nrandom 80/20,\n5-fold, 10-fold\n\ngrouped\n(5 \u00d7 5 CV):\ncomposition,\nchemistry\ncluster\n\n+ attribution\ncontrol (\u00a7" + sec["attribution"]
+         + "):\nTreeSHAP,\nrandom vs\ngrouped"),
+        (f"(B)  \u00a7{sec['ceiling']}\nLabel-noise\nceiling",
+         "round-robin\nmeasurement\nnoise\n\n+ teMatDb\ndigitization\nnoise"),
+        (f"(C)  \u00a7{sec['ablation']}\nDescriptor\nablation", "feature sets:\nMAGPIE,\nCBFV,\nfull"),
+        (f"(D)  \u00a7{sec['external']}\nExternal\ntransfer", "ESTM,\nteMatDb;\nin-support\nrestriction"),
+        (f"(E)  \u00a7{sec['direct_vs_derived']}\nDirect vs\nderived zT",
+         "zT predicted\ndirectly vs\n$S^2\\sigma T/\\kappa$\nfrom predicted\ncomponents\n\n" + f"{f['dvd_subset_rows']:,}-row\nsubset"),
+    ]
+    order = [float(x) for x in (sec["ladder"], sec["ceiling"], sec["ablation"], sec["external"], sec["direct_vs_derived"])]
+    assert all(0 < (b_ - a_) < 1 for a_, b_ in zip([3.0] + order, order)) and order == sorted(order), order   # boxes run in section order
+    x_centres = []
+    for i, (head, body) in enumerate(analyses):
+        x0 = i * (a_w + a_gap)
+        x_centres.append(x0 + a_w / 2)
+        box(x0, a_y, a_w, a_h, head, body, face="0.95")
+    bus_y = top_y - 0.55
+    x_src = x_centres[-1]                                   # the last box's centre lies under the last top box
+    assert xs[3] < x_src < xs[3] + top_w
+    ax.plot([x_src, x_src], [top_y, bus_y], color="0.25", lw=0.9)
+    ax.plot([x_centres[0], x_src], [bus_y, bus_y], color="0.25", lw=0.9)
+    for xc in x_centres:
+        arrow((xc, bus_y), (xc, a_y + a_h + 0.03))
+
+    # ---- bottom box spanning A-E
+    ax.add_patch(FancyBboxPatch((0, 0.1), W, b_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
+    t = ax.text(W / 2, 0.1 + b_h / 2 + 0.25, "XGBoost, frozen per-target hyperparameters",
+                ha="center", va="center", fontsize=fs_title, fontweight="bold", color="0.1", linespacing=1.3)
+    t2 = ax.text(W / 2, 0.1 + b_h / 2 - 0.3, "same model in every model-based analysis", ha="center", va="center",
+                 fontsize=fs, color="0.1", style="italic")
+    checks.extend([(t, (0, 0.1, W, 0.1 + b_h)), (t2, (0, 0.1, W, 0.1 + b_h))])
+    for i, xc in enumerate(x_centres):
+        if i == 1:                                          # (B) label-noise ceiling trains no model
+            continue
+        ax.plot([xc, xc], [a_y, 0.1 + b_h], color="0.25", lw=0.9, ls=(0, (3, 2)))
+
+    # every text block must lie inside its box (0.08 cm margin)
+    fig.canvas.draw()
+    inv = ax.transData.inverted()
+    renderer = fig.canvas.get_renderer()
+    for text, (bx0, by0, bx1, by1) in checks:
+        bb = text.get_window_extent(renderer)
+        (tx0, ty0), (tx1, ty1) = inv.transform((bb.x0, bb.y0)), inv.transform((bb.x1, bb.y1))
+        assert tx0 >= bx0 + 0.08 and tx1 <= bx1 - 0.08 and ty0 >= by0 + 0.08 and ty1 <= by1 - 0.08, (
+            f"text overflows its box: {text.get_text()[:40]!r} text=({tx0:.2f},{ty0:.2f},{tx1:.2f},{ty1:.2f}) "
+            f"box=({bx0:.2f},{by0:.2f},{bx1:.2f},{by1:.2f})")
+    for text, _ in checks:
+        assert text.get_fontsize() >= 8.0
+
+    save_figure(fig, out_path)
+    plt.close(fig)
+    return f
+
+
 def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -2064,6 +2300,9 @@ def main():
 
     make_zt_direct_vs_derived(FIGURES_DIR / "zt_direct_vs_derived")
     print("Saved zt_direct_vs_derived.png / .pdf")
+
+    make_study_overview(FIGURES_DIR / "fig0_study_overview")
+    print("Saved fig0_study_overview.png / .pdf")
 
     make_leakage_schematic(FIGURES_DIR / "fig1_leakage_schematic")
     print("Saved fig1_leakage_schematic.png / .pdf")
