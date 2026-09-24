@@ -2171,6 +2171,25 @@ pathway conclusion (direct beats derived) is unchanged. The naive
 only the protocol-consistent frozen-smear number this section reports as
 the result.
 
+**In-support share of ESTM's loss (2026-09-24).** The paper's claim that
+restricting ESTM's cluster-disjoint stratum to in-support rows "recovers 15
+to 40% of the loss, depending on property" comes from
+`scripts/insupport_share.py`, which reads the saved per-row predictions
+(`results/external_snapfix/20260917T160553/estm_predictions_pass{a,b}.npz`)
+and writes `reports/insupport_share/<UTC timestamp>/` (the latest folder,
+produced from a clean tree, is the source; earlier folders are dirty-tree
+runs and were deleted). Measure: (R2 in-support - R2 full) / (internal
+chemistry-cluster R2 - R2 full): S 39.6%, sigma 31.3%, kappa 20.0%, zT
+14.6%. The in-support rows are a different subset from the full set, so
+this compares row sets rather than decomposing the loss. It replaces the
+earlier "between a third and a half", which no reading of the data
+supported: the same measure on the DOI-disjoint stratum runs 9 to 93%
+(internal chemistry-cluster R2 is not that stratum's matched reference),
+and the share of external squared error from out-of-support rows runs 13
+to 79% across properties and strata. The script asserts the row counts
+(2,709 and 1,196 in-support) and the four quoted shares against its own
+output.
+
 **ESTM external validation: COMPLETE.** teMatDb: PENDING — a separate
 dataset, not yet downloaded (item 6 requires both, each touched exactly
 once).
@@ -2351,7 +2370,46 @@ test" without this qualifier.
   function itself, not from this re-implementation.
 - The author is a flat string list because pandoc's default docx and html
   templates print a map-valued author as "true" or drop it; the affiliation
-  is a top-level key that the default templates do not render.
+  is a top-level key that the default templates do not render. The YAML
+  also carries `corresponding-author` and `keywords`, likewise not rendered
+  by the default templates (see the Lua filter below).
+- **Submission manuscript (added 2026-09-24):** the third build output,
+  `paper/build/PaperA_manuscript.docx` (journal-neutral, Word), is
+  `pandoc paper/paper.md --resource-path="paper;." --citeproc
+  --csl=paper/csl/nature.csl --reference-doc=paper/templates/reference.docx
+  --lua-filter=paper/templates/frontmatter.lua`. Its pieces:
+  - `paper/csl/nature.csl`: the Nature numbered citation style, downloaded
+    from the citation-style-language/styles repository; the commit that
+    last touched it (`e0aa3018cd24b7be9a0e2acf3f9d83a6a78d8f0f`, 2026-09-08)
+    and the repository head at download
+    (`8947960dc3c5133a873d77342c77c67300a2bc18`) are recorded in the header
+    comment of both build scripts. References come out numbered in order of
+    first citation under the References heading, which must remain the last
+    line of `paper.md` so citeproc appends the bibliography there.
+  - `paper/templates/reference.docx`: the Word template (Times New Roman;
+    Normal and Body Text 12 pt, 1.5 spacing, justified; headings bold and
+    black; captions 10 pt; table text 10 pt single-spaced; grid table style;
+    A4, 2.5 cm margins; PAGE field in the footer; continuous line
+    numbering). Regenerate it with `paper/templates/make_reference_docx.py`
+    (needs python-docx) rather than editing the binary by hand. Line
+    numbers and the footer survive pandoc; checked by looking for
+    `w:lnNumType` and the footer part in `word/document.xml`.
+  - `paper/templates/frontmatter.lua`: prints the affiliation, corresponding
+    author and keywords above the abstract, drops the bare "Figure N"
+    alt-text caption that pandoc would print above each real caption, and
+    styles the italic caption paragraph as "Image Caption" and the bold
+    "Table N." paragraph as "Table Caption". It changes presentation only.
+  - Declarations (Data availability through Use of AI tools) and References
+    are unnumbered level-1 headings after "5. Conclusion". Their placeholder
+    TODOs (affiliation, email, commit hash, author contributions, funding,
+    acknowledgements) are for the authors to fill before submission.
+- **Table markup fix (2026-09-24):** every pipe table in `paper.md` had a
+  blank line between its rows, which makes pandoc parse each row as a
+  separate paragraph, so no table had ever rendered as a table in any
+  output (docx or html). Found while checking that tables render as Word
+  tables. The blank lines between pipe rows are removed; keep pipe-table
+  rows contiguous, and check for `<table>` in the html or `w:tbl` in the
+  docx after any edit to a table.
 
 ## Code conventions
 - Python, `src/` module structure (not notebooks) — this repo goes on

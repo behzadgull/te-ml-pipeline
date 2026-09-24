@@ -16,19 +16,7 @@ bibliography: refs.bib
 
 # Abstract
 
-
-
-Machine learning models predicting thermoelectric transport properties from composition are routinely reported with cross-validated R² above 0.9. We show that this figure is substantially inflated by the validation protocol. On a pinned snapshot of the Starrydata2 database, with hyperparameters held fixed throughout, moving from ungrouped to chemistry-cluster grouped cross-validation lowers R² by 0.134 to 0.213 across the Seebeck coefficient, electrical conductivity, thermal conductivity and figure of merit. k-fold cross-validation provides no protection: five-fold and ten-fold results are indistinguishable from repeated random 80/20 holdout. A feature-attribution control shows that the model relies on the same descriptors under both protocols, locating the inflation in test-set composition rather than in learned structure.
-
-
-
-We then ask what limits honest performance. Combining an inter-laboratory measurement round-robin with a direct comparison of two independent digitizations of the same published figures gives a label-noise ceiling of 0.96 to 0.99, against which grouped performance of 0.70 to 0.81 leaves 0.15 to 0.29 of headroom. A descriptor ablation shows this gap is not one of descriptor count: tripling the feature set from 133 to 397 closes under 4.2% of the headroom on every property, and two descriptor families of different construction are nearly interchangeable. Predicting the figure of merit directly outperforms reconstructing it from separately predicted components by 0.186 in R². Transfer to two independent databases degrades further, though 13 to 17 percent of external rows fall outside the training data's property range, and restricting to in-support rows recovers a substantial share of the apparent loss.
-
-
-
-The results indicate that composition-based thermoelectric models are further from their achievable limit than published figures suggest, and that the remaining distance is a property of the representation rather than of the number of descriptors or the size of the dataset.
-
-
+Machine learning models that predict thermoelectric transport properties from composition are routinely reported with R² above 0.9. On a pinned snapshot of the Starrydata2 database, with hyperparameters fixed throughout, we show that this figure is substantially inflated by the validation protocol. Chemistry-cluster grouped cross-validation lowers R² by 0.134 to 0.213 across the Seebeck coefficient, electrical and thermal conductivity and figure of merit; k-fold cross-validation offers no protection, and grouping by exact composition removes only 58 to 65% of the inflation. Feature attributions do not differ between protocols, locating the inflation in test-set composition rather than in what the model learns. A label-noise ceiling built from an inter-laboratory round-robin and a comparison of two independent digitizations of the same published figures lies at 0.96 to 0.99, 0.15 to 0.29 above grouped performance. Tripling the number of descriptors closes at most 4.2% of this gap, and predicting the figure of merit directly outperforms reconstructing it from predicted components by 0.186. On two independent databases performance falls further, and part of that loss is extrapolation beyond the training data's property range. Because additional composition descriptors do not close the remaining gap, it points to information that composition does not carry, such as structure and processing history.
 
 # 1. Introduction
 
@@ -64,7 +52,7 @@ We make four contributions. First, we quantify validation inflation across five 
 
 
 
-We then test transfer to two independent databases, finding a further degradation beyond the validation gap, of which a substantial share is extrapolation outside the training data's property range rather than failure to generalise.
+We then test transfer to two independent databases, finding a further degradation beyond the validation gap, part of which is extrapolation outside the training data's property range rather than failure to generalise.
 
 
 
@@ -339,7 +327,7 @@ Combined ceilings fall between 0.96 and 0.99, leaving **headroom of 0.15 to 0.29
 
 
 
-Three qualifications. The digitization term was measured on a subset whose target variance is narrower than the full database, which makes the combined ceiling conservative rather than optimistic. It shifted by up to 0.02 between two snapshots of the same source database taken one week apart, so the floor is quoted to two decimals at most. And both components read the same printed curve: neither captures synthesis-to-synthesis variation or processing differences between nominally identical specimens. The true label-noise floor is therefore larger than what is measured here, and the reported headroom is a lower bound on the gap that remains.
+Three qualifications. The digitization term was measured on 96 matched samples (Section 4.5), of which 80 to 87 enter each property's agreement figure (a sample counts for a property only if both databases hold a curve for it and at least one teMatDb point lies inside the temperature range of the matched training curve, within 5 K of one of its points, and between 300 and 800 K), and two properties of that subset bias it in opposite directions: its target variance is narrower than the full database's, which overstates the noise fraction and lowers the ceiling, while its simpler formulas are probably easier to digitize accurately, which understates the noise and raises the ceiling; we cannot net the two. The term also shifted by up to 0.02 between two snapshots of the same source database taken one week apart, so the floor is quoted to two decimals at most. Finally, both components read the same printed curve, so neither captures synthesis-to-synthesis variation or processing differences between nominally identical specimens. For a composition-based model that variation is also label noise, so the true ceiling for such models lies below the one reported here, and the headroom is an upper bound on what any composition representation could recover (Section 4.2).
 
 
 
@@ -394,7 +382,7 @@ The conclusion is that the gap between honest performance and the noise ceiling 
 
 
 
-## 3.5 Transfer to independent databases degrades further, and much of the loss is extrapolation rather than failure to generalise
+## 3.5 Transfer to independent databases degrades further, and part of the loss is extrapolation rather than failure to generalise
 
 
 
@@ -439,7 +427,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-**A large share of that loss is extrapolation, not failure to generalise.** External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties (Figure 10). Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
+**Part of that loss is extrapolation, not failure to generalise: on ESTM's cluster-disjoint stratum, restricting to in-support rows recovers 15 to 40% of it, depending on property (the gain in R² from restricting to in-support rows, as a fraction of the drop from internal grouped R² to external R²; because the in-support rows are a different subset, this compares row sets rather than decomposing the loss).** External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties (Figure 10). Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
 
 
 
@@ -527,7 +515,7 @@ What remains is a property of the representation rather than its size. Thermoele
 
 
 
-The ceiling we report is conservative in a specific way worth stating. Both noise components read measurements from the same published figure: the inter-laboratory round-robin measures apparatus scatter, and the cross-database digitization comparison measures reading error. Neither captures synthesis-to-synthesis variation between nominally identical specimens. The true label-noise floor is therefore higher than the one we measure, and the reported headroom is a lower bound on the gap that remains.
+The ceiling we report is optimistic in one respect whose direction is certain. Both noise components read measurements from the same published figure: the inter-laboratory round-robin measures apparatus scatter, and the cross-database digitization comparison measures reading error. Neither captures synthesis-to-synthesis variation between nominally identical specimens. From the standpoint of a composition-based model that variation is also noise, so the true ceiling for such models lies below the one we measure, and the reported headroom is an upper bound on what any composition representation could recover.
 
 
 
@@ -535,7 +523,7 @@ The ceiling we report is conservative in a specific way worth stating. Both nois
 
 
 
-Section 3.5 finds a second gap beyond the validation-protocol gap, but decomposes it. Between 13 and 17 percent of external rows fall outside the property ranges the training data covers, almost entirely in electrical conductivity, where the external tail reaches an order of magnitude below training's cleaned floor. Restricting to rows within support recovers a substantial share of the apparent loss: σ improves from 0.275 to 0.409 on the cluster-disjoint stratum.
+Section 3.5 finds a second gap beyond the validation-protocol gap, but decomposes it. Between 13 and 17 percent of external rows fall outside the property ranges the training data covers, almost entirely in electrical conductivity, where the external tail reaches an order of magnitude below training's cleaned floor. Restricting to rows within support recovers part of the apparent loss: σ improves from 0.275 to 0.409 on the cluster-disjoint stratum.
 
 
 
@@ -587,7 +575,7 @@ The measurement-noise component of the ceiling derives from a round-robin on a s
 
 
 
-The digitization-noise component was measured on 96 of 176 candidate samples, those whose compositions canonicalise identically in both databases. Samples that match are those with simpler formulas, which may also be easier to digitize accurately, so this component may be optimistic. It also shifted by up to 0.02 between two snapshots of the same source database taken one week apart.
+The digitization-noise component was measured on 96 of 176 candidate samples, those whose compositions canonicalise identically in both databases. Samples that match are those with simpler formulas, which may also be easier to digitize accurately, so this component may be optimistic, although the narrower target variance of the same subset works in the opposite direction (Section 3.3). It also shifted by up to 0.02 between two snapshots of the same source database taken one week apart.
 
 
 
@@ -615,39 +603,39 @@ Honest grouped performance of 0.70 to 0.81 sits 0.15 to 0.29 below a label-noise
 
 
 
-Transfer to independent databases degrades further, though between a third and a half of the apparent loss is extrapolation beyond the property ranges the training data covers rather than failure to generalise on inputs the model should handle.
+Transfer to independent databases degrades further, though restricting ESTM's cluster-disjoint stratum to rows inside the training data's property range recovers 15 to 40% of the loss, depending on property, so part of the apparent loss is extrapolation beyond the property ranges the training data covers rather than failure to generalise on inputs the model should handle.
 
 
 
 For practitioners, the recommendation is specific: report grouped cross-validation, state the grouping rule, and report the fraction of any external evaluation that falls outside the training range. For the field, the implication is that current composition-based models are further from the achievable limit than published figures suggest, and that closing the remaining distance will require representations that encode structure and processing rather than larger sets of composition-derived features.
 
 
-## Data availability
+# Data availability
 
 The Starrydata2 snapshot used in this study (pulled 22 August 2026) is identified by its SHA-256 hash and archived with the analysis outputs. ESTM and teMatDb are publicly available from their original sources [@na2022public; @ryu2025tematdb]. Per-row predictions, model checkpoints and all intermediate results are available in the project repository.
 
-## Code availability
+# Code availability
 
 All code for data cleaning, featurization, model training, validation and figure generation is available at https://github.com/behzadgull/te-ml-pipeline (commit TODO at submission). An archived release with a DOI will be deposited at submission.
 
-## Author contributions
+# Author contributions
 
 TODO: to be agreed with the supervisor.
 
-## Competing interests
+# Competing interests
 
 The authors declare no competing interests.
 
-## Funding
+# Funding
 
 TODO
 
-## Acknowledgements
+# Acknowledgements
 
 TODO
 
-## Use of AI tools
+# Use of AI tools
 
 Claude (Anthropic), including the Claude Code agent, was used to assist with writing and reviewing analysis code, checking numerical results against stored outputs, verifying references, and editing the manuscript text. All scientific decisions, analyses and conclusions were made and verified by the authors, who take full responsibility for the content.
 
-## References
+# References
