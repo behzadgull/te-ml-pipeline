@@ -1,17 +1,12 @@
-\# Validation Inflation, Descriptor Saturation, and the Label-Noise Ceiling in Thermoelectric Property Prediction
+---
+title: "Validation Inflation, Descriptor Saturation, and the Label-Noise Ceiling in Thermoelectric Property Prediction"
+author:
+  - Muhammad Behzad Gull
+affiliation: "TODO: Affiliation"
+bibliography: refs.bib
+---
 
-
-
-**Muhammad Behzad Gull**
-TODO: Affiliation
-
-
-
-## Abstract
-
-
-
-\## Abstract
+# Abstract
 
 
 
@@ -27,11 +22,7 @@ The results indicate that composition-based thermoelectric models are further fr
 
 
 
-# Introduction
-
-
-
-\## 1. Introduction
+# 1. Introduction
 
 
 
@@ -45,7 +36,7 @@ Such models are routinely reported with R² between 0.90 and 0.98 [@athar2026bey
 
 ![Figure 1](figures/fig1_leakage_schematic.png)
 
-*Figure 1. PLACEHOLDER -- file pending. Schematic of within-curve and near-duplicate leakage: a single material's temperature curve contributes one row per bin, and a doped series shares its host lattice across dopant labels, so rows that appear independent under random row-level splitting are not.*
+*Figure 1. PLACEHOLDER: file pending. Schematic of within-curve and near-duplicate leakage: a single material's temperature curve contributes one row per bin, and a doped series shares its host lattice across dopant labels, so rows that appear independent under random row-level splitting are not.*
 
 
 
@@ -69,15 +60,11 @@ We then test transfer to two independent databases, finding a further degradatio
 
 
 
-# Methods
+# 2. Data and Methods
 
 
 
-\## 2. Data and Methods
-
-
-
-\### 2.1 Dataset
+## 2.1 Dataset
 
 
 
@@ -85,7 +72,7 @@ Training data comes from Starrydata2 [@katsura2025starrydata], a community-curat
 
 
 
-\### 2.2 Cleaning pipeline
+## 2.2 Cleaning pipeline
 
 
 
@@ -107,7 +94,7 @@ The cleaned dataset contains 280,664 rows. After featurization it provides 185,0
 
 
 
-\### 2.3 Features
+## 2.3 Features
 
 
 
@@ -115,7 +102,7 @@ Each composition is described by 132 MAGPIE elemental-property attributes [@ward
 
 
 
-\### 2.4 Targets
+## 2.4 Targets
 
 
 
@@ -123,7 +110,7 @@ The Seebeck coefficient and figure of merit are modelled in linear space; electr
 
 
 
-\### 2.5 Validation protocols
+## 2.5 Validation protocols
 
 
 
@@ -133,7 +120,7 @@ Five protocols are compared. Twenty independent random 80/20 holdout draws, pool
 
 ![Figure 3](figures/fig3_grouping_rule_schematic.png)
 
-*Figure 3. PLACEHOLDER -- file pending. The chemistry-cluster grouping rule: elements below 5 atomic percent are treated as dopants and collapsed into the host lattice, and host amounts within 5% of an integer are snapped to that integer before reduction, so Pb0.97Te and (PbTe)0.97(SrTe)0.02(Na2Te)0.01 both group with PbTe while Bi2Te2.7Se0.3 (Se at 6.0 at%) remains distinct from Bi2Te3.*
+*Figure 3. PLACEHOLDER: file pending. The chemistry-cluster grouping rule: elements below 5 atomic percent are treated as dopants and collapsed into the host lattice, and host amounts within 5% of an integer are snapped to that integer before reduction, so Pb0.97Te and (PbTe)0.97(SrTe)0.02(Na2Te)0.01 both group with PbTe while Bi2Te2.7Se0.3 (Se at 6.0 at%) remains distinct from Bi2Te3.*
 
 
 
@@ -141,7 +128,7 @@ Random holdout draws and k-fold partitions are generated with scikit-learn [@ped
 
 
 
-\### 2.6 Model and hyperparameters
+## 2.6 Model and hyperparameters
 
 
 
@@ -149,7 +136,7 @@ All results use gradient-boosted trees (XGBoost [@chen2016xgboost]). Hyperparame
 
 
 
-\### 2.7 Significance testing
+## 2.7 Significance testing
 
 
 
@@ -157,7 +144,7 @@ Where two protocols differ by an amount comparable to repeat-to-repeat variation
 
 
 
-\### 2.8 External validation
+## 2.8 External validation
 
 
 
@@ -165,7 +152,7 @@ For external testing, models are refit on 100% of the training data with frozen 
 
 
 
-\### 2.9 Reproducibility
+## 2.9 Reproducibility
 
 
 
@@ -173,15 +160,11 @@ The dataset snapshot, model checkpoints, per-row predictions, frozen hyperparame
 
 
 
-# Results
+# 3. Results
 
 
 
-\## 3. Results
-
-
-
-\### 3.1 Grouped validation lowers reported accuracy by 0.13 to 0.21
+## 3.1 Grouped validation lowers reported accuracy by 0.13 to 0.21
 
 
 
@@ -195,7 +178,7 @@ Table 1 gives pooled out-of-fold R² for four thermoelectric properties under fi
 
 
 
-\*\*Table 1.\*\* Pooled out-of-fold R² by validation protocol. Composition and chemistry cluster report mean ± standard deviation across five independent repeats. Random 80/20, 5-fold and 10-fold report mean ± standard deviation across that rung's own folds or draws within a single pass (twenty draws for random 80/20, five or ten folds for k-fold), not across independent repeats. These two kinds of standard deviation are not directly comparable: one measures repeat-to-repeat spread under a newly drawn held-out partition each time, the other measures fold-to-fold or draw-to-draw spread within one partition.
+**Table 1.** Pooled out-of-fold R² by validation protocol. Composition and chemistry cluster report mean ± standard deviation across five independent repeats. Random 80/20, 5-fold and 10-fold report mean ± standard deviation across that rung's own folds or draws within a single pass (twenty draws for random 80/20, five or ten folds for k-fold), not across independent repeats. These two kinds of standard deviation are not directly comparable: one measures repeat-to-repeat spread under a newly drawn held-out partition each time, the other measures fold-to-fold or draw-to-draw spread within one partition.
 
 
 
@@ -221,7 +204,7 @@ Grouping changes the picture substantially. Requiring that no exact composition 
 
 
 
-The gap between the ungrouped and chemistry-cluster rungs ranges from \*\*0.134 for thermal conductivity to 0.213 for electrical conductivity\*\*, with a mean of 0.181 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped and grouped rungs use different resampling structures that cannot be paired. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above. Figure 5 shows the random-versus-chemistry-cluster gap directly, as predicted-versus-actual zT under both protocols.
+The gap between the ungrouped and chemistry-cluster rungs ranges from **0.134 for thermal conductivity to 0.213 for electrical conductivity**, with a mean of 0.181 across the four properties. Set against the across-repeat standard deviations of the grouped rungs, which run from 0.0020 to 0.0050, these gaps are 30 to 100 times the repeat-to-repeat spread. No formal test is required to establish that they are real, and none is available in any case: the ungrouped and grouped rungs use different resampling structures that cannot be paired. Their stability is instead attested by the mutual agreement of the three ungrouped protocols noted above. Figure 5 shows the random-versus-chemistry-cluster gap directly, as predicted-versus-actual zT under both protocols.
 
 
 
@@ -235,7 +218,7 @@ The narrower comparison between the two grouped rungs does warrant a test. Compo
 
 
 
-The practically important observation is that \*\*k-fold cross-validation offers no protection\*\*. Five-fold and ten-fold sit with the random split, not with the grouped rungs, because the leakage they fail to prevent is not fold-count dependent: it arises from the same material appearing, at different temperatures or under different dopant labels, on both sides of the split. A practitioner who moves from repeated random 80/20 holdout to ten-fold cross-validation in the belief that this makes the estimate more honest gains nothing.
+The practically important observation is that **k-fold cross-validation offers no protection**. Five-fold and ten-fold sit with the random split, not with the grouped rungs, because the leakage they fail to prevent is not fold-count dependent: it arises from the same material appearing, at different temperatures or under different dopant labels, on both sides of the split. A practitioner who moves from repeated random 80/20 holdout to ten-fold cross-validation in the belief that this makes the estimate more honest gains nothing.
 
 
 
@@ -243,7 +226,7 @@ Thermal conductivity inflates least, at 0.134. It is also the property that tran
 
 
 
-\### 3.2 The inflation reflects test-set composition, not a shift in learned structure
+## 3.2 The inflation reflects test-set composition, not a shift in learned structure
 
 
 
@@ -269,7 +252,7 @@ The two protocols reproduce the expected R² gap: 0.9180 pooled under random spl
 
 
 
-\*\*Table 2.\*\* Attribution shares by descriptor family, zT, twenty-five folds per protocol.
+**Table 2.** Attribution shares by descriptor family, zT, twenty-five folds per protocol.
 
 
 
@@ -289,7 +272,7 @@ Their attribution shares are indistinguishable. Disaggregating into ten semantic
 
 
 
-\*\*The model does not rely on different descriptors when near-duplicates are available to it.\*\* It applies the same learned structure and is graded on an easier test set, because the random-split held-out fold contains materials that also appear, at other temperatures or under other dopant labels, in training. Validation inflation in this setting is a property of how the data is partitioned, not of what the model learns.
+**The model does not rely on different descriptors when near-duplicates are available to it.** It applies the same learned structure and is graded on an easier test set, because the random-split held-out fold contains materials that also appear, at other temperatures or under other dopant labels, in training. Validation inflation in this setting is a property of how the data is partitioned, not of what the model learns.
 
 
 
@@ -309,7 +292,7 @@ This is a negative result and we report it as such: it rules out an alternative 
 
 
 
-\### 3.3 A measured ceiling on achievable performance
+## 3.3 A measured ceiling on achievable performance
 
 
 
@@ -317,11 +300,11 @@ Honest grouped performance of 0.70 to 0.81 is only interpretable against some no
 
 
 
-\*\*Measurement noise.\*\* Alleno et al. [@alleno2015round] report relative uncertainties from a round-robin in which the same specimen was measured by multiple laboratories: approximately 6% for the Seebeck coefficient, 8% for electrical resistivity (equivalently, to first order, conductivity), 11% for thermal conductivity and 19% for the figure of merit. The 19% figure for zT is the per-measurement standard uncertainty, the quantity that matches this dataset's row-level noise floor; Alleno et al. separately report a 17% expanded uncertainty on the mean of zT across the round-robin's repeated measurements, a different statistic that is not used here. Converting each to a noise variance and dividing by this dataset's own property variance in the matched space gives the expected upper bound on R² under label noise [@li2021performance], R²max = 1 − σ²noise/σ²total: 0.9974 for S, 0.9968 for σ, 0.9777 for κ and 0.9761 for zT. This estimate rests on a single skutterudite compound and excludes any error introduced by reading values from published figures.
+**Measurement noise.** Alleno et al. [@alleno2015round] report relative uncertainties from a round-robin in which the same specimen was measured by multiple laboratories: approximately 6% for the Seebeck coefficient, 8% for electrical resistivity (equivalently, to first order, conductivity), 11% for thermal conductivity and 19% for the figure of merit. The 19% figure for zT is the per-measurement standard uncertainty, the quantity that matches this dataset's row-level noise floor; Alleno et al. separately report a 17% expanded uncertainty on the mean of zT across the round-robin's repeated measurements, a different statistic that is not used here. Converting each to a noise variance and dividing by this dataset's own property variance in the matched space gives the expected upper bound on R² under label noise [@li2021performance], R²max = 1 − σ²noise/σ²total: 0.9974 for S, 0.9968 for σ, 0.9777 for κ and 0.9761 for zT. This estimate rests on a single skutterudite compound and excludes any error introduced by reading values from published figures.
 
 
 
-\*\*Digitization noise.\*\* That second component can be measured directly. The training data is digitized from figures in the primary literature, and an independent group [@ryu2025highquality] has digitized an overlapping set of the same publications. Taking samples whose DOI appears in both databases and whose canonical composition matches, and comparing the two sets of labels directly without any model, gives agreement over 300 to 800 K of R² = 0.9639 for S, 0.9840 for σ, 0.9833 for κ, and 0.9807 or 0.9839 for zT depending on whether the digitized or reconstructed target is used. This is measured on 96 of 176 DOI-overlap samples, those whose compositions canonicalise identically on both sides.
+**Digitization noise.** That second component can be measured directly. The training data is digitized from figures in the primary literature, and an independent group [@ryu2025highquality] has digitized an overlapping set of the same publications. Taking samples whose DOI appears in both databases and whose canonical composition matches, and comparing the two sets of labels directly without any model, gives agreement over 300 to 800 K of R² = 0.9639 for S, 0.9840 for σ, 0.9833 for κ, and 0.9807 or 0.9839 for zT depending on whether the digitized or reconstructed target is used. This is measured on 96 of 176 DOI-overlap samples, those whose compositions canonicalise identically on both sides.
 
 
 
@@ -329,7 +312,7 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 
-\*\*Combined.\*\* The two components are independent — the round-robin measures inter-laboratory scatter on physical specimens and explicitly excludes figure-reading error — so their noise fractions add: (1 − R²comb) = (1 − R²meas) + (1 − R²dig). Table 3 gives the result (Figure 7).
+**Combined.** The two components are independent (the round-robin measures inter-laboratory scatter on physical specimens and explicitly excludes figure-reading error), so their noise fractions add: (1 − R²comb) = (1 − R²meas) + (1 − R²dig). Table 3 gives the result (Figure 7).
 
 
 
@@ -339,7 +322,7 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 
-\*\*Table 3.\*\* Combined label-noise ceiling and remaining headroom.
+**Table 3.** Combined label-noise ceiling and remaining headroom.
 
 
 
@@ -359,7 +342,7 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 
 
-Combined ceilings fall between 0.96 and 0.99, leaving \*\*headroom of 0.15 to 0.29 R² on every property\*\*.
+Combined ceilings fall between 0.96 and 0.99, leaving **headroom of 0.15 to 0.29 R² on every property**.
 
 
 
@@ -367,7 +350,7 @@ Three qualifications. The digitization term was measured on a subset whose targe
 
 
 
-\### 3.4 Tripling the descriptor count closes under five percent of the remaining gap
+## 3.4 Tripling the descriptor count closes under five percent of the remaining gap
 
 
 
@@ -385,7 +368,7 @@ To test this we refit each target under chemistry-cluster grouped CV using three
 
 
 
-\*\*Table 4.\*\* Descriptor ablation under chemistry-cluster grouped CV.
+**Table 4.** Descriptor ablation under chemistry-cluster grouped CV.
 
 
 
@@ -407,7 +390,7 @@ Adding 264 CBFV features to the 132 MAGPIE attributes changes R² by 0.0049 to 0
 
 
 
-Measured against the headroom to the combined ceiling, it is not. \*\*Tripling the descriptor count closes between 2.2 and 4.2 percent of the gap that remains to the label-noise limit.\*\* On the current trajectory, closing the remaining headroom by adding composition-derived descriptors would require a representation orders of magnitude larger than anything in use.
+Measured against the headroom to the combined ceiling, it is not. **Tripling the descriptor count closes between 2.2 and 4.2 percent of the gap that remains to the label-noise limit.** On the current trajectory, closing the remaining headroom by adding composition-derived descriptors would require a representation orders of magnitude larger than anything in use.
 
 
 
@@ -423,7 +406,7 @@ The conclusion is that the gap between honest performance and the noise ceiling 
 
 
 
-\### 3.5 Transfer to independent databases degrades further, and much of the loss is extrapolation rather than failure to generalise
+## 3.5 Transfer to independent databases degrades further, and much of the loss is extrapolation rather than failure to generalise
 
 
 
@@ -439,7 +422,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-\*\*Table 5.\*\* External transfer on ESTM. Full-set and in-support results, the latter restricted to rows within training's per-property range in S, σ and κ simultaneously.
+**Table 5.** External transfer on ESTM. Full-set and in-support results, the latter restricted to rows within training's per-property range in S, σ and κ simultaneously.
 
 
 
@@ -469,7 +452,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-\*\*Transfer degrades substantially on both databases.\*\* On ESTM, for samples whose chemistry cluster is absent from training, R² falls to 0.354 for the Seebeck coefficient, 0.275 for electrical conductivity, 0.618 for thermal conductivity and 0.498 for the figure of merit, against internal grouped values of 0.753, 0.702, 0.809 and 0.746. teMatDb degrades comparably on samples from publications absent from training: 0.699, 0.175, 0.653 and 0.496. A second gap therefore exists beyond the one Section 3.1 measures, of similar or larger magnitude (Figure 9).
+**Transfer degrades substantially on both databases.** On ESTM, for samples whose chemistry cluster is absent from training, R² falls to 0.354 for the Seebeck coefficient, 0.275 for electrical conductivity, 0.618 for thermal conductivity and 0.498 for the figure of merit, against internal grouped values of 0.753, 0.702, 0.809 and 0.746. teMatDb degrades comparably on samples from publications absent from training: 0.699, 0.175, 0.653 and 0.496. A second gap therefore exists beyond the one Section 3.1 measures, of similar or larger magnitude (Figure 9).
 
 
 
@@ -479,7 +462,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 
 
-\*\*A large share of that loss is extrapolation, not failure to generalise.\*\* External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties (Figure 10). Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
+**A large share of that loss is extrapolation, not failure to generalise.** External datasets extend beyond the property ranges the training data covers, and the model is being asked to predict outside its support. Restricting to rows within training's per-property range in all of S, σ and κ simultaneously, 13.3% of ESTM's DOI-disjoint rows and 17.4% of its cluster-disjoint rows fall outside. Electrical conductivity dominates that exclusion: 12.0% and 15.5% of rows sit below training's cleaned conductivity floor of roughly 959 S m⁻¹, against 2 to 5% for the other two properties (Figure 10). Temperature contributes nothing, because the 300–800 K window is enforced on both sides before anything else runs.
 
 
 
@@ -493,11 +476,11 @@ Within support, performance recovers markedly. For the cluster-disjoint stratum,
 
 
 
-The interpretation matters for what the result means in practice. \*\*A model that fails on out-of-support inputs is not the same as a model that fails to generalise.\*\* Roughly a third of σ's apparent external failure is the model being asked to predict conductivities an order of magnitude below anything it was trained on. The remaining 0.29 is genuine cross-database degradation on inputs the model should in principle handle, and it is that residual, not the headline full-set number, that the second inflation gap should be read as.
+The interpretation matters for what the result means in practice. **A model that fails on out-of-support inputs is not the same as a model that fails to generalise.** Roughly a third of σ's apparent external failure is the model being asked to predict conductivities an order of magnitude below anything it was trained on. The remaining 0.29 is genuine cross-database degradation on inputs the model should in principle handle, and it is that residual, not the headline full-set number, that the second inflation gap should be read as.
 
 
 
-\*\*Degradation is not uniform across databases.\*\* ESTM transfers worse on the Seebeck coefficient; teMatDb transfers worse on electrical conductivity. The databases differ in curation, teMatDb applying a self-consistency filter that ESTM does not, and in chemistry breadth. We report both rather than averaging them, and note that characterising this heterogeneity properly would require more external sets than two.
+**Degradation is not uniform across databases.** ESTM transfers worse on the Seebeck coefficient; teMatDb transfers worse on electrical conductivity. The databases differ in curation, teMatDb applying a self-consistency filter that ESTM does not, and in chemistry breadth. We report both rather than averaging them, and note that characterising this heterogeneity properly would require more external sets than two.
 
 
 
@@ -509,7 +492,7 @@ Finally, the chemistry-cluster rule collapses dopants below 5 at% but not alloy 
 
 
 
-\### 3.6 Predicting zT directly outperforms reconstructing it from components
+## 3.6 Predicting zT directly outperforms reconstructing it from components
 
 
 
@@ -535,15 +518,11 @@ The same ordering holds on both external databases and on every stratum. Direct 
 
 
 
-# Discussion
+# 4. Discussion
 
 
 
-\## 4. Discussion
-
-
-
-\### 4.1 What this means for reported performance
+## 4.1 What this means for reported performance
 
 
 
@@ -559,7 +538,7 @@ The remedy is not costly. Grouping by chemistry cluster requires a formula parse
 
 
 
-\### 4.2 Where the remaining gap lives
+## 4.2 Where the remaining gap lives
 
 
 
@@ -575,7 +554,7 @@ The ceiling we report is conservative in a specific way worth stating. Both nois
 
 
 
-\### 4.3 Extrapolation versus generalisation in cross-database transfer
+## 4.3 Extrapolation versus generalisation in cross-database transfer
 
 
 
@@ -591,7 +570,7 @@ Transfer is also heterogeneous between databases. ESTM degrades most on the Seeb
 
 
 
-\### 4.4 Two leakage defects in our own pipeline
+## 4.4 Two leakage defects in our own pipeline
 
 
 
@@ -619,7 +598,7 @@ Neither defect produced an error, a warning, or an implausible result. In both c
 
 
 
-\### 4.5 Limitations
+## 4.5 Limitations
 
 
 
@@ -647,9 +626,7 @@ Finally, the external chemistry-disjoint strata are small. teMatDb's contains 27
 
 
 
-# Conclusion
-
-\## 5. Conclusion
+# 5. Conclusion
 
 
 
@@ -666,8 +643,3 @@ Transfer to independent databases degrades further, though between a third and a
 
 
 For practitioners, the recommendation is specific: report grouped cross-validation, state the grouping rule, and report the fraction of any external evaluation that falls outside the training range. For the field, the implication is that current composition-based models are further from the achievable limit than published figures suggest, and that closing the remaining distance will require representations that encode structure and processing rather than larger sets of composition-derived features.
-
-
-
-# 
-

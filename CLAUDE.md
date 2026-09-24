@@ -2299,6 +2299,30 @@ test" without this qualifier.
   behavior-preservation, and say explicitly that GPU behavior/performance
   is unverified until run on Kaggle.
 
+## Manuscript build (added 2026-09-24)
+- `paper/paper.md` is Pandoc markdown with a YAML front matter block
+  (title, author, affiliation, `bibliography: refs.bib`); citations are
+  `[@key]` against `paper/refs.bib`.
+- Toolchain: **pandoc 3.9**, installed via `pip install pypandoc_binary`
+  (the wheel bundles the binary; there is no project venv, and it was
+  installed with `pip --target` outside the repo to leave the pinned
+  packages untouched). Point `PANDOC` at that binary if pandoc is not on
+  PATH.
+- Build (from the repo root): `scripts/build_paper.ps1` on Windows,
+  `scripts/build_paper.sh` elsewhere. Each runs
+  `pandoc paper/paper.md --resource-path="paper;." --citeproc -o paper/build/paper.docx`
+  and the same command with `--standalone --embed-resources -o
+  paper/build/paper.html`. The resource path must list `paper` (for
+  `refs.bib`, which pandoc resolves from the working directory, not the
+  file's folder) and `.` (for `figures/`); its separator is `;` on
+  Windows and `:` elsewhere (the `.sh` uses `:`, verified only by
+  `bash -n`, not run on Linux). Output goes to `paper/build/`, gitignored.
+- Two figure warnings are expected until the placeholders are replaced:
+  `fig1_leakage_schematic.png` and `fig3_grouping_rule_schematic.png`.
+- The author is a flat string list because pandoc's default docx and html
+  templates print a map-valued author as "true" or drop it; the affiliation
+  is a top-level key that the default templates do not render.
+
 ## Code conventions
 - Python, `src/` module structure (not notebooks) — this repo goes on
   GitHub for a PhD portfolio, needs to read as engineered, not exploratory.

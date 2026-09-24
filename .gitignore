@@ -53,3 +53,6 @@ checkpoints/saved_predictions/checkpoints/*
 # (per-file SHA256) and results/regen_postfix/20260916T161906/README.md
 # (tar SHA256 and location). 430 MB, mostly .npz.
 kaggle_out/
+
+# rendered manuscript (pandoc output, regenerated from paper/paper.md)
+paper/build/
