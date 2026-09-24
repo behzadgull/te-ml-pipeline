@@ -2246,6 +2246,12 @@ test" without this qualifier.
 ## Competitive landscape (verified by DOI/arXiv — cite and differentiate)
 - Jia, Aziz, Hashimoto & Li (2024), Sci. China Materials 67(4):1173-1182,
   DOI 10.1007/s40843-023-2777-2 — composition-CV on Starrydata2, single method.
+  Verified 2026-09-24 from the abstract: it PROPOSES composition-based CV
+  on Starrydata2 so that the temperature rows of one composition are not
+  split between training and test. Paper.md therefore says "proposed",
+  not "already hold out whole compositions", and names exact-composition
+  grouping as "the protocol proposed for this database" (Introduction,
+  contributions paragraph).
 - Barua, Lee, Oliynyk & Kleinke (2025), ACS Appl. Mater. Interfaces
   17(1):1662-1673, DOI 10.1021/acsami.4c19149 — closest competitor,
   ~160K rows, 3 external test sets, honest R² 0.67-0.80.
@@ -2257,6 +2263,19 @@ test" without this qualifier.
   2025, 59:101948) and the Jan 2026 generalizability review (arXiv:2601.06571)
   — 3 papers in 4 months, fast-moving group, treat competitive window as
   narrowing.
+- Athar et al. (2025), Materials Today Physics 59:101948 (arXiv
+  2512.18653), the Starrydata2 curation critique. Verified 2026-09-24:
+  documents Starrydata2 inaccuracies (wrong compositions, multi-source
+  spread); applies a round-robin error-bin filter (+/-15%, citing Wang
+  2015 and Alleno 2015) to conflicting multi-source entries; half-Heusler
+  case study; NO R² ceiling. Cited in paper.md's Introduction for the
+  filtering and the database inconsistencies (`athar2025tackling`).
+- Novelty search, 2026-09-24 (web search, not Google Scholar): no
+  thermoelectric R² ceiling derived from measurement noise was found.
+  Paper.md's Introduction states this as "To our knowledge, measurement
+  uncertainty has not been converted into such a ceiling for
+  composition-based thermoelectric models"; the search is not exhaustive,
+  so keep the "to our knowledge" qualifier.
 - Ma & Poon, arXiv:2509.00299 — verified NOT a scoop despite title
   ("Reexamining ML Models on Predicting Thermoelectric Properties"):
   physics-based feature engineering, no split-strategy comparison. Cite
@@ -2317,8 +2336,19 @@ test" without this qualifier.
   file's folder) and `.` (for `figures/`); its separator is `;` on
   Windows and `:` elsewhere (the `.sh` uses `:`, verified only by
   `bash -n`, not run on Linux). Output goes to `paper/build/`, gitignored.
-- Two figure warnings are expected until the placeholders are replaced:
-  `fig1_leakage_schematic.png` and `fig3_grouping_rule_schematic.png`.
+- Figures 1 and 3 (`fig1_leakage_schematic`, `fig3_grouping_rule_schematic`) are
+  schematics drawn by `scripts/make_figures.py` with no data files read; the
+  placeholder warnings are gone and the build must be warning-free.
+  `make_grouping_rule_schematic` gets every ID from `chemistry_cluster_id`,
+  but that function returns only the final ID, so `chemistry_cluster_trace`
+  recomputes the intermediate steps (dopant removal, snapping, reduction)
+  using the module's own constants (`DEFAULT_DOPANT_THRESHOLD_FRAC`,
+  `DEFAULT_SNAP_TOLERANCE`) and asserts that its final step equals the
+  function's return value. The figure also asserts that rows 1 and 2 share
+  PbTe's ID, that rows 3 and 4 do not, and the deciding at% values (Sr and
+  Na 1.0% removed, Se 6.0% kept). If the grouping rule ever changes,
+  refactor `src/canonicalization.py` so the intermediates come from the
+  function itself, not from this re-implementation.
 - The author is a flat string list because pandoc's default docx and html
   templates print a map-valued author as "true" or drop it; the affiliation
   is a top-level key that the default templates do not render.

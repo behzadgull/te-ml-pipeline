@@ -1744,6 +1744,285 @@ def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPO
     plt.close(fig)
 
 
+# ---------------------------------------------------------------------------
+# Figure 1 and Figure 3 of the paper: two schematics, no data files read.
+# ---------------------------------------------------------------------------
+
+SCHEMATIC_TRAIN_COLOR = "#0072B2"  # Okabe-Ito blue
+SCHEMATIC_TEST_COLOR = "#D55E00"   # Okabe-Ito vermillion
+SCHEMATIC_GREY = "0.45"
+SCHEMATIC_NOTE = "Schematic; values illustrative"
+
+
+def _formula_mathtext(formula):
+    """Render a formula string with numeric subscripts, e.g. 'Bi2Te2.7Se0.3' -> 'Bi$_{2}$Te$_{2.7}$Se$_{0.3}$'."""
+    import re
+
+    return re.sub(r"(?<=[A-Za-z\)])(\d+(?:\.\d+)?)", r"$_{\1}$", formula)
+
+
+def _schematic_curve(x, level, rise, curvature=1.3, hump=0.0):
+    """Smooth illustrative zT(T) shape on x in [0, 1]: a rising power law, optionally with a roll-over hump."""
+    y = level + rise * x**curvature
+    if hump:
+        y = level + hump * np.sin(np.pi * np.clip(x / 0.9, 0, 1)) ** 1.2
+    return y
+
+
+def make_leakage_schematic(out_path):
+    """
+    Figure 1: three panels illustrating why random row splits leak.
+    (a) one zT(T) curve with scattered test rows; (b) near-duplicate curves
+    of one host lattice on both sides of a split; (c) the chemistry-cluster
+    split, where the whole cluster is test. Illustrative values, no numeric
+    tick labels.
+    """
+    from matplotlib.lines import Line2D
+
+    T = np.linspace(300, 800, 21)          # 300-800 K at 25 K
+    x = (T - 300) / 500.0                  # normalised; tick labels are suppressed
+    train_kw = dict(marker="o", ms=5.0, mfc=SCHEMATIC_TRAIN_COLOR, mec="white", mew=0.5, ls="none", zorder=3)
+    test_kw = dict(marker="D", ms=5.0, mfc=SCHEMATIC_TEST_COLOR, mec="white", mew=0.5, ls="none", zorder=4)
+    x_right = {"a": 1.12, "b": 2.05, "c": 2.05}   # right x-limit: b and c leave room for curve labels
+
+    fig, axes = plt.subplots(
+        1, 3, figsize=(15.5, 3.9),
+        gridspec_kw={"wspace": 0.12, "width_ratios": [x_right["a"] + 0.05, x_right["b"] + 0.05, x_right["c"] + 0.05]},
+    )
+
+    def base(ax, title, letter):
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_xlabel("T")
+        ax.set_ylabel("zT")
+        ax.set_xlim(-0.05, x_right[letter])
+        ax.set_ylim(-0.02, 1.62)
+        ax.set_title(title, fontsize=12, pad=8)
+        add_panel_label(ax, letter, x=-0.02, y=1.02)
+
+    def draw_curve(ax, y, is_test, label=None, label_y=None):
+        """Draw a whole curve that is entirely train or entirely test, with an optional right-hand label."""
+        color = SCHEMATIC_TEST_COLOR if is_test else SCHEMATIC_TRAIN_COLOR
+        ax.plot(x, y, color=color, lw=1.1, alpha=0.5, zorder=2)
+        ax.plot(x, y, **(test_kw if is_test else train_kw))
+        if label is None:
+            return None
+        return ax.annotate(
+            label, xy=(x[-1] + 0.02, y[-1]), xytext=(1.16, label_y), textcoords="data",
+            fontsize=9.5, va="center", ha="left", color="0.15",
+            arrowprops=dict(arrowstyle="-", color="0.65", lw=0.7, shrinkA=2, shrinkB=2),
+        )
+
+    note_kw = dict(fontsize=9.5, va="top", ha="left", color="0.15", linespacing=1.3)
+
+    # (a) random row split: one curve, 4 of 21 points (19%) are test, scattered
+    ax = axes[0]
+    base(ax, "Random row split", "a")
+    y = 0.25 + 0.95 * x**1.3
+    test_idx = [3, 8, 13, 18]
+    tr = [i for i in range(len(x)) if i not in test_idx]
+    ax.plot(x, y, color=SCHEMATIC_GREY, lw=1.1, alpha=0.55, zorder=2)
+    ax.plot(x[tr], y[tr], **train_kw)
+    ax.plot(x[test_idx], y[test_idx], **test_kw)
+    ax.text(0.0, 1.56, "test rows lie between\ntraining rows of the\nsame curve", **note_kw)
+    ax.annotate("", xy=(x[8], y[8] + 0.05), xytext=(0.36, 1.05),
+                arrowprops=dict(arrowstyle="->", color="0.4", lw=0.8, shrinkA=0, shrinkB=2))
+
+    # (b) near-duplicate curves across dopant labels: two train, two test, interleaved
+    near = [
+        # label, level, rise, curvature, is_test, label slot (b), label slot (c)
+        ("PbTe", 0.36, 0.94, 1.30, False, 1.30, 1.42),
+        ("Pb$_{0.99}$Na$_{0.01}$Te", 0.32, 0.90, 1.28, True, 1.14, 1.26),
+        ("Pb$_{0.98}$Na$_{0.02}$Te", 0.28, 0.86, 1.32, False, 0.98, 1.10),
+        ("(PbTe)$_{0.98}$(SrTe)$_{0.02}$", 0.24, 0.82, 1.30, True, 0.82, 0.94),
+    ]
+    ax = axes[1]
+    base(ax, "Near-duplicates across dopant labels", "b")
+    for name, level, rise, curv, is_test, slot_b, _slot_c in near:
+        draw_curve(ax, level + rise * x**curv, is_test, label=name, label_y=slot_b)
+    ax.text(0.0, 1.56, "same host lattice on both\nsides of the split", **note_kw)
+
+    # (c) chemistry-cluster split: the same four curves all test, two differently shaped train curves
+    ax = axes[2]
+    base(ax, "Chemistry-cluster split", "c")
+    cluster_labels = []
+    for name, level, rise, curv, _is_test, _slot_b, slot_c in near:
+        cluster_labels.append(draw_curve(ax, level + rise * x**curv, True, label=name, label_y=slot_c))
+    bi = 0.10 + 0.34 * np.sin(np.pi * x**0.8)          # rises, peaks, rolls over
+    se = 0.08 + 0.85 * x**3.2                           # low, then steep rise
+    draw_curve(ax, se, False, label="SnSe", label_y=0.66)
+    draw_curve(ax, bi, False, label="Bi$_{2}$Te$_{3}$", label_y=0.28)
+    ax.text(0.0, 1.56, "whole cluster held out", **note_kw)
+    # bracket around the four cluster labels, placed from their rendered extents
+    fig.canvas.draw()
+    inv = ax.transData.inverted()
+    xs = [inv.transform((t.get_window_extent().x1, 0))[0] for t in cluster_labels]
+    bx = max(xs) + 0.04
+    ax.plot([bx - 0.03, bx, bx, bx - 0.03], [1.42 + 0.07, 1.42 + 0.07, 0.94 - 0.07, 0.94 - 0.07],
+            color="0.3", lw=1.0, clip_on=False)
+
+    handles = [
+        Line2D([], [], marker="o", ms=6, mfc=SCHEMATIC_TRAIN_COLOR, mec="white", ls="none", label="Training row"),
+        Line2D([], [], marker="D", ms=6, mfc=SCHEMATIC_TEST_COLOR, mec="white", ls="none", label="Test row"),
+    ]
+    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False, bbox_to_anchor=(0.5, -0.06))
+    fig.text(0.995, -0.055, SCHEMATIC_NOTE, fontsize=8.5, color="0.5", ha="right", va="center")
+    save_figure(fig, out_path)
+    plt.close(fig)
+
+
+def chemistry_cluster_trace(formula):
+    """
+    Step-by-step trace of src.canonicalization.chemistry_cluster_id for one
+    formula, for the grouping-rule schematic. The final id is the pipeline
+    function's own return value; the intermediates re-apply that function's
+    steps with the module's own constants (dopant threshold, snap
+    tolerance), and the trace asserts that its last step reproduces the
+    function's output, so a drift between the two fails loudly.
+    """
+    from src.canonicalization import (
+        DEFAULT_DOPANT_THRESHOLD_FRAC,
+        DEFAULT_SNAP_TOLERANCE,
+        chemistry_cluster_id,
+        parse_formula,
+    )
+    from pymatgen.core import Composition
+
+    comp, err = parse_formula(formula)
+    assert comp is not None, (formula, err)
+    total = comp.num_atoms
+    amounts = comp.get_el_amt_dict()
+    kept = {el: a for el, a in amounts.items() if a / total >= DEFAULT_DOPANT_THRESHOLD_FRAC}
+    removed = {el: a for el, a in amounts.items() if el not in kept}
+    snap = {}
+    for el, a in kept.items():
+        nearest = round(a)
+        rel = abs(a - nearest) / nearest if nearest >= 1 else None
+        snapped = nearest >= 1 and rel <= DEFAULT_SNAP_TOLERANCE
+        snap[el] = dict(before=a, after=float(nearest) if snapped else a, snapped=snapped, nearest=nearest, rel=rel)
+    snapped_formula = "".join(f"{el}{v['after']:g}" for el, v in snap.items())
+    reduced = Composition({el: v["after"] for el, v in snap.items()}).reduced_formula
+    cluster_id = chemistry_cluster_id(comp)
+    assert reduced == cluster_id, (formula, reduced, cluster_id)
+    # readable form of the same id: the reduced composition written in the input's element order
+    rc = Composition({el: v["after"] for el, v in snap.items()}).reduced_composition
+    readable = "".join(f"{el}{'' if rc[el] == 1 else format(rc[el], 'g')}" for el in snap)
+    assert Composition(readable).reduced_formula == cluster_id, (readable, cluster_id)
+    return dict(
+        formula=formula, at_pct={el: 100.0 * a / total for el, a in amounts.items()},
+        kept=list(kept), removed=list(removed), snap=snap,
+        snapped_formula=snapped_formula, cluster_id=cluster_id, readable=readable,
+    )
+
+
+GROUPING_RULE_FORMULAS = [
+    "Pb0.97Te",
+    "(PbTe)0.97(SrTe)0.02(Na2Te)0.01",
+    "Bi2Te2.7Se0.3",
+    "Bi2Te3",
+]
+
+
+def make_grouping_rule_schematic(out_path):
+    """
+    Figure 3: the chemistry-cluster grouping rule as a flow diagram over
+    four formulas. Every intermediate and the final id come from
+    `chemistry_cluster_trace`, which wraps the pipeline's
+    chemistry_cluster_id. Fails (draws nothing) if rows 1 and 2 do not
+    share PbTe's id, or if rows 3 and 4 share an id.
+    """
+    from matplotlib.patches import FancyBboxPatch
+    from src.canonicalization import chemistry_cluster_id, parse_formula
+
+    traces = [chemistry_cluster_trace(f) for f in GROUPING_RULE_FORMULAS]
+    pbte_id = chemistry_cluster_id(parse_formula("PbTe")[0])
+    ids = [t["cluster_id"] for t in traces]
+    assert ids[0] == ids[1] == pbte_id, ("rows 1 and 2 must share PbTe's id", ids, pbte_id)
+    assert ids[2] != ids[3], ("rows 3 and 4 must not share an id", ids)
+    assert traces[0]["readable"] == traces[1]["readable"] == "PbTe", [t["readable"] for t in traces[:2]]
+    assert traces[2]["readable"] == ids[2] and traces[3]["readable"] == ids[3], [t["readable"] for t in traces[2:]]
+    t2 = traces[1]
+    assert set(t2["removed"]) == {"Sr", "Na"} and all(round(t2["at_pct"][e], 1) == 1.0 for e in ("Sr", "Na")), t2
+    assert "Se" in traces[2]["kept"] and round(traces[2]["at_pct"]["Se"], 1) == 6.0, traces[2]
+
+    col_w = [4.0, 4.4, 3.7, 2.9, 3.1]
+    col_x = [0.0]
+    for w_ in col_w[:-1]:
+        col_x.append(col_x[-1] + w_ + 0.35)
+    headers = ["Input formula", "Remove elements < 5 at%\n(dopants)", "Snap amounts within 5%\nof an integer",
+               "Reduce", "Cluster ID"]
+    row_h, gap, top = 1.15, 0.3, 4.9
+    fig, ax = plt.subplots(figsize=(17.2, 6.2))
+    ax.set_xlim(-0.3, 22.3)
+    ax.set_ylim(-0.75, 5.95)
+    ax.axis("off")
+
+    def box(i, y_top, h, lines, face="white", edge="0.35", lw=0.9, fontsize=9.5, weight="normal"):
+        x0, w = col_x[i], col_w[i]
+        ax.add_patch(FancyBboxPatch((x0, y_top - h), w, h, boxstyle="round,pad=0.02,rounding_size=0.12",
+                                    fc=face, ec=edge, lw=lw))
+        n = len(lines)
+        for k, (txt, color) in enumerate(lines):
+            yy = y_top - h / 2 + (n - 1) * 0.16 - k * 0.32
+            ax.text(x0 + w / 2, yy, txt, ha="center", va="center", fontsize=fontsize, color=color, fontweight=weight)
+
+    for i, htxt in enumerate(headers):
+        ax.text(col_x[i] + col_w[i] / 2, 5.6, htxt, ha="center", va="center", fontsize=10.5, fontweight="bold", color="0.15")
+
+    for r, (formula, t) in enumerate(zip(GROUPING_RULE_FORMULAS, traces)):
+        y_top = top - r * (row_h + gap)
+        mid = y_top - row_h / 2
+        # 1: input
+        box(0, y_top, row_h, [(_formula_mathtext(formula), "0.1")], fontsize=10)
+        # 2: dopant removal, with the deciding at%
+        kept_txt = ", ".join(f"{e} {t['at_pct'][e]:.1f}%" for e in t["kept"])
+        lines = [(f"kept: {kept_txt}", SCHEMATIC_TRAIN_COLOR)]
+        if t["removed"]:
+            lines.append(("removed: " + ", ".join(f"{e} {t['at_pct'][e]:.1f}%" for e in t["removed"]), SCHEMATIC_TEST_COLOR))
+        else:
+            lines.append(("removed: none", "0.45"))
+        box(1, y_top, row_h, lines)
+        # 3: snap, per element
+        snap_lines = []
+        for e, v in t["snap"].items():
+            if v["snapped"] and abs(v["before"] - v["after"]) > 1e-12:
+                snap_lines.append((f"{e} {v['before']:g} → {v['after']:g}", "0.1"))
+            elif v["snapped"]:
+                snap_lines.append((f"{e} {v['before']:g} (integer)", "0.45"))
+            elif v["nearest"] >= 1:
+                snap_lines.append((f"{e} {v['before']:g}: {100 * v['rel']:.0f}% from {v['nearest']}, kept", "0.1"))
+            else:
+                snap_lines.append((f"{e} {v['before']:g}: kept", "0.1"))
+        box(2, y_top, row_h, snap_lines[:3])
+        # 4: reduce
+        box(3, y_top, row_h, [(f"{_formula_mathtext(t['snapped_formula'])} →", "0.3"),
+                              (_formula_mathtext(t["cluster_id"]), "0.1")])
+        # 5: cluster id
+        if t["readable"] == t["cluster_id"]:
+            box(4, y_top, row_h, [(_formula_mathtext(t["cluster_id"]), "0.1")], face="0.94", edge="0.2", lw=1.4,
+                fontsize=11.5, weight="bold")
+        else:
+            box(4, y_top, row_h, [], face="0.94", edge="0.2", lw=1.4)
+            cx = col_x[4] + col_w[4] / 2
+            ax.text(cx, mid + 0.16, _formula_mathtext(t["readable"]), ha="center", va="center",
+                    fontsize=11.5, fontweight="bold", color="0.1")
+            ax.text(cx, mid - 0.27, f"(ID: {t['cluster_id']})", ha="center", va="center", fontsize=8.5, color="0.5")
+        for i in range(4):
+            ax.annotate("", xy=(col_x[i + 1] - 0.03, mid), xytext=(col_x[i] + col_w[i] + 0.03, mid),
+                        arrowprops=dict(arrowstyle="->", color="0.6", lw=0.9), annotation_clip=False)
+
+    # bracket rows 1-2: same cluster
+    y1 = top - 0.05
+    y2 = top - (row_h + gap) - row_h + 0.05
+    bx = col_x[4] + col_w[4] + 0.25
+    ax.plot([bx - 0.12, bx, bx, bx - 0.12], [y1, y1, y2, y2], color="0.2", lw=1.3, clip_on=False)
+    ax.text(bx + 0.18, (y1 + y2) / 2, "same\ncluster", ha="left", va="center", fontsize=10.5, fontweight="bold", color="0.15")
+
+    save_figure(fig, out_path)
+    plt.close(fig)
+    return traces
+
+
 def main():
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -1785,6 +2064,12 @@ def main():
 
     make_zt_direct_vs_derived(FIGURES_DIR / "zt_direct_vs_derived")
     print("Saved zt_direct_vs_derived.png / .pdf")
+
+    make_leakage_schematic(FIGURES_DIR / "fig1_leakage_schematic")
+    print("Saved fig1_leakage_schematic.png / .pdf")
+
+    make_grouping_rule_schematic(FIGURES_DIR / "fig3_grouping_rule_schematic")
+    print("Saved fig3_grouping_rule_schematic.png / .pdf")
 
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
