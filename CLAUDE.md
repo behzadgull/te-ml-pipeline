@@ -274,7 +274,16 @@ row count is not an identity. The code commit is missing for the same
 reason: `regen_postfix`'s use of the corrected fold code (commit c1c6873)
 is inferred from its fold-level R2 and its start time, not recorded. Not
 yet implemented in `src/nested_cv.py`; every existing run violates this
-rule and its dataset and code identity remain inferential.
+rule and its dataset and code identity remain inferential. (The
+direct-vs-derived runs of 2026-09-24 are the first to record all three,
+via `src/direct_vs_derived_zt.py`'s `run_config.json`; their `tree_clean`
+is false for a script-side reason, see the Direct-vs-Derived section.)
+
+**Standing rule (2026-09-24): `results/` folder timestamps are UTC from
+now on.** Earlier folders mix clocks (`20260918T200058` matches the
++0500 local time of its commit, not UTC). `run_config.json` records no
+timestamp of its own, so a run's folder timestamp is its file
+modification time converted to UTC.
 
 **CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
 beyond what these numbers support:**
@@ -1846,11 +1855,11 @@ compares pathways under one shared set, and the derived pathway's S, sigma
 and kappa models were not run with their own tuned hyperparameters; the
 effect on the 0.2018 gap is unmeasured, and plausibly favors the direct
 pathway. A per-target rerun (each model on its own frozen JSON, plus a
-same-device control with zT's set shared) is prepared but not yet run:
-`python -m src.direct_vs_derived_zt --hyperparams per_target` and
-`scripts/kaggle_dvd_per_target.sh`. Until it is run, keep the ordering
-(direct beats derived) and state the magnitude as conditional on the shared
-set.
+same-device control with zT's set shared) was prepared here
+(`python -m src.direct_vs_derived_zt --hyperparams per_target`,
+`scripts/kaggle_dvd_per_target.sh`) and run 2026-09-24: see the RESOLVED
+paragraph below, which supersedes this one's "not yet run" and its
+instruction to state the magnitude as conditional.
 
 **Do not cite `duan_verdict` ("COLLAPSES -- back-transform artifact") in
 `results/direct_vs_derived_snapfix/20260918T200058/backtransform_check_results.json`.**
@@ -1860,6 +1869,53 @@ correction moved derived R2 by +0.0035 (0.5244 to 0.5279) against a gap of
 0.2018, so the label flipped on a change that does not touch the finding.
 The numbers in that file are correct; the label is not. The rerun's output
 reports the numeric effect (`duan_effect_on_derived_r2`) instead.
+
+**RESOLVED 2026-09-24: the per-target rerun above was run, and it
+supersedes 20260918T200058 as the canonical direct-vs-derived result.**
+Canonical: `results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/`
+(each of the four models on its own target's canonical frozen JSON).
+Sensitivity: `results/direct_vs_derived_snapfix/20260924T122148_zt_shared_cuda/`
+(zT's set for all four models, same device). Both: Kaggle P100 (`cuda`),
+snapfix CSV (SHA256 `d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489`),
+code `aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2`, same subset (56,088 rows,
+4,139 clusters, n = 280,440 pooled), folds and seed 0; each folder holds
+`run_config.json`, `results.json`, `backtransform_check_results.json`, the
+logs and 25 per-fold `.npz` (Git LFS). Bundle SHA256
+`8981836580ff46a6460fa4bcaf4afa0064720c8f478ccc960dbb6bea9b2fa509`.
+
+| | 20260918T200058 (superseded) | sensitivity (zT set shared, cuda) | canonical (per target, cuda) |
+|---|---|---|---|
+| direct zT R2 | 0.7262 | 0.7267 | 0.7267 |
+| derived zT R2 | 0.5244 | 0.5259 | 0.5403 |
+| gap | 0.2018 | 0.2008 | **0.1864** |
+| S / sigma (log10) / kappa (log10) R2 | 0.8172 / 0.6856 / 0.8221 | 0.8180 / 0.6856 / 0.8228 | 0.8198 / 0.6920 / 0.8209 |
+| sigma/kappa residual correlation | 0.4305 | 0.4325 | 0.4263 |
+| Duan effect on derived R2 | +0.0035 | +0.0023 | -0.0052 |
+| gap after Duan | 0.1983 | 0.1985 | 0.1915 |
+| top-1% SSE share, direct / derived | 23.0% / 21.3% | 23.0% / 21.3% | 23.0% / 21.8% |
+
+- **Why 20260918T200058 is superseded:** it used zT's frozen set for all
+  four models, its device is not recorded, and it has no `run_config.json`.
+  Its numbers are correct for what it ran; it is retained, not deleted.
+- **Device effect on the gap: -0.0011** (sensitivity vs 200058: same
+  hyperparameters, cuda vs unrecorded device). **Per-target effect on the
+  gap: -0.0144** (canonical vs sensitivity, same device), about 13 times
+  the device effect. The ordering (direct beats derived) holds in every
+  configuration; derived gained +0.0144, mostly through sigma (+0.0063).
+- **Duan:** -0.0052 canonical, +0.0023 sensitivity; the direction is not
+  stable and the magnitude is under 3% of the gap. Do not cite the sign.
+- **`tree_clean = false` in both `run_config.json` files** is attributed,
+  by inference and not proven, to `scripts/kaggle_dvd_per_target.sh`
+  writing its `tee` logs into the repo root before each run's
+  `git status --porcelain` check (the untracked log file makes the tree
+  "dirty"; the script's own step-1 assertion had shown a clean checkout).
+  The script now writes logs to `/kaggle/working/` and re-checks the tree
+  before running; it has not been rerun. Code identity for these runs is
+  therefore `aaf512e` with a high but unverified likelihood that no
+  tracked file was modified.
+- `figures/zt_direct_vs_derived.*` and `paper.md` Section 3.6 now use the
+  canonical run. External validation already used each target's own
+  frozen set, so this makes the internal comparison consistent with it.
 
 ## Confirmed Results — External Validation, ESTM (Paper A item 6, ESTM COMPLETE)
 

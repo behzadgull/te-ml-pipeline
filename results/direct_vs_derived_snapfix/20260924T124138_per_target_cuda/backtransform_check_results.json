@@ -1,0 +1,85 @@
+{
+  "checkpoint_dir_read": "checkpoints/direct_vs_derived_zt_snapfix_per_target_cuda",
+  "checkpoint_run_config": {
+    "hyperparams_mode": "per_target",
+    "model_type": "xgboost",
+    "seed": 0,
+    "n_repeats": 5,
+    "n_outer_folds": 5,
+    "device": "cuda",
+    "subset_n_rows": 56088,
+    "subset_n_chemistry_clusters": 4139,
+    "provenance": {
+      "dataset_path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "dataset_bytes": 974854507,
+      "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+      "tree_clean": false,
+      "git_source": "git",
+      "hyperparams_sha256": {
+        "zT_direct": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5",
+        "S": "243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b",
+        "sigma_log10": "b457b6f2f946b0ef32bb3b38f09cd2084d846d6683af6b5b91df01b9672d6f0f",
+        "kappa_log10": "883e3d0b2e62b1569473f397f00bd5ffbd055be60a54c7e4c758c11c6d129d3c"
+      }
+    }
+  },
+  "check_provenance": {
+    "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+    "tree_clean": false,
+    "git_source": "git"
+  },
+  "n": 280440,
+  "r2_direct": 0.7266641979968649,
+  "r2_derived_uncorrected": 0.5402869487740098,
+  "r2_derived_corrected": 0.5351281644355248,
+  "duan_effect_on_derived_r2": -0.005158784338485045,
+  "smear_sigma": 1.291779906925165,
+  "smear_kappa": 1.0571849212617608,
+  "residual_distribution_stats": {
+    "direct": {
+      "mean": 0.010917798376216406,
+      "std": 0.2020670700047035,
+      "median": -0.0046415320913315225,
+      "p1": -0.5088518447423096,
+      "p99": 0.6785007077811203,
+      "max_abs": 3.4641518758932737,
+      "sse": 11484.10188007219,
+      "top1pct_sse_share": 0.22984131294519275,
+      "top5pct_sse_share": 0.5134938886899736
+    },
+    "derived": {
+      "mean": 0.09053389434816773,
+      "std": 0.24632571692817481,
+      "median": 0.03581843814740929,
+      "p1": -0.423482324954253,
+      "p99": 0.965587369057683,
+      "max_abs": 3.8826137617094854,
+      "sse": 19314.67256461911,
+      "top1pct_sse_share": 0.21837725700660332,
+      "top5pct_sse_share": 0.5257930432316433
+    }
+  },
+  "residual_correlation_matrix": [
+    [
+      1.0,
+      -0.07880899600634038,
+      -0.07920118269043548
+    ],
+    [
+      -0.07880899600634038,
+      0.9999999999999998,
+      0.42633174399676393
+    ],
+    [
+      -0.07920118269043548,
+      0.426331743996764,
+      0.9999999999999998
+    ]
+  ],
+  "residual_correlation_labels": [
+    "S",
+    "sigma (log10)",
+    "kappa (log10)"
+  ]
+}

@@ -1,0 +1,24 @@
+Verified 25/25 folds against data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv
+
+n = 280,440
+Direct zT R^2 = 0.7267
+Derived zT R^2 (uncorrected) = 0.5259, gap = 0.2008
+
+=== 1. Residual distribution ===
+direct   mean=+0.0109 std=0.2021 p1=-0.5089 p99=+0.6785 max_abs=3.4642 top1%SSEshare=23.0% top5%SSEshare=51.3%
+derived  mean=+0.0968 std=0.2483 p1=-0.4221 p99=+0.9660 max_abs=3.8985 top1%SSEshare=21.3% top5%SSEshare=51.6%
+
+=== 2. Duan smearing correction ===
+smear_sigma=1.3219  smear_kappa=1.0564
+Derived zT R^2 WITHOUT correction = 0.5259
+Derived zT R^2 WITH correction    = 0.5282
+
+=== 3. Residual correlation matrix ===
+                               S   sigma (log10)   kappa (log10)
+S                         1.0000         -0.0765         -0.0767
+sigma (log10)            -0.0765          1.0000          0.4325
+kappa (log10)            -0.0767          0.4325          1.0000
+
+Conclusion: Duan correction result -> gap COLLAPSES -- back-transform artifact
+
+Saved results to checkpoints/direct_vs_derived_zt_snapfix_zt_shared_cuda/backtransform_check_results.json

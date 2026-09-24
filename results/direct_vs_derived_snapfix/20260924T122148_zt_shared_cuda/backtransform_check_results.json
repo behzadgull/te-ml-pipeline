@@ -1,0 +1,82 @@
+{
+  "checkpoint_dir_read": "checkpoints/direct_vs_derived_zt_snapfix_zt_shared_cuda",
+  "checkpoint_run_config": {
+    "hyperparams_mode": "zt_shared",
+    "model_type": "xgboost",
+    "seed": 0,
+    "n_repeats": 5,
+    "n_outer_folds": 5,
+    "device": "cuda",
+    "subset_n_rows": 56088,
+    "subset_n_chemistry_clusters": 4139,
+    "provenance": {
+      "dataset_path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "dataset_bytes": 974854507,
+      "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+      "tree_clean": false,
+      "git_source": "git",
+      "hyperparams_sha256": {
+        "zt_shared": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5"
+      }
+    }
+  },
+  "check_provenance": {
+    "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+    "tree_clean": false,
+    "git_source": "git"
+  },
+  "n": 280440,
+  "r2_direct": 0.7266641979968649,
+  "r2_derived_uncorrected": 0.5259100965692491,
+  "r2_derived_corrected": 0.52817277953697,
+  "duan_effect_on_derived_r2": 0.0022626829677208082,
+  "smear_sigma": 1.321877637473772,
+  "smear_kappa": 1.0564403576518384,
+  "residual_distribution_stats": {
+    "direct": {
+      "mean": 0.010917798376216406,
+      "std": 0.2020670700047035,
+      "median": -0.0046415320913315225,
+      "p1": -0.5088518447423096,
+      "p99": 0.6785007077811203,
+      "max_abs": 3.4641518758932737,
+      "sse": 11484.10188007219,
+      "top1pct_sse_share": 0.22984131294519275,
+      "top5pct_sse_share": 0.5134938886899736
+    },
+    "derived": {
+      "mean": 0.096752880873975,
+      "std": 0.24832542980168384,
+      "median": 0.040398307865514516,
+      "p1": -0.42210128457805685,
+      "p99": 0.9659715017418935,
+      "max_abs": 3.8985147724818763,
+      "sse": 19918.71065338847,
+      "top1pct_sse_share": 0.21341809245839471,
+      "top5pct_sse_share": 0.5159582326963252
+    }
+  },
+  "residual_correlation_matrix": [
+    [
+      0.9999999999999998,
+      -0.07651305663398904,
+      -0.07670386621756234
+    ],
+    [
+      -0.07651305663398904,
+      1.0,
+      0.4325207524955898
+    ],
+    [
+      -0.07670386621756234,
+      0.43252075249558974,
+      1.0
+    ]
+  ],
+  "residual_correlation_labels": [
+    "S",
+    "sigma (log10)",
+    "kappa (log10)"
+  ]
+}

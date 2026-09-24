@@ -1,0 +1,21 @@
+{
+  "hyperparams_mode": "zt_shared",
+  "model_type": "xgboost",
+  "seed": 0,
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "device": "cuda",
+  "subset_n_rows": 56088,
+  "subset_n_chemistry_clusters": 4139,
+  "provenance": {
+    "dataset_path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "dataset_bytes": 974854507,
+    "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+    "tree_clean": false,
+    "git_source": "git",
+    "hyperparams_sha256": {
+      "zt_shared": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5"
+    }
+  }
+}

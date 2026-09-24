@@ -1651,16 +1651,18 @@ def make_sigma_extrapolation(out_path, training_csv=SIGMA_EXTRAPOLATION_TRAINING
 # =====================================================================
 # Direct-vs-derived zT parity, both pathways from the identical
 # all-four-properties-present subset (56,088 rows, chemistry-cluster
-# grouped CV, canonical frozen hyperparameters -- see CLAUDE.md's
-# Direct-vs-Derived zT section). Source:
-# checkpoints/direct_vs_derived_zt_snapfix_canonical/repeat*_fold*.npz
-# (5 repeats x 5 outer folds = 25 files). R^2 is pooled across ALL 25
-# files (not per-repeat-then-averaged): this matches CLAUDE.md's own
-# reported method for this specific result (direct=0.7262,
-# derived=0.5244), confirmed by reproducing those exact values below --
-# a different convention from the Five-Way Ladder's per-repeat-mean
-# reporting, which is a different result computed a different way.
-DIRECT_VS_DERIVED_CHECKPOINT_DIR = Path("checkpoints/direct_vs_derived_zt_snapfix_canonical")
+# grouped CV, each model on its own target's canonical frozen
+# hyperparameters -- see CLAUDE.md's Direct-vs-Derived zT section).
+# Source: results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/
+# repeat*_fold*.npz (5 repeats x 5 outer folds = 25 files). Superseded
+# source (zT's set shared by all four models, device not recorded):
+# checkpoints/direct_vs_derived_zt_snapfix_canonical/ (direct=0.7262,
+# derived=0.5244). R^2 is pooled across ALL 25 files (not per-repeat-
+# then-averaged) and is checked below against the folder's own
+# results.json -- a different convention from the Five-Way Ladder's
+# per-repeat-mean reporting, which is a different result computed a
+# different way.
+DIRECT_VS_DERIVED_CHECKPOINT_DIR = Path("results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda")
 
 
 def load_direct_vs_derived_predictions(checkpoint_dir=DIRECT_VS_DERIVED_CHECKPOINT_DIR):
@@ -1694,6 +1696,15 @@ def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPO
     d = load_direct_vs_derived_predictions(checkpoint_dir)
     r2_direct = r2_score(d["direct_true"], d["direct_pred"])
     r2_derived = r2_score(d["derived_true"], d["derived_pred"])
+
+    with open(Path(checkpoint_dir) / "results.json", encoding="utf-8") as f:
+        recorded = json.load(f)
+    for got, key in ((r2_direct, "zT_direct"), (r2_derived, "zT_derived")):
+        if abs(got - recorded[key]["pooled_r2"]) > 1e-9:
+            raise ValueError(
+                f"{key}: pooled R^2 from the per-fold predictions ({got:.10f}) does not match "
+                f"{checkpoint_dir}/results.json ({recorded[key]['pooled_r2']:.10f})"
+            )
 
     lo = min(d["direct_true"].min(), d["direct_pred"].min(), d["derived_true"].min(), d["derived_pred"].min())
     hi = max(d["direct_true"].max(), d["direct_pred"].max(), d["derived_true"].max(), d["derived_pred"].max())

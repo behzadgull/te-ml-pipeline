@@ -1,0 +1,91 @@
+{
+  "zT_direct": {
+    "pooled_r2": 0.7266641979968649,
+    "n": 280440
+  },
+  "S": {
+    "pooled_r2": 0.8197913622880765,
+    "n": 280440
+  },
+  "sigma_log10": {
+    "pooled_r2": 0.6919515675998502,
+    "n": 280440
+  },
+  "kappa_log10": {
+    "pooled_r2": 0.8208530789690474,
+    "n": 280440
+  },
+  "zT_derived": {
+    "pooled_r2": 0.5402869487740098,
+    "n": 280440
+  },
+  "subset_n_rows": 56088,
+  "subset_n_chemistry_clusters": 4139,
+  "model_type": "xgboost",
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "hyperparams_mode": "per_target",
+  "frozen_hyperparams_source": "per-target canonical frozen hyperparameters (each model uses its own target's file)",
+  "frozen_hyperparams_inner_cv_r2": {
+    "zT_direct": 0.7926783006456432,
+    "S": 0.7972220210002797,
+    "sigma_log10": 0.749004894294982,
+    "kappa_log10": 0.8419289898254999
+  },
+  "best_params": {
+    "zT_direct": {
+      "n_estimators": 500,
+      "max_depth": 9,
+      "learning_rate": 0.021879194372117446,
+      "subsample": 0.6803687069914941,
+      "colsample_bytree": 0.6984141242996358,
+      "min_child_weight": 4,
+      "reg_lambda": 1.7133930619789375,
+      "reg_alpha": 0.050328646865956124
+    },
+    "S": {
+      "n_estimators": 500,
+      "max_depth": 10,
+      "learning_rate": 0.03183308682237681,
+      "subsample": 0.8969010059780653,
+      "colsample_bytree": 0.5061521655432422,
+      "min_child_weight": 4,
+      "reg_lambda": 0.6494186419907995,
+      "reg_alpha": 8.79300330033791
+    },
+    "sigma_log10": {
+      "n_estimators": 550,
+      "max_depth": 10,
+      "learning_rate": 0.02669280098570686,
+      "subsample": 0.8676496872090056,
+      "colsample_bytree": 0.5166510752439176,
+      "min_child_weight": 4,
+      "reg_lambda": 0.8073661687820751,
+      "reg_alpha": 6.547909796510876
+    },
+    "kappa_log10": {
+      "n_estimators": 350,
+      "max_depth": 9,
+      "learning_rate": 0.05741815501967946,
+      "subsample": 0.9052182073106718,
+      "colsample_bytree": 0.7081730343531392,
+      "min_child_weight": 6,
+      "reg_lambda": 0.05444122226792827,
+      "reg_alpha": 3.3513428043937066
+    }
+  },
+  "provenance": {
+    "dataset_path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "dataset_bytes": 974854507,
+    "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+    "tree_clean": false,
+    "git_source": "git",
+    "hyperparams_sha256": {
+      "zT_direct": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5",
+      "S": "243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b",
+      "sigma_log10": "b457b6f2f946b0ef32bb3b38f09cd2084d846d6683af6b5b91df01b9672d6f0f",
+      "kappa_log10": "883e3d0b2e62b1569473f397f00bd5ffbd055be60a54c7e4c758c11c6d129d3c"
+    }
+  }
+}

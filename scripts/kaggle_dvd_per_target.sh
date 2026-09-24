@@ -38,19 +38,25 @@ mkdir -p data/processed
 ln -sf "$SNAPFIX_CSV" data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv
 ls data/processed   # must list only the snapfix CSV: load_all_four_subset() takes the last glob match
 
+# Logs go to /kaggle/working, OUTSIDE the repo. The first bundle (2026-09-24) wrote them into the
+# repo root before each run's git check, so both run_config.json files recorded tree_clean=false.
+# Re-check here: from this point nothing may add files to the repo.
+LOGDIR=/kaggle/working
+test -z "$(git status --porcelain)" || { echo "working tree became dirty during setup"; exit 1; }
+
 nvidia-smi -L
 
 # 4. control first (published configuration, same device), then the per-target run
 for MODE in zt_shared per_target; do
   CK="checkpoints/direct_vs_derived_zt_snapfix_${MODE}_cuda"
   python -m src.direct_vs_derived_zt --hyperparams "$MODE" --device cuda --checkpoint-dir "$CK" \
-    2>&1 | tee "dvd_${MODE}.log"
+    2>&1 | tee "$LOGDIR/dvd_${MODE}.log"
   python -m src.backtransform_check --checkpoint-dir "$CK" --results-json "$CK/backtransform_check_results.json" \
-    --no-figure 2>&1 | tee "btc_${MODE}.log"
+    --no-figure 2>&1 | tee "$LOGDIR/btc_${MODE}.log"
 done
 
 # 5. bundle everything to download (run_config.json, results.json, the check JSONs, logs, per-fold npz)
 tar -czf /kaggle/working/dvd_per_target_bundle.tar.gz \
   checkpoints/direct_vs_derived_zt_snapfix_zt_shared_cuda checkpoints/direct_vs_derived_zt_snapfix_per_target_cuda \
-  dvd_zt_shared.log dvd_per_target.log btc_zt_shared.log btc_per_target.log
+  -C "$LOGDIR" dvd_zt_shared.log dvd_per_target.log btc_zt_shared.log btc_per_target.log
 sha256sum /kaggle/working/dvd_per_target_bundle.tar.gz

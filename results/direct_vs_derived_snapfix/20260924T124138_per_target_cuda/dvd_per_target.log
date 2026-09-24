@@ -1,0 +1,50 @@
+Subset: 56,088 rows from data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv, 4,139 chemistry clusters, 397 features. Hyperparameters (per-target canonical frozen hyperparameters (each model uses its own target's file)): {'zT_direct': {'n_estimators': 500, 'max_depth': 9, 'learning_rate': 0.021879194372117446, 'subsample': 0.6803687069914941, 'colsample_bytree': 0.6984141242996358, 'min_child_weight': 4, 'reg_lambda': 1.7133930619789375, 'reg_alpha': 0.050328646865956124}, 'S': {'n_estimators': 500, 'max_depth': 10, 'learning_rate': 0.03183308682237681, 'subsample': 0.8969010059780653, 'colsample_bytree': 0.5061521655432422, 'min_child_weight': 4, 'reg_lambda': 0.6494186419907995, 'reg_alpha': 8.79300330033791}, 'sigma_log10': {'n_estimators': 550, 'max_depth': 10, 'learning_rate': 0.02669280098570686, 'subsample': 0.8676496872090056, 'colsample_bytree': 0.5166510752439176, 'min_child_weight': 4, 'reg_lambda': 0.8073661687820751, 'reg_alpha': 6.547909796510876}, 'kappa_log10': {'n_estimators': 350, 'max_depth': 9, 'learning_rate': 0.05741815501967946, 'subsample': 0.9052182073106718, 'colsample_bytree': 0.7081730343531392, 'min_child_weight': 6, 'reg_lambda': 0.05444122226792827, 'reg_alpha': 3.3513428043937066}}
+REGENERATION GATE -- checkpoint_dir=checkpoints/direct_vs_derived_zt_snapfix_per_target_cuda, hyperparams_mode=per_target, hyperparams_sha256={'zT_direct': '6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5', 'S': '243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b', 'sigma_log10': 'b457b6f2f946b0ef32bb3b38f09cd2084d846d6683af6b5b91df01b9672d6f0f', 'kappa_log10': '883e3d0b2e62b1569473f397f00bd5ffbd055be60a54c7e4c758c11c6d129d3c'}, dataset_sha256=d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489, git_head=aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2, tree_clean=False, subset_n_rows=56,088, subset_n_chemistry_clusters=4,139. A rerun against different inputs must print a different value here.
+/usr/local/lib/python3.12/dist-packages/xgboost/core.py:160: UserWarning: [12:41:51] WARNING: /workspace/src/common/error_msg.cc:58: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.
+Potential solutions:
+- Use a data structure that matches the device ordinal in the booster.
+- Set the device for booster before call to inplace_predict.
+
+This warning will only be shown once.
+
+  warnings.warn(smsg, UserWarning)
+[1/25] repeat 0 fold 0: n_train=44,870, n_test=11,218, elapsed=51s
+[2/25] repeat 0 fold 1: n_train=44,870, n_test=11,218, elapsed=101s
+[3/25] repeat 0 fold 2: n_train=44,870, n_test=11,218, elapsed=150s
+[4/25] repeat 0 fold 3: n_train=44,871, n_test=11,217, elapsed=200s
+[5/25] repeat 0 fold 4: n_train=44,871, n_test=11,217, elapsed=250s
+[6/25] repeat 1 fold 0: n_train=44,870, n_test=11,218, elapsed=300s
+[7/25] repeat 1 fold 1: n_train=44,870, n_test=11,218, elapsed=350s
+[8/25] repeat 1 fold 2: n_train=44,870, n_test=11,218, elapsed=399s
+[9/25] repeat 1 fold 3: n_train=44,871, n_test=11,217, elapsed=449s
+[10/25] repeat 1 fold 4: n_train=44,871, n_test=11,217, elapsed=498s
+[11/25] repeat 2 fold 0: n_train=44,870, n_test=11,218, elapsed=548s
+[12/25] repeat 2 fold 1: n_train=44,870, n_test=11,218, elapsed=597s
+[13/25] repeat 2 fold 2: n_train=44,870, n_test=11,218, elapsed=647s
+[14/25] repeat 2 fold 3: n_train=44,871, n_test=11,217, elapsed=697s
+[15/25] repeat 2 fold 4: n_train=44,871, n_test=11,217, elapsed=747s
+[16/25] repeat 3 fold 0: n_train=44,870, n_test=11,218, elapsed=797s
+[17/25] repeat 3 fold 1: n_train=44,870, n_test=11,218, elapsed=846s
+[18/25] repeat 3 fold 2: n_train=44,870, n_test=11,218, elapsed=896s
+[19/25] repeat 3 fold 3: n_train=44,871, n_test=11,217, elapsed=946s
+[20/25] repeat 3 fold 4: n_train=44,871, n_test=11,217, elapsed=996s
+[21/25] repeat 4 fold 0: n_train=44,870, n_test=11,218, elapsed=1045s
+[22/25] repeat 4 fold 1: n_train=44,870, n_test=11,218, elapsed=1094s
+[23/25] repeat 4 fold 2: n_train=44,870, n_test=11,218, elapsed=1144s
+[24/25] repeat 4 fold 3: n_train=44,871, n_test=11,217, elapsed=1194s
+[25/25] repeat 4 fold 4: n_train=44,871, n_test=11,217, elapsed=1245s
+
+Subset: 56,088 rows, 4,139 chemistry clusters
+Model: xgboost, frozen hyperparameters from per-target canonical frozen hyperparameters (each model uses its own target's file)
+
+Pathway               Pooled R^2         n
+------------------------------------------
+DIRECT zT                 0.7267   280,440
+DERIVED zT                0.5403   280,440
+
+Component models feeding the derived pathway (diagnostic, not the headline comparison):
+  S (linear)            0.8198  (n=280,440)
+  sigma (log10)         0.6920  (n=280,440)
+  kappa (log10)         0.8209  (n=280,440)
+
+Saved results to checkpoints/direct_vs_derived_zt_snapfix_per_target_cuda/results.json

@@ -1,0 +1,51 @@
+Loading canonical frozen zT hyperparameters: checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json
+Subset: 56,088 rows from data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv, 4,139 chemistry clusters, 397 features. Hyperparameters (zT canonical frozen hyperparameters (shared across all four models)): {'n_estimators': 500, 'max_depth': 9, 'learning_rate': 0.021879194372117446, 'subsample': 0.6803687069914941, 'colsample_bytree': 0.6984141242996358, 'min_child_weight': 4, 'reg_lambda': 1.7133930619789375, 'reg_alpha': 0.050328646865956124}
+REGENERATION GATE -- checkpoint_dir=checkpoints/direct_vs_derived_zt_snapfix_zt_shared_cuda, hyperparams_mode=zt_shared, hyperparams_sha256={'zt_shared': '6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5'}, dataset_sha256=d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489, git_head=aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2, tree_clean=False, subset_n_rows=56,088, subset_n_chemistry_clusters=4,139. A rerun against different inputs must print a different value here.
+/usr/local/lib/python3.12/dist-packages/xgboost/core.py:160: UserWarning: [12:22:01] WARNING: /workspace/src/common/error_msg.cc:58: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.
+Potential solutions:
+- Use a data structure that matches the device ordinal in the booster.
+- Set the device for booster before call to inplace_predict.
+
+This warning will only be shown once.
+
+  warnings.warn(smsg, UserWarning)
+[1/25] repeat 0 fold 0: n_train=44,870, n_test=11,218, elapsed=47s
+[2/25] repeat 0 fold 1: n_train=44,870, n_test=11,218, elapsed=93s
+[3/25] repeat 0 fold 2: n_train=44,870, n_test=11,218, elapsed=138s
+[4/25] repeat 0 fold 3: n_train=44,871, n_test=11,217, elapsed=185s
+[5/25] repeat 0 fold 4: n_train=44,871, n_test=11,217, elapsed=231s
+[6/25] repeat 1 fold 0: n_train=44,870, n_test=11,218, elapsed=277s
+[7/25] repeat 1 fold 1: n_train=44,870, n_test=11,218, elapsed=323s
+[8/25] repeat 1 fold 2: n_train=44,870, n_test=11,218, elapsed=369s
+[9/25] repeat 1 fold 3: n_train=44,871, n_test=11,217, elapsed=414s
+[10/25] repeat 1 fold 4: n_train=44,871, n_test=11,217, elapsed=460s
+[11/25] repeat 2 fold 0: n_train=44,870, n_test=11,218, elapsed=506s
+[12/25] repeat 2 fold 1: n_train=44,870, n_test=11,218, elapsed=551s
+[13/25] repeat 2 fold 2: n_train=44,870, n_test=11,218, elapsed=597s
+[14/25] repeat 2 fold 3: n_train=44,871, n_test=11,217, elapsed=643s
+[15/25] repeat 2 fold 4: n_train=44,871, n_test=11,217, elapsed=689s
+[16/25] repeat 3 fold 0: n_train=44,870, n_test=11,218, elapsed=736s
+[17/25] repeat 3 fold 1: n_train=44,870, n_test=11,218, elapsed=781s
+[18/25] repeat 3 fold 2: n_train=44,870, n_test=11,218, elapsed=827s
+[19/25] repeat 3 fold 3: n_train=44,871, n_test=11,217, elapsed=874s
+[20/25] repeat 3 fold 4: n_train=44,871, n_test=11,217, elapsed=919s
+[21/25] repeat 4 fold 0: n_train=44,870, n_test=11,218, elapsed=965s
+[22/25] repeat 4 fold 1: n_train=44,870, n_test=11,218, elapsed=1011s
+[23/25] repeat 4 fold 2: n_train=44,870, n_test=11,218, elapsed=1056s
+[24/25] repeat 4 fold 3: n_train=44,871, n_test=11,217, elapsed=1102s
+[25/25] repeat 4 fold 4: n_train=44,871, n_test=11,217, elapsed=1149s
+
+Subset: 56,088 rows, 4,139 chemistry clusters
+Model: xgboost, frozen hyperparameters from zT canonical frozen hyperparameters (shared across all four models)
+
+Pathway               Pooled R^2         n
+------------------------------------------
+DIRECT zT                 0.7267   280,440
+DERIVED zT                0.5259   280,440
+
+Component models feeding the derived pathway (diagnostic, not the headline comparison):
+  S (linear)            0.8180  (n=280,440)
+  sigma (log10)         0.6856  (n=280,440)
+  kappa (log10)         0.8228  (n=280,440)
+
+Saved results to checkpoints/direct_vs_derived_zt_snapfix_zt_shared_cuda/results.json

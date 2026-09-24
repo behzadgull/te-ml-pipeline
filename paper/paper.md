@@ -19,7 +19,7 @@ Machine learning models predicting thermoelectric transport properties from comp
 
 
 
-We then ask what limits honest performance. Combining an inter-laboratory measurement round-robin with a direct comparison of two independent digitizations of the same published figures gives a label-noise ceiling of 0.96 to 0.99, against which grouped performance of 0.70 to 0.81 leaves 0.15 to 0.29 of headroom. A descriptor ablation shows this gap is not one of descriptor count: tripling the feature set from 133 to 397 closes under 4.2% of the headroom on every property, and two descriptor families of different construction are nearly interchangeable. Predicting the figure of merit directly outperforms reconstructing it from separately predicted components by 0.202 in R². Transfer to two independent databases degrades further, though 13 to 17 percent of external rows fall outside the training data's property range, and restricting to in-support rows recovers a substantial share of the apparent loss.
+We then ask what limits honest performance. Combining an inter-laboratory measurement round-robin with a direct comparison of two independent digitizations of the same published figures gives a label-noise ceiling of 0.96 to 0.99, against which grouped performance of 0.70 to 0.81 leaves 0.15 to 0.29 of headroom. A descriptor ablation shows this gap is not one of descriptor count: tripling the feature set from 133 to 397 closes under 4.2% of the headroom on every property, and two descriptor families of different construction are nearly interchangeable. Predicting the figure of merit directly outperforms reconstructing it from separately predicted components by 0.186 in R². Transfer to two independent databases degrades further, though 13 to 17 percent of external rows fall outside the training data's property range, and restricting to in-support rows recovers a substantial share of the apparent loss.
 
 
 
@@ -61,7 +61,7 @@ This paper addresses both questions on a single pinned snapshot of Starrydata2 [
 
 
 
-We make four contributions. First, we quantify validation inflation across five protocols and four properties, with the grouped protocols repeated over independent partitions. Grouping by chemistry cluster lowers R² by 0.134 to 0.213 relative to ungrouped validation; grouping by exact composition removes only 58 to 65% of that inflation; and k-fold cross-validation provides no protection. Second, a feature-attribution control shows that the inflation reflects test-set composition rather than a change in what the model learns: the same function is applied to an easier test set. Third, we construct a label-noise ceiling from two independently measured components, an inter-laboratory round-robin and a direct comparison of two independent digitizations of the same figures. Honest performance sits 0.15 to 0.29 below it, and an ablation shows that the gap is not a descriptor-count problem: tripling the number of descriptors closes at most 4.2% of it. Fourth, we show that the figure of merit is better predicted directly than reconstructed from separately predicted components, by 0.202 in R² under grouped validation.
+We make four contributions. First, we quantify validation inflation across five protocols and four properties, with the grouped protocols repeated over independent partitions. Grouping by chemistry cluster lowers R² by 0.134 to 0.213 relative to ungrouped validation; grouping by exact composition removes only 58 to 65% of that inflation; and k-fold cross-validation provides no protection. Second, a feature-attribution control shows that the inflation reflects test-set composition rather than a change in what the model learns: the same function is applied to an easier test set. Third, we construct a label-noise ceiling from two independently measured components, an inter-laboratory round-robin and a direct comparison of two independent digitizations of the same figures. Honest performance sits 0.15 to 0.29 below it, and an ablation shows that the gap is not a descriptor-count problem: tripling the number of descriptors closes at most 4.2% of it. Fourth, we show that the figure of merit is better predicted directly than reconstructed from separately predicted components, by 0.186 in R² under grouped validation.
 
 
 
@@ -145,7 +145,7 @@ Random holdout draws and k-fold partitions are generated with scikit-learn [@ped
 
 
 
-All results use gradient-boosted trees (XGBoost [@chen2016xgboost]). Hyperparameters were tuned once per target on all rows, by an Optuna search of 20 trials scored with three-fold cross-validation grouped by the original chemistry-cluster identifier, then frozen and reused unchanged across every protocol, feature set and experiment reported here. Differences between conditions therefore reflect the condition rather than the tuning. In particular, the descriptor ablation of Section 3.4 applies full-feature hyperparameters to reduced feature sets, and the direct-versus-derived comparison of Section 3.6 applies full-dataset hyperparameters to a subset; retuning in either case would confound the effect of interest with a tuning change.
+All results use gradient-boosted trees (XGBoost [@chen2016xgboost]). Hyperparameters were tuned once per target on all rows, by an Optuna search of 20 trials scored with three-fold cross-validation grouped by the original chemistry-cluster identifier, then frozen and reused unchanged across every protocol, feature set and experiment reported here. Differences between conditions therefore reflect the condition rather than the tuning. In particular, the descriptor ablation of Section 3.4 applies full-feature hyperparameters to reduced feature sets, and the direct-versus-derived comparison of Section 3.6 applies each target's own frozen set to its model on a subset, with a sensitivity run applying the figure-of-merit set to all four models; retuning on the subset in either case would confound the effect of interest with a tuning change.
 
 
 
@@ -513,21 +513,21 @@ Finally, the chemistry-cluster rule collapses dopants below 5 at% but not alloy 
 
 
 
-The figure of merit can be predicted directly or assembled from separately predicted S, σ and κ via S²σT/κ. We compare both on the subset where all four properties are reported, 56,088 rows across 4,139 chemistry clusters, under the same grouped protocol and hyperparameters (Figure 11).
+The figure of merit can be predicted directly or assembled from separately predicted S, σ and κ via S²σT/κ. We compare both on the subset where all four properties are reported, 56,088 rows across 4,139 chemistry clusters, under the same grouped protocol, each model with its own target's frozen hyperparameters (Figure 11).
 
 
 
 ![Figure 11](figures/zt_direct_vs_derived.png)
 
-*Figure 11. Predicted versus actual zT, direct prediction (R² = 0.7262) versus reconstruction from S, σ and κ via S²σT/κ (R² = 0.5244), identical axes and colour scale, n = 280,440 pooled across five repeats of the 56,088-row subset.*
+*Figure 11. Predicted versus actual zT, direct prediction (R² = 0.7267) versus reconstruction from S, σ and κ via S²σT/κ (R² = 0.5403), identical axes and colour scale, n = 280,440 pooled across five repeats of the 56,088-row subset.*
 
 
 
-Direct prediction gives pooled R² = 0.7262; reconstruction gives 0.5244, a gap of 0.202. The component models are individually adequate: S at 0.8172, σ at 0.6856 and κ at 0.8221 in their respective spaces. Combining three imperfect predictions through a product of powers compounds their errors, and the residuals of σ and κ are positively correlated at 0.43, so the errors reinforce rather than cancel.
+Direct prediction gives pooled R² = 0.7267; reconstruction gives 0.5403, a gap of 0.186. Giving all four models the figure-of-merit hyperparameters instead, so that the two pathways differ only in what is predicted, gives a gap of 0.201; the ordering does not depend on the hyperparameter choice. The component models are individually adequate: S at 0.8198, σ at 0.6920 and κ at 0.8209 in their respective spaces. Combining three imperfect predictions through a product of powers compounds their errors, and the residuals of σ and κ are positively correlated at 0.43, so the errors reinforce rather than cancel.
 
 
 
-The gap is not an artefact of the log-space back-transformation. Applying Duan's smearing correction changes reconstructed R² by 0.0035, and the direction of that change is not consistent between runs differing only in hyperparameter choice. At this magnitude the correction is negligible relative to the gap it would need to explain. Tail contributions are similar for both pathways, with the worst 1% of rows carrying 23.0% of squared error for direct prediction and 21.3% for reconstruction, so the difference is a broadly wider residual distribution rather than a small number of catastrophic failures.
+The gap is not an artefact of the log-space back-transformation. Applying Duan's smearing correction [@duan1983smearing] changes reconstructed R² by −0.0052, and by +0.0023 when all four models share the figure-of-merit hyperparameters; the direction is not stable and the magnitude is under 3% of the gap. Tail contributions are similar for both pathways, with the worst 1% of rows carrying 23.0% of squared error for direct prediction and 21.8% for reconstruction, so the difference is a broadly wider residual distribution rather than a small number of catastrophic failures.
 
 
 
@@ -635,7 +635,7 @@ The digitization-noise component was measured on 96 of 176 candidate samples, th
 
 
 
-Reconstructing zT from separately predicted components is numerically unstable in a way that limits what can be claimed about it. Direct prediction outperforms reconstruction on every stratum of both external databases and by 0.20 internally, and that ordering is robust; the reconstructed values themselves move substantially under small changes to the back-transformation correction, and we report the ordering rather than the magnitudes.
+Reconstructing zT from separately predicted components is numerically unstable in a way that limits what can be claimed about it. Direct prediction outperforms reconstruction on every stratum of both external databases and by 0.19 internally, and that ordering is robust; the reconstructed values themselves move substantially under small changes to the back-transformation correction, and we report the ordering rather than the magnitudes.
 
 
 

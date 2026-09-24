@@ -1,0 +1,51 @@
+{
+  "zT_direct": {
+    "pooled_r2": 0.7266641979968649,
+    "n": 280440
+  },
+  "S": {
+    "pooled_r2": 0.8180181722405779,
+    "n": 280440
+  },
+  "sigma_log10": {
+    "pooled_r2": 0.6856045929377783,
+    "n": 280440
+  },
+  "kappa_log10": {
+    "pooled_r2": 0.8228472224375003,
+    "n": 280440
+  },
+  "zT_derived": {
+    "pooled_r2": 0.5259100965692491,
+    "n": 280440
+  },
+  "subset_n_rows": 56088,
+  "subset_n_chemistry_clusters": 4139,
+  "model_type": "xgboost",
+  "n_repeats": 5,
+  "n_outer_folds": 5,
+  "hyperparams_mode": "zt_shared",
+  "frozen_hyperparams_source": "zT canonical frozen hyperparameters (shared across all four models)",
+  "frozen_hyperparams_inner_cv_r2": 0.7926783006456432,
+  "best_params": {
+    "n_estimators": 500,
+    "max_depth": 9,
+    "learning_rate": 0.021879194372117446,
+    "subsample": 0.6803687069914941,
+    "colsample_bytree": 0.6984141242996358,
+    "min_child_weight": 4,
+    "reg_lambda": 1.7133930619789375,
+    "reg_alpha": 0.050328646865956124
+  },
+  "provenance": {
+    "dataset_path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "dataset_bytes": 974854507,
+    "git_head": "aaf512e6c4c1b84d1c8d635773e4fa90ab70a8a2",
+    "tree_clean": false,
+    "git_source": "git",
+    "hyperparams_sha256": {
+      "zt_shared": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5"
+    }
+  }
+}
