@@ -575,7 +575,7 @@ The measurement-noise component of the ceiling derives from a round-robin on a s
 
 
 
-The digitization-noise component was measured on 96 of 176 candidate samples, those whose compositions canonicalise identically in both databases. A sample enters a property's agreement figure only if both databases hold a curve for that property and at least one teMatDb point lies within the temperature range of the matched training curve and within 5 K of one of its points, between 300 and 800 K. Samples that match are those with simpler formulas, which may also be easier to digitize accurately, so this component may be optimistic, although the narrower target variance of the same subset works in the opposite direction (Section 3.3). It also shifted by up to 0.02 between two snapshots of the same source database taken one week apart.
+The digitization-noise component was measured on 96 of 176 candidate samples, those whose compositions canonicalise identically in both databases. A sample enters a property's agreement figure only if both databases hold a curve for that property and at least one teMatDb point lies within the temperature range of the matched training curve and within 5 K of one of its points, between 300 and 800 K. Samples whose compositions match are those with simpler formulas, which may also be easier to digitize accurately, so this component may be optimistic, although the narrower target variance of the same subset works in the opposite direction (Section 3.3). It also shifted by up to 0.02 between two snapshots of the same source database taken one week apart.
 
 
 
