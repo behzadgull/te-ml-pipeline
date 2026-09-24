@@ -2183,9 +2183,13 @@ test" without this qualifier.
   physics-based feature engineering, no split-strategy comparison. Cite
   and explicitly state why it doesn't overlap.
 - Wang, Zhong, Zhang et al. (2025), Materials & Design 249:113552, DOI
-  10.1016/j.matdes.2024.113552 — R²=0.970 stacking ensemble. CV
-  methodology UNVERIFIED (paywalled) — do not assert it's leaky, soften
-  to "should be interrogated before treating as a benchmark."
+  10.1016/j.matdes.2024.113552 — R²=0.970 stacking ensemble. Open
+  access (CC BY-NC-ND). Protocol verified 2026-09-24: 10-fold CV over
+  5,226 temperature rows from 1,022 materials, no material grouping
+  described, R² 0.970. Still do not assert leakage: the absence of a
+  described grouping is not evidence that leakage occurred. State the
+  protocol as described, and that the figure "should be interrogated before
+  treating as a benchmark."
 
 ---
 
