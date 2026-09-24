@@ -1,0 +1,48 @@
+{
+  "timestamp_utc": "20260924T194948Z",
+  "code_commit": "48915cc40e7211a261dd8c11290949d90fb88f4b",
+  "tree_clean": true,
+  "uncommitted_paths": [],
+  "script": {
+    "path": "scripts/insupport_share.py",
+    "sha256": "e6412cff11ea711ac7c7006ae91c1d607bd85fede3979379315b1226909d306a"
+  },
+  "inputs": {
+    "results/external_snapfix/20260917T160553/estm_predictions_passa.npz": {
+      "sha256": "85b4467e915c3068a8252dc5bf746f548c5e61a81c3e692f1ece75d4a7e7374b",
+      "bytes": 397490
+    },
+    "results/external_snapfix/20260917T160553/estm_predictions_passb.npz": {
+      "sha256": "29e2730786d18bbb50994a1ee8a67cc4263d12e88a127adc066f0fe2fdeebfbf",
+      "bytes": 191782
+    },
+    "reports/regen_snapfix/20260917T150000/ladder_metrics.json": {
+      "sha256": "23d8b4419b5037c70544da4ef9448f091fd7a638a2eadfe171c4ad70a66fd8bf",
+      "bytes": 14200
+    }
+  },
+  "training_bounds": {
+    "S": [
+      -461.0258,
+      562.5
+    ],
+    "sigma": [
+      958.7831,
+      1656678.2772
+    ],
+    "kappa": [
+      0.2830364,
+      13.7753
+    ]
+  },
+  "asserted_in_support_rows": {
+    "a": 2709,
+    "b": 1196
+  },
+  "asserted_cluster_disjoint_percent": {
+    "S": 40,
+    "sigma": 31,
+    "kappa": 20,
+    "zT": 15
+  }
+}
