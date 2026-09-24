@@ -1838,6 +1838,29 @@ predictions, git-tracked). Superseded intermediate (wrong hyperparameters,
 same fixed grouping): `results/direct_vs_derived_snapfix/20260918T103933/`,
 kept locally, not committed.
 
+**Hyperparameter sharing in the 20260918T200058 run (verified 2026-09-24
+from its recorded `best_params`, which equal the canonical `zT.json`
+exactly): zT's frozen set was used for all four models** (direct zT, S,
+sigma, kappa), not each target's own frozen file. The comparison therefore
+compares pathways under one shared set, and the derived pathway's S, sigma
+and kappa models were not run with their own tuned hyperparameters; the
+effect on the 0.2018 gap is unmeasured, and plausibly favors the direct
+pathway. A per-target rerun (each model on its own frozen JSON, plus a
+same-device control with zT's set shared) is prepared but not yet run:
+`python -m src.direct_vs_derived_zt --hyperparams per_target` and
+`scripts/kaggle_dvd_per_target.sh`. Until it is run, keep the ordering
+(direct beats derived) and state the magnitude as conditional on the shared
+set.
+
+**Do not cite `duan_verdict` ("COLLAPSES -- back-transform artifact") in
+`results/direct_vs_derived_snapfix/20260918T200058/backtransform_check_results.json`.**
+It is invalid: the label comes from a one-line rule that calls any
+corrected-minus-uncorrected R2 above +1e-6 a "collapse", and the Duan
+correction moved derived R2 by +0.0035 (0.5244 to 0.5279) against a gap of
+0.2018, so the label flipped on a change that does not touch the finding.
+The numbers in that file are correct; the label is not. The rerun's output
+reports the numeric effect (`duan_effect_on_derived_r2`) instead.
+
 ## Confirmed Results — External Validation, ESTM (Paper A item 6, ESTM COMPLETE)
 
 Protocol: refit-on-full-training-then-predict (no saved/serialized model
@@ -2181,7 +2204,9 @@ test" without this qualifier.
 - Ma & Poon, arXiv:2509.00299 — verified NOT a scoop despite title
   ("Reexamining ML Models on Predicting Thermoelectric Properties"):
   physics-based feature engineering, no split-strategy comparison. Cite
-  and explicitly state why it doesn't overlap.
+  and explicitly state why it doesn't overlap. Verified 2026-09-24 from
+  the paper: they adopt 5 at% as the doping-to-alloying crossover, citing
+  Yeh 2004 (supports paper.md's Section 2.5 threshold sentence).
 - Wang, Zhong, Zhang et al. (2025), Materials & Design 249:113552, DOI
   10.1016/j.matdes.2024.113552 — R²=0.970 stacking ensemble. Open
   access (CC BY-NC-ND). Protocol verified 2026-09-24: 10-fold CV over
@@ -2190,6 +2215,20 @@ test" without this qualifier.
   described grouping is not evidence that leakage occurred. State the
   protocol as described, and that the figure "should be interrogated before
   treating as a benchmark."
+- **Prior-evidence numbers quoted in paper.md (Introduction, Section 4.1),
+  verified 2026-09-24 from the papers unless noted:**
+  - Ho et al. (2026, `ho2026physicsinspired`): 3,879 rows; the
+    composition-wise split holds out all temperature records of a
+    composition; Seebeck R² 0.9653 under a random split falling to 0.871
+    under the composition split (drop 0.094); electrical and thermal
+    conductivity are scored in linear units, so their drops are not
+    comparable to this paper's log10 sigma and kappa.
+  - Na & Chang (2022, `na2022public`): R² 0.13 for zT prediction on
+    material groups absent from training, before transfer learning
+    (abstract).
+  - Athar & Jund (2026, `athar2026beyond`): reported R² of 0.90 to 0.98
+    for composition-based models; verified by the maintainer, not
+    re-read from the paper in this session.
 
 ---
 

@@ -33,6 +33,8 @@ make_figures.py's Figure 3 checkpoint verification). This run is fully
 local (unlike Figure 3's Kaggle checkpoints), so it verifies exactly.
 """
 
+import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -42,7 +44,7 @@ from sklearn.metrics import r2_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.direct_vs_derived_zt import CHECKPOINT_DIR, load_all_four_subset
+from src.direct_vs_derived_zt import CHECKPOINT_DIR, _git_state, load_all_four_subset
 from src.nested_cv import GROUP_COL, N_OUTER_FOLDS, N_OUTER_REPEATS_GROUPED, randomized_group_kfold
 from src.plotting_style import COLORBLIND_PALETTE, add_panel_label, apply_style, get_figsize, save_figure
 
@@ -247,8 +249,17 @@ def report(d, stats, r2_direct, r2_derived_uncorrected, r2_derived_corrected, sm
     print(f"\nConclusion: Duan correction result -> gap {verdict}")
 
 
-def main():
-    d = load_pooled_verified_data()
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Back-transform bias diagnostic for the direct-vs-derived zT comparison.")
+    parser.add_argument("--checkpoint-dir", default=str(CHECKPOINT_DIR),
+                        help="direct_vs_derived_zt checkpoint directory to check (default: the module's default)")
+    parser.add_argument("--results-json", default=None,
+                        help="write the numbers (R^2 values, Duan effect, residual stats and correlation) here")
+    parser.add_argument("--no-figure", action="store_true",
+                        help="do not write figures/fig_backtransform_check (it overwrites the committed figure)")
+    args = parser.parse_args(argv)
+
+    d = load_pooled_verified_data(checkpoint_dir=args.checkpoint_dir)
 
     direct_resid = d["zT_direct_true"] - d["zT_direct_pred"]
     derived_resid = d["zT_derived_true"] - d["zT_derived_pred"]
@@ -263,9 +274,32 @@ def main():
 
     report(d, stats, r2_direct, r2_derived_uncorrected, r2_derived_corrected, smear_sigma, smear_kappa, corr, labels)
 
-    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
-    make_residual_distribution_figure(direct_resid, derived_resid, FIGURES_DIR / "fig_backtransform_check")
-    print(f"\nSaved fig_backtransform_check.png / .pdf to {FIGURES_DIR}")
+    if args.results_json:
+        run_config_path = Path(args.checkpoint_dir) / "run_config.json"
+        run_config = json.load(open(run_config_path, encoding="utf-8")) if run_config_path.exists() else None
+        out = {
+            "checkpoint_dir_read": str(args.checkpoint_dir),
+            "checkpoint_run_config": run_config,
+            "check_provenance": _git_state(),
+            "n": int(len(d["zT_direct_true"])),
+            "r2_direct": float(r2_direct),
+            "r2_derived_uncorrected": float(r2_derived_uncorrected),
+            "r2_derived_corrected": float(r2_derived_corrected),
+            "duan_effect_on_derived_r2": float(r2_derived_corrected - r2_derived_uncorrected),
+            "smear_sigma": float(smear_sigma),
+            "smear_kappa": float(smear_kappa),
+            "residual_distribution_stats": stats,
+            "residual_correlation_matrix": np.asarray(corr).tolist(),
+            "residual_correlation_labels": list(labels),
+        }
+        with open(args.results_json, "w", encoding="utf-8") as f:
+            json.dump(out, f, indent=2)
+        print(f"\nSaved results to {args.results_json}")
+
+    if not args.no_figure:
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+        make_residual_distribution_figure(direct_resid, derived_resid, FIGURES_DIR / "fig_backtransform_check")
+        print(f"\nSaved fig_backtransform_check.png / .pdf to {FIGURES_DIR}")
 
 
 if __name__ == "__main__":

@@ -81,7 +81,7 @@ We then test transfer to two independent databases, finding a further degradatio
 
 
 
-Training data comes from Starrydata2, a community-curated database of thermoelectric property measurements digitized from figures in the primary literature. The snapshot used throughout is a single frozen pull of 9,494 publications, 55,261 samples and 156,101 digitized property curves, taken on 22 August 2026 and identified by SHA-256 hash. Starrydata2 regenerates its public export daily, so an unpinned pull is not reproducible; every result reported here derives from this one snapshot, which is archived separately from the live source.
+Training data comes from Starrydata2 [@katsura2025starrydata], a community-curated database of thermoelectric property measurements digitized from figures in the primary literature. The snapshot used throughout is a single frozen pull of 9,494 publications, 55,261 samples and 156,101 digitized property curves, taken on 22 August 2026 and identified by SHA-256 hash. Starrydata2 regenerates its public export daily, so an unpinned pull is not reproducible; every result reported here derives from this one snapshot, which is archived separately from the live source.
 
 
 
@@ -111,7 +111,7 @@ The cleaned dataset contains 280,664 rows. After featurization it provides 185,0
 
 
 
-Each composition is described by 132 MAGPIE elemental-property attributes and 264 CBFV embeddings, computed once per unique formula and joined onto every row of that composition. With the temperature bin this gives 397 features. Formulas that fail either featurizer are excluded and logged rather than silently dropped.
+Each composition is described by 132 MAGPIE elemental-property attributes [@ward2016general], computed with matminer [@ward2018matminer], and 264 CBFV features [@murdock2020domain] built on the Oliynyk element-property set [@oliynyk2016highthroughput], both computed once per unique formula and joined onto every row of that composition. With the temperature bin this gives 397 features. Formulas that fail either featurizer are excluded and logged rather than silently dropped.
 
 
 
@@ -127,7 +127,7 @@ The Seebeck coefficient and figure of merit are modelled in linear space; electr
 
 
 
-Five protocols are compared. Twenty independent random 80/20 holdout draws, pooled, together with five-fold and ten-fold cross-validation, impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 3): elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃.
+Five protocols are compared. Twenty independent random 80/20 holdout draws, pooled, together with five-fold and ten-fold cross-validation, impose no constraint on what appears in both training and test. Composition grouping requires that no exact composition be split across folds. Chemistry-cluster grouping applies a stricter rule (Figure 3). It follows the leave-cluster-out principle for separating extrapolation from interpolation [@meredig2018machine]. Elements present below 5 atomic percent are treated as dopants and removed before forming the cluster identifier, and remaining amounts within 5% of an integer are snapped to that integer before reduction. A doped material therefore groups with its parent, and so does one whose host stoichiometry is reported with measurement-level imprecision. (PbTe)₀.₉₇(SrTe)₀.₀₂(Na₂Te)₀.₀₁ groups with PbTe, and Pb₀.₉₇Te groups with PbTe, while Bi₂Te₂.₇Se₀.₃, where selenium occupies 6.0 atomic percent and is therefore an alloy component rather than a dopant, does not group with Bi₂Te₃. The 5 atomic percent threshold follows the convention that separates principal elements from minor additions in multicomponent alloys [@yeh2004nanostructured], also used to distinguish doping from alloying in thermoelectric compositions [@ma2025reexamining].
 
 
 
@@ -137,7 +137,7 @@ Five protocols are compared. Twenty independent random 80/20 holdout draws, pool
 
 
 
-Grouped protocols are run as five repeats of five-fold cross-validation. Because the group-size distribution is heavy-tailed, the assignment of the largest clusters to folds is randomised between repeats rather than fixed, so that the across-repeat standard deviation reflects which chemistries are held out and not only residual model variance. Reported values are the mean and standard deviation of per-repeat pooled R². The random 80/20 protocol pools twenty independent holdout draws into one value; five-fold and ten-fold cross-validation are each a single partition and likewise report one pooled value.
+Random holdout draws and k-fold partitions are generated with scikit-learn [@pedregosa2011scikit]. Grouped protocols are run as five repeats of five-fold cross-validation, with a custom fold assignment in place of scikit-learn's deterministic GroupKFold. Because the group-size distribution is heavy-tailed, the assignment of the largest clusters to folds is randomised between repeats rather than fixed, so that the across-repeat standard deviation reflects which chemistries are held out and not only residual model variance. Reported values are the mean and standard deviation of per-repeat pooled R². The random 80/20 protocol pools twenty independent holdout draws into one value; five-fold and ten-fold cross-validation are each a single partition and likewise report one pooled value.
 
 
 
@@ -145,7 +145,7 @@ Grouped protocols are run as five repeats of five-fold cross-validation. Because
 
 
 
-All results use gradient-boosted trees (XGBoost). Hyperparameters were tuned once per target by grouped cross-validation over the full dataset, then frozen and reused unchanged across every protocol, feature set and experiment reported here. Differences between conditions therefore reflect the condition rather than the tuning. In particular, the descriptor ablation of Section 3.4 applies full-feature hyperparameters to reduced feature sets, and the direct-versus-derived comparison of Section 3.6 applies full-dataset hyperparameters to a subset; retuning in either case would confound the effect of interest with a tuning change.
+All results use gradient-boosted trees (XGBoost [@chen2016xgboost]). Hyperparameters were tuned once per target on all rows, by an Optuna search of 20 trials scored with three-fold cross-validation grouped by the original chemistry-cluster identifier, then frozen and reused unchanged across every protocol, feature set and experiment reported here. Differences between conditions therefore reflect the condition rather than the tuning. In particular, the descriptor ablation of Section 3.4 applies full-feature hyperparameters to reduced feature sets, and the direct-versus-derived comparison of Section 3.6 applies full-dataset hyperparameters to a subset; retuning in either case would confound the effect of interest with a tuning change.
 
 
 
@@ -153,7 +153,7 @@ All results use gradient-boosted trees (XGBoost). Hyperparameters were tuned onc
 
 
 
-Where two protocols differ by an amount comparable to repeat-to-repeat variation, we apply the Nadeau-Bengio corrected paired t-test, which accounts for the dependence between overlapping training sets that inflates the naive paired test. We report the mean paired difference as the effect size and use the test only to establish that the direction is not attributable to chance.
+Where two protocols differ by an amount comparable to repeat-to-repeat variation, we apply the Nadeau-Bengio corrected paired t-test [@nadeau2003inference], which accounts for the dependence between overlapping training sets that inflates the naive paired test. We report the mean paired difference as the effect size and use the test only to establish that the direction is not attributable to chance.
 
 
 
@@ -161,7 +161,7 @@ Where two protocols differ by an amount comparable to repeat-to-repeat variation
 
 
 
-For external testing, models are refit on 100% of the training data with frozen hyperparameters and applied once. Smearing factors correcting the log-space back-transformation are computed from training-side out-of-fold residuals and held fixed; external labels are never used for calibration. Each external database is partitioned by source publication and by chemistry cluster, and the resulting strata are scored separately and never pooled. Because external datasets extend beyond the property ranges the training data covers, results are reported both over the full external set and restricted to rows falling within training's per-property range in S, σ and κ simultaneously, with the excluded fraction stated.
+For external testing, models are refit on 100% of the training data with frozen hyperparameters and applied once. Smearing factors [@duan1983smearing] correcting the log-space back-transformation are computed from training-side out-of-fold residuals and held fixed; external labels are never used for calibration. Each external database is partitioned by source publication and by chemistry cluster, and the resulting strata are scored separately and never pooled. Because external datasets extend beyond the property ranges the training data covers, results are reported both over the full external set and restricted to rows falling within training's per-property range in S, σ and κ simultaneously, with the excluded fraction stated.
 
 
 
@@ -255,7 +255,7 @@ These are distinguishable through feature attribution. If the first mechanism op
 
 
 
-We fit the figure-of-merit model under both random and chemistry-cluster splits across all twenty-five folds of five repeats, with identical hyperparameters, and computed exact TreeSHAP attributions on a fixed 20,000-row subsample of each fold's held-out set. Attributions were normalised to shares of each model's total, since the two models have different prediction variances and raw magnitudes are not comparable. Shares were aggregated to descriptor families, which is robust to the arbitrary splitting of credit among correlated features that individual feature rankings suffer from (Figure 6).
+We fit the figure-of-merit model under both random and chemistry-cluster splits across all twenty-five folds of five repeats, with identical hyperparameters, and computed exact TreeSHAP attributions [@lundberg2020local] on a fixed 20,000-row subsample of each fold's held-out set. Attributions were normalised to shares of each model's total, since the two models have different prediction variances and raw magnitudes are not comparable. Shares were aggregated to descriptor families, which is robust to the arbitrary splitting of credit among correlated features that individual feature rankings suffer from (Figure 6).
 
 
 
@@ -321,7 +321,7 @@ Honest grouped performance of 0.70 to 0.81 is only interpretable against some no
 
 
 
-\*\*Digitization noise.\*\* That second component can be measured directly. The training data is digitized from figures in the primary literature, and an independent group has digitized an overlapping set of the same publications. Taking samples whose DOI appears in both databases and whose canonical composition matches, and comparing the two sets of labels directly without any model, gives agreement over 300 to 800 K of R² = 0.9639 for S, 0.9840 for σ, 0.9833 for κ, and 0.9807 or 0.9839 for zT depending on whether the digitized or reconstructed target is used. This is measured on 96 of 176 DOI-overlap samples, those whose compositions canonicalise identically on both sides.
+\*\*Digitization noise.\*\* That second component can be measured directly. The training data is digitized from figures in the primary literature, and an independent group [@ryu2025highquality] has digitized an overlapping set of the same publications. Taking samples whose DOI appears in both databases and whose canonical composition matches, and comparing the two sets of labels directly without any model, gives agreement over 300 to 800 K of R² = 0.9639 for S, 0.9840 for σ, 0.9833 for κ, and 0.9807 or 0.9839 for zT depending on whether the digitized or reconstructed target is used. This is measured on 96 of 176 DOI-overlap samples, those whose compositions canonicalise identically on both sides.
 
 
 
@@ -371,7 +371,7 @@ Three qualifications. The digitization term was measured on a subset whose targe
 
 
 
-A natural explanation for the headroom in Section 3.3 is that the descriptor set is too small. The pipeline uses 397 features, combining 132 MAGPIE attributes with 264 CBFV embeddings and a temperature bin, and it would be reasonable to suppose that a richer representation would recover part of that gap.
+A natural explanation for the headroom in Section 3.3 is that the descriptor set is too small. The pipeline uses 397 features, combining 132 MAGPIE attributes with 264 CBFV features and a temperature bin, and it would be reasonable to suppose that a richer representation would recover part of that gap.
 
 
 
@@ -431,11 +431,11 @@ Grouped cross-validation removes materials from training that appear in test, bu
 
 
 
-We test against two independent databases. ESTM is a separately compiled thermoelectric dataset. teMatDb is an independent digitization effort by a different group, drawing on overlapping primary literature but producing its own values from its own reading of the published figures. Neither shares rows with the training data.
+We test against two independent databases. ESTM [@na2022public] is a separately compiled thermoelectric dataset. teMatDb [@ryu2025highquality; @ryu2025tematdb] is an independent digitization effort by a different group, drawing on overlapping primary literature but producing its own values from its own reading of the published figures. Neither shares rows with the training data.
 
 
 
-Models were refit on the full training set with frozen hyperparameters and applied once to each external set. Smearing factors correcting the log-space back-transformation were computed from training-side out-of-fold residuals and held fixed; external labels were never used for calibration. Each external set was partitioned by source publication and by chemistry cluster, and the resulting strata were scored separately and never pooled.
+Models were refit on the full training set with frozen hyperparameters and applied once to each external set. Smearing factors [@duan1983smearing] correcting the log-space back-transformation were computed from training-side out-of-fold residuals and held fixed; external labels were never used for calibration. Each external set was partitioned by source publication and by chemistry cluster, and the resulting strata were scored separately and never pooled.
 
 
 
@@ -636,6 +636,10 @@ The digitization-noise component was measured on 96 of 176 candidate samples, th
 
 
 Reconstructing zT from separately predicted components is numerically unstable in a way that limits what can be claimed about it. Direct prediction outperforms reconstruction on every stratum of both external databases and by 0.20 internally, and that ordering is robust; the reconstructed values themselves move substantially under small changes to the back-transformation correction, and we report the ordering rather than the magnitudes.
+
+
+
+Hyperparameters were selected by grouped cross-validation on the same rows later used for evaluation, so the evaluation is not nested and grouped R² is optimistic by an amount we did not measure. The search was small: one Optuna search per target, 20 trials over eight XGBoost hyperparameters, each scored by three-fold grouped cross-validation. Two biases of known direction run against our conclusions. Selection on the evaluation rows raises grouped R², which understates both the validation gap and the headroom to the label-noise ceiling. Applying hyperparameters tuned on the full 397-feature set to the MAGPIE-only and CBFV-only subsets, without retuning, penalises the subsets, so the 4.2% of headroom closed by the full descriptor set is an upper bound. A third effect has unknown sign: tuning used the cluster identifier as it stood before the snapping correction described in Section 4.4, so its inner folds were less strict than the grouping used for evaluation.
 
 
 

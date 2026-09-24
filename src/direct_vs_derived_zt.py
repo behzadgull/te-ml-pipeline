@@ -29,8 +29,11 @@ space the canonical file was tuned with (see nested_cv.py's
 _xgb_search_space); nothing here caps it for local-runtime convenience.
 """
 
+import argparse
 import hashlib
 import json
+import os
+import subprocess
 import time
 from pathlib import Path
 
@@ -73,6 +76,60 @@ def _sha256_file(path):
 # converts sigma_pred/kappa_pred back to linear (10**pred) before
 # combining.
 COMPONENT_KEYS = ("zT_direct", "S", "sigma_log10", "kappa_log10")
+
+# Each component model's own canonical frozen hyperparameters, used when
+# hyperparams_mode="per_target". The default, "zt_shared", reproduces the
+# published comparison (results/direct_vs_derived_snapfix/20260918T200058/):
+# zT's set applied to all four models.
+COMPONENT_FROZEN_JSON = {
+    "zT_direct": "zT.json",
+    "S": "S.json",
+    "sigma_log10": "sigma.json",
+    "kappa_log10": "kappa.json",
+}
+HYPERPARAMS_MODES = ("zt_shared", "per_target")
+
+
+def _git_state():
+    """
+    Return {"git_head", "tree_clean", "git_source"} for the code that is
+    running (CLAUDE.md standing rule: every run config records the code
+    commit and whether the working tree was clean). Uses git when the
+    working directory is a repository; otherwise falls back to the
+    TE_GIT_HEAD / TE_TREE_CLEAN environment variables (for a code copy
+    without .git, e.g. an uploaded Kaggle dataset), recorded as
+    git_source="env". Raises if neither is available: an unrecorded
+    code identity is what the rule exists to prevent.
+    """
+    try:
+        head = subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+        ).stdout.strip()
+        porcelain = subprocess.run(
+            ["git", "status", "--porcelain"], capture_output=True, text=True, check=True
+        ).stdout
+        return {"git_head": head, "tree_clean": porcelain.strip() == "", "git_source": "git"}
+    except (OSError, subprocess.CalledProcessError):
+        head, clean = os.environ.get("TE_GIT_HEAD"), os.environ.get("TE_TREE_CLEAN")
+        if head and clean in ("true", "false"):
+            return {"git_head": head, "tree_clean": clean == "true", "git_source": "env"}
+        raise RuntimeError(
+            "Cannot record the code identity: not a git repository, and TE_GIT_HEAD / "
+            "TE_TREE_CLEAN (true|false) are not set."
+        )
+
+
+def _run_provenance(dataset_path, hyperparams_paths):
+    """Dataset SHA256 and size, code commit and tree state, and each hyperparameter file's SHA256."""
+    dataset_path = Path(dataset_path)
+    state = _git_state()
+    return {
+        "dataset_path": str(dataset_path),
+        "dataset_sha256": _sha256_file(dataset_path),
+        "dataset_bytes": dataset_path.stat().st_size,
+        **state,
+        "hyperparams_sha256": {str(k): _sha256_file(v) for k, v in hyperparams_paths.items()},
+    }
 
 
 def load_all_four_subset(processed_data_dir=PROCESSED_DATA_DIR, project=PROJECT):
@@ -126,6 +183,24 @@ def load_zt_frozen_hyperparams(model_type="xgboost"):
     return best_params, inner_cv_r2, path
 
 
+def load_component_frozen_hyperparams(model_type="xgboost"):
+    """
+    Load each component model's OWN canonical frozen hyperparameters
+    (S.json, sigma.json, kappa.json, zT.json in the canonical directory),
+    for hyperparams_mode="per_target". Returns {component_key:
+    (best_params, inner_cv_r2, path)}. Consumer only: a missing file
+    raises, as in load_zt_frozen_hyperparams.
+    """
+    out = {}
+    for key, fname in COMPONENT_FROZEN_JSON.items():
+        path = CANONICAL_FROZEN_HYPERPARAMS_DIR / fname
+        if not path.exists():
+            raise FileNotFoundError(f"Canonical frozen hyperparameters for {key} not found at {path}.")
+        best_params, inner_cv_r2 = _load_frozen_hyperparams(path, expected_model_type=model_type)
+        out[key] = (best_params, inner_cv_r2, path)
+    return out
+
+
 def _fold_path(repeat, fold, checkpoint_dir=CHECKPOINT_DIR):
     return Path(checkpoint_dir) / f"repeat{repeat}_fold{fold}.npz"
 
@@ -143,6 +218,7 @@ def run_direct_vs_derived(
     seed=0,
     device="cpu",
     checkpoint_dir=CHECKPOINT_DIR,
+    hyperparams_mode="zt_shared",
 ):
     """
     Run the full direct-vs-derived comparison: N_OUTER_REPEATS_GROUPED
@@ -158,7 +234,18 @@ def run_direct_vs_derived(
     plus "zT_derived" (the combined S^2*sigma*T/kappa prediction scored
     against actual zT), subset size/cluster count, and the frozen
     hyperparameters used.
+
+    hyperparams_mode: "zt_shared" (default, the published comparison) fits
+    all four models with zT's canonical frozen hyperparameters;
+    "per_target" fits each model with its own canonical frozen file
+    (S.json, sigma.json, kappa.json, zT.json). Everything else (subset,
+    folds, seeds, back-transform) is identical. run_config.json, written
+    to checkpoint_dir, records the dataset SHA256, code commit,
+    tree_clean, and each hyperparameter file's SHA256; a resumed run
+    whose recorded inputs differ raises instead of mixing checkpoints.
     """
+    if hyperparams_mode not in HYPERPARAMS_MODES:
+        raise ValueError(f"hyperparams_mode={hyperparams_mode!r} must be one of {HYPERPARAMS_MODES}")
     subset, source_path = load_all_four_subset()
     feature_cols = get_feature_columns(subset)
     X = subset[feature_cols].to_numpy(dtype=np.float64)
@@ -173,24 +260,68 @@ def run_direct_vs_derived(
     }
     y_zt_actual = subset["zT"].to_numpy(dtype=np.float64)
 
-    best_params, inner_cv_r2, hyperparams_path = load_zt_frozen_hyperparams(model_type=model_type)
+    if hyperparams_mode == "zt_shared":
+        zt_params, zt_inner_cv_r2, zt_path = load_zt_frozen_hyperparams(model_type=model_type)
+        params_by_key = {key: zt_params for key in COMPONENT_KEYS}
+        hyperparams_paths = {"zt_shared": zt_path}
+        hyperparams_source = "zT canonical frozen hyperparameters (shared across all four models)"
+        inner_cv_r2 = zt_inner_cv_r2
+        best_params = zt_params
+    else:
+        loaded = load_component_frozen_hyperparams(model_type=model_type)
+        params_by_key = {key: loaded[key][0] for key in COMPONENT_KEYS}
+        hyperparams_paths = {key: loaded[key][2] for key in COMPONENT_KEYS}
+        hyperparams_source = "per-target canonical frozen hyperparameters (each model uses its own target's file)"
+        inner_cv_r2 = {key: loaded[key][1] for key in COMPONENT_KEYS}
+        best_params = params_by_key
 
     n_groups = len(np.unique(groups))
     print(
         f"Subset: {len(subset):,} rows from {source_path}, {n_groups:,} chemistry clusters, "
-        f"{len(feature_cols)} features. Frozen zT hyperparameters (inner CV R^2={inner_cv_r2:.4f}): "
-        f"{best_params}",
+        f"{len(feature_cols)} features. Hyperparameters ({hyperparams_source}): {best_params}",
         flush=True,
     )
 
+    provenance = _run_provenance(source_path, hyperparams_paths)
     if checkpoint_dir is not None:
         checkpoint_dir = Path(checkpoint_dir)
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        run_config = {
+            "hyperparams_mode": hyperparams_mode,
+            "model_type": model_type,
+            "seed": seed,
+            "n_repeats": n_repeats,
+            "n_outer_folds": n_outer_folds,
+            "device": device,
+            "subset_n_rows": len(subset),
+            "subset_n_chemistry_clusters": n_groups,
+            "provenance": provenance,
+        }
+        config_path = checkpoint_dir / "run_config.json"
+        if config_path.exists():
+            with open(config_path, encoding="utf-8") as f:
+                previous = json.load(f)
+            # device and code identity may legitimately differ on resume; the inputs may not.
+            keys = ("hyperparams_mode", "model_type", "seed", "n_repeats", "n_outer_folds",
+                    "subset_n_rows", "subset_n_chemistry_clusters")
+            drift = [k for k in keys if previous.get(k) != run_config[k]]
+            for k in ("dataset_sha256", "hyperparams_sha256"):
+                if previous.get("provenance", {}).get(k) != provenance[k]:
+                    drift.append(f"provenance.{k}")
+            if drift:
+                raise ValueError(
+                    f"{config_path} was written by a run with different inputs ({', '.join(drift)}); "
+                    f"use a fresh checkpoint_dir instead of mixing checkpoints."
+                )
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(run_config, f, indent=2)
 
     print(
-        f"REGENERATION GATE -- checkpoint_dir={checkpoint_dir}, "
-        f"hyperparams_path={hyperparams_path} (sha256={_sha256_file(hyperparams_path)}), "
-        f"subset_n_rows={len(subset):,}, subset_n_chemistry_clusters={n_groups:,}. "
+        f"REGENERATION GATE -- checkpoint_dir={checkpoint_dir}, hyperparams_mode={hyperparams_mode}, "
+        f"hyperparams_sha256={provenance['hyperparams_sha256']}, "
+        f"dataset_sha256={provenance['dataset_sha256']}, git_head={provenance['git_head']}, "
+        f"tree_clean={provenance['tree_clean']}, subset_n_rows={len(subset):,}, "
+        f"subset_n_chemistry_clusters={n_groups:,}. "
         f"A rerun against different inputs must print a different value here.",
         flush=True,
     )
@@ -224,7 +355,7 @@ def run_direct_vs_derived(
 
             fold_preds = {}
             for key in COMPONENT_KEYS:
-                fold_preds[key] = _fit_predict(X_train, y[key][train_idx], X_test, best_params, model_type, device)
+                fold_preds[key] = _fit_predict(X_train, y[key][train_idx], X_test, params_by_key[key], model_type, device)
                 pooled[key]["y_true"].append(y[key][test_idx])
                 pooled[key]["y_pred"].append(fold_preds[key])
 
@@ -267,9 +398,11 @@ def run_direct_vs_derived(
     results["model_type"] = model_type
     results["n_repeats"] = n_repeats
     results["n_outer_folds"] = n_outer_folds
-    results["frozen_hyperparams_source"] = "zT canonical frozen hyperparameters (shared across all four models)"
+    results["hyperparams_mode"] = hyperparams_mode
+    results["frozen_hyperparams_source"] = hyperparams_source
     results["frozen_hyperparams_inner_cv_r2"] = inner_cv_r2
     results["best_params"] = best_params
+    results["provenance"] = provenance
 
     return results
 
@@ -290,10 +423,21 @@ def report(results):
         print(f"  {label:<18}{results[key]['pooled_r2']:>10.4f}  (n={results[key]['n']:,})")
 
 
-def main():
-    results = run_direct_vs_derived()
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Direct-vs-derived zT comparison (CLAUDE.md Paper A item 5).")
+    parser.add_argument("--hyperparams", choices=HYPERPARAMS_MODES, default="zt_shared",
+                        help="zt_shared: zT's frozen set for all four models (published run); "
+                             "per_target: each model's own frozen file")
+    parser.add_argument("--device", default="cpu", help="cpu or cuda (default: cpu)")
+    parser.add_argument("--checkpoint-dir", default=str(CHECKPOINT_DIR),
+                        help="per-fold checkpoints and run_config.json (use a fresh directory per configuration)")
+    args = parser.parse_args(argv)
+
+    results = run_direct_vs_derived(
+        device=args.device, checkpoint_dir=args.checkpoint_dir, hyperparams_mode=args.hyperparams
+    )
     report(results)
-    out_path = CHECKPOINT_DIR / "results.json"
+    out_path = Path(args.checkpoint_dir) / "results.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
     print(f"\nSaved results to {out_path}")
