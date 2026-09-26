@@ -59,3 +59,7 @@ paper/build/
 
 # superseded run (File B hyperparameter cache); documented in CLAUDE.md; kept locally only
 results/direct_vs_derived_snapfix/20260918T103933/
+
+# Paper B: track CSV outputs (labels, audit samples, transition matrices, later results)
+!paper_b/reports/**/*.csv
+!paper_b/results/**/*.csv
