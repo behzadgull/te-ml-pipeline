@@ -1,0 +1,16 @@
+{
+  "labels_file": "paper_b\\reports\\family_labels\\20260926T181709\\host_family_labels.csv",
+  "labels_sha256": "6d4d56ef6991f2751ab10ba5415af318279d2c80f71572d6d6b3bcb51c96934e",
+  "labels_run_config": "paper_b\\reports\\family_labels\\20260926T181709\\run_config.json",
+  "labels_run_config_sha256": "5125cf39205e866fa2e36854320bfeb5d5dc6f951edcd61eb63828baf2e39d39",
+  "definitions_file": "paper_b\\config\\super_families.yaml",
+  "definitions_sha256": "99008935a4488acf8ecd47c8f758c25260f9eacabd5b892255903421b8ba488c",
+  "threshold": {
+    "min_clusters": 30,
+    "min_rows_per_target": 1000
+  },
+  "git_head": "d68a0c183edd46103a03d411b2b682ae4da7e15a",
+  "tree_clean_excluding_labels_run_dir": true,
+  "dirty_files_excluding_labels_run_dir": [],
+  "utc_stamp": "20260926T181743"
+}
