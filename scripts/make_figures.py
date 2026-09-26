@@ -306,12 +306,12 @@ LADDER_HONEST_STRATEGY = "Chemistry-Cluster CV"
 RAW_CURVES = 156_101
 CLEANING_STEPS = [
     ("1. Property extraction\n& range filtering", 1_996_047),
-    ("2. Integration &\nconsolidation", 1_996_047),
+    ("2. Resistivity \u2192 conductivity merge", 1_996_047),
     ("3. Temperature filtering\n300-800K", 1_096_324),
-    ("4. Pivot long→wide", 398_763),
+    ("4. One row per material and T bin", 398_763),
     ("5. Formula cleaning", 393_381),
     ("6. zT self-consistency\ncheck", 388_669),
-    ("7. DFT data removal", 387_683),
+    ("7. Computational-paper exclusion", 387_683),
     ("8. Multi-source\nconsistency filtering", 308_998),
     ("9. MAD outlier filter", 289_637),
     ("10. Min. temperature\ncoverage", 284_987),
@@ -343,8 +343,9 @@ def load_snapfix_cluster_columns(
 # is the strongest available one: each label's anchor term(s) must occur in section 2.2 (prose plus the Figure 3
 # caption), so no label can name a step the paper does not describe.
 CLEANING_LABEL_ANCHORS = {
-    1: ("range filtering",), 2: ("conductivity",), 3: ("300 to 800 K",), 4: ("Pivoting",), 5: ("Formulas",),
-    6: ("S²σT/κ",), 7: ("computational",), 8: ("coefficient of variation",), 9: ("median-absolute-deviation",),
+    1: ("range filtering",), 2: ("Resistivity is inverted to conductivity",), 3: ("300 to 800 K",),
+    4: ("one row per material and temperature bin",), 5: ("Formulas",),
+    6: ("S²σT/κ",), 7: ("identified as computational",), 8: ("coefficient of variation",), 9: ("median-absolute-deviation",),
     10: ("distinct temperature",), 11: ("smoothness filter",),
 }
 
@@ -356,6 +357,8 @@ def check_cleaning_labels_against_paper(labels, paper_path=PAPER_MD_PATH):
     assert m, "section 2.2 not found in paper.md"
     section = m.group(0)
     assert len(labels) == 11 and [int(l.split(".")[0]) for l in labels] == list(range(1, 12)), labels
+    step_numbers = [int(x) for x in re.findall(r"\(step (\d+)[,)]", section)]
+    assert step_numbers == list(range(1, 12)), f"section 2.2 must number the eleven steps once each, in order: {step_numbers}"
     for k, anchors in CLEANING_LABEL_ANCHORS.items():
         for a in anchors:
             assert a in section, f"step {k} ({labels[k - 1]!r}): {a!r} does not occur in paper.md section 2.2"

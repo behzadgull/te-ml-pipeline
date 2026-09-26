@@ -74,7 +74,7 @@ Training data comes from Starrydata2 [@katsura2025starrydata], a community-curat
 
 
 
-Digitized curves are converted to model-ready rows through eleven stages (Figure 3). Each curve's digitized points are first expanded into individual temperature-property observations and screened against physical bounds, giving 1,996,047 observations. Resistivity is inverted to conductivity and merged with directly reported conductivity. Observations outside 300 to 800 K are discarded and the remainder binned at 25 K, leaving 1,096,324. Pivoting to one row per material and temperature bin, averaging where multiple digitized points fall in the same bin, gives 398,763 rows.
+Digitized curves are converted to model-ready rows through eleven stages (Figure 3). Each curve's digitized points are first expanded into individual temperature-property observations and screened against physical bounds (step 1), giving 1,996,047 observations. Resistivity is inverted to conductivity and merged with directly reported conductivity (step 2). Observations outside 300 to 800 K are discarded (step 3) and the remainder binned at 25 K, leaving 1,096,324. Pivoting to one row per material and temperature bin (step 4), averaging where multiple digitized points fall in the same bin, gives 398,763 rows.
 
 
 
@@ -84,7 +84,7 @@ Digitized curves are converted to model-ready rows through eleven stages (Figure
 
 
 
-Six filters then act on those rows. Formulas that cannot be parsed are dropped (98.7% retained). Rows reporting all four properties are checked against S²σT/κ and discarded if the relative discrepancy exceeds 50% (98.8%). Publications identified as computational rather than experimental are excluded entirely (99.7%). Where several sources report the same composition at the same temperature, the group is discarded if any property's coefficient of variation exceeds a per-property threshold (79.7%). A median-absolute-deviation filter at 3.5σ removes outliers (93.7%). Materials measured at fewer than three distinct temperature bins are removed (98.4%), and a rolling-median smoothness filter removes remaining spikes within each measurement series (98.5%).
+Six filters then act on those rows. Formulas that cannot be parsed are dropped (step 5, 98.7% retained). Rows reporting all four properties are checked against S²σT/κ and discarded if the relative discrepancy exceeds 50% (step 6, 98.8%). Publications identified as computational rather than experimental are excluded entirely (step 7, 99.7%). Where several sources report the same composition at the same temperature, the group is discarded if any property's coefficient of variation exceeds a per-property threshold (step 8, 79.7%). A median-absolute-deviation filter at 3.5σ removes outliers (step 9, 93.7%). Materials measured at fewer than three distinct temperature bins are removed (step 10, 98.4%), and a rolling-median smoothness filter removes remaining spikes within each measurement series (step 11, 98.5%).
 
 
 
