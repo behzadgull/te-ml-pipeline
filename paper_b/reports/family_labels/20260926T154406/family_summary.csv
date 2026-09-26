@@ -1,0 +1,14 @@
+family,clusters_all,rows_all,clusters_S,rows_S,qualifies_S,clusters_sigma,rows_sigma,qualifies_sigma,clusters_kappa,rows_kappa,qualifies_kappa,clusters_zT,rows_zT,qualifies_zT
+unassignable,4585,101050,4241,72346,False,3778,65706,False,3192,45028,False,3084,49255,False
+oxide,2126,62704,1485,31321,True,1515,37487,True,813,13369,True,668,11704,True
+iv_vi_rocksalt,486,34438,465,22929,True,455,22950,True,441,19882,True,438,20645,True
+skutterudite,219,24808,207,17325,True,195,16814,True,192,13403,True,194,14797,True
+half_heusler,478,16887,437,11485,True,449,11840,True,404,7889,True,390,8587,True
+tetradymite,406,14241,392,11052,True,383,10940,True,355,9003,True,339,9245,True
+mg2x,202,9175,198,6879,True,181,6101,True,178,4480,True,178,5425,True
+cu2x_ag2x_liquid_like,128,4596,120,3182,True,113,3166,True,112,2280,True,116,2483,True
+bicuseo,36,3430,34,1894,True,33,1768,True,32,1592,True,31,1619,True
+clathrate_type_i,83,3093,83,2531,True,62,1821,True,47,800,False,52,1547,True
+zintl_122,85,2770,82,1993,True,81,1935,True,77,1427,True,77,2034,True
+mg3x2_zintl,53,1987,45,1405,True,52,1571,True,45,1315,True,45,1386,True
+tetrahedrite,21,994,21,722,False,20,656,False,20,642,False,20,692,False

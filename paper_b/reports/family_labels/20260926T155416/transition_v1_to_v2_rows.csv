@@ -1,0 +1,14 @@
+v1_family,bicuseo,clathrate_type_i,cu2x_ag2x_liquid_like,diamond_like_cu,full_heusler,gete_sb2te3_pseudobinary,gete_type,half_heusler,i_v_vi2,in2o3_based,iv_vi_rocksalt,layered_cobaltite,manganite,mg2x,mg3x2_zintl,mgagsb,other_oxide,perovskite_titanate,sige,skutterudite,snse_type,tetradymite,tetrahedrite,tm_silicide,unassignable,zinc_antimonide,zintl_122,zintl_14_1_11,zno_based
+bicuseo,3430,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+clathrate_type_i,0,3093,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+cu2x_ag2x_liquid_like,0,0,4596,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+half_heusler,0,0,0,0,0,0,0,16887,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+iv_vi_rocksalt,0,0,0,0,0,0,4993,0,0,0,27024,0,0,0,0,0,0,0,0,0,2421,0,0,0,0,0,0,0,0
+mg2x,0,0,0,0,0,0,0,0,0,0,0,0,0,9175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mg3x2_zintl,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1987,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+oxide,967,0,0,0,0,0,0,0,0,1314,0,16338,9474,0,0,0,23444,8273,0,0,0,0,0,0,0,0,0,0,2894
+skutterudite,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24808,0,0,0,0,0,0,0,0,0
+tetradymite,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14241,0,0,0,0,0,0,0
+tetrahedrite,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,994,0,0,0,0,0,0
+unassignable,0,352,0,3655,2941,3795,951,2770,1680,0,2391,0,0,718,46,389,0,0,2265,1890,37,444,67,3761,67197,3815,252,1634,0
+zintl_122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2770,0,0

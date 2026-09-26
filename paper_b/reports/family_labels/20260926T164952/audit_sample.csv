@@ -1,0 +1,437 @@
+host,assigned_family,matched_rule,rules_matched,nearest_rule,why_not,rows,S,sigma,kappa,zT,rule_description
+Cu0.875Bi0.875Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,22,0,3,9,10,BiCuSeO-type oxychalcogenide
+Cu0.875Bi1Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,12,6,6,7,6,BiCuSeO-type oxychalcogenide
+Cu1Bi0.905Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,32,9,9,5,9,BiCuSeO-type oxychalcogenide
+Cu1Bi0.9216Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,43,10,11,10,12,BiCuSeO-type oxychalcogenide
+Cu1Bi0.945Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,35,9,9,9,8,BiCuSeO-type oxychalcogenide
+Cu1Bi0.94Te1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,12,6,6,7,6,BiCuSeO-type oxychalcogenide
+Cu1Bi0.95S1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,12,7,5,7,7,BiCuSeO-type oxychalcogenide
+Cu1Bi0.95Se1O0.95,bicuseo,bicuseo,bicuseo;other_oxide,,,17,8,9,9,9,BiCuSeO-type oxychalcogenide
+Cu1Bi1Se0.92O1,bicuseo,bicuseo,bicuseo;other_oxide,,,10,9,6,10,8,BiCuSeO-type oxychalcogenide
+Cu1Bi1Se0.94O1,bicuseo,bicuseo,bicuseo;other_oxide,,,10,9,10,10,10,BiCuSeO-type oxychalcogenide
+Cu1Bi1Te0.2Se0.8O1,bicuseo,bicuseo,bicuseo;other_oxide,,,37,17,10,17,17,BiCuSeO-type oxychalcogenide
+Cu1Bi1Te0.3Se0.7O1,bicuseo,bicuseo,bicuseo;other_oxide,,,29,10,3,6,10,BiCuSeO-type oxychalcogenide
+CuBiSO,bicuseo,bicuseo,bicuseo;other_oxide,,,13,8,2,7,8,BiCuSeO-type oxychalcogenide
+La0.95Cu1Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,13,13,0,0,0,BiCuSeO-type oxychalcogenide
+Sr0.2La0.8Cu1Se1O1,bicuseo,bicuseo,bicuseo;other_oxide,,,13,13,0,0,0,BiCuSeO-type oxychalcogenide
+Ba4Al7Si15,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,16,16,14,4,16,Type-I clathrate A8B16C30
+Ba7.5Ga16Ge30,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,20,20,0,12,20,Type-I clathrate A8B16C30
+Ba8(GaGe2)15,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,11,5,3,5,4,Type-I clathrate A8B16C30
+Ba8(GaSn2)15,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,68,49,66,0,38,Type-I clathrate A8B16C30
+Ba8Ga15Ge31,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,65,53,12,10,30,Type-I clathrate A8B16C30
+Ba8Ga16Si13Ge17,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,7,6,4,0,0,Type-I clathrate A8B16C30
+Ba8Ga17Ge30,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,11,9,9,4,4,Type-I clathrate A8B16C30
+Sr3Ga6Ge11,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,20,19,18,0,0,Type-I clathrate A8B16C30
+Sr4(GaGe2)7,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,20,6,10,9,10,Type-I clathrate A8B16C30
+Sr4Al3(GaSi3)5,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,15,15,0,0,0,Type-I clathrate A8B16C30
+Sr4Al4Ga4Ge15,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,16,16,0,0,0,Type-I clathrate A8B16C30
+Sr4Al5(GaSi5)3,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,17,17,0,0,0,Type-I clathrate A8B16C30
+Sr7Ga14Ge29,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,20,20,19,0,0,Type-I clathrate A8B16C30
+Sr8Al11(GaSi6)5,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,16,16,0,0,0,Type-I clathrate A8B16C30
+Sr8Al5Ga11Si30,clathrate_type_i,clathrate_type_i,clathrate_type_i,,,16,16,0,0,0,Type-I clathrate A8B16C30
+Ba0.475Sr0.475Co0.8O3,cobaltite,cobaltite,cobaltite;other_oxide,,,39,0,39,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ba0.47Sr0.47Co0.8O3,cobaltite,cobaltite,cobaltite;other_oxide,,,10,0,10,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ba0.5Sr0.5Co0.72O3,cobaltite,cobaltite,cobaltite;other_oxide,,,7,0,7,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ca2.8Co4O9,cobaltite,cobaltite,cobaltite;other_oxide,,,750,395,525,212,208,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ca258(Co69O155)5,cobaltite,cobaltite,cobaltite;other_oxide,,,13,10,10,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ca3Co4.26O9,cobaltite,cobaltite,cobaltite;other_oxide,,,16,14,14,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Na0.45Ca1.55Co2O5,cobaltite,cobaltite,cobaltite;other_oxide,,,24,5,19,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Na0.81Co1O2,cobaltite,cobaltite,cobaltite;other_oxide,,,22,21,22,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Na1Co1.6Ni0.4O4,cobaltite,cobaltite,cobaltite;other_oxide,,,3,2,2,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Na1Co2.5Ru0.5O4,cobaltite,cobaltite,cobaltite;other_oxide,,,3,3,0,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Sr0.3Pr0.7Co0.8O3,cobaltite,cobaltite,cobaltite;other_oxide,,,10,0,10,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Sr0.9Co0.95O3,cobaltite,cobaltite,cobaltite;other_oxide,,,14,0,14,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Sr1Co0.85O3,cobaltite,cobaltite,cobaltite;other_oxide,,,66,0,66,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Sr1Fe0.4Co0.4O3,cobaltite,cobaltite,cobaltite;other_oxide,,,3,0,3,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Sr2.4Dy0.6Co2O7,cobaltite,cobaltite,cobaltite;other_oxide,,,34,20,14,0,0,"Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide"
+Ag1.9Te1,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,15,12,10,12,8,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Ag2Te0.7S0.3,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,11,0,0,8,5,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Ag2Te0.9,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,13,0,0,6,8,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Ag2Te1.075,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,11,6,8,8,6,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu1.57Ag0.4Se0.3S0.7,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,12,7,6,8,10,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu1.73S1,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,8,8,8,7,8,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu1.75S1,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,8,6,6,4,5,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu1.885S1,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,16,10,10,10,10,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2Se0.5S0.5,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,19,0,0,4,15,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2Se0.81S0.19,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,17,10,8,10,6,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2Se0.84S0.16,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,12,12,12,0,11,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2Se0.92,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,18,12,18,4,17,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2Te0.5Se0.5,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,9,7,7,5,7,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu5Ag3Te4,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,6,4,5,6,5,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu7.4S4,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,cu2x_ag2x_liquid_like,,,20,14,19,14,16,"Cu2/Ag2 (Se,S,Te) liquid-like"
+Cu2SnS3,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,36,20,20,20,20,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.89S4,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,31,7,28,7,7,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.91S4,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,10,7,5,7,7,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.91Se4,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,33,16,16,16,16,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.94Se3S1,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,15,8,9,8,8,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.95Se4,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,9,8,8,8,8,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Cu3Sb0.9Se4,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,36,23,23,15,13,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Ga0.95Cu1Te2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,36,31,33,28,28,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Ga1Cu0.9Te2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,34,28,13,16,25,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+GaCuTe2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,283,179,155,162,174,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+In0.65Ga0.35Cu1Te2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,22,9,11,11,6,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+In0.95Cu1Se2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,20,10,10,10,10,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+In4Cu3.62Te8,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,7,4,5,6,6,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+In4Cu3.68Te8,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,7,5,6,5,4,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+InCuTe2,diamond_like_cu,diamond_like_cu,diamond_like_cu,,,455,285,255,197,259,"Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3"
+Al0.67V1Fe2Si0.33,full_heusler,full_heusler,full_heusler,,,3,0,3,0,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Al1V1.05Fe2,full_heusler,full_heusler,full_heusler,,,46,17,36,0,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+HfCo2Sn,full_heusler,full_heusler,full_heusler,,,37,36,36,0,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Mn0.87Fe2Si1,full_heusler,full_heusler,full_heusler,,,3,0,3,0,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+MnNi2Sn,full_heusler,full_heusler,full_heusler,,,5,5,0,0,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti0.25V0.75Ga1Fe2,full_heusler,full_heusler,full_heusler,,,11,9,9,9,9,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti0.95Fe2Sn1,full_heusler,full_heusler,full_heusler,,,15,14,11,3,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1.1Fe1.9Sn1,full_heusler,full_heusler,full_heusler,,,15,14,11,4,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1Fe1.2Co0.8Sn1,full_heusler,full_heusler,full_heusler,,,10,4,5,5,5,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1Fe1.8Co0.2Sn1,full_heusler,full_heusler,full_heusler,,,10,5,5,5,5,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1Fe2Si0.4Sn0.6,full_heusler,full_heusler,full_heusler,,,3,3,3,3,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1Fe2Si0.6Sn0.4,full_heusler,full_heusler,full_heusler,,,3,3,1,1,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+Ti1Fe2Si0.8Sn0.2,full_heusler,full_heusler,full_heusler,,,3,3,3,3,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+TiSbRu2,full_heusler,full_heusler,full_heusler,,,10,0,0,10,0,Full-Heusler X2YZ (e.g. Fe2VAl)
+V0.9Ga1Fe2,full_heusler,full_heusler,full_heusler,,,4,3,2,2,2,Full-Heusler X2YZ (e.g. Fe2VAl)
+Bi2Te4Pb,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,29,25,26,5,3,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Bi2Te5Pb2,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,7,5,5,4,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Ge3(BiTe3)2,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,9,9,9,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Ge4(SbTe2)7,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,7,4,4,3,4,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Ge4Sb2Te7,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,9,0,0,0,9,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Ge4Sb5Te11,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,7,5,5,4,5,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+GeBi4Te7,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,12,8,10,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn(BiTe2)2,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,233,206,217,61,107,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn0.93Bi2Te4,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,28,24,25,15,25,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn0.95Bi2Te4,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,27,23,23,13,23,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn1.1Bi1.9Te4,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,13,13,13,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn1.2Bi1.8Te4,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,13,13,12,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn1Bi0.5Te1.75,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,13,6,12,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn1Bi2.5Te5,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,9,4,7,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Sn2Bi2Te5,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,gete_sb2te3_pseudobinary,,,13,13,13,0,0,"(Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced"
+Ge0.85Te1Pb0.12,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,10,6,5,6,5,"GeTe-type, Ge (majority cation) with Te"
+Ge0.85Te1Pb0.1455,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,10,6,6,6,6,"GeTe-type, Ge (majority cation) with Te"
+Ge0.85Te1Pb0.1485,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,11,6,6,5,6,"GeTe-type, Ge (majority cation) with Te"
+Ge0.87Te1.15Pb0.13,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,13,13,13,13,12,"GeTe-type, Ge (majority cation) with Te"
+Ge0.882Te1,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,14,12,10,8,10,"GeTe-type, Ge (majority cation) with Te"
+Ge0.88Te1,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,17,9,7,6,11,"GeTe-type, Ge (majority cation) with Te"
+Ge0.935Te1,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,18,6,10,10,9,"GeTe-type, Ge (majority cation) with Te"
+Ge0.945Te1,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,12,7,7,6,5,"GeTe-type, Ge (majority cation) with Te"
+Ge0.95Te0.95,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,9,8,8,8,5,"GeTe-type, Ge (majority cation) with Te"
+Ge19Te22,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,225,208,192,144,142,"GeTe-type, Ge (majority cation) with Te"
+Ge1Te1.06,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,51,50,46,16,16,"GeTe-type, Ge (majority cation) with Te"
+Ge1Te1.0684,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,54,16,16,27,16,"GeTe-type, Ge (majority cation) with Te"
+Ge1Te1.115,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,11,0,0,0,11,"GeTe-type, Ge (majority cation) with Te"
+Ge25Te23,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,39,30,27,22,35,"GeTe-type, Ge (majority cation) with Te"
+Ge87Te100Pb13,gete_type,gete_type,gete_type;iv_vi_rocksalt,,,15,15,15,15,15,"GeTe-type, Ge (majority cation) with Te"
+DyNiSb,half_heusler,half_heusler,half_heusler,,,39,31,39,20,20,Half-Heusler XYZ 1:1:1
+Hf0.21Zr0.49Ti0.3Ni1Sn1,half_heusler,half_heusler,half_heusler,,,12,6,6,5,6,Half-Heusler XYZ 1:1:1
+Hf0.2Ti0.8Ni1.1Sn1,half_heusler,half_heusler,half_heusler,,,10,10,9,0,0,Half-Heusler XYZ 1:1:1
+Hf0.69Zr0.3Ni1Sn1,half_heusler,half_heusler,half_heusler,,,19,10,8,10,10,Half-Heusler XYZ 1:1:1
+Hf1.5Ti1.25Ni2.75Sn2.75,half_heusler,half_heusler,half_heusler,,,7,0,0,0,7,Half-Heusler XYZ 1:1:1
+Lu1Ni1Sn0.5Sb0.5,half_heusler,half_heusler,half_heusler,,,17,14,14,0,0,Half-Heusler XYZ 1:1:1
+Nb0.387V0.473Fe1Sb1,half_heusler,half_heusler,half_heusler,,,6,0,1,0,5,Half-Heusler XYZ 1:1:1
+Nb0.516V0.344Fe1Sb1,half_heusler,half_heusler,half_heusler,,,5,0,1,0,4,Half-Heusler XYZ 1:1:1
+NbFeSb,half_heusler,half_heusler,half_heusler,,,190,81,114,71,62,Half-Heusler XYZ 1:1:1
+Ta0.25Nb0.375V0.375Co1Sb1,half_heusler,half_heusler,half_heusler,,,8,4,4,4,5,Half-Heusler XYZ 1:1:1
+Ti1Co0.92Sb1,half_heusler,half_heusler,half_heusler,,,19,11,9,10,10,Half-Heusler XYZ 1:1:1
+Ti1Ni0.94Sn1,half_heusler,half_heusler,half_heusler,,,13,9,0,8,0,Half-Heusler XYZ 1:1:1
+Ti7Nb27(Fe17Sb16)2,half_heusler,half_heusler,half_heusler,,,5,5,5,0,0,Half-Heusler XYZ 1:1:1
+Zr0.8Ti0.2Ni1.1Sn1,half_heusler,half_heusler,half_heusler,,,39,24,33,21,14,Half-Heusler XYZ 1:1:1
+Zr0.95Co1Sb1,half_heusler,half_heusler,half_heusler,,,16,10,10,10,12,Half-Heusler XYZ 1:1:1
+Ag0.88Sb1Te2,i_v_vi2,i_v_vi2,i_v_vi2,,,13,8,9,3,3,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag0.93Sb1.07Te2,i_v_vi2,i_v_vi2,i_v_vi2,,,16,15,15,5,15,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag1Sb1Te0.5Se1.5,i_v_vi2,i_v_vi2,i_v_vi2,,,10,10,0,0,0,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag1Sb1Te1.25Se0.75,i_v_vi2,i_v_vi2,i_v_vi2,,,9,9,0,0,0,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag1Sb1Te1.75Se0.25,i_v_vi2,i_v_vi2,i_v_vi2,,,10,10,0,0,9,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag1Sb1Te1.8,i_v_vi2,i_v_vi2,i_v_vi2,,,9,9,9,9,9,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag1Sb1Te1.85,i_v_vi2,i_v_vi2,i_v_vi2,,,35,33,24,25,35,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag5Sb5Te7Se3,i_v_vi2,i_v_vi2,i_v_vi2,,,16,15,16,11,11,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Ag5Sb5Te9Se,i_v_vi2,i_v_vi2,i_v_vi2,,,16,16,15,11,8,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+AgBiS2,i_v_vi2,i_v_vi2,i_v_vi2,,,14,14,8,5,14,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+AgBiSe2,i_v_vi2,i_v_vi2,i_v_vi2,,,208,182,163,132,166,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+AgBiSeS,i_v_vi2,i_v_vi2,i_v_vi2,,,121,73,78,72,101,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+AgSbSe2,i_v_vi2,i_v_vi2,i_v_vi2,,,283,259,221,185,229,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+Cu4Bi4S9,i_v_vi2,i_v_vi2,i_v_vi2,,,6,0,0,5,6,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+CuSbSe2,i_v_vi2,i_v_vi2,i_v_vi2,,,12,6,4,10,5,"I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2"
+In1.6O3,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,11,10,11,0,0,In2O3-based oxide (In is the majority cation)
+In1.84O3,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,16,10,10,10,10,In2O3-based oxide (In is the majority cation)
+In1.88O3,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,12,11,10,10,10,In2O3-based oxide (In is the majority cation)
+In3.8Sn3O12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,4,4,0,0,0,In2O3-based oxide (In is the majority cation)
+In4(SnO4)3,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,128,74,48,55,44,In2O3-based oxide (In is the majority cation)
+In4.625Sn1Sb1O12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,13,10,8,5,5,In2O3-based oxide (In is the majority cation)
+In4Sn2.7O12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,4,4,0,0,0,In2O3-based oxide (In is the majority cation)
+In4Sn3.6O12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,9,4,0,5,0,In2O3-based oxide (In is the majority cation)
+In4Sn3.8O12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,3,3,0,0,0,In2O3-based oxide (In is the majority cation)
+In5.6Ga2.4Sn2O16,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,20,10,10,10,10,In2O3-based oxide (In is the majority cation)
+In5O8,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,6,6,0,0,0,In2O3-based oxide (In is the majority cation)
+In5SnSbO12,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,43,30,27,15,15,In2O3-based oxide (In is the majority cation)
+In6.6Ga1.4Sn2O16,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,20,10,10,10,10,In2O3-based oxide (In is the majority cation)
+Zn2In6O11,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,12,9,0,3,6,In2O3-based oxide (In is the majority cation)
+Zn4In6O13,in2o3_based,in2o3_based,in2o3_based;other_oxide,,,14,12,0,3,6,In2O3-based oxide (In is the majority cation)
+Ge0.2Te1Pb0.8,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,3,3,3,2,3,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Ge0.32Te1Pb0.68,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,3,2,2,1,2,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Ge1Te0.8Se0.2,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,7,7,7,7,7,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Pb1S0.95,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,22,14,13,9,7,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn0.25Te1Pb0.735,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,13,5,9,9,9,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn0.26Te1Pb0.71,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,9,5,9,9,0,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn0.56Te1Pb0.4,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,16,14,14,14,14,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn0.6975Te1Pb0.3,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,17,17,17,9,0,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn0.72Te1Pb0.24,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,13,11,8,11,9,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Sn1.06Te1,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,18,12,10,9,6,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Te0.1Pb1Se0.4S0.5,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,5,5,3,5,2,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Te17Pb15,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,8,8,8,8,8,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Te1Pb0.915,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,40,29,27,18,36,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Te1Pb0.925,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,29,27,20,11,14,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Te23Pb21,iv_vi_rocksalt,iv_vi_rocksalt,iv_vi_rocksalt,,,129,102,103,94,95,"IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type"
+Ba0.397La0.603Mn1O3,manganite,manganite,manganite;other_oxide,,,4,0,4,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.6Pr0.4Mn1O3,manganite,manganite,manganite;other_oxide,,,6,5,6,5,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.8Mn1O3,manganite,manganite,manganite;other_oxide,,,165,69,149,39,45,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.925Mn1O3,manganite,manganite,manganite;other_oxide,,,32,9,10,6,7,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.95Mn1O3,manganite,manganite,manganite;other_oxide,,,415,198,321,51,60,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.9Mn0.92O3,manganite,manganite,manganite;other_oxide,,,9,9,9,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca0.9Mn1O3.18,manganite,manganite,manganite;other_oxide,,,19,0,19,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca1Yb0.5Mn0.5O3,manganite,manganite,manganite;other_oxide,,,3,3,0,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Ca2.7Mn2O7,manganite,manganite,manganite;other_oxide,,,5,4,4,0,4,"Manganite (Mn with Ca, La or Sr) oxide"
+CaMn6CuO12,manganite,manganite,manganite;other_oxide,,,5,5,4,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Sr0.25Ca0.5Mn1O3,manganite,manganite,manganite;other_oxide,,,18,0,18,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Sr0.3La0.7Mn0.7Fe0.3O3,manganite,manganite,manganite;other_oxide,,,13,0,13,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Sr0.5Mn1Bi0.4O3,manganite,manganite,manganite;other_oxide,,,47,23,24,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Sr0.6Gd0.4Mn1O3,manganite,manganite,manganite;other_oxide,,,20,10,10,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Sr0.75Pr0.25Mn1O3,manganite,manganite,manganite;other_oxide,,,20,0,20,0,0,"Manganite (Mn with Ca, La or Sr) oxide"
+Mg1.818Si1,mg2x,mg2x,mg2x,,,12,10,10,0,0,"Mg2(Si,Ge,Sn)"
+Mg199Si99,mg2x,mg2x,mg2x,,,41,18,23,18,22,"Mg2(Si,Ge,Sn)"
+Mg2.16Si0.2744Sn0.686,mg2x,mg2x,mg2x,,,20,15,17,19,18,"Mg2(Si,Ge,Sn)"
+Mg2Si0.35Sn0.635,mg2x,mg2x,mg2x,,,8,6,6,6,6,"Mg2(Si,Ge,Sn)"
+Mg2Si0.37Sn0.6,mg2x,mg2x,mg2x,,,17,10,10,11,10,"Mg2(Si,Ge,Sn)"
+Mg2Si0.38612Sn0.591,mg2x,mg2x,mg2x,,,211,26,30,143,109,"Mg2(Si,Ge,Sn)"
+Mg2Si0.487Sn0.5,mg2x,mg2x,mg2x,,,36,18,15,5,34,"Mg2(Si,Ge,Sn)"
+Mg2Si0.48Sn0.5,mg2x,mg2x,mg2x,,,20,18,15,5,19,"Mg2(Si,Ge,Sn)"
+Mg2Si0.4Sn0.49,mg2x,mg2x,mg2x,,,15,15,15,1,15,"Mg2(Si,Ge,Sn)"
+Mg2Si0.6915Sn0.3,mg2x,mg2x,mg2x,,,17,16,16,6,6,"Mg2(Si,Ge,Sn)"
+Mg2Si0.93,mg2x,mg2x,mg2x,,,12,0,12,0,0,"Mg2(Si,Ge,Sn)"
+Mg2Sn,mg2x,mg2x,mg2x,,,457,353,329,120,84,"Mg2(Si,Ge,Sn)"
+Mg2Sn0.5Ge0.5,mg2x,mg2x,mg2x,,,14,12,8,10,0,"Mg2(Si,Ge,Sn)"
+Mg2Sn0.73Ge0.25,mg2x,mg2x,mg2x,,,69,52,41,47,47,"Mg2(Si,Ge,Sn)"
+Mg40Si19,mg2x,mg2x,mg2x,,,34,30,30,27,30,"Mg2(Si,Ge,Sn)"
+Mg3.16Bi0.59Sb1.4,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,12,9,9,9,10,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.16Bi0.69Sb1.3,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,12,9,5,8,9,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.17Sb2,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,15,15,15,15,15,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.19Bi0.49Sb1.5,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,33,20,27,28,28,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.2Bi0.495Sb1.5,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,7,4,7,4,7,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.2Bi0.5Sb1.5,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,52,11,11,40,10,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.2Bi1.393Sb0.597,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,17,11,12,15,14,"Mg3(Sb,Bi)2-type Zintl"
+Mg3.2Sb2,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,14,6,6,10,6,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi0.46Sb1.5,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,19,10,11,9,10,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi0.475Sb1.475,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,18,14,15,13,8,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi0.4Sb1.4,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,17,13,8,11,12,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi0.5Sb1.5,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,106,79,103,52,71,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi1.4925Sb0.4975,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,10,0,10,0,0,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Bi1.7Sb0.3,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,12,10,10,5,5,"Mg3(Sb,Bi)2-type Zintl"
+Mg3Sb1.9,mg3x2_zintl,mg3x2_zintl,mg3x2_zintl,,,23,11,10,14,11,"Mg3(Sb,Bi)2-type Zintl"
+MgAgSb,mgagsb,mgagsb,mgagsb,,,389,348,326,346,343,MgAgSb 1:1:1
+Ba0.5Sr0.5Pb1O3,other_oxide,other_oxide,other_oxide,,,9,0,9,0,0,Any other oxide (O at or above one atom in five)
+Ba1Gd1Co2O5.497,other_oxide,other_oxide,other_oxide,,,3,3,0,0,0,Any other oxide (O at or above one atom in five)
+Ga1.8O3,other_oxide,other_oxide,other_oxide,,,4,0,0,4,0,Any other oxide (O at or above one atom in five)
+Gd0.4Mn0.58Zn0.37Fe1.65O4,other_oxide,other_oxide,other_oxide,,,8,8,0,0,0,Any other oxide (O at or above one atom in five)
+La0.88Fe1O3,other_oxide,other_oxide,other_oxide,,,18,7,0,10,8,Any other oxide (O at or above one atom in five)
+La0.93Co0.93O3,other_oxide,other_oxide,other_oxide,,,28,14,14,0,0,Any other oxide (O at or above one atom in five)
+La0.9Co1O3,other_oxide,other_oxide,other_oxide,,,72,30,37,27,17,Any other oxide (O at or above one atom in five)
+La1.8Cu1O4,other_oxide,other_oxide,other_oxide,,,20,20,0,0,0,Any other oxide (O at or above one atom in five)
+La1Cu0.5Ni0.5O3,other_oxide,other_oxide,other_oxide,,,6,6,6,0,0,Any other oxide (O at or above one atom in five)
+Mg0.5Al1Fe1.25O4,other_oxide,other_oxide,other_oxide,,,2,2,0,0,0,Any other oxide (O at or above one atom in five)
+Sr0.5Nb2O6,other_oxide,other_oxide,other_oxide,,,19,10,10,10,10,Any other oxide (O at or above one atom in five)
+Sr0.95Pb1O3,other_oxide,other_oxide,other_oxide,,,5,5,0,0,0,Any other oxide (O at or above one atom in five)
+Sr1Fe0.6O3,other_oxide,other_oxide,other_oxide,,,12,0,12,0,0,Any other oxide (O at or above one atom in five)
+Sr2V0.5Fe1Mo0.5O6,other_oxide,other_oxide,other_oxide,,,18,1,18,0,0,Any other oxide (O at or above one atom in five)
+Ti74Cu26O149,other_oxide,other_oxide,other_oxide,,,5,0,5,0,0,Any other oxide (O at or above one atom in five)
+Ba0.5Sr0.4Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,12,10,10,10,0,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Ba0.9Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,37,20,20,30,10,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Ca0.75Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,20,19,20,10,11,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.5La0.33Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,23,4,5,9,5,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.78Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,14,11,6,10,10,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.91Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,64,29,29,11,20,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.92Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,58,24,39,19,16,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.9Dy1Ti1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,13,9,9,9,0,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr0.9Ti1.1O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,22,6,6,4,6,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr1.07Ti1.07O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,36,36,35,0,0,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr1.9Ti1O4,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,39,12,13,14,33,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr10Ti25O61,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,11,7,7,5,5,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr1Ta0.3Ti0.7O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,17,9,0,9,2,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr1Ti0.3Fe0.55O3,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,6,0,6,0,0,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Sr2TiO4,perovskite_titanate,perovskite_titanate,perovskite_titanate;other_oxide,,,53,38,21,0,0,"Perovskite titanate (Ti with Sr, Ca or Ba) oxide"
+Si0.05Ge0.95,sige,sige,sige,,,20,10,20,0,10,Si and/or Ge only
+Si0.12Ge0.88,sige,sige,sige,,,5,5,5,0,0,Si and/or Ge only
+Si0.91Ge0.09,sige,sige,sige,,,10,0,0,10,0,Si and/or Ge only
+Si0.936Ge0.114,sige,sige,sige,,,14,9,5,5,5,Si and/or Ge only
+Si0.95,sige,sige,sige,,,7,4,4,4,4,Si and/or Ge only
+Si10Ge,sige,sige,sige,,,27,13,17,10,13,Si and/or Ge only
+Si16Ge9,sige,sige,sige,,,10,4,5,5,5,Si and/or Ge only
+Si19Ge,sige,sige,sige,,,41,33,10,5,10,Si and/or Ge only
+Si3Ge2,sige,sige,sige,,,21,16,7,4,3,Si and/or Ge only
+Si43Ge7,sige,sige,sige,,,10,6,6,6,6,Si and/or Ge only
+Si45Ge4,sige,sige,sige,,,6,6,6,6,6,Si and/or Ge only
+Si4Ge,sige,sige,sige,,,486,334,307,172,170,Si and/or Ge only
+Si78Ge19,sige,sige,sige,,,12,6,0,4,10,Si and/or Ge only
+Si87Ge13,sige,sige,sige,,,4,4,4,0,0,Si and/or Ge only
+SiGe,sige,sige,sige,,,49,7,20,5,30,Si and/or Ge only
+Ba1Fe3.7Sb12,skutterudite,skutterudite,skutterudite,,,100,80,90,70,83,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Ce0.9Fe2.8Co0.9Sb11,skutterudite,skutterudite,skutterudite,,,17,16,16,5,5,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Ce1Fe3.75Sb12,skutterudite,skutterudite,skutterudite,,,9,5,5,5,5,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Co0.79Ni0.21Sb3,skutterudite,skutterudite,skutterudite,,,20,13,19,10,10,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Co100Sb323,skutterudite,skutterudite,skutterudite,,,8,7,7,0,7,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe1.1Co3Sb12,skutterudite,skutterudite,skutterudite,,,12,9,9,6,9,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe1.5Co2.49Sb12,skutterudite,skutterudite,skutterudite,,,20,17,0,15,7,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe2.5Co1.5Sb12,skutterudite,skutterudite,skutterudite,,,27,24,7,0,4,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe2.6Co1.4Sb12,skutterudite,skutterudite,skutterudite,,,10,10,10,8,8,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe2.75Co1.25Sb12,skutterudite,skutterudite,skutterudite,,,19,10,7,6,10,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Fe2.7Co1.3Sb12,skutterudite,skutterudite,skutterudite,,,109,96,97,75,80,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+FeSb3,skutterudite,skutterudite,skutterudite,,,667,491,477,338,409,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Nd0.9Fe3Co1Sb12,skutterudite,skutterudite,skutterudite,,,48,45,45,25,44,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+NdFe3CoSb12,skutterudite,skutterudite,skutterudite,,,27,25,25,15,25,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+YbFe3NiSb12,skutterudite,skutterudite,skutterudite,,,11,10,11,0,0,"Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled"
+Sn0.792Pb0.198Se1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,19,8,10,11,11,"SnSe-type, Sn (majority cation) with Se or S"
+Sn0.81Pb0.19Se0.95,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,19,10,10,6,10,"SnSe-type, Sn (majority cation) with Se or S"
+Sn0.895Se1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,17,10,8,10,9,"SnSe-type, Sn (majority cation) with Se or S"
+Sn0.9405Se1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,19,9,10,11,11,"SnSe-type, Sn (majority cation) with Se or S"
+Sn0.95S1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,8,4,0,3,4,"SnSe-type, Sn (majority cation) with Se or S"
+Sn0.9Pb0.1Se1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,10,5,2,6,7,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.3S0.7,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,12,1,0,10,7,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.4S0.6,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,9,2,0,5,6,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.5S0.5,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,90,48,42,48,57,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.7S0.3,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,10,10,6,0,0,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.9481,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,15,14,14,14,14,"SnSe-type, Sn (majority cation) with Se or S"
+Sn1Se0.9S0.1,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,51,31,25,35,34,"SnSe-type, Sn (majority cation) with Se or S"
+Sn88Pb12Se97,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,19,10,10,10,10,"SnSe-type, Sn (majority cation) with Se or S"
+Sn90Pb10Se97,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,18,10,10,10,9,"SnSe-type, Sn (majority cation) with Se or S"
+Sn96Se97,snse_type,snse_type,snse_type;iv_vi_rocksalt,,,18,10,10,11,9,"SnSe-type, Sn (majority cation) with Se or S"
+Bi0.25Sb1.75Te3,tetradymite,tetradymite,tetradymite,,,15,14,15,10,10,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi0.32Sb1.68Te3,tetradymite,tetradymite,tetradymite,,,18,11,13,11,17,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi0.48Sb1.515Te3,tetradymite,tetradymite,tetradymite,,,6,4,5,5,5,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi0.4Sb1.6Te3,tetradymite,tetradymite,tetradymite,,,323,270,273,201,181,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi0.9Sb1.1Te3,tetradymite,tetradymite,tetradymite,,,3,2,3,0,0,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi1.3Sb0.7Te3,tetradymite,tetradymite,tetradymite,,,7,6,7,0,0,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi1.88Te2.7Se0.3,tetradymite,tetradymite,tetradymite,,,9,0,8,8,9,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi159Te239,tetradymite,tetradymite,tetradymite,,,7,7,7,7,7,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi187Te261,tetradymite,tetradymite,tetradymite,,,5,5,5,5,5,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi2Te2.6595Se0.2955,tetradymite,tetradymite,tetradymite,,,8,8,8,0,0,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi2Te2.67Se0.27,tetradymite,tetradymite,tetradymite,,,4,4,3,3,3,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi2Te2.75Se0.25,tetradymite,tetradymite,tetradymite,,,4,4,4,4,3,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi39(Sb79Te148)2,tetradymite,tetradymite,tetradymite,,,8,8,7,8,8,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi44Sb133Te277,tetradymite,tetradymite,tetradymite,,,6,3,4,3,4,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Bi48(SbTe2)143,tetradymite,tetradymite,tetradymite,,,9,9,9,9,9,"Tetradymite (Bi,Sb)2(Te,Se,S)3"
+Co1.7Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,14,9,10,8,9,Tetrahedrite Cu12Sb4S13
+Co2Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,12,4,9,3,5,Tetrahedrite Cu12Sb4S13
+Cu10Ni1.5Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,22,19,17,17,18,Tetrahedrite Cu12Sb4S13
+Cu11Sb3.59S13,tetrahedrite,tetrahedrite,tetrahedrite;diamond_like_cu,,,14,8,7,9,10,Tetrahedrite Cu12Sb4S13
+Cu11Sb3.5S13,tetrahedrite,tetrahedrite,tetrahedrite;diamond_like_cu,,,8,5,8,5,7,Tetrahedrite Cu12Sb4S13
+Cu12Sb3.5S13,tetrahedrite,tetrahedrite,tetrahedrite,,,23,16,17,17,18,Tetrahedrite Cu12Sb4S13
+Cu12Sb3.8S13,tetrahedrite,tetrahedrite,tetrahedrite,,,11,11,11,10,11,Tetrahedrite Cu12Sb4S13
+Cu12Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,643,448,410,413,442,Tetrahedrite Cu12Sb4S13
+Cu13Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,12,12,12,11,11,Tetrahedrite Cu12Sb4S13
+Cu3SbS3,tetrahedrite,tetrahedrite,tetrahedrite,,,30,28,25,23,27,Tetrahedrite Cu12Sb4S13
+Mn1.5Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,5,5,5,0,5,Tetrahedrite Cu12Sb4S13
+Mn1.5Cu11Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,9,9,9,7,7,Tetrahedrite Cu12Sb4S13
+Mn1.8Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,16,9,7,7,7,Tetrahedrite Cu12Sb4S13
+Mn2Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,9,8,8,2,6,Tetrahedrite Cu12Sb4S13
+Zn1.5Cu10Sb4S13,tetrahedrite,tetrahedrite,tetrahedrite,,,11,11,9,5,2,Tetrahedrite Cu12Sb4S13
+Fe0.9Si2,tm_silicide,tm_silicide,tm_silicide,,,72,57,46,22,11,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Fe1Si1.74,tm_silicide,tm_silicide,tm_silicide,,,6,3,3,2,3,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn0.18Cr1Si2.3114,tm_silicide,tm_silicide,tm_silicide,,,10,10,10,10,10,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn0.31Si0.69,tm_silicide,tm_silicide,tm_silicide,,,70,61,64,0,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn0.65Fe0.35Si1.7,tm_silicide,tm_silicide,tm_silicide,,,11,10,11,0,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn0.9Si1.746,tm_silicide,tm_silicide,tm_silicide,,,6,0,0,5,5,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.70625,tm_silicide,tm_silicide,tm_silicide,,,13,9,8,0,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.7321335,tm_silicide,tm_silicide,tm_silicide,,,19,13,5,10,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.7757,tm_silicide,tm_silicide,tm_silicide,,,18,9,15,9,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.782,tm_silicide,tm_silicide,tm_silicide,,,13,10,10,10,10,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.7919,tm_silicide,tm_silicide,tm_silicide,,,20,20,20,19,20,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn1Si1.7946,tm_silicide,tm_silicide,tm_silicide,,,20,20,20,19,20,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn33Si67,tm_silicide,tm_silicide,tm_silicide,,,23,0,0,23,0,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn35Si64,tm_silicide,tm_silicide,tm_silicide,,,17,17,16,11,12,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Mn7(ReSi8)2,tm_silicide,tm_silicide,tm_silicide,,,20,20,19,12,13,"Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85"
+Ag0.3Te1Pb1,unassignable,(none),,bicuseo,a required site is empty,13,13,0,0,0,
+Ag0.7Sb1.3Te2.3,unassignable,(none),,i_v_vi2,ratio spread 0.571 > 0.15,13,13,10,0,13,
+Ag1.7Te1Pb0.15,unassignable,(none),,bicuseo,a required site is empty,15,11,10,7,8,
+Bi0.54Te0.46,unassignable,(none),,tetradymite,ratio spread 0.551 > 0.15,3,0,3,3,3,
+Bi4Te4.70235Pb1Se2.34765,unassignable,(none),,bicuseo,a required site is empty,3,2,3,3,0,
+Bi77Sb23,unassignable,(none),,tetradymite,a required site is empty,4,0,3,4,3,
+Ca1Mn1Zn0.8P2,unassignable,(none),,skutterudite,"elements outside rule: Mn,Zn",4,3,3,3,0,
+CdCu3SbSe4,unassignable,(none),,tetrahedrite,elements outside rule: Cd,3,2,2,3,3,
+Ce(Tl3Te2)3,unassignable,(none),,skutterudite,elements outside rule: Te,9,6,6,6,6,
+CeCrB6,unassignable,(none),,skutterudite,"elements outside rule: B,Cr",12,12,9,7,0,
+Co3.8Sn6Se6,unassignable,(none),,snse_type,elements outside rule: Co,20,18,0,10,20,
+Co4Sb12C1.2,unassignable,(none),,skutterudite,elements outside rule: C,17,11,9,6,10,
+Cr2Fe0.41Cu0.59S4,unassignable,(none),,tetrahedrite,elements outside rule: Cr,6,6,0,0,0,
+Cu1Bi2.23Te3,unassignable,(none),,i_v_vi2,ratio spread 0.780 > 0.15,5,4,5,5,5,
+Cu2Ge0.85Se3,unassignable,(none),,cu2x_ag2x_liquid_like,elements outside rule: Ge,16,9,9,7,7,
+Dy1.85S2.775,unassignable,(none),,tetradymite,elements outside rule: Dy,15,10,10,0,0,
+Fe0.6Co0.4Te2,unassignable,(none),,tetradymite,"elements outside rule: Co,Fe",20,20,0,0,0,
+Fe1.6Cu5.6S4,unassignable,(none),,tetrahedrite,a required site is empty,14,11,10,10,9,
+Fe78Si9B13,unassignable,(none),,half_heusler,elements outside rule: B,41,34,28,0,0,
+Mg70Sn29,unassignable,(none),,mg2x,ratio spread 0.188 > 0.15,9,8,8,0,0,
+MnGe3Sb2Te7,unassignable,(none),,gete_sb2te3_pseudobinary,elements outside rule: Mn,32,21,15,14,22,
+NaCd4As3,unassignable,(none),,zintl_122,elements outside rule: Na,3,3,0,0,0,
+Nb0.8Fe1Sb1,unassignable,(none),,half_heusler,ratio spread 0.214 > 0.15,32,11,10,22,13,
+Si1.23C1,unassignable,(none),,sige,elements outside rule: C,3,3,0,0,0,
+Si94P5.5,unassignable,(none),,sige,elements outside rule: P,17,10,10,10,10,
+Sr1Zn0.25Cu0.5Sb1,unassignable,(none),,zintl_122,elements outside rule: Cu,12,10,10,10,10,
+Ti,unassignable,(none),,half_heusler,a required site is empty,9,6,9,0,0,
+V0.05Fe0.7Si0.25,unassignable,(none),,full_heusler,ratio spread 1.385 > 0.15,8,8,0,7,0,
+V17Ge31,unassignable,(none),,half_heusler,a required site is empty,4,4,3,0,0,
+Zr3Ni1.7Sb4Pt1.2,unassignable,(none),,half_heusler,ratio spread 0.333 > 0.15,16,10,10,10,10,
+Zn1.09Sb1,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,15,15,15,9,9,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn1.1Sb1,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,15,14,14,7,9,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn13Sb12,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,10,9,9,0,9,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn3.64Sb2.82,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,13,7,12,9,12,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn3.6Sb2.7,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,16,16,16,15,16,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn3.725Sb3,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,30,18,18,17,22,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn34Sb33,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,13,6,13,5,0,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn359Sb254,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,17,17,16,17,16,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn389Sb283,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,17,16,17,17,16,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn3Sb2,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,11,10,11,0,0,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn4.4Sb3,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,12,10,8,9,9,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn51Sb43,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,6,3,4,5,3,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn51Sb46,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,10,9,9,0,9,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn57Sb43,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,10,10,0,0,0,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Zn803Sb600,zinc_antimonide,zinc_antimonide,zinc_antimonide,,,13,7,0,7,12,"Zinc antimonide, Zn4Sb3 or ZnSb"
+Ca1Mg1.8Bi2,zintl_122,zintl_122,zintl_122,,,12,10,10,8,8,1-2-2 Zintl AB2X2
+Eu(ZnSb)2,zintl_122,zintl_122,zintl_122,,,217,161,145,64,185,1-2-2 Zintl AB2X2
+Eu0.9Zn2Sb2,zintl_122,zintl_122,zintl_122,,,34,32,33,33,32,1-2-2 Zintl AB2X2
+Eu1Zn0.5Cd1.5Sb2,zintl_122,zintl_122,zintl_122,,,17,16,17,9,12,1-2-2 Zintl AB2X2
+Eu1Zn1.4Cd0.6Sb2,zintl_122,zintl_122,zintl_122,,,28,20,18,18,19,1-2-2 Zintl AB2X2
+EuZnCdSb2,zintl_122,zintl_122,zintl_122,,,29,20,7,18,22,1-2-2 Zintl AB2X2
+Yb1.05Zn1.9Sb2,zintl_122,zintl_122,zintl_122,,,10,9,9,2,8,1-2-2 Zintl AB2X2
+Yb1.1Zn1.9Sb2.1,zintl_122,zintl_122,zintl_122,,,9,8,8,1,8,1-2-2 Zintl AB2X2
+Yb1Cd1.9Sb2,zintl_122,zintl_122,zintl_122,,,45,37,38,29,15,1-2-2 Zintl AB2X2
+Yb1Mn0.4Cd1.6Sb2,zintl_122,zintl_122,zintl_122,,,13,6,7,6,7,1-2-2 Zintl AB2X2
+Yb1Mn0.8Cd1.2Sb2,zintl_122,zintl_122,zintl_122,,,12,7,7,6,7,1-2-2 Zintl AB2X2
+Yb1Mn1.5Cd0.5Sb2,zintl_122,zintl_122,zintl_122,,,13,7,6,6,6,1-2-2 Zintl AB2X2
+Yb1Zn0.4Cd1.6Sb2,zintl_122,zintl_122,zintl_122,,,64,36,38,30,50,1-2-2 Zintl AB2X2
+Yb1Zn0.9Cd1.1Sb2,zintl_122,zintl_122,zintl_122,,,17,16,17,7,13,1-2-2 Zintl AB2X2
+Yb1Zn2Sb1.8,zintl_122,zintl_122,zintl_122,,,8,0,0,0,8,1-2-2 Zintl AB2X2
+Ca14Bi11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,11,11,1,0,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca14Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,18,17,18,5,10,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca16Bi11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,17,9,5,9,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca16Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,18,11,10,9,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca2Yb12Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,47,16,10,16,17,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca4Yb10Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,44,16,18,15,14,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ca6Yb8Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,7,0,0,7,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb10Sb9,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,20,9,6,10,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb11Sb10,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,12,9,6,3,7,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb14Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,1039,722,659,386,605,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb15Sb11,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,7,0,7,0,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb3.8Sb3,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,50,48,39,12,37,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb4Bi0.6Sb2.4,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,26,26,14,0,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb4Sb2.8,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,19,19,12,0,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Yb4Sb3,zintl_14_1_11,zintl_14_1_11,zintl_14_1_11,,,76,73,60,0,0,"Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional"
+Ti19Zn81(B13O27)3,zno_based,zno_based,zno_based;other_oxide,,,8,6,4,6,0,ZnO-based oxide (Zn is the majority cation)
+Zn0.4532O0.5054,zno_based,zno_based,zno_based;other_oxide,,,19,0,0,19,0,ZnO-based oxide (Zn is the majority cation)
+Zn1C0.14O1,zno_based,zno_based,zno_based;other_oxide,,,9,4,0,3,7,ZnO-based oxide (Zn is the majority cation)
+Zn1C0.24O1,zno_based,zno_based,zno_based;other_oxide,,,9,5,5,4,4,ZnO-based oxide (Zn is the majority cation)
+Zn1O1.06,zno_based,zno_based,zno_based;other_oxide,,,10,10,9,0,0,ZnO-based oxide (Zn is the majority cation)
+Zn25O27,zno_based,zno_based,zno_based;other_oxide,,,17,0,17,0,0,ZnO-based oxide (Zn is the majority cation)
+Zn3In2O6,zno_based,zno_based,zno_based;other_oxide,,,82,60,52,55,60,ZnO-based oxide (Zn is the majority cation)
+Zn5.5In2O8.5,zno_based,zno_based,zno_based;other_oxide,,,12,4,10,4,0,ZnO-based oxide (Zn is the majority cation)
+Zn50O53,zno_based,zno_based,zno_based;other_oxide,,,9,4,7,0,0,ZnO-based oxide (Zn is the majority cation)
+Zn5In1.6O8,zno_based,zno_based,zno_based;other_oxide,,,18,9,18,9,9,ZnO-based oxide (Zn is the majority cation)
+Zn5In2O8,zno_based,zno_based,zno_based;other_oxide,,,36,18,36,9,9,ZnO-based oxide (Zn is the majority cation)
+Zn7In2O10,zno_based,zno_based,zno_based;other_oxide,,,9,6,4,6,5,ZnO-based oxide (Zn is the majority cation)
+Zn9(GaO6)2,zno_based,zno_based,zno_based;other_oxide,,,18,4,0,8,10,ZnO-based oxide (Zn is the majority cation)
+Zn93O107,zno_based,zno_based,zno_based;other_oxide,,,18,9,14,9,9,ZnO-based oxide (Zn is the majority cation)
+Zn9Ga1.2O12,zno_based,zno_based,zno_based;other_oxide,,,29,8,5,8,8,ZnO-based oxide (Zn is the majority cation)

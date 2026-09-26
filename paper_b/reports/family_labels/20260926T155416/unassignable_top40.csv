@@ -1,0 +1,41 @@
+host,rows,S,sigma,kappa,zT,family,n_rules_matched,all_matches,nearest_rule,why_not
+Te,495,292,300,224,259,unassignable,0,,tetradymite,a required site is empty
+Fe0.95Si2,468,195,185,280,93,unassignable,0,,tm_silicide,"X/M = 2.105 outside [1.7, 2.0]"
+TiS2,395,333,288,284,287,unassignable,0,,tetradymite,elements outside rule: Ti
+Ba8Cu5Si41,373,237,225,93,97,unassignable,0,,clathrate_type_i,ratio spread 1.180 > 0.15
+Cr2Se3,308,6,0,304,0,unassignable,0,,tetradymite,elements outside rule: Cr
+B,306,193,1,117,96,unassignable,0,,sige,elements outside rule: B
+In4Se3,299,223,179,203,212,unassignable,0,,diamond_like_cu,a required site is empty
+Sb5.4Te1.6Mo3,246,166,159,138,133,unassignable,0,,tetradymite,elements outside rule: Mo
+Fe0.94Si2,229,208,156,52,177,unassignable,0,,tm_silicide,"X/M = 2.128 outside [1.7, 2.0]"
+Mn(CuTe)2,216,135,131,104,118,unassignable,0,,cu2x_ag2x_liquid_like,elements outside rule: Mn
+Fe,187,184,3,0,0,unassignable,0,,skutterudite,a required site is empty
+FeCu5S4,185,140,158,138,148,unassignable,0,,tetrahedrite,a required site is empty
+Ga3Fe,178,156,144,110,110,unassignable,0,,skutterudite,filler above 8% of atoms
+Ga67Ru33,169,104,116,72,76,unassignable,0,,full_heusler,a required site is empty
+Ti1.9Bi1.2S5,169,101,96,93,97,unassignable,0,,tetradymite,elements outside rule: Ti
+Cu,168,168,0,0,0,unassignable,0,,cu2x_ag2x_liquid_like,a required site is empty
+MnTe,168,108,102,78,44,unassignable,0,,tetradymite,elements outside rule: Mn
+Al0.2In1Ga0.8As1,166,78,98,18,37,unassignable,0,,zintl_14_1_11,M above 10% of atoms
+TiSe2,161,95,95,157,92,unassignable,0,,tetradymite,elements outside rule: Ti
+Mg3.5Sb2,157,118,124,119,75,unassignable,0,,mg3x2_zintl,ratio spread 0.154 > 0.15
+Fe0.92Si2,155,114,78,37,119,unassignable,0,,tm_silicide,"X/M = 2.174 outside [1.7, 2.0]"
+CoSi,148,92,94,45,33,unassignable,0,,half_heusler,a required site is empty
+InSb,147,131,21,100,127,unassignable,0,,skutterudite,filler above 8% of atoms
+Ga0.9Sb0.1Te1,147,81,78,80,76,unassignable,0,,diamond_like_cu,elements outside rule: Sb
+Fe1Si2.1,146,122,38,13,0,unassignable,0,,tm_silicide,"X/M = 2.100 outside [1.7, 2.0]"
+FeCuS2,142,56,62,31,106,unassignable,0,,tetrahedrite,a required site is empty
+ZnCu2SnSe4,138,88,82,84,71,unassignable,0,,tetrahedrite,elements outside rule: Sn
+NdGdS3,137,127,122,35,36,unassignable,0,,tetradymite,"elements outside rule: Gd,Nd"
+AgSn4SbTe6,135,85,80,82,86,unassignable,0,,gete_sb2te3_pseudobinary,elements outside rule: Ag
+Zr3Ni3Sb4,134,82,49,83,89,unassignable,0,,half_heusler,ratio spread 0.300 > 0.15
+Ti0.4V0.8Fe1Sb1,133,66,44,31,76,unassignable,0,,half_heusler,ratio spread 0.188 > 0.15
+Ba(CuTe)2,131,106,109,94,110,unassignable,0,,bicuseo,a required site is empty
+In3Ru,128,118,118,69,114,unassignable,0,,full_heusler,a required site is empty
+Ca5(AlSb3)2,126,74,107,61,105,unassignable,0,,zintl_14_1_11,M above 10% of atoms
+In4Se2.7,125,110,94,104,100,unassignable,0,,diamond_like_cu,a required site is empty
+Cu13Sn3S16,123,88,85,110,102,unassignable,0,,diamond_like_cu,ratio spread 0.708 > 0.15
+Mn0.14Sn0.86Te1,122,54,74,42,50,unassignable,0,,gete_type,elements outside rule: Mn
+Ca3AlSb3,119,65,88,77,98,unassignable,0,,zintl_14_1_11,M above 10% of atoms
+Cu0.14Sn0.8835Te1,119,70,76,78,72,unassignable,0,,diamond_like_cu,ratio spread 1.897 > 0.15
+MnTe2,116,76,79,31,86,unassignable,0,,tetradymite,elements outside rule: Mn

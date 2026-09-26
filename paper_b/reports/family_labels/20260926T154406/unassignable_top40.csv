@@ -1,0 +1,41 @@
+host,rows,S,sigma,kappa,zT,family,n_rules_matched,all_matches,nearest_rule,why_not
+Zn4Sb3,2629,2147,2025,1336,1609,unassignable,0,,zintl_122,a required site is empty
+Yb14Sb11,1039,722,659,386,605,unassignable,0,,skutterudite,filler above 8% of atoms
+FeSi2,797,543,501,158,130,unassignable,0,,half_heusler,a required site is empty
+Si,745,459,444,128,319,unassignable,0,,half_heusler,a required site is empty
+Cu3SbSe4,585,469,466,422,404,unassignable,0,,tetrahedrite,ratio spread 0.214 > 0.1
+Fe3.5Sb12,560,375,358,264,282,unassignable,0,,skutterudite,ratio spread 0.133 > 0.1
+AgSbTe2,521,393,398,289,383,unassignable,0,,tetradymite,elements outside rule: Ag
+Te,495,292,300,224,259,unassignable,0,,tetradymite,a required site is empty
+Si4Ge,486,334,307,172,170,unassignable,0,,half_heusler,a required site is empty
+Te10Pb9,473,353,342,200,226,unassignable,0,,iv_vi_rocksalt,ratio spread 0.105 > 0.1
+Fe0.95Si2,468,195,185,280,93,unassignable,0,,half_heusler,a required site is empty
+InCuTe2,455,285,255,197,259,unassignable,0,,cu2x_ag2x_liquid_like,elements outside rule: In
+ZnSb,422,246,246,161,141,unassignable,0,,zintl_122,a required site is empty
+AlVFe2,405,221,324,26,38,unassignable,0,,half_heusler,elements outside rule: Al
+CrSi2,399,205,342,109,56,unassignable,0,,half_heusler,elements outside rule: Cr
+TiS2,395,333,288,284,287,unassignable,0,,tetradymite,elements outside rule: Ti
+MgAgSb,389,348,326,346,343,unassignable,0,,mg3x2_zintl,elements outside rule: Ag
+Ba8Cu5Si41,373,237,225,93,97,unassignable,0,,clathrate_type_i,ratio spread 1.180 > 0.1
+Ge17(SbTe10)2,345,283,303,299,315,unassignable,0,,iv_vi_rocksalt,elements outside rule: Sb
+Cr2Se3,308,6,0,304,0,unassignable,0,,tetradymite,elements outside rule: Cr
+B,306,193,1,117,96,unassignable,0,,tetradymite,elements outside rule: B
+In4Se3,299,223,179,203,212,unassignable,0,,skutterudite,elements outside rule: Se
+Al0.9V1Fe2,297,224,237,11,13,unassignable,0,,half_heusler,elements outside rule: Al
+Mn1Si1.73,289,182,169,166,88,unassignable,0,,half_heusler,a required site is empty
+AgSbSe2,283,259,221,185,229,unassignable,0,,tetrahedrite,ratio spread 1.026 > 0.1
+GaCuTe2,283,179,155,162,174,unassignable,0,,cu2x_ag2x_liquid_like,elements outside rule: Ga
+Mn1Si1.75,279,164,166,155,139,unassignable,0,,half_heusler,a required site is empty
+Mn1Si1.74,278,225,219,105,88,unassignable,0,,half_heusler,a required site is empty
+Zr0.9Ni1Sn1,278,268,229,83,191,unassignable,0,,half_heusler,ratio spread 0.103 > 0.1
+Sb5.4Te1.6Mo3,246,166,159,138,133,unassignable,0,,tetradymite,elements outside rule: Mo
+Sn(BiTe2)2,233,206,217,61,107,unassignable,0,,tetradymite,elements outside rule: Sn
+Fe0.94Si2,229,208,156,52,177,unassignable,0,,half_heusler,a required site is empty
+Mn1Si1.8,229,144,153,134,121,unassignable,0,,half_heusler,a required site is empty
+Ge19Te22,225,208,192,144,142,unassignable,0,,iv_vi_rocksalt,ratio spread 0.146 > 0.1
+Cu2SnSe3,219,182,160,171,170,unassignable,0,,cu2x_ag2x_liquid_like,elements outside rule: Sn
+Mn(CuTe)2,216,135,131,104,118,unassignable,0,,cu2x_ag2x_liquid_like,elements outside rule: Mn
+Bi4Te7Pb,210,184,204,10,0,unassignable,0,,bicuseo,a required site is empty
+AgBiSe2,208,182,163,132,166,unassignable,0,,tetrahedrite,ratio spread 1.026 > 0.1
+Co3.5Sb12,207,173,175,105,106,unassignable,0,,skutterudite,ratio spread 0.133 > 0.1
+Ge12Sb2Te15,198,163,169,169,170,unassignable,0,,iv_vi_rocksalt,elements outside rule: Sb

@@ -1,0 +1,29 @@
+rule,status,changes,reason
+tetradymite,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+snse_type,new,new rule,New. Split out of iv_vi_rocksalt: SnSe and SnS are a distinct (orthorhombic) family from the rocksalt IV-VI tellurides. The majority cation decides for alloys; anions are Se and S only.
+gete_type,new,new rule,New. Split out of iv_vi_rocksalt: GeTe (rhombohedral) is a distinct family from rocksalt PbTe/SnTe. The majority cation decides for alloys; the anion is Te only.
+iv_vi_rocksalt,changed,tolerance: 0.1 -> 0.15; description changed,"Now the remainder of the IV-VI 1:1 hosts after snse_type and gete_type have taken theirs (first match wins); site definition unchanged. Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+skutterudite,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+half_heusler,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+mg2x,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+mg3x2_zintl,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+zintl_122,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+zintl_14_1_11,new,new rule,"New (Yb14Sb11 and relatives were unassignable). The M site is optional because at one M per 26 atoms (3.8 at%) M falls below the 5 at% dopant threshold and is already removed from the host; its element set (Mn, Al, Zn, Cd, Ga, In, Mg) was not specified in the request and is a choice to review."
+clathrate_type_i,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+tetrahedrite,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+bicuseo,changed,tolerance: 0.1 -> 0.15,"Removing a substituted dopant makes its site look deficient, and cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%."
+zinc_antimonide,new,new rule,"New (Zn4Sb3 alone was the largest unassignable host in the v1 run). Two variants, 4:3 and 1:1, so intermediate Zn:Sb ratios are not accepted."
+tm_silicide,new,new rule,"New (higher manganese silicide, FeSi2, CrSi2 were unassignable). The 1.7 to 2.0 range is used as specified and is not widened by the 15% tolerance."
+sige,new,new rule,"New (elemental Si, Ge and SiGe alloys were unassignable)."
+i_v_vi2,new,new rule,"New (AgSbTe2, AgBiSe2, AgSbSe2 were unassignable)."
+gete_sb2te3_pseudobinary,new,new rule,"New (Ge17(SbTe10)2, Ge12Sb2Te15, Sn(BiTe2)2, Bi4Te7Pb were unassignable). Compositions on the (Ge,Pb,Sn)Te - (Sb,Bi)2Te3 tie line have Te = A + 1.5 B, so the rule tests charge balance (A 2+, B 3+, Te 2-) rather than a fixed ratio; it sits after tetradymite and the IV-VI rules, so only what they did not match reaches it."
+diamond_like_cu,new,new rule,"New (Cu3SbSe4, InCuTe2, GaCuTe2, Cu2SnSe3 were unassignable)."
+full_heusler,new,new rule,"New (AlVFe2, Al0.9V1Fe2 were unassignable). Element sets were not specified in the request and are a choice to review."
+mgagsb,new,new rule,New (MgAgSb was unassignable in the v1 run).
+layered_cobaltite,new,new rule,New; carved out of the v1 oxide rule (see removed_from_v1).
+perovskite_titanate,new,new rule,New; carved out of the v1 oxide rule (see removed_from_v1).
+manganite,new,new rule,New; carved out of the v1 oxide rule (see removed_from_v1).
+zno_based,new,new rule,New; carved out of the v1 oxide rule (see removed_from_v1).
+in2o3_based,new,new rule,New; carved out of the v1 oxide rule (see removed_from_v1).
+other_oxide,new,new rule,New; the remainder of the v1 oxide rule after the five oxide rules above.
+oxide,removed,rule removed,"Split by cation set into layered_cobaltite, perovskite_titanate, manganite, zno_based, in2o3_based and other_oxide (O >= 20% kept, checked after all non-oxide rules): one oxide bucket held a large number of chemically unrelated compounds (v1 run, family_summary.csv)."
