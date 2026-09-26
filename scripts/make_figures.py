@@ -6,6 +6,7 @@ distribution that motivates repeated grouped CV. Reads the cleaned CSV
 written by src/data_cleaning.py; run that first.
 """
 
+import ast
 import hashlib
 import json
 import re
@@ -20,6 +21,9 @@ import pandas as pd
 from sklearn.metrics import r2_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import figstyle as fs  # noqa: E402
 
 from src.noise_floor import load_aligned_target_values
 from src.plotting_style import (
@@ -31,6 +35,7 @@ from src.plotting_style import (
 )
 
 FIGURES_DIR = Path("figures")
+PAPER_MD_PATH = Path("paper/paper.md")
 
 # The snapfix featurized CSV's chemistry_cluster_id, NOT File A's cleaned
 # CSV. File A's cleaned CSV predates the 2026-09-19 SNAP(0.05)/S5
@@ -333,51 +338,59 @@ def load_snapfix_cluster_columns(
     return pd.read_csv(path, usecols=["sample_id", "chemistry_cluster_id"])
 
 
+# The eleven step labels are the pipeline's step names (src/data_cleaning.py). Section 2.2 of paper.md describes
+# the steps in prose and never names them, so a word-for-word match against the paper is impossible; this check
+# is the strongest available one: each label's anchor term(s) must occur in section 2.2 (prose plus the Figure 3
+# caption), so no label can name a step the paper does not describe.
+CLEANING_LABEL_ANCHORS = {
+    1: ("range filtering",), 2: ("conductivity",), 3: ("300 to 800 K",), 4: ("Pivoting",), 5: ("Formulas",),
+    6: ("S²σT/κ",), 7: ("computational",), 8: ("coefficient of variation",), 9: ("median-absolute-deviation",),
+    10: ("distinct temperature",), 11: ("smoothness filter",),
+}
+
+
+def check_cleaning_labels_against_paper(labels, paper_path=PAPER_MD_PATH):
+    """Assert the eleven labels exist in order and that each step's anchor term(s) occur in paper.md section 2.2."""
+    text = Path(paper_path).read_text(encoding="utf-8")
+    m = re.search(r"^## 2\.2 .*?(?=^## 2\.3 )", text, flags=re.S | re.M)
+    assert m, "section 2.2 not found in paper.md"
+    section = m.group(0)
+    assert len(labels) == 11 and [int(l.split(".")[0]) for l in labels] == list(range(1, 12)), labels
+    for k, anchors in CLEANING_LABEL_ANCHORS.items():
+        for a in anchors:
+            assert a in section, f"step {k} ({labels[k - 1]!r}): {a!r} does not occur in paper.md section 2.2"
+
+
 def make_cleaning_funnel(out_path):
     """
-    Horizontal funnel chart of row count after each of the 11 cleaning
-    steps, annotated with n and step-to-step retention. Step 1's
-    point-per-curve expansion is called out separately since a literal
-    funnel (monotonic decrease) only starts from step 1 onward.
+    Figure 3: horizontal funnel of the row count after each of the 11 cleaning steps, annotated with the count
+    and the step-to-step retention. Step 1 expands raw curves into points, so it carries no retention figure
+    and its input (raw curves) is stated under the axis.
     """
-    labels = [label for label, _ in CLEANING_STEPS]
+    labels = [label.replace("\n", " ") for label, _ in CLEANING_STEPS]
     counts = [count for _, count in CLEANING_STEPS]
+    check_cleaning_labels_against_paper(labels)
 
-    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=7.0, panel_height=6.0))
-
+    fig, ax = fs.new_figure("double", 7.4)
     y_pos = np.arange(len(labels))[::-1]
     max_count = max(counts)
-    bar_color = COLORBLIND_PALETTE[5]
-
-    ax.barh(y_pos, counts, color=bar_color, height=0.6)
+    ax.barh(y_pos, counts, color=fs.OI["blue"], height=0.62)
     for i, (y, count) in enumerate(zip(y_pos, counts)):
-        if i == 0:
-            # step 1 expands curves into points -- not a same-unit
-            # reduction, so a "% kept" figure here would be nonsensical.
-            label = f"n={count:,}"
-        else:
-            retention = counts[i] / counts[i - 1]
-            label = f"n={count:,}  ({retention:.0%} kept)"
-        ax.text(count + max_count * 0.015, y, label, va="center", ha="left", fontsize=9)
-
+        label = f"{count:,}" if i == 0 else f"{count:,} ({counts[i] / counts[i - 1]:.0%} kept)"
+        ax.text(count + max_count * 0.012, y, label, va="center", ha="left")
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(labels, fontsize=10)
-    ax.set_xlabel("Rows (temperature-property points)")
-    ax.set_xlim(0, max_count * 1.32)
-
-    fig.tight_layout()
-    fig.text(
-        0.01,
-        -0.02,
-        f"Note: step 1 input is {RAW_CURVES:,} raw digitized curves (curve-level), "
-        f"not point-level rows -- each curve expands into multiple\n"
-        f"temperature-property points, so step 1's {counts[0]:,} is an expansion, not a reduction.",
-        ha="left",
-        va="top",
-        fontsize=8,
-        style="italic",
+    ax.set_yticklabels(labels)
+    ax.set_xlim(0, max_count * 1.55)
+    ax.set_ylim(-0.6, len(labels) - 0.4)
+    ax.set_xticks([0, 0.5e6, 1.0e6, 1.5e6, 2.0e6])
+    ax.set_xticklabels(["0", "0.5", "1.0", "1.5", "2.0"])
+    ax.set_xlabel(
+        "Rows after the step (millions of temperature-property points)\n"
+        f"Step 1 input: {RAW_CURVES:,} raw curves (expanded into points)"
     )
-    save_figure(fig, out_path)
+    fs.grid(ax, "x")
+    fs.panel_title(ax, "Rows remaining after each of the eleven cleaning steps")
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -599,110 +612,62 @@ def load_ladder_ungrouped_sd(ungrouped_dir=UNGROUPED_SNAPFIX_DIR):
     return sd
 
 
+LADDER_LEGEND_LABELS = ["Random 80/20", "5-fold", "10-fold", "Composition", "Chemistry cluster"]
+
+
 def make_validation_ladder(
     out_path, ladder_metrics_path=LADDER_METRICS_PATH, ungrouped_dir=UNGROUPED_SNAPFIX_DIR,
 ):
     """
-    Figure 2: five-way validation-inflation ladder, grouped bar chart,
-    one group per target (S, sigma, kappa, zT), five validation
-    strategies per group (random 80/20, 5-fold, 10-fold, composition,
-    chemistry-cluster), pooled out-of-fold R^2, frozen hyperparameters
-    reused unchanged across every rung -- see CLAUDE.md "Confirmed
-    Results -- Five-Way Ladder". Colours and hatches come from the
-    shared PALETTE/HATCH dicts: random 80/20 gets its own concept
-    colour, 5-fold and 10-fold both use the "kfold" concept (identical
-    colour+hatch), so the three ungrouped rungs still read as "the same,
-    indistinguishable number" (they differ by <0.003) while random 80/20
-    is individually addressable (it reappears as a marker in the
-    headroom figure). All five rungs now carry error bars: composition/
-    chemistry-cluster get across-repeat SD from load_ladder_grouped_sd,
-    random 80/20/5-fold/10-fold get per-draw/per-fold SD from
-    load_ladder_ungrouped_sd (added 2026-09-22 alongside the
-    unidentified-dataset correction -- these three rungs never had error
-    bars before, not because there was no spread to show, but because
-    the per-draw/per-fold structure that produces it wasn't being read).
-    A bracket to the right of each group annotates the inflation gap:
-    random 80/20 minus chemistry-cluster, the headline number this
-    ladder exists to report.
+    Figure 5: five-way validation-inflation ladder, one group of five bars per property, pooled out-of-fold R^2
+    with the frozen hyperparameters reused across every rung. Ungrouped rungs (random 80/20, 5-fold, 10-fold)
+    are three greys; grouped rungs (composition, chemistry cluster) are two blues. Error bars are each rung's
+    own SD (grouped: across the 5 repeats; ungrouped: across the 20 draws or the folds). A bracket beside each
+    group gives random 80/20 minus chemistry cluster.
     """
-    n_props = len(LADDER_PROPERTIES)
-    n_strategies = len(LADDER_STRATEGIES)
+    from matplotlib.patches import Patch
+
+    n_props, n_strategies = len(LADDER_PROPERTIES), len(LADDER_STRATEGIES)
     all_sd = {**load_ladder_grouped_sd(ladder_metrics_path), **load_ladder_ungrouped_sd(ungrouped_dir)}
 
-    bar_colors = [
-        PALETTE["random_split"], PALETTE["kfold"], PALETTE["kfold"],
-        PALETTE["composition"], PALETTE["chemistry_cluster"],
-    ]
-    bar_hatches = [
-        HATCH["random_split"], HATCH["kfold"], HATCH["kfold"],
-        HATCH["composition"], HATCH["chemistry_cluster"],
-    ]
+    # the plotted heights must equal the committed ladder metrics (grouped rungs, 4 dp)
+    with open(ladder_metrics_path, encoding="utf-8") as f:
+        runs = json.load(f)["runs"]
+    for prop in LADDER_PROPERTIES:
+        for strategy, run in (("Composition CV", "composition"), ("Chemistry-Cluster CV", "chemistry")):
+            assert round(runs[f"{prop}_{run}_full"]["per_repeat_r2_mean"], 4) == LADDER_RESULTS[strategy][prop], (prop, strategy)
 
-    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=11.5, panel_height=5.5))
-
+    colors = [*fs.UNGROUPED_GREYS, *fs.GROUPED_BLUES]
+    fig, ax = fs.new_figure("double", 7.0)
     group_centers = np.arange(n_props)
-    bar_width = 0.8 / n_strategies
+    bar_width = 0.098
     offsets = (np.arange(n_strategies) - (n_strategies - 1) / 2) * bar_width
 
     for i, strategy in enumerate(LADDER_STRATEGIES):
         heights = [LADDER_RESULTS[strategy][prop] for prop in LADDER_PROPERTIES]
         x = group_centers + offsets[i]
-        bars = ax.bar(
-            x, heights, width=bar_width * 0.92,
-            color=bar_colors[i], hatch=bar_hatches[i], label=strategy,
-            edgecolor="black", linewidth=0.5, zorder=2,
-        )
-        for rect, h in zip(bars, heights):
-            ax.text(
-                rect.get_x() + rect.get_width() / 2, h + 0.015, f"{h:.2f}",
-                ha="center", va="bottom", fontsize=7.5, rotation=0,
-            )
+        ax.bar(x, heights, width=bar_width * 0.94, color=colors[i], edgecolor=fs.EDGE_GREY, linewidth=0.4, zorder=2)
         errs = [all_sd[strategy][prop] for prop in LADDER_PROPERTIES]
-        ax.errorbar(
-            x, heights, yerr=errs, fmt="none", color="black",
-            capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
-        )
+        ax.errorbar(x, heights, yerr=errs, fmt="none", color="black", capsize=1.5, elinewidth=0.7, capthick=0.7, zorder=5)
 
-    # Inflation-gap bracket: placed clear of the bars, in the gap before
-    # the next group, so it never collides with the tightly-packed
-    # value labels above (random/5-fold/10-fold differ by <0.002 from
-    # each other, so a line spanning the group would strike through
-    # multiple labels at once, same failure mode fixed in Figure 1).
-    bracket_x_gap = 0.42
+    # inflation bracket beside each group, clear of the bars and of the next group
+    x_off = 0.5 * n_strategies * bar_width + 0.035
     for j, prop in enumerate(LADDER_PROPERTIES):
         y_leaky = LADDER_RESULTS[LADDER_LEAKY_STRATEGY][prop]
         y_honest = LADDER_RESULTS[LADDER_HONEST_STRATEGY][prop]
-        gap = y_leaky - y_honest
-        x_bracket = group_centers[j] + bracket_x_gap
-
-        ax.annotate(
-            "", xy=(x_bracket, y_honest), xytext=(x_bracket, y_leaky),
-            arrowprops=dict(arrowstyle="<->", color="black", lw=1.1, shrinkA=0, shrinkB=0),
-        )
-        # short horizontal tick marks at each end so the bracket reads
-        # as spanning exactly the leaky and honest heights
-        for y in (y_leaky, y_honest):
-            ax.plot(
-                [x_bracket - 0.035, x_bracket + 0.035], [y, y],
-                color="black", lw=1.1, solid_capstyle="butt",
-            )
-        ax.text(
-            x_bracket + 0.06, (y_leaky + y_honest) / 2, f"$\\Delta$={gap:.3f}",
-            ha="left", va="center", fontsize=8.5, fontweight="bold",
-        )
+        xb = group_centers[j] + x_off
+        ax.plot([xb - 0.02, xb, xb, xb - 0.02], [y_leaky, y_leaky, y_honest, y_honest], color="black", lw=0.7, solid_joinstyle="miter", zorder=6)
+        ax.text(xb + 0.025, (y_leaky + y_honest) / 2, f"$\\Delta$={y_leaky - y_honest:.3f}", ha="left", va="center")
 
     ax.set_xticks(group_centers)
     ax.set_xticklabels(LADDER_PROPERTY_LABELS)
-    ax.set_xlim(-0.5, n_props - 1 + 0.62)
+    ax.set_xlim(-0.5, n_props - 1 + 0.78)
+    ax.set_ylim(0, 1.0)
     ax.set_ylabel("Pooled out-of-fold R$^2$")
-    ax.set_ylim(0, 1.08)
-    ax.legend(
-        loc="lower center", bbox_to_anchor=(0.5, -0.32), ncol=5, framealpha=0.9,
-        columnspacing=1.2, handletextpad=0.5,
-    )
-
-    fig.tight_layout()
-    save_figure(fig, out_path)
+    fs.panel_title(ax, "Pooled out-of-fold R$^2$ under five validation protocols")
+    handles = [Patch(facecolor=c, edgecolor=fs.EDGE_GREY, linewidth=0.4) for c in colors]
+    fs.legend_row(fig, handles, LADDER_LEGEND_LABELS)
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -738,19 +703,15 @@ HEADROOM_SEGMENT_DISPLAY_NAMES = {
     "digitization": "Digitization noise",
     "measurement": "Measurement noise",
 }
-HEADROOM_SEGMENT_PALETTE_KEY = {
-    "achieved": "internal",
-    "headroom": "headroom",
-    "digitization": "digitization_noise",
-    "measurement": "measurement_noise",
+HEADROOM_SEGMENT_COLORS = {
+    "achieved": fs.OI["blue"],
+    "headroom": "#F3D19C",
+    "digitization": "#E3B7CE",
+    "measurement": "#A9D8C8",
 }
-HEADROOM_SEGMENT_COLORS = {name: PALETTE[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
-HEADROOM_SEGMENT_HATCHES = {name: HATCH[key] for name, key in HEADROOM_SEGMENT_PALETTE_KEY.items()}
 # headroom-only emphasis: denser hatch and a bolder edge than every other
 # segment (including the shared HATCH["kfold"] value, left untouched for
 # the ladder figure) -- see the drawing loop's comment for why.
-HEADROOM_SEGMENT_HATCH_OVERRIDE = {"headroom": "..."}
-HEADROOM_SEGMENT_EDGE_LINEWIDTH = {"headroom": 2.2}
 
 
 def load_headroom_data(
@@ -827,95 +788,48 @@ def make_headroom_decomposition(
     noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
 ):
     """
-    Figure 5: one horizontal stacked bar per property (S, sigma, kappa,
-    zT), spanning R^2 = 0 to 1.0, decomposed left to right into achieved
-    (chemistry-cluster grouped R^2), headroom to the combined label-noise
-    ceiling, digitization noise, and measurement noise. An error bar on
-    the achieved/headroom boundary shows the grouped R^2's across-repeat
-    SD; a dashed marker shows where the ungrouped random 80/20 R^2 falls,
-    so the reader sees how much apparent performance is validation
-    artefact rather than real headroom closed. See the module-level
-    HEADROOM_* comment for data provenance and the ceiling-bound choice.
+    Figure 8: one horizontal stacked bar per property spanning R^2 = 0 to 1, split left to right into achieved
+    (chemistry-cluster grouped R^2), headroom to the combined label-noise ceiling, digitization noise and
+    measurement noise. An error bar on the achieved/headroom boundary is the across-repeat SD of the grouped
+    R^2; a dashed line marks the ungrouped random 80/20 R^2. Muted tones, no hatching.
     """
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+
     data = load_headroom_data(ladder_metrics_path, noise_floor_inputs_path)
 
-    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=10.0, panel_height=5.1))
+    fig, ax = fs.new_figure("double", 6.2)
     y_pos = np.arange(len(HEADROOM_PROPERTIES))[::-1]
-    bar_height = 0.55
-
-    segment_labeled = set()
-    marker_labeled = False
+    bar_height = 0.5
     for y, prop in zip(y_pos, HEADROOM_PROPERTIES):
         d = data[prop]
         achieved_end = d["achieved_width"]
         headroom_end = achieved_end + d["headroom_width"]
         digitization_end = headroom_end + d["digitization_width"]
-        segments = [
-            ("achieved", 0.0, achieved_end),
-            ("headroom", achieved_end, headroom_end),
-            ("digitization", headroom_end, digitization_end),
-            ("measurement", digitization_end, 1.0),
-        ]
-        for name, left, right in segments:
-            label = HEADROOM_SEGMENT_DISPLAY_NAMES[name] if name not in segment_labeled else None
-            # Okabe-Ito yellow ("headroom") is the lowest-contrast colour
-            # in the palette on white -- without extra emphasis it reads
-            # as flatter than the achieved segment's dense dark-blue
-            # crosshatch, even though headroom is this figure's main
-            # point. Denser hatching and a bolder edge, on this segment
-            # only, fix that without changing its colour or touching the
-            # shared HATCH["kfold"] entry the ladder figure also uses.
-            hatch = HEADROOM_SEGMENT_HATCH_OVERRIDE.get(name, HEADROOM_SEGMENT_HATCHES[name])
-            linewidth = HEADROOM_SEGMENT_EDGE_LINEWIDTH.get(name, 0.6)
-            ax.barh(
-                y, right - left, left=left, height=bar_height,
-                color=HEADROOM_SEGMENT_COLORS[name], hatch=hatch,
-                edgecolor="black", linewidth=linewidth, label=label, zorder=2,
-            )
-            segment_labeled.add(name)
-
-        # Headroom segment width label, placed above the bar so it never
-        # collides with the ungrouped-R^2 marker line, which falls inside
-        # the headroom segment for every property here.
-        headroom_center = (achieved_end + headroom_end) / 2
-        ax.text(
-            headroom_center, y + bar_height / 2 + 0.10, f"$\\Delta$={d['headroom_width']:.3f}",
-            ha="center", va="bottom", fontsize=8.5, fontweight="bold", zorder=4,
-        )
-
-        ax.errorbar(
-            achieved_end, y, xerr=d["grouped_sd"], color="black",
-            capsize=3, elinewidth=1.1, capthick=1.1, zorder=5,
-        )
-
-        marker_label = "Ungrouped random 80/20 R$^2$" if not marker_labeled else None
-        ax.plot(
-            [d["ungrouped_r2"], d["ungrouped_r2"]],
-            [y - bar_height / 2 - 0.04, y + bar_height / 2 + 0.04],
-            color=PALETTE["random_split"], linestyle="--", linewidth=2.2, zorder=6,
-            path_effects=[pe.withStroke(linewidth=3.6, foreground="black")], label=marker_label,
-        )
-        marker_labeled = True
+        for name, left, right in (
+            ("achieved", 0.0, achieved_end), ("headroom", achieved_end, headroom_end),
+            ("digitization", headroom_end, digitization_end), ("measurement", digitization_end, 1.0),
+        ):
+            ax.barh(y, right - left, left=left, height=bar_height, color=HEADROOM_SEGMENT_COLORS[name],
+                    edgecolor=fs.EDGE_GREY, linewidth=0.4, zorder=2)
+        ax.text((achieved_end + headroom_end) / 2, y + bar_height / 2 + 0.07, f"$\\Delta$ = {d['headroom_width']:.3f}",
+                ha="center", va="bottom", zorder=4)
+        ax.errorbar(achieved_end, y, xerr=d["grouped_sd"], color="black", capsize=1.5, elinewidth=0.7, capthick=0.7, zorder=5)
+        ax.plot([d["ungrouped_r2"]] * 2, [y - bar_height / 2 - 0.03, y + bar_height / 2 + 0.03],
+                color="black", linestyle=(0, (3, 2)), linewidth=1.0, zorder=6)
 
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(HEADROOM_PROPERTY_LABELS, fontsize=11)
+    ax.set_yticklabels(HEADROOM_PROPERTY_LABELS)
     ax.set_xlim(0, 1.0)
-    ax.set_ylim(y_pos.min() - 0.55, y_pos.max() + 0.55)
+    ax.set_ylim(y_pos.min() - 0.55, y_pos.max() + 0.75)
     ax.set_xlabel("R$^2$ (per-property matched space)")
-
-    # Legend placed on the FIGURE (not the axes), at a fixed
-    # figure-fraction position, with subplots_adjust reserving room below
-    # the axes for both the xlabel and the legend -- ax.legend() with a
-    # large negative bbox_to_anchor plus tight_layout(rect=...) fought
-    # each other and put the legend box on top of the xlabel text.
-    handles, labels = ax.get_legend_handles_labels()
-    fig.legend(
-        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
-        columnspacing=1.2, handletextpad=0.6,
-    )
-    fig.subplots_adjust(bottom=0.32)
-    save_figure(fig, out_path)
+    fs.grid(ax, "x")
+    fs.panel_title(ax, "Where each property's R$^2$ range goes: achieved, headroom and label noise")
+    handles = [Patch(facecolor=HEADROOM_SEGMENT_COLORS[n], edgecolor=fs.EDGE_GREY, linewidth=0.4) for n in HEADROOM_SEGMENT_ORDER]
+    handles.append(Line2D([], [], color="black", linestyle=(0, (3, 2)), linewidth=1.0))
+    labels = [HEADROOM_SEGMENT_DISPLAY_NAMES[n] for n in HEADROOM_SEGMENT_ORDER] + ["Ungrouped random 80/20 R$^2$"]
+    fs.legend_row(fig, handles, labels, ncol=3)
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -932,21 +846,46 @@ SHAP_COARSE_ORDER = ["cbfv", "magpie", "temperature"]
 SHAP_COARSE_LABELS = {"cbfv": "CBFV", "magpie": "MAGPIE", "temperature": "Temperature"}
 
 
+SHAP_RANDOM_COLOR = "#9A9A9A"
+SHAP_GROUPING_CODE = Path("scripts/shap_attribution_zT.py")
+# group key -> readable label. The definition of each group is the member list in SHAP_GROUPING_CODE's
+# FINE_GROUP_MEMBERS (read below with ast, not imported, since that script imports xgboost); the label says
+# what the members are. "temperature" is the single temperature_bin column.
+SHAP_FINE_LABELS = {
+    "temperature": "Temperature",
+    "valence_electron_config": "Valence-electron configuration",
+    "atomic_radius": "Atomic and ionic radii",
+    "thermodynamic_bulk": "Bulk thermodynamic properties",
+    "periodic_position": "Periodic-table position",
+    "electronegativity": "Electronegativity",
+    "dft_groundstate": "DFT ground state",
+    "metal_class": "Metal class",
+    "melting_point": "Melting point",
+    "atomic_mass": "Atomic mass",
+}
+
+
+def load_shap_fine_group_members(path=SHAP_GROUPING_CODE):
+    """FINE_GROUP_MEMBERS ({group key: [raw MAGPIE/CBFV property names]}) read from the grouping code itself."""
+    tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "FINE_GROUP_MEMBERS" for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise KeyError(f"FINE_GROUP_MEMBERS not found in {path}")
+
+
 def load_shap_group_data(shap_dir=SHAP_ATTRIBUTION_DIR):
     """
-    Load coarse and fine SHAP attribution-share group comparisons from
-    summary.json. Returns (coarse_rows, fine_rows, max_delta_row), each
-    row a dict with group/random_mean_share/random_sd/
-    chemistry_mean_share/chemistry_sd/delta_in_pooled_sd_units. fine_rows
-    is sorted by descending mean of the two arms' shares. max_delta_row
-    is the fine-group row with the largest |delta_in_pooled_sd_units|.
+    Load coarse and fine SHAP attribution-share group comparisons from summary.json. Returns
+    (coarse_rows, fine_rows, max_delta_row), each row a dict with group/random_mean_share/random_sd/
+    chemistry_mean_share/chemistry_sd/delta_in_pooled_sd_units. fine_rows is sorted by descending mean of the
+    two arms' shares. max_delta_row is the fine-group row with the largest |delta_in_pooled_sd_units|.
     """
     with open(shap_dir / "summary.json", encoding="utf-8") as f:
         summary = json.load(f)
 
     coarse_by_group = {row["group"]: row for row in summary["coarse_group_comparison"]}
     coarse_rows = [coarse_by_group[g] for g in SHAP_COARSE_ORDER]
-
     fine_rows = sorted(
         summary["fine_group_comparison"],
         key=lambda row: (row["random_mean_share"] + row["chemistry_mean_share"]) / 2,
@@ -957,40 +896,29 @@ def load_shap_group_data(shap_dir=SHAP_ATTRIBUTION_DIR):
 
 
 def _plot_shap_paired_bars(ax, rows, group_labels, horizontal):
-    """Shared paired-bar drawing for both SHAP panels (random vs chemistry)."""
-    n = len(rows)
-    positions = np.arange(n)
-    bar_width = 0.36
-    random_vals = [row["random_mean_share"] for row in rows]
-    random_errs = [row["random_sd"] for row in rows]
-    chemistry_vals = [row["chemistry_mean_share"] for row in rows]
-    chemistry_errs = [row["chemistry_sd"] for row in rows]
-
+    """Paired bars (random 80/20 grey, chemistry cluster blue) with across-fold SD error bars."""
+    positions = np.arange(len(rows))
+    w = 0.38
+    series = (
+        ("random", SHAP_RANDOM_COLOR, -w / 2),
+        ("chemistry", fs.OI["blue"], +w / 2),
+    )
+    err_kw = dict(capsize=1.5, elinewidth=0.7, capthick=0.7, ecolor="black")
+    for key, color, shift in series:
+        vals = [row[f"{key}_mean_share"] for row in rows]
+        errs = [row[f"{key}_sd"] for row in rows]
+        if horizontal:
+            ax.barh(positions + shift, vals, height=w * 0.94, xerr=errs, color=color, edgecolor=fs.EDGE_GREY,
+                    linewidth=0.4, error_kw=err_kw, zorder=2)
+        else:
+            ax.bar(positions + shift, vals, width=w * 0.94, yerr=errs, color=color, edgecolor=fs.EDGE_GREY,
+                   linewidth=0.4, error_kw=err_kw, zorder=2)
     if horizontal:
-        ax.barh(
-            positions + bar_width / 2, random_vals, height=bar_width, xerr=random_errs,
-            color=PALETTE["random_split"], hatch=HATCH["random_split"], edgecolor="black",
-            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Random 80/20",
-        )
-        ax.barh(
-            positions - bar_width / 2, chemistry_vals, height=bar_width, xerr=chemistry_errs,
-            color=PALETTE["chemistry_cluster"], hatch=HATCH["chemistry_cluster"], edgecolor="black",
-            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Chemistry-Cluster CV",
-        )
         ax.set_yticks(positions)
         ax.set_yticklabels(group_labels)
         ax.set_xlabel("Mean |SHAP| share")
+        fs.grid(ax, "x")
     else:
-        ax.bar(
-            positions - bar_width / 2, random_vals, width=bar_width, yerr=random_errs,
-            color=PALETTE["random_split"], hatch=HATCH["random_split"], edgecolor="black",
-            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Random 80/20",
-        )
-        ax.bar(
-            positions + bar_width / 2, chemistry_vals, width=bar_width, yerr=chemistry_errs,
-            color=PALETTE["chemistry_cluster"], hatch=HATCH["chemistry_cluster"], edgecolor="black",
-            linewidth=0.6, error_kw=dict(capsize=2.5, elinewidth=1.0, capthick=1.0), label="Chemistry-Cluster CV",
-        )
         ax.set_xticks(positions)
         ax.set_xticklabels(group_labels)
         ax.set_ylabel("Mean |SHAP| share")
@@ -998,50 +926,46 @@ def _plot_shap_paired_bars(ax, rows, group_labels, horizontal):
 
 def make_shap_attribution(out_path, shap_dir=SHAP_ATTRIBUTION_DIR):
     """
-    SHAP attribution shares, random vs chemistry-cluster split. Left
-    panel: three coarse families (CBFV, MAGPIE, temperature), paired
-    vertical bars. Right panel: ten fine semantic groups, paired
-    horizontal bars sorted by mean share. Error bars are across-fold SD
-    (25 folds per arm). No significance stars -- the visual point is
-    that every pair overlaps within its error bars, i.e. attribution
-    shares are indistinguishable between split strategies despite the
-    large R^2 gap the ladder figure shows. The largest fine-group delta
-    (valence_electron_config) is annotated in pooled fold-SD units.
+    Figure 7: SHAP attribution shares for zT, random 80/20 vs chemistry-cluster split. Two panels whose axes have
+    equal width: (a) three coarse descriptor families, (b) ten fine semantic groups sorted by mean share. Error
+    bars are across-fold SD (25 folds per arm). The largest fine-group delta is stated in the caption (and
+    asserted here). The right panel's tick labels take more room than the left's, so the gridspec width ratio is
+    iterated until the two axes are within 0.5% of each other in width.
     """
+    import textwrap
+
+    from matplotlib.patches import Patch
+
     coarse_rows, fine_rows, max_delta_row = load_shap_group_data(shap_dir)
+    assert max_delta_row["group"] == "valence_electron_config" and round(abs(max_delta_row["delta_in_pooled_sd_units"]), 2) == 0.78, max_delta_row
+    members = load_shap_fine_group_members()
+    assert set(SHAP_FINE_LABELS) == set(members) | {"temperature"} == {r["group"] for r in fine_rows}, (sorted(SHAP_FINE_LABELS), sorted(members))
+    fine_labels = ["\n".join(textwrap.wrap(SHAP_FINE_LABELS[r["group"]], 24, break_long_words=False)) for r in fine_rows]
 
-    fig, (ax_left, ax_right) = plt.subplots(
-        1, 2, figsize=get_figsize(1, 2, panel_width=6.0, panel_height=5.2),
-    )
+    def build(ratio):
+        fig, (ax_left, ax_right) = fs.new_figure("double", 8.2, 1, 2, width_ratios=[1.0, ratio])
+        _plot_shap_paired_bars(ax_left, coarse_rows, [SHAP_COARSE_LABELS[r["group"]] for r in coarse_rows], horizontal=False)
+        fs.panel_title(ax_left, "Three descriptor families", letter="a")
+        _plot_shap_paired_bars(ax_right, fine_rows, fine_labels, horizontal=True)
+        ax_right.invert_yaxis()
+        fs.panel_title(ax_right, "Ten semantic groups", letter="b")
+        fig.canvas.draw()
+        return fig, ax_left.get_position().width, ax_right.get_position().width
 
-    coarse_labels = [SHAP_COARSE_LABELS[row["group"]] for row in coarse_rows]
-    _plot_shap_paired_bars(ax_left, coarse_rows, coarse_labels, horizontal=False)
-    add_panel_label(ax_left, "a")
+    ratio = 1.0
+    for _ in range(8):
+        fig, w_left, w_right = build(ratio)
+        if abs(w_left / w_right - 1) < 0.005:
+            break
+        plt.close(fig)
+        ratio *= w_left / w_right          # right axes too wide -> shrink its gridspec cell
+    else:
+        raise AssertionError(f"SHAP panels did not reach equal axes width: {w_left:.4f} vs {w_right:.4f}")
 
-    fine_labels = [row["group"].replace("_", " ") for row in fine_rows]
-    _plot_shap_paired_bars(ax_right, fine_rows, fine_labels, horizontal=True)
-    ax_right.invert_yaxis()
-    add_panel_label(ax_right, "b")
-
-    max_delta_idx = fine_rows.index(max_delta_row)
-    y_pos = max_delta_idx
-    ax_right.annotate(
-        f"Largest group delta: {max_delta_row['group'].replace('_', ' ')},\n"
-        f"{abs(max_delta_row['delta_in_pooled_sd_units']):.2f} pooled fold-SD",
-        xy=(max(max_delta_row["random_mean_share"], max_delta_row["chemistry_mean_share"]), y_pos),
-        xytext=(0.60, y_pos - 2.0 if y_pos < len(fine_rows) - 2 else y_pos + 1.5),
-        textcoords="data", fontsize=8, ha="left", va="center",
-        arrowprops=dict(arrowstyle="-", color="black", lw=0.8),
-    )
-
-    handles, labels = ax_left.get_legend_handles_labels()
-    fig.legend(
-        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
-        columnspacing=1.2, handletextpad=0.6,
-    )
-    fig.subplots_adjust(bottom=0.16, wspace=0.35)
-    save_figure(fig, out_path)
+    handles = [Patch(facecolor=SHAP_RANDOM_COLOR, edgecolor=fs.EDGE_GREY, linewidth=0.4),
+               Patch(facecolor=fs.OI["blue"], edgecolor=fs.EDGE_GREY, linewidth=0.4)]
+    fs.legend_row(fig, handles, ["Random 80/20", "Chemistry cluster"])
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -1126,67 +1050,97 @@ def load_descriptor_ablation_data(
     return data
 
 
+def load_descriptor_ablation_gain_data(
+    ablation_metrics_path=DESCRIPTOR_ABLATION_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    Gain in chemistry-cluster grouped R^2 over MAGPIE alone, as a percentage of the headroom to the combined
+    label-noise ceiling, for each feature set and property. For repeat i the gain is R^2(feature set, i) minus
+    R^2(MAGPIE, i) (the runs share seeds, so the repeats are paired); the percentage divides by the lower
+    headroom bound (the larger fraction, i.e. the 'closes at most' reading). Returns {property: {feature_counts,
+    gain_pct_mean, gain_pct_sd, headroom_lower, headroom_upper}}; the MAGPIE point is 0 by construction.
+
+    Assertions (the numbers the paper quotes): the full-set mean gain equals ablation_metrics.json's
+    deltas_full_minus_magpie to 1e-9, and the fraction ranges from load_descriptor_ablation_data span exactly
+    2.2 to 4.2 percent over the four properties, as the abstract and Section 3.4 state.
+    """
+    with open(ablation_metrics_path, encoding="utf-8") as f:
+        ablation = json.load(f)
+    with open(noise_floor_inputs_path, encoding="utf-8") as f:
+        noise_floor = json.load(f)
+    combined_by_label = {e["label"]: e for e in noise_floor["item3_combined_ceiling_new"]}
+
+    data = {}
+    for prop in DESCRIPTOR_ABLATION_PROPERTIES:
+        combined = combined_by_label[ZT_COMBINED_CEILING_LABEL if prop == "zT" else prop]
+        head_lo, head_hi = combined["headroom_lower"], combined["headroom_upper"]
+        per_repeat = {fs_: np.asarray(ablation[prop][fs_]["per_repeat_r2"], float) for fs_ in DESCRIPTOR_ABLATION_FEATURE_SETS}
+        assert all(len(v) == 5 for v in per_repeat.values()), prop
+        means, sds = [], []
+        for fs_ in DESCRIPTOR_ABLATION_FEATURE_SETS:
+            gain = per_repeat[fs_] - per_repeat["magpie"]
+            means.append(100 * gain.mean() / head_lo)
+            sds.append(100 * gain.std(ddof=1) / head_lo)
+        assert abs(means[-1] / 100 * head_lo - ablation["deltas_full_minus_magpie"][prop]) < 1e-9, prop
+        data[prop] = {
+            "feature_counts": [DESCRIPTOR_ABLATION_FEATURE_COUNTS[s] for s in DESCRIPTOR_ABLATION_FEATURE_SETS],
+            "gain_pct_mean": means, "gain_pct_sd": sds, "headroom_lower": head_lo, "headroom_upper": head_hi,
+        }
+    # the paper's range: full-minus-MAGPIE closes 2.2 to 4.2 percent of headroom, over both headroom bounds
+    lows = [100 * ablation["deltas_full_minus_magpie"][p] / data[p]["headroom_upper"] for p in DESCRIPTOR_ABLATION_PROPERTIES]
+    highs = [100 * ablation["deltas_full_minus_magpie"][p] / data[p]["headroom_lower"] for p in DESCRIPTOR_ABLATION_PROPERTIES]
+    assert round(min(lows), 1) == 2.2 and round(max(highs), 1) == 4.2, (min(lows), max(highs))
+    return data
+
+
+ABLATION_LINE_STYLE = {
+    "S": (fs.OI["blue"], "o"),
+    "sigma": (fs.OI["vermillion"], "s"),
+    "kappa": (fs.OI["green"], "^"),
+    "zT": (fs.OI["purple"], "D"),
+}
+
+
 def make_descriptor_ablation(
     out_path,
     ablation_metrics_path=DESCRIPTOR_ABLATION_METRICS_PATH,
     noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
 ):
     """
-    2x2 panels, one per target. Each panel: three points (magpie=133,
-    cbfv=265, full=397 features) with across-repeat SD error bars,
-    connected by a line (chemistry_cluster/"internal" colour, since
-    every point here is a chemistry-cluster grouped R^2), plus a shaded
-    horizontal band at the combined label-noise ceiling range
-    ("headroom" colour). Y axis spans from just below the lowest point
-    to 1.0, so the gap between the points and the band -- the dominant
-    visual -- is what the reader sees. Each panel is annotated with the
-    full-minus-magpie delta and the fraction of headroom it closes.
+    Figure 9 (single column): per property (categorical x), the gain in chemistry-cluster grouped R^2 over MAGPIE
+    alone as a percentage of the headroom to the combined label-noise ceiling. Filled marker: the full set (MAGPIE
+    plus CBFV, 397 features) minus MAGPIE. Open marker: CBFV alone (265 features) minus MAGPIE. Error bars are the
+    SD across the 5 repeats of the paired per-repeat gain; no connecting lines. The absolute-R^2 version is
+    make_descriptor_ablation_absolute (supplementary). The 2.2-4.2 percent range the paper quotes is asserted in
+    load_descriptor_ablation_gain_data.
     """
-    data = load_descriptor_ablation_data(ablation_metrics_path, noise_floor_inputs_path)
+    data = load_descriptor_ablation_gain_data(ablation_metrics_path, noise_floor_inputs_path)
+    props = DESCRIPTOR_ABLATION_PROPERTIES
+    x = np.arange(len(props))
+    dx = 0.17
+    blue = fs.OI["blue"]
+    full_m = [data[p]["gain_pct_mean"][2] for p in props]
+    full_s = [data[p]["gain_pct_sd"][2] for p in props]
+    cbfv_m = [data[p]["gain_pct_mean"][1] for p in props]
+    cbfv_s = [data[p]["gain_pct_sd"][1] for p in props]
 
-    fig, axes = plt.subplots(2, 2, figsize=get_figsize(2, 2, panel_width=4.6, panel_height=4.0))
-    panel_letters = ["a", "b", "c", "d"]
-
-    for ax, prop, letter in zip(axes.flat, DESCRIPTOR_ABLATION_PROPERTIES, panel_letters):
-        d = data[prop]
-        x = d["feature_counts"]
-
-        ax.axhspan(
-            d["band_lower"], d["band_upper"], color=PALETTE["headroom"], alpha=0.35,
-            zorder=1, label="Combined ceiling range" if prop == "S" else None,
-        )
-        ax.errorbar(
-            x, d["r2_values"], yerr=d["r2_sd"], color=PALETTE["chemistry_cluster"],
-            marker="o", markersize=5, linewidth=1.6, capsize=3, elinewidth=1.1, capthick=1.1,
-            zorder=3, label="Chemistry-cluster R$^2$" if prop == "S" else None,
-        )
-
-        y_low = min(d["r2_values"]) - max(d["r2_sd"]) - 0.02
-        ax.set_ylim(y_low, 1.0)
-        ax.set_xlim(min(x) - 40, max(x) + 40)
-        ax.set_xticks(x)
-        ax.set_xlabel("Number of features")
-        ax.set_ylabel(f"R$^2$ ({DESCRIPTOR_ABLATION_PROPERTY_LABELS[prop]})")
-
-        fraction_lo, fraction_hi = d["fraction_pct"]
-        annotation_y = (max(d["r2_values"]) + d["band_lower"]) / 2
-        ax.text(
-            sum(x) / len(x), annotation_y,
-            f"full - magpie = {d['delta']:.4f}\ncloses {fraction_lo:.1f}-{fraction_hi:.1f}% of headroom",
-            ha="center", va="center", fontsize=8,
-            bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5, alpha=0.9),
-            zorder=4,
-        )
-        add_panel_label(ax, letter)
-
-    handles, labels = axes.flat[0].get_legend_handles_labels()
-    fig.legend(
-        handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-        bbox_transform=fig.transFigure, ncol=2, framealpha=0.9,
-        columnspacing=1.2, handletextpad=0.6,
-    )
-    fig.subplots_adjust(bottom=0.13, hspace=0.38, wspace=0.35)
-    save_figure(fig, out_path)
+    fig, ax = fs.new_figure("single", 6.0)
+    ax.axhline(0, color="black", linewidth=0.5, zorder=1)
+    ax.errorbar(x + dx, full_m, yerr=full_s, fmt="o", color=blue, markersize=4.5, capsize=1.5, elinewidth=0.7,
+                capthick=0.7, label="Full set (MAGPIE + CBFV)", zorder=3)
+    ax.errorbar(x - dx, cbfv_m, yerr=cbfv_s, fmt="o", color=blue, markerfacecolor="white", markeredgewidth=0.9,
+                markersize=4.5, capsize=1.5, elinewidth=0.7, capthick=0.7, label="CBFV instead of MAGPIE", zorder=3)
+    ax.set_xticks(x)
+    ax.set_xticklabels([DESCRIPTOR_ABLATION_PROPERTY_LABELS[p] for p in props])
+    ax.set_xlim(-0.6, len(props) - 0.4)
+    lows = [m - s for m, s in zip(full_m + cbfv_m, full_s + cbfv_s)]
+    highs = [m + s for m, s in zip(full_m + cbfv_m, full_s + cbfv_s)]
+    ax.set_ylim(min(lows) - 0.4, max(highs) + 1.9)          # headroom above the data for the legend
+    ax.set_ylabel("Share of headroom closed (%)")
+    ax.legend(loc="upper left", ncol=1)
+    fs.panel_title(ax, "Gain over MAGPIE, as a share of headroom")
+    fs.save(fig, out_path, expect_width_cm=8.0)
     plt.close(fig)
 
 
@@ -1316,64 +1270,103 @@ def load_zt_parity_predictions(checkpoint_dir):
     return np.concatenate(y_true_parts), np.concatenate(y_pred_parts), len(npz_paths)
 
 
+def make_descriptor_ablation_absolute(
+    out_path,
+    ablation_metrics_path=DESCRIPTOR_ABLATION_METRICS_PATH,
+    noise_floor_inputs_path=NOISE_FLOOR_INPUTS_PATH,
+):
+    """
+    Supplementary: the absolute-R^2 version of the descriptor ablation, one panel per property, with the
+    combined label-noise ceiling band and across-repeat SD error bars. Not in the manuscript body.
+    """
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+
+    data = load_descriptor_ablation_data(ablation_metrics_path, noise_floor_inputs_path)
+    fig, axes = fs.new_figure("double", 10.0, 2, 2)
+    for ax, prop, letter in zip(axes.flat, DESCRIPTOR_ABLATION_PROPERTIES, "abcd"):
+        d = data[prop]
+        x = d["feature_counts"]
+        ax.axhspan(d["band_lower"], d["band_upper"], color=fs.OI["orange"], alpha=0.28, linewidth=0, zorder=1)
+        ax.errorbar(x, d["r2_values"], yerr=d["r2_sd"], color=fs.OI["blue"], marker="o", markersize=3.5, linewidth=1.0,
+                    capsize=1.5, elinewidth=0.7, capthick=0.7, zorder=3)
+        ax.set_ylim(min(d["r2_values"]) - max(d["r2_sd"]) - 0.02, 1.0)
+        ax.set_xlim(min(x) - 40, max(x) + 40)
+        ax.set_xticks(x)
+        ax.set_xlabel("Number of features")
+        ax.set_ylabel("R$^2$")
+        fs.panel_title(ax, DESCRIPTOR_ABLATION_PROPERTY_LABELS[prop], letter=letter)
+    handles = [Line2D([], [], color=fs.OI["blue"], marker="o", markersize=3.5, linewidth=1.0),
+               Patch(facecolor=fs.OI["orange"], alpha=0.28, linewidth=0)]
+    fs.legend_row(fig, handles, ["Chemistry-cluster grouped R$^2$", "Combined label-noise ceiling range"])
+    fs.save(fig, out_path, expect_width_cm=16.0)
+    plt.close(fig)
+
+
+def _density_cmap():
+    """Sequential blues for hexbin density: light enough to read on white, dark enough at the top; no yellow."""
+    from matplotlib.colors import ListedColormap
+
+    return ListedColormap(plt.cm.Blues(np.linspace(0.25, 1.0, 256)))
+
+
+def _hexbin_parity_pair(fig, axes, panels, lo, hi, cbar_label="Rows per hexbin (log scale)"):
+    """
+    Draw two hexbin parity panels on a shared axis range and one shared log colour scale. `panels` is a list of
+    (ax, actual, predicted, title, letter, r2). The sample sizes are given in the caption, not in the image.
+    """
+    cmap = _density_cmap()
+    hbs = []
+    for ax, actual, predicted, title, letter, r2 in panels:
+        hb = ax.hexbin(actual, predicted, gridsize=50, extent=(lo, hi, lo, hi), cmap=cmap, norm=LogNorm(), mincnt=1, linewidths=0)
+        hbs.append(hb)
+    vmax = max(hb.get_array().max() for hb in hbs)
+    norm = LogNorm(vmin=1, vmax=vmax)
+    for hb in hbs:
+        hb.set_norm(norm)
+    for (ax, actual, predicted, title, letter, r2) in panels:
+        ax.plot([lo, hi], [lo, hi], color=fs.EDGE_GREY, linestyle=(0, (3, 2)), linewidth=0.7, zorder=5)
+        ax.set_xlim(lo, hi)
+        ax.set_ylim(lo, hi)
+        ax.set_aspect("equal", adjustable="box")
+        ax.set_xlabel("Actual zT")
+        ax.set_ylabel("Predicted zT")
+        ax.grid(False)
+        ax.text(0.05, 0.95, f"$R^2$ = {r2:.4f}", transform=ax.transAxes, ha="left", va="top",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="0.7", linewidth=0.4))
+        fs.panel_title(ax, title, letter=letter)
+    cbar = fig.colorbar(hbs[-1], ax=list(axes), label=cbar_label, shrink=0.8, aspect=22, pad=0.02)
+    cbar.outline.set_linewidth(0.4)
+    return hbs
+
+
 def make_zt_parity(
     out_path,
     random_checkpoint_dir=ZT_PARITY_RANDOM_CHECKPOINT_DIR,
     chemistry_checkpoint_dir=ZT_PARITY_CHEMISTRY_CHECKPOINT_DIR,
 ):
     """
-    Two hexbin parity panels for zT, random 80/20 (left) vs
-    chemistry-cluster (right), identical axis limits and identical
-    (shared, log-scaled) colour scale on both, so the difference in
-    prediction spread -- not an artifact of differing color normalization
-    -- is the dominant visual. Identity line on both. Each panel is
-    labelled with its split-type name in that split's PALETTE colour
-    (random_split / chemistry_cluster) rather than a generic a/b letter,
-    and annotated with its own recomputed pooled R^2 and n.
+    Figure 6: two hexbin parity panels for zT, random 80/20 (a) and chemistry-cluster (b), identical axes and one
+    shared log colour scale so the difference in spread is the dominant visual. R^2 is recomputed here from the
+    raw predictions; n is given in the caption.
     """
     yt_r, yp_r, n_files_r = load_zt_parity_predictions(random_checkpoint_dir)
     yt_c, yp_c, n_files_c = load_zt_parity_predictions(chemistry_checkpoint_dir)
-    r2_r = r2_score(yt_r, yp_r)
-    r2_c = r2_score(yt_c, yp_c)
+    r2_r, r2_c = r2_score(yt_r, yp_r), r2_score(yt_c, yp_c)
+    # the values the paper's caption quotes (Section 3.1)
+    assert round(r2_r, 4) == 0.9180 and round(r2_c, 4) == 0.7456 and len(yt_r) == 517_680 and len(yt_c) == 647_095, (r2_r, r2_c, len(yt_r), len(yt_c))
 
     lo = min(yt_r.min(), yp_r.min(), yt_c.min(), yp_c.min())
     hi = max(yt_r.max(), yp_r.max(), yt_c.max(), yp_c.max())
     pad = (hi - lo) * 0.03
     lo, hi = lo - pad, hi + pad
 
-    fig, (ax_left, ax_right) = plt.subplots(
-        1, 2, figsize=get_figsize(1, 2, panel_width=5.2, panel_height=5.0), constrained_layout=True,
-    )
-
-    hb_left = ax_left.hexbin(yt_r, yp_r, gridsize=60, extent=(lo, hi, lo, hi), cmap="viridis", norm=LogNorm(), mincnt=1)
-    hb_right = ax_right.hexbin(yt_c, yp_c, gridsize=60, extent=(lo, hi, lo, hi), cmap="viridis", norm=LogNorm(), mincnt=1)
-    vmax = max(hb_left.get_array().max(), hb_right.get_array().max())
-    shared_norm = LogNorm(vmin=1, vmax=vmax)
-    hb_left.set_norm(shared_norm)
-    hb_right.set_norm(shared_norm)
-
-    panels = [
-        (ax_left, hb_left, "Random 80/20", PALETTE["random_split"], r2_r, len(yt_r)),
-        (ax_right, hb_right, "Chemistry-Cluster CV", PALETTE["chemistry_cluster"], r2_c, len(yt_c)),
-    ]
-    for ax, hb, split_name, color, r2, n in panels:
-        ax.plot([lo, hi], [lo, hi], color="black", linestyle="--", linewidth=1.2, zorder=5)
-        ax.set_xlim(lo, hi)
-        ax.set_ylim(lo, hi)
-        ax.set_aspect("equal", adjustable="box")
-        ax.set_xlabel("Actual zT")
-        ax.set_ylabel("Predicted zT")
-        ax.text(
-            0.04, 0.96, split_name, transform=ax.transAxes, ha="left", va="top",
-            fontsize=12, fontweight="bold", color=color,
-        )
-        ax.text(
-            0.04, 0.87, f"$R^2$={r2:.4f}\nn={n:,}", transform=ax.transAxes, ha="left", va="top",
-            fontsize=9.5, bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5),
-        )
-
-    fig.colorbar(hb_right, ax=[ax_left, ax_right], label="Rows per hexbin (log scale)", shrink=0.85)
-    save_figure(fig, out_path)
+    fig, axes = fs.new_figure("double", 6.9, 1, 2)
+    _hexbin_parity_pair(fig, axes, [
+        (axes[0], yt_r, yp_r, "Random 80/20", "a", r2_r),
+        (axes[1], yt_c, yp_c, "Chemistry-cluster CV", "b", r2_c),
+    ], lo, hi)
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -1483,89 +1476,65 @@ def load_tematdb_doi_disjoint(scoring_path=EXTERNAL_SNAPFIX_DIR / "tematdb_D_sco
     }
 
 
+EXTERNAL_PANELS = (
+    ("a", "ESTM, DOI-disjoint", 3123),
+    ("b", "ESTM, cluster-disjoint", 1448),
+)
+
+
+EXTERNAL_TICK_SYMBOL = {"S": "S", "sigma": "$\\sigma$", "kappa": "$\\kappa$", "zT_direct": "zT"}
+
+
 def make_external_transfer(out_path, ladder_metrics_path=LADDER_METRICS_PATH, external_dir=EXTERNAL_SNAPFIX_DIR):
     """
-    Three panels: ESTM DOI-disjoint, ESTM cluster-disjoint, teMatDb
-    DOI-disjoint. Each shows grouped bars per property (S, sigma, kappa,
-    zT direct): internal chemistry-cluster R^2, external full-set R^2,
-    and (ESTM only) external in-support R^2. OOD fraction annotated
-    above each property group -- the property's own marginal OOD % for
-    S/sigma/kappa, and the joint OOD % for zT (which has no bound of its
-    own; its in-support subset is the same joint one used for S/sigma/
-    kappa together). teMatDb has no in-support bar (0.12% OOD, judged
-    negligible in CLAUDE.md) and is not annotated.
+    Figure 10: three panels (ESTM DOI-disjoint, ESTM cluster-disjoint, teMatDb DOI-disjoint) of grouped bars per
+    property (S, sigma, kappa, zT direct): internal chemistry-cluster R^2, external full-set R^2 and (ESTM only)
+    external in-support R^2. Under each property, the share of external rows outside the training range (the
+    property's own marginal share for S, sigma and kappa; the joint share for zT). teMatDb has no in-support bar
+    (0.12% out-of-range tail, given in the caption). The panel titles are checked against the row counts of the
+    passes they are drawn from.
     """
+    from matplotlib.patches import Patch
+
     internal = load_internal_chemistry_r2(ladder_metrics_path)
-    estm_a = load_estm_pass_transfer("a", external_dir)
-    estm_b = load_estm_pass_transfer("b", external_dir)
+    estm = {letter: load_estm_pass_transfer(letter, external_dir) for letter, _, _ in EXTERNAL_PANELS}
+    for letter, title, n_expected in EXTERNAL_PANELS:      # a = DOI-disjoint (3,123 rows), b = cluster-disjoint (1,448 rows)
+        assert estm[letter]["S"]["full_n"] == n_expected, (letter, title, estm[letter]["S"]["full_n"], n_expected)
     tematdb = load_tematdb_doi_disjoint()
 
-    fig, axes = plt.subplots(1, 3, figsize=get_figsize(1, 3, panel_width=5.3, panel_height=5.0))
+    fig, axes = fs.new_figure("double", 6.3, 1, 3, sharey=True)
     props = EXTERNAL_TRANSFER_PROPERTIES
-    labels = [EXTERNAL_TRANSFER_PROPERTY_LABELS[p] for p in props]
-    n_props = len(props)
-    group_centers = np.arange(n_props)
+    centers = np.arange(len(props))
+    c_int, c_full, c_in = fs.OI["blue"], fs.OI["orange"], fs.OI["green"]
 
-    def draw_panel(ax, bars, ood_pct=None):
+    def draw_panel(ax, bars, ood_pct, title, letter):
         n_bars = len(bars)
         bar_width = 0.8 / n_bars
         offsets = (np.arange(n_bars) - (n_bars - 1) / 2) * bar_width
-        for i, (bar_label, color, hatch, values) in enumerate(bars):
-            heights = [values[p] for p in props]
-            x = group_centers + offsets[i]
-            rects = ax.bar(
-                x, heights, width=bar_width * 0.92, color=color, hatch=hatch,
-                edgecolor="black", linewidth=0.5, label=bar_label, zorder=2,
-            )
-            for rect, h in zip(rects, heights):
-                ax.text(rect.get_x() + rect.get_width() / 2, h + 0.02, f"{h:.2f}",
-                        ha="center", va="bottom", fontsize=7, rotation=90 if h < 0.3 else 0)
-        if ood_pct is not None:
-            for j, p in enumerate(props):
-                ax.text(group_centers[j], 1.05, f"OOD {ood_pct[p]:.1f}%", ha="center", va="bottom", fontsize=7.5)
-        ax.set_xticks(group_centers)
-        ax.set_xticklabels(labels)
-        ax.set_ylim(-0.15, 1.18)
-        ax.axhline(0, color="black", linewidth=0.6, zorder=1)
+        for i, (color, values) in enumerate(bars):
+            ax.bar(centers + offsets[i], [values[p] for p in props], width=bar_width * 0.92, color=color,
+                   edgecolor=fs.EDGE_GREY, linewidth=0.4, zorder=2)
+        ax.axhline(0, color="black", linewidth=0.5, zorder=3)
+        ticks = [EXTERNAL_TICK_SYMBOL[p] + ("\n" + f"{ood_pct[p]:.1f}%" if ood_pct else "\n ") for p in props]
+        ax.set_xticks(centers)
+        ax.set_xticklabels(ticks)
+        ax.set_ylim(-0.1, 1.0)
+        fs.panel_title(ax, title, letter=letter)
 
-    ood_a = {**estm_a["marginal_ood_pct"], "zT_direct": estm_a["joint_ood_pct"]}
-    draw_panel(axes[0], [
-        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
-        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"],
-         {p: estm_a[p]["full_r2"] for p in props}),
-        ("External, in-support", PALETTE["external_insupport"], HATCH["external_insupport"],
-         {p: estm_a[p]["insupport_r2"] for p in props}),
-    ], ood_pct=ood_a)
+    for k, (letter, title, _n) in enumerate(EXTERNAL_PANELS):
+        e = estm[letter]
+        ood = {**e["marginal_ood_pct"], "zT_direct": e["joint_ood_pct"]}
+        draw_panel(axes[k], [
+            (c_int, internal),
+            (c_full, {p: e[p]["full_r2"] for p in props}),
+            (c_in, {p: e[p]["insupport_r2"] for p in props}),
+        ], ood, title, "abc"[k])
+    draw_panel(axes[2], [(c_int, internal), (c_full, tematdb)], None, "teMatDb, DOI-disjoint", "c")
     axes[0].set_ylabel("R$^2$")
-    add_panel_label(axes[0], "a")
 
-    ood_b = {**estm_b["marginal_ood_pct"], "zT_direct": estm_b["joint_ood_pct"]}
-    draw_panel(axes[1], [
-        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
-        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"],
-         {p: estm_b[p]["full_r2"] for p in props}),
-        ("External, in-support", PALETTE["external_insupport"], HATCH["external_insupport"],
-         {p: estm_b[p]["insupport_r2"] for p in props}),
-    ], ood_pct=ood_b)
-    add_panel_label(axes[1], "b")
-
-    draw_panel(axes[2], [
-        ("Internal (chemistry-cluster)", PALETTE["internal"], HATCH["internal"], internal),
-        ("External, full-set", PALETTE["external_fullset"], HATCH["external_fullset"], tematdb),
-    ])
-    axes[2].text(
-        0.5, 1.12, "OOD tail 0.12% (not split)", transform=axes[2].transAxes,
-        ha="center", va="bottom", fontsize=7.5, style="italic",
-    )
-    add_panel_label(axes[2], "c")
-
-    handles, hlabels = axes[0].get_legend_handles_labels()
-    fig.legend(
-        handles, hlabels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-        bbox_transform=fig.transFigure, ncol=3, framealpha=0.9, columnspacing=1.2, handletextpad=0.6,
-    )
-    fig.subplots_adjust(bottom=0.22, top=0.85, wspace=0.3)
-    save_figure(fig, out_path)
+    handles = [Patch(facecolor=c, edgecolor=fs.EDGE_GREY, linewidth=0.4) for c in (c_int, c_full, c_in)]
+    fs.legend_row(fig, handles, ["Internal (chemistry-cluster CV)", "External, full set", "External, in-support rows"])
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -1619,33 +1588,25 @@ def load_sigma_extrapolation_data(
 
 def make_sigma_extrapolation(out_path, training_csv=SIGMA_EXTRAPOLATION_TRAINING_CSV, external_dir=EXTERNAL_SNAPFIX_DIR):
     """
-    Overlaid density histograms of log10(sigma): training (snapfix CSV)
-    vs ESTM cluster-disjoint rows. Vertical line at training's cleaned
-    conductivity floor; the ESTM mass below it (extrapolation, not
-    interpolation, per CLAUDE.md's External Validation section) is
-    shaded and its fraction annotated.
+    Figure 11 (single column): overlaid density histograms of log10(sigma) for the training set (snapfix CSV) and
+    ESTM's cluster-disjoint rows. A dashed vertical line marks training's cleaned conductivity floor; ESTM mass
+    below it (extrapolation) is shaded and its share is given in the caption.
     """
     d = load_sigma_extrapolation_data(training_csv, external_dir)
+    assert round(100 * d["frac_below_floor"], 1) == 15.5, d["frac_below_floor"]      # Section 3.5 / caption
 
-    fig, ax = plt.subplots(figsize=get_figsize(1, 1, panel_width=8.0, panel_height=5.0))
-    ax.hist(
-        d["train_log_sigma"], bins=d["bin_edges"], density=True, color=PALETTE["internal"],
-        alpha=0.55, label="Training (snapfix)", zorder=2,
-    )
-    ax.hist(
-        d["estm_log_sigma"], bins=d["bin_edges"], density=True, color=PALETTE["external_fullset"],
-        alpha=0.55, label="ESTM, cluster-disjoint", zorder=3,
-    )
-    ax.axvspan(
-        d["bin_edges"][0], d["log_floor"], color="black", alpha=0.08, zorder=1,
-        label=f"ESTM below training floor ({100 * d['frac_below_floor']:.1f}%)",
-    )
-    ax.axvline(d["log_floor"], color="black", linestyle="--", linewidth=1.4, zorder=4)
-    ax.set_xlabel("log$_{10}(\\sigma$, S/m)")
+    fig, ax = fs.new_figure("single", 5.6)
+    ax.hist(d["train_log_sigma"], bins=d["bin_edges"], density=True, color=fs.OI["blue"], alpha=0.6, linewidth=0,
+            label="Training", zorder=2)
+    ax.hist(d["estm_log_sigma"], bins=d["bin_edges"], density=True, color=fs.OI["orange"], alpha=0.7, linewidth=0,
+            label="ESTM, cluster-disjoint", zorder=3)
+    ax.axvspan(d["bin_edges"][0], d["log_floor"], color="black", alpha=0.08, linewidth=0, zorder=1)
+    ax.axvline(d["log_floor"], color="black", linestyle=(0, (3, 2)), linewidth=0.8, zorder=4, label="Training floor")
+    ax.set_xlabel("log$_{10}$($\\sigma$ / S m$^{-1}$)")
     ax.set_ylabel("Density")
-    ax.legend(loc="upper right", framealpha=0.9, fontsize=9.5)
-    fig.tight_layout()
-    save_figure(fig, out_path)
+    ax.legend(loc="upper left")
+    fs.panel_title(ax, "Conductivity: training vs ESTM")
+    fs.save(fig, out_path, expect_width_cm=8.0)
     plt.close(fig)
 
 
@@ -1685,14 +1646,9 @@ def load_direct_vs_derived_predictions(checkpoint_dir=DIRECT_VS_DERIVED_CHECKPOI
 
 def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPOINT_DIR):
     """
-    Two hexbin parity panels for zT: direct prediction (left) vs derived
-    S^2*sigma*T/kappa (right), identical axis limits and a shared
-    log-scaled colour scale, identity line on both. Panel labels use
-    plain bold text with two existing PALETTE hues for contrast (direct/
-    derived is not one of the shared PALETTE concepts; direct reuses
-    "chemistry_cluster" -- the pathway this project treats as the honest
-    number everywhere else -- and derived reuses "full_feature_set",
-    chosen for visual contrast rather than shared semantics).
+    Figure 12: two hexbin parity panels for zT, direct prediction (a) and derived S^2 sigma T / kappa (b), identical
+    axes and one shared log colour scale. R^2 is recomputed from the per-fold predictions and checked against the
+    folder's results.json (unchanged assertion); n is given in the caption.
     """
     d = load_direct_vs_derived_predictions(checkpoint_dir)
     r2_direct = r2_score(d["direct_true"], d["direct_pred"])
@@ -1712,36 +1668,12 @@ def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPO
     pad = (hi - lo) * 0.03
     lo, hi = lo - pad, hi + pad
 
-    fig, (ax_left, ax_right) = plt.subplots(
-        1, 2, figsize=get_figsize(1, 2, panel_width=5.2, panel_height=5.0), constrained_layout=True,
-    )
-    hb_left = ax_left.hexbin(d["direct_true"], d["direct_pred"], gridsize=60, extent=(lo, hi, lo, hi),
-                              cmap="viridis", norm=LogNorm(), mincnt=1)
-    hb_right = ax_right.hexbin(d["derived_true"], d["derived_pred"], gridsize=60, extent=(lo, hi, lo, hi),
-                                cmap="viridis", norm=LogNorm(), mincnt=1)
-    vmax = max(hb_left.get_array().max(), hb_right.get_array().max())
-    shared_norm = LogNorm(vmin=1, vmax=vmax)
-    hb_left.set_norm(shared_norm)
-    hb_right.set_norm(shared_norm)
-
-    panels = [
-        (ax_left, "Direct", PALETTE["chemistry_cluster"], r2_direct, len(d["direct_true"])),
-        (ax_right, "Derived (S$^2\\sigma T/\\kappa$)", PALETTE["full_feature_set"], r2_derived, len(d["derived_true"])),
-    ]
-    for ax, label, color, r2, n in panels:
-        ax.plot([lo, hi], [lo, hi], color="black", linestyle="--", linewidth=1.2, zorder=5)
-        ax.set_xlim(lo, hi)
-        ax.set_ylim(lo, hi)
-        ax.set_aspect("equal", adjustable="box")
-        ax.set_xlabel("Actual zT")
-        ax.set_ylabel("Predicted zT")
-        ax.text(0.04, 0.96, label, transform=ax.transAxes, ha="left", va="top",
-                fontsize=12, fontweight="bold", color=color)
-        ax.text(0.04, 0.87, f"$R^2$={r2:.4f}\nn={n:,}", transform=ax.transAxes, ha="left", va="top",
-                fontsize=9.5, bbox=dict(boxstyle="round", facecolor="white", edgecolor="0.7", linewidth=0.5))
-
-    fig.colorbar(hb_right, ax=[ax_left, ax_right], label="Rows per hexbin (log scale)", shrink=0.85)
-    save_figure(fig, out_path)
+    fig, axes = fs.new_figure("double", 6.9, 1, 2)
+    _hexbin_parity_pair(fig, axes, [
+        (axes[0], d["direct_true"], d["direct_pred"], "Direct prediction", "a", r2_direct),
+        (axes[1], d["derived_true"], d["derived_pred"], "Derived: S$^2\\sigma T/\\kappa$", "b", r2_derived),
+    ], lo, hi)
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -1772,24 +1704,20 @@ def _schematic_curve(x, level, rise, curvature=1.3, hump=0.0):
 
 def make_leakage_schematic(out_path):
     """
-    Figure 1: three panels illustrating why random row splits leak.
-    (a) one zT(T) curve with scattered test rows; (b) near-duplicate curves
-    of one host lattice on both sides of a split; (c) the chemistry-cluster
-    split, where the whole cluster is test. Illustrative values, no numeric
-    tick labels.
+    Figure 1: three panels illustrating why random row splits leak. (a) one zT(T) curve with scattered test
+    rows; (b) near-duplicate curves of one host lattice on both sides of a split; (c) the chemistry-cluster
+    split, where the whole cluster is test. Illustrative values, no numeric tick labels (the caption says so).
     """
     from matplotlib.lines import Line2D
 
     T = np.linspace(300, 800, 21)          # 300-800 K at 25 K
     x = (T - 300) / 500.0                  # normalised; tick labels are suppressed
-    train_kw = dict(marker="o", ms=5.0, mfc=SCHEMATIC_TRAIN_COLOR, mec="white", mew=0.5, ls="none", zorder=3)
-    test_kw = dict(marker="D", ms=5.0, mfc=SCHEMATIC_TEST_COLOR, mec="white", mew=0.5, ls="none", zorder=4)
-    x_right = {"a": 1.12, "b": 2.05, "c": 2.05}   # right x-limit: b and c leave room for curve labels
+    blue, verm = fs.OI["blue"], fs.OI["vermillion"]
+    train_kw = dict(marker="o", ms=3.2, mfc=blue, mec="white", mew=0.3, ls="none", zorder=3)
+    test_kw = dict(marker="D", ms=3.0, mfc=verm, mec="white", mew=0.3, ls="none", zorder=4)
+    x_right = {"a": 1.12, "b": 2.55, "c": 2.55}
 
-    fig, axes = plt.subplots(
-        1, 3, figsize=(15.5, 3.9),
-        gridspec_kw={"wspace": 0.12, "width_ratios": [x_right["a"] + 0.05, x_right["b"] + 0.05, x_right["c"] + 0.05]},
-    )
+    fig, axes = fs.new_figure("double", 6.2, 1, 3, width_ratios=[1.45, 2.4, 2.4])
 
     def base(ax, title, letter):
         ax.set_xticks([])
@@ -1797,51 +1725,48 @@ def make_leakage_schematic(out_path):
         ax.set_xlabel("T")
         ax.set_ylabel("zT")
         ax.set_xlim(-0.05, x_right[letter])
-        ax.set_ylim(-0.02, 1.62)
-        ax.set_title(title, fontsize=12, pad=8)
-        add_panel_label(ax, letter, x=-0.02, y=1.02)
+        ax.set_ylim(-0.02, 2.08)
+        ax.grid(False)
+        fs.panel_title(ax, title, letter=letter)
 
     def draw_curve(ax, y, is_test, label=None, label_y=None):
-        """Draw a whole curve that is entirely train or entirely test, with an optional right-hand label."""
-        color = SCHEMATIC_TEST_COLOR if is_test else SCHEMATIC_TRAIN_COLOR
-        ax.plot(x, y, color=color, lw=1.1, alpha=0.5, zorder=2)
+        color = verm if is_test else blue
+        ax.plot(x, y, color=color, lw=0.8, alpha=0.5, zorder=2)
         ax.plot(x, y, **(test_kw if is_test else train_kw))
         if label is None:
             return None
         return ax.annotate(
-            label, xy=(x[-1] + 0.02, y[-1]), xytext=(1.16, label_y), textcoords="data",
-            fontsize=9.5, va="center", ha="left", color="0.15",
-            arrowprops=dict(arrowstyle="-", color="0.65", lw=0.7, shrinkA=2, shrinkB=2),
+            label, xy=(x[-1] + 0.02, y[-1]), xytext=(1.14, label_y), textcoords="data", va="center", ha="left", color="0.15",
+            arrowprops=dict(arrowstyle="-", color="0.65", lw=0.5, shrinkA=1.5, shrinkB=1.5),
         )
 
-    note_kw = dict(fontsize=9.5, va="top", ha="left", color="0.15", linespacing=1.3)
+    note_kw = dict(va="top", ha="left", color="0.15", linespacing=1.25)
 
-    # (a) random row split: one curve, 4 of 21 points (19%) are test, scattered
+    # (a) random row split: 4 of 21 points (19%) are test, scattered
     ax = axes[0]
     base(ax, "Random row split", "a")
     y = 0.25 + 0.95 * x**1.3
     test_idx = [3, 8, 13, 18]
     tr = [i for i in range(len(x)) if i not in test_idx]
-    ax.plot(x, y, color=SCHEMATIC_GREY, lw=1.1, alpha=0.55, zorder=2)
+    ax.plot(x, y, color=fs.OI["black"], lw=0.8, alpha=0.35, zorder=2)
     ax.plot(x[tr], y[tr], **train_kw)
     ax.plot(x[test_idx], y[test_idx], **test_kw)
-    ax.text(0.0, 1.56, "test rows lie between\ntraining rows of the\nsame curve", **note_kw)
-    ax.annotate("", xy=(x[8], y[8] + 0.05), xytext=(0.36, 1.05),
-                arrowprops=dict(arrowstyle="->", color="0.4", lw=0.8, shrinkA=0, shrinkB=2))
+    ax.text(0.0, 2.04, "test rows lie between\ntraining rows of the\nsame curve", **note_kw)
+    ax.annotate("", xy=(x[8], y[8] + 0.05), xytext=(0.30, 1.42),
+                arrowprops=dict(arrowstyle="->", color="0.4", lw=0.6, shrinkA=0, shrinkB=1.5))
 
     # (b) near-duplicate curves across dopant labels: two train, two test, interleaved
     near = [
-        # label, level, rise, curvature, is_test, label slot (b), label slot (c)
-        ("PbTe", 0.36, 0.94, 1.30, False, 1.30, 1.42),
-        ("Pb$_{0.99}$Na$_{0.01}$Te", 0.32, 0.90, 1.28, True, 1.14, 1.26),
-        ("Pb$_{0.98}$Na$_{0.02}$Te", 0.28, 0.86, 1.32, False, 0.98, 1.10),
-        ("(PbTe)$_{0.98}$(SrTe)$_{0.02}$", 0.24, 0.82, 1.30, True, 0.82, 0.94),
+        ("PbTe", 0.36, 0.94, 1.30, False, 1.44, 1.72),
+        ("Pb$_{0.99}$Na$_{0.01}$Te", 0.32, 0.90, 1.28, True, 1.22, 1.50),
+        ("Pb$_{0.98}$Na$_{0.02}$Te", 0.28, 0.86, 1.32, False, 1.00, 1.28),
+        ("(PbTe)$_{0.98}$(SrTe)$_{0.02}$", 0.24, 0.82, 1.30, True, 0.78, 1.06),
     ]
     ax = axes[1]
-    base(ax, "Near-duplicates across dopant labels", "b")
+    base(ax, "Near-duplicate dopant labels", "b")
     for name, level, rise, curv, is_test, slot_b, _slot_c in near:
         draw_curve(ax, level + rise * x**curv, is_test, label=name, label_y=slot_b)
-    ax.text(0.0, 1.56, "same host lattice on both\nsides of the split", **note_kw)
+    ax.text(0.0, 2.04, "same host lattice on both\nsides of the split", **note_kw)
 
     # (c) chemistry-cluster split: the same four curves all test, two differently shaped train curves
     ax = axes[2]
@@ -1851,24 +1776,18 @@ def make_leakage_schematic(out_path):
         cluster_labels.append(draw_curve(ax, level + rise * x**curv, True, label=name, label_y=slot_c))
     bi = 0.10 + 0.34 * np.sin(np.pi * x**0.8)          # rises, peaks, rolls over
     se = 0.08 + 0.85 * x**3.2                           # low, then steep rise
-    draw_curve(ax, se, False, label="SnSe", label_y=0.66)
+    draw_curve(ax, se, False, label="SnSe", label_y=0.72)
     draw_curve(ax, bi, False, label="Bi$_{2}$Te$_{3}$", label_y=0.28)
-    ax.text(0.0, 1.56, "whole cluster held out", **note_kw)
-    # bracket around the four cluster labels, placed from their rendered extents
-    fig.canvas.draw()
+    ax.text(0.0, 2.04, "whole cluster held out", **note_kw)
+    fig.canvas.draw()                                   # bracket around the four cluster labels, from their extents
     inv = ax.transData.inverted()
-    xs = [inv.transform((t.get_window_extent().x1, 0))[0] for t in cluster_labels]
-    bx = max(xs) + 0.04
-    ax.plot([bx - 0.03, bx, bx, bx - 0.03], [1.42 + 0.07, 1.42 + 0.07, 0.94 - 0.07, 0.94 - 0.07],
-            color="0.3", lw=1.0, clip_on=False)
+    bx = max(inv.transform((t.get_window_extent().x1, 0))[0] for t in cluster_labels) + 0.04
+    ax.plot([bx - 0.03, bx, bx, bx - 0.03], [1.72 + 0.1, 1.72 + 0.1, 1.06 - 0.1, 1.06 - 0.1], color="0.3", lw=0.7, clip_on=False)
 
-    handles = [
-        Line2D([], [], marker="o", ms=6, mfc=SCHEMATIC_TRAIN_COLOR, mec="white", ls="none", label="Training row"),
-        Line2D([], [], marker="D", ms=6, mfc=SCHEMATIC_TEST_COLOR, mec="white", ls="none", label="Test row"),
-    ]
-    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False, bbox_to_anchor=(0.5, -0.06))
-    fig.text(0.995, -0.055, SCHEMATIC_NOTE, fontsize=8.5, color="0.5", ha="right", va="center")
-    save_figure(fig, out_path)
+    handles = [Line2D([], [], marker="o", ms=4, mfc=blue, mec="white", mew=0.3, ls="none"),
+               Line2D([], [], marker="D", ms=4, mfc=verm, mec="white", mew=0.3, ls="none")]
+    fs.legend_row(fig, handles, ["Training row", "Test row"])
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
 
 
@@ -1926,12 +1845,14 @@ GROUPING_RULE_FORMULAS = [
 
 def make_grouping_rule_schematic(out_path):
     """
-    Figure 3: the chemistry-cluster grouping rule as a flow diagram over
-    four formulas. Every intermediate and the final id come from
-    `chemistry_cluster_trace`, which wraps the pipeline's
-    chemistry_cluster_id. Fails (draws nothing) if rows 1 and 2 do not
-    share PbTe's id, or if rows 3 and 4 share an id.
+    Figure 4: the chemistry-cluster grouping rule as a flow diagram over four formulas, drawn in cm-sized data
+    units at 16 cm width with 8 pt text; a fit check fails the run if any text overflows its box. Every
+    intermediate and the final id come from `chemistry_cluster_trace`, which wraps the pipeline's
+    chemistry_cluster_id. Fails (draws nothing) if rows 1 and 2 do not share PbTe's id, or if rows 3 and 4 share
+    an id.
     """
+    import textwrap
+
     from matplotlib.patches import FancyBboxPatch
     from src.canonicalization import chemistry_cluster_id, parse_formula
 
@@ -1946,80 +1867,94 @@ def make_grouping_rule_schematic(out_path):
     assert set(t2["removed"]) == {"Sr", "Na"} and all(round(t2["at_pct"][e], 1) == 1.0 for e in ("Sr", "Na")), t2
     assert "Se" in traces[2]["kept"] and round(traces[2]["at_pct"]["Se"], 1) == 6.0, traces[2]
 
-    col_w = [4.0, 4.4, 3.7, 2.9, 3.1]
+    W = 16.0
+    col_w = [3.3, 3.45, 3.15, 2.35, 2.25]
+    gap = 0.2
     col_x = [0.0]
     for w_ in col_w[:-1]:
-        col_x.append(col_x[-1] + w_ + 0.35)
-    headers = ["Input formula", "Remove elements < 5 at%\n(dopants)", "Snap amounts within 5%\nof an integer",
-               "Reduce", "Cluster ID"]
-    row_h, gap, top = 1.15, 0.3, 4.9
-    fig, ax = plt.subplots(figsize=(17.2, 6.2))
-    ax.set_xlim(-0.3, 22.3)
-    ax.set_ylim(-0.75, 5.95)
+        col_x.append(col_x[-1] + w_ + gap)
+    row_h, row_gap, head_h = 1.75, 0.22, 1.05
+    H = head_h + 4 * row_h + 3 * row_gap + 0.1
+    fig = plt.figure(figsize=(W * fs.CM, H * fs.CM))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, W)
+    ax.set_ylim(0, H)
     ax.axis("off")
+    checks = []
+    LS = 1.2
 
-    def box(i, y_top, h, lines, face="white", edge="0.35", lw=0.9, fontsize=9.5, weight="normal"):
+    def cell(i, y_top, lines, face="white", edge="0.35", lw=0.7, size=8, weight="normal", color="0.1"):
         x0, w = col_x[i], col_w[i]
-        ax.add_patch(FancyBboxPatch((x0, y_top - h), w, h, boxstyle="round,pad=0.02,rounding_size=0.12",
-                                    fc=face, ec=edge, lw=lw))
-        n = len(lines)
-        for k, (txt, color) in enumerate(lines):
-            yy = y_top - h / 2 + (n - 1) * 0.16 - k * 0.32
-            ax.text(x0 + w / 2, yy, txt, ha="center", va="center", fontsize=fontsize, color=color, fontweight=weight)
+        ax.add_patch(FancyBboxPatch((x0, y_top - row_h), w, row_h, boxstyle="round,pad=0.0,rounding_size=0.1", fc=face, ec=edge, lw=lw))
+        text = ax.text(x0 + w / 2, y_top - row_h / 2, "\n".join(lines), ha="center", va="center", fontsize=size,
+                       fontweight=weight, color=color, linespacing=LS)
+        checks.append((text, (x0, y_top - row_h, x0 + w, y_top)))
+        return text
 
+    def wrap(s, k):
+        return textwrap.wrap(s, k, break_long_words=False)
+
+    headers = ["Input formula", "Remove elements\n< 5 at% (dopants)", "Snap amounts within\n5% of an integer", "Reduce", "Cluster ID"]
     for i, htxt in enumerate(headers):
-        ax.text(col_x[i] + col_w[i] / 2, 5.6, htxt, ha="center", va="center", fontsize=10.5, fontweight="bold", color="0.15")
+        ax.text(col_x[i] + col_w[i] / 2, H - head_h / 2 + 0.02, htxt, ha="center", va="center", fontsize=8, fontweight="bold", color="0.1", linespacing=LS)
 
+    first_input = ["Pb$_{0.97}$Te", "(PbTe)$_{0.97}$(SrTe)$_{0.02}$\n(Na$_{2}$Te)$_{0.01}$", "Bi$_{2}$Te$_{2.7}$Se$_{0.3}$", "Bi$_{2}$Te$_{3}$"]
     for r, (formula, t) in enumerate(zip(GROUPING_RULE_FORMULAS, traces)):
-        y_top = top - r * (row_h + gap)
+        y_top = H - head_h - r * (row_h + row_gap)
         mid = y_top - row_h / 2
-        # 1: input
-        box(0, y_top, row_h, [(_formula_mathtext(formula), "0.1")], fontsize=10)
-        # 2: dopant removal, with the deciding at%
-        kept_txt = ", ".join(f"{e} {t['at_pct'][e]:.1f}%" for e in t["kept"])
-        lines = [(f"kept: {kept_txt}", SCHEMATIC_TRAIN_COLOR)]
-        if t["removed"]:
-            lines.append(("removed: " + ", ".join(f"{e} {t['at_pct'][e]:.1f}%" for e in t["removed"]), SCHEMATIC_TEST_COLOR))
-        else:
-            lines.append(("removed: none", "0.45"))
-        box(1, y_top, row_h, lines)
-        # 3: snap, per element
+        cell(0, y_top, first_input[r].split("\n"))
+        # kept in blue, removed in vermillion: two text blocks stacked in one cell
+        x0, w = col_x[1], col_w[1]
+        ax.add_patch(FancyBboxPatch((x0, y_top - row_h), w, row_h, boxstyle="round,pad=0.0,rounding_size=0.1", fc="white", ec="0.35", lw=0.7))
+        def two_lines(prefix, items):        # first item after the prefix, the rest on a second line
+            head = f"{prefix} {items[0]}" + ("," if len(items) > 1 else "")
+            return [head] + ([", ".join(items[1:])] if len(items) > 1 else [])
+
+        kl = two_lines("kept:", [f"{e} {t['at_pct'][e]:.1f}%" for e in t["kept"]])
+        rl = two_lines("removed:", [f"{e} {t['at_pct'][e]:.1f}%" for e in t["removed"]]) if t["removed"] else ["removed: none"]
+        line_cm = 8 / 72 * 2.54 * LS
+        block = (len(kl) + len(rl)) * line_cm
+        y_k = y_top - (row_h - block) / 2
+        tk = ax.text(x0 + w / 2, y_k, "\n".join(kl), ha="center", va="top", fontsize=8, color=fs.OI["blue"], linespacing=LS)
+        tr_ = ax.text(x0 + w / 2, y_k - len(kl) * line_cm, "\n".join(rl), ha="center", va="top", fontsize=8,
+                      color=fs.OI["vermillion"] if t["removed"] else "0.45", linespacing=LS)
+        checks.extend([(tk, (x0, y_top - row_h, x0 + w, y_top)), (tr_, (x0, y_top - row_h, x0 + w, y_top))])
+        # snap
         snap_lines = []
         for e, v in t["snap"].items():
             if v["snapped"] and abs(v["before"] - v["after"]) > 1e-12:
-                snap_lines.append((f"{e} {v['before']:g} → {v['after']:g}", "0.1"))
+                snap_lines.append(f"{e} {v['before']:g} → {v['after']:g}")
             elif v["snapped"]:
-                snap_lines.append((f"{e} {v['before']:g} (integer)", "0.45"))
+                snap_lines.append(f"{e} {v['before']:g} (integer)")
             elif v["nearest"] >= 1:
-                snap_lines.append((f"{e} {v['before']:g}: {100 * v['rel']:.0f}% from {v['nearest']}, kept", "0.1"))
+                snap_lines += wrap(f"{e} {v['before']:g}: {100 * v['rel']:.0f}% from {v['nearest']}, kept", 20)
             else:
-                snap_lines.append((f"{e} {v['before']:g}: kept", "0.1"))
-        box(2, y_top, row_h, snap_lines[:3])
-        # 4: reduce
-        box(3, y_top, row_h, [(f"{_formula_mathtext(t['snapped_formula'])} →", "0.3"),
-                              (_formula_mathtext(t["cluster_id"]), "0.1")])
-        # 5: cluster id
+                snap_lines.append(f"{e} {v['before']:g}: kept")
+        cell(2, y_top, snap_lines[:5])
+        # reduce
+        cell(3, y_top, [f"{_formula_mathtext(t['snapped_formula'])} →", _formula_mathtext(t["cluster_id"])])
+        # cluster id: readable formula over the canonical ID in small grey text when they differ
         if t["readable"] == t["cluster_id"]:
-            box(4, y_top, row_h, [(_formula_mathtext(t["cluster_id"]), "0.1")], face="0.94", edge="0.2", lw=1.4,
-                fontsize=11.5, weight="bold")
+            cell(4, y_top, [_formula_mathtext(t["cluster_id"])], face="0.94", edge="0.2", lw=1.0, weight="bold")
         else:
-            box(4, y_top, row_h, [], face="0.94", edge="0.2", lw=1.4)
-            cx = col_x[4] + col_w[4] / 2
-            ax.text(cx, mid + 0.16, _formula_mathtext(t["readable"]), ha="center", va="center",
-                    fontsize=11.5, fontweight="bold", color="0.1")
-            ax.text(cx, mid - 0.27, f"(ID: {t['cluster_id']})", ha="center", va="center", fontsize=8.5, color="0.5")
+            x0, w = col_x[4], col_w[4]
+            ax.add_patch(FancyBboxPatch((x0, y_top - row_h), w, row_h, boxstyle="round,pad=0.0,rounding_size=0.1", fc="0.94", ec="0.2", lw=1.0))
+            ta = ax.text(x0 + w / 2, mid + 0.22, _formula_mathtext(t["readable"]), ha="center", va="center", fontsize=8, fontweight="bold", color="0.1")
+            tb = ax.text(x0 + w / 2, mid - 0.22, f"(ID: {t['cluster_id']})", ha="center", va="center", fontsize=8, color="0.45")
+            checks.extend([(ta, (x0, y_top - row_h, x0 + w, y_top)), (tb, (x0, y_top - row_h, x0 + w, y_top))])
         for i in range(4):
-            ax.annotate("", xy=(col_x[i + 1] - 0.03, mid), xytext=(col_x[i] + col_w[i] + 0.03, mid),
-                        arrowprops=dict(arrowstyle="->", color="0.6", lw=0.9), annotation_clip=False)
+            ax.annotate("", xy=(col_x[i + 1] - 0.01, mid), xytext=(col_x[i] + col_w[i] + 0.01, mid),
+                        arrowprops=dict(arrowstyle="->", color="0.55", lw=0.6, shrinkA=0, shrinkB=0, mutation_scale=6))
 
-    # bracket rows 1-2: same cluster
-    y1 = top - 0.05
-    y2 = top - (row_h + gap) - row_h + 0.05
-    bx = col_x[4] + col_w[4] + 0.25
-    ax.plot([bx - 0.12, bx, bx, bx - 0.12], [y1, y1, y2, y2], color="0.2", lw=1.3, clip_on=False)
-    ax.text(bx + 0.18, (y1 + y2) / 2, "same\ncluster", ha="left", va="center", fontsize=10.5, fontweight="bold", color="0.15")
+    # bracket rows 1-2: same cluster, label rotated beside it
+    y1 = H - head_h - 0.05
+    y2 = H - head_h - (row_h + row_gap) - row_h + 0.05
+    bx = col_x[4] + col_w[4] + 0.12
+    ax.plot([bx - 0.08, bx, bx, bx - 0.08], [y1, y1, y2, y2], color="0.2", lw=0.9)
+    ax.text(bx + 0.2, (y1 + y2) / 2, "same cluster", ha="center", va="center", rotation=90, fontsize=8, fontweight="bold", color="0.15")
 
-    save_figure(fig, out_path)
+    fs.check_text_fits(fig, ax, checks)
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
     return traces
 
@@ -2034,7 +1969,6 @@ FUNNEL_COUNTS_PATH = Path("results/cleaning_funnel/20260914T100914/funnel_counts
 # committed copy of the raw pull record (README beside it: original path and SHA256)
 RAW_PULL_METADATA_PATH = Path("results/raw_pull_metadata/extraction_metadata.json")
 RAW_PULL_METADATA_SHA256 = "d101d6675ceb15190a435da19783b9bbdba616caebb46009275ca1429653c1e3"
-PAPER_MD_PATH = Path("paper/paper.md")
 OVERVIEW_TARGETS = ["S", "sigma", "kappa", "zT"]
 OVERVIEW_TARGET_SYMBOLS = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
 # heading keyword -> analysis key; each must match exactly one "## 3.x" heading in paper.md
@@ -2162,11 +2096,11 @@ def make_study_overview(out_path):
     top_w, top_h, gap = 3.4, 2.75, 0.8
     a_h, a_y, b_h = 7.35, 1.85, 1.35
     H = a_y + a_h + 1.1 + top_h + 0.2
-    fs, fs_title = 8.0, 8.0                # points; the minimum size is 8
+    fsz, fsz_title = 8.0, 8.0              # points; the minimum size is 8
     # save_figure crops with bbox_inches='tight' and its 0.1 in pad on each side (0.508 cm in total), so the canvas is
     # made that much narrower: the saved PNG is 16.0 cm wide at its natural size, and 8 pt text stays 8 pt at 16 cm
-    fig, ax = plt.subplots(figsize=((W - 0.508) / 2.54, H / 2.54))
-    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)          # axes fill the figure
+    fig = plt.figure(figsize=(W * fs.CM, H * fs.CM))                 # exactly 16 cm wide
+    ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(-0.1, W + 0.1)
     ax.set_ylim(0, H)
     ax.axis("off")
@@ -2175,12 +2109,12 @@ def make_study_overview(out_path):
     def box(x, y, w, h, head, body, face="white"):
         ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.0,rounding_size=0.12",
                                     fc=face, ec="0.15", lw=0.9))
-        t1 = ax.text(x + w / 2, y + h - 0.15, head, ha="center", va="top", fontsize=fs_title,
+        t1 = ax.text(x + w / 2, y + h - 0.15, head, ha="center", va="top", fontsize=fsz_title,
                      fontweight="bold", color="0.1", linespacing=1.3)
         fig.canvas.draw()                  # place the body just below the rendered heading, whatever its line count
         head_bottom = ax.transData.inverted().transform((0, t1.get_window_extent(fig.canvas.get_renderer()).y0))[1]
         t2 = ax.text(x + w / 2, head_bottom - 0.3, body, ha="center", va="top",
-                     fontsize=fs, color="0.1", linespacing=1.3)
+                     fontsize=fsz, color="0.1", linespacing=1.3)
         checks.extend([(t1, (x, y, x + w, y + h)), (t2, (x, y, x + w, y + h))])
 
     def arrow(p0, p1):
@@ -2232,39 +2166,63 @@ def make_study_overview(out_path):
     # ---- bottom box spanning A-E
     ax.add_patch(FancyBboxPatch((0, 0.1), W, b_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
     t = ax.text(W / 2, 0.1 + b_h / 2 + 0.25, "XGBoost, frozen per-target hyperparameters",
-                ha="center", va="center", fontsize=fs_title, fontweight="bold", color="0.1", linespacing=1.3)
+                ha="center", va="center", fontsize=fsz_title, fontweight="bold", color="0.1", linespacing=1.3)
     t2 = ax.text(W / 2, 0.1 + b_h / 2 - 0.3, "same model in every model-based analysis", ha="center", va="center",
-                 fontsize=fs, color="0.1", style="italic")
+                 fontsize=fsz, color="0.1", style="italic")
     checks.extend([(t, (0, 0.1, W, 0.1 + b_h)), (t2, (0, 0.1, W, 0.1 + b_h))])
     for i, xc in enumerate(x_centres):
         if i == 1:                                          # (B) label-noise ceiling trains no model
             continue
         ax.plot([xc, xc], [a_y, 0.1 + b_h], color="0.25", lw=0.9, ls=(0, (3, 2)))
 
-    # every text block must lie inside its box (0.08 cm margin)
-    fig.canvas.draw()
-    inv = ax.transData.inverted()
-    renderer = fig.canvas.get_renderer()
-    for text, (bx0, by0, bx1, by1) in checks:
-        bb = text.get_window_extent(renderer)
-        (tx0, ty0), (tx1, ty1) = inv.transform((bb.x0, bb.y0)), inv.transform((bb.x1, bb.y1))
-        assert tx0 >= bx0 + 0.08 and tx1 <= bx1 - 0.08 and ty0 >= by0 + 0.08 and ty1 <= by1 - 0.08, (
-            f"text overflows its box: {text.get_text()[:40]!r} text=({tx0:.2f},{ty0:.2f},{tx1:.2f},{ty1:.2f}) "
-            f"box=({bx0:.2f},{by0:.2f},{bx1:.2f},{by1:.2f})")
-    for text, _ in checks:
-        assert text.get_fontsize() >= 8.0
-
-    save_figure(fig, out_path)
+    fs.check_text_fits(fig, ax, checks)                               # every text block inside its box, all text >= 8 pt
+    fs.save(fig, out_path, expect_width_cm=16.0)
     plt.close(fig)
     return f
 
 
+def make_contact_sheet(out_path, paper_path=PAPER_MD_PATH, scale=0.75):
+    """
+    One image with all 12 manuscript figures in paper order, for reviewing them together. The order and the
+    file behind each figure number are read from paper.md's image lines, so they cannot drift from the
+    manuscript. All figures share one scale, so a single-column (8 cm) figure appears half as wide as a
+    double-column (16 cm) one; two columns of 16 cm slots.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    from matplotlib import font_manager
+
+    paper = Path(paper_path).read_text(encoding="utf-8")
+    items = [(int(n), Path("figures") / f) for n, f in re.findall(r"^!\[Figure (\d+)\]\(figures/([^)]+)\)", paper, flags=re.M)]
+    assert [n for n, _ in items] == list(range(1, 13)), items
+    imgs = []
+    for n, path in items:
+        assert path.exists(), path
+        imgs.append((n, Image.open(path).convert("RGB")))
+
+    slot_w = round(fs.WIDTH_CM["double"] * fs.CM * fs.DPI)          # a 16 cm slot in pixels
+    margin, label_h = 60, 70
+    font = ImageFont.truetype(font_manager.findfont("DejaVu Sans:bold"), 46)
+    rows = [imgs[i:i + 2] for i in range(0, len(imgs), 2)]
+    row_heights = [max(im.size[1] for _, im in row) + label_h + margin for row in rows]
+    sheet = Image.new("RGB", (2 * slot_w + 3 * margin, sum(row_heights) + margin), "white")
+    draw = ImageDraw.Draw(sheet)
+    y = margin
+    for row, h in zip(rows, row_heights):
+        for k, (n, im) in enumerate(row):
+            x = margin + k * (slot_w + margin)
+            draw.text((x, y), f"Figure {n}", fill="black", font=font)
+            sheet.paste(im, (x, y + label_h))
+            draw.rectangle([x - 1, y + label_h - 1, x + im.size[0], y + label_h + im.size[1]], outline=(210, 210, 210))
+        y += h
+    sheet = sheet.resize((round(sheet.size[0] * scale), round(sheet.size[1] * scale)), Image.LANCZOS)
+    sheet.save(out_path, dpi=(fs.DPI * scale, fs.DPI * scale))
+    return [n for n, _ in items]
+
+
 def main():
+    # legacy figures (not in the manuscript): their own older style, untouched by the overhaul
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
-
-    make_cleaning_funnel(FIGURES_DIR / "cleaning_funnel")
-    print("Saved cleaning_funnel.png / .pdf")
 
     make_property_distributions(FIGURES_DIR / "fig_property_distributions")
     print("Saved fig_property_distributions.png / .pdf")
@@ -2277,44 +2235,36 @@ def main():
     make_model_comparison(FIGURES_DIR / "fig1_model_comparison")
     print("Saved fig1_model_comparison.png / .pdf")
 
-    make_validation_ladder(FIGURES_DIR / "fig2_validation_ladder")
-    print("Saved fig2_validation_ladder.png / .pdf")
-
-    make_headroom_decomposition(FIGURES_DIR / "fig5_headroom")
-    print("Saved fig5_headroom.png / .pdf")
-
-    make_shap_attribution(FIGURES_DIR / "shap_attribution")
-    print("Saved shap_attribution.png / .pdf")
-
-    make_descriptor_ablation(FIGURES_DIR / "descriptor_ablation")
-    print("Saved descriptor_ablation.png / .pdf")
-
-    make_zt_parity(FIGURES_DIR / "zt_parity_random_vs_grouped")
-    print("Saved zt_parity_random_vs_grouped.png / .pdf")
-
-    make_external_transfer(FIGURES_DIR / "external_transfer")
-    print("Saved external_transfer.png / .pdf")
-
-    make_sigma_extrapolation(FIGURES_DIR / "sigma_extrapolation")
-    print("Saved sigma_extrapolation.png / .pdf")
-
-    make_zt_direct_vs_derived(FIGURES_DIR / "zt_direct_vs_derived")
-    print("Saved zt_direct_vs_derived.png / .pdf")
-
-    make_study_overview(FIGURES_DIR / "fig0_study_overview")
-    print("Saved fig0_study_overview.png / .pdf")
-
-    make_leakage_schematic(FIGURES_DIR / "fig1_leakage_schematic")
-    print("Saved fig1_leakage_schematic.png / .pdf")
-
-    make_grouping_rule_schematic(FIGURES_DIR / "fig3_grouping_rule_schematic")
-    print("Saved fig3_grouping_rule_schematic.png / .pdf")
-
     try:
         make_actual_vs_predicted(FIGURES_DIR / "fig3_actual_vs_predicted")
         print("Saved fig3_actual_vs_predicted.png / .pdf")
     except FileNotFoundError as e:
         print(f"Skipped fig3_actual_vs_predicted: {e}")
+
+    # the twelve manuscript figures, in paper order, in scripts/figstyle.py's style
+    fs.apply()
+    paper_figures = [
+        ("Figure 1", make_leakage_schematic, "fig1_leakage_schematic"),
+        ("Figure 2", make_study_overview, "fig0_study_overview"),
+        ("Figure 3", make_cleaning_funnel, "cleaning_funnel"),
+        ("Figure 4", make_grouping_rule_schematic, "fig3_grouping_rule_schematic"),
+        ("Figure 5", make_validation_ladder, "fig2_validation_ladder"),
+        ("Figure 6", make_zt_parity, "zt_parity_random_vs_grouped"),
+        ("Figure 7", make_shap_attribution, "shap_attribution"),
+        ("Figure 8", make_headroom_decomposition, "fig5_headroom"),
+        ("Figure 9", make_descriptor_ablation, "descriptor_ablation"),
+        ("Figure 10", make_external_transfer, "external_transfer"),
+        ("Figure 11", make_sigma_extrapolation, "sigma_extrapolation"),
+        ("Figure 12", make_zt_direct_vs_derived, "zt_direct_vs_derived"),
+    ]
+    for label, fn, stem in paper_figures:
+        fn(FIGURES_DIR / stem)
+        print(f"Saved {stem}.png / .pdf ({label})")
+    make_descriptor_ablation_absolute(FIGURES_DIR / "descriptor_ablation_absolute")
+    print("Saved descriptor_ablation_absolute.png / .pdf (supplementary)")
+
+    order = make_contact_sheet(FIGURES_DIR / "_contact_sheet.png")
+    print(f"Saved _contact_sheet.png ({len(order)} figures in paper order)")
 
 
 if __name__ == "__main__":

@@ -2362,6 +2362,24 @@ test" without this qualifier.
   Figure 4 the grouping-rule schematic (`fig3_grouping_rule_schematic`),
   and so on to Figure 12; figure FILE names do not track paper numbers.
   Figures must be numbered in order of first mention in the text.
+- **Figure style (added 2026-09-26):** all twelve manuscript figures use
+  `scripts/figstyle.py`: Okabe-Ito colours without the yellow, no hatching,
+  DejaVu Sans at 8 pt (9 pt axis labels and titles, bold 10 pt panel
+  letters), light grid, no top or right spines, legends inside the axes or
+  in one row below. Figures are created at exactly 16 cm (double column) or
+  8 cm (single column; Figures 9 and 11) and saved at 300 dpi WITHOUT
+  cropping, so 8 pt stays 8 pt in the manuscript; `figstyle.save` asserts the
+  file's physical width. n and error-bar meaning live in the captions, not
+  in the images. Figure 9 (descriptor ablation) is one panel of the gain
+  over MAGPIE as a share of headroom (the absolute-R2 version is the
+  supplementary `figures/descriptor_ablation_absolute`). Figure 10's panel
+  titles are asserted from the row counts of the passes they plot (a =
+  DOI-disjoint, 3,123 rows; b = cluster-disjoint, 1,448 rows). The four
+  older figures that are not in the manuscript (property distributions,
+  cluster sizes, model comparison, actual vs predicted) keep the old
+  `src/plotting_style.py` style. `python scripts/make_figures.py` runs every
+  figure with its assertions and writes `figures/_contact_sheet.png` (all
+  12 in paper order, read from paper.md's image lines).
 - **Study overview (`make_study_overview`):** every count and section number
   is read from a committed artifact and asserted before drawing (papers,
   curves, cleaned rows from `results/cleaning_funnel/20260914T100914/

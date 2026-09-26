@@ -307,7 +307,7 @@ Agreement between two noisy measurements understates the ceiling on predicting t
 
 ![Figure 8](figures/fig5_headroom.png){width=100%}
 
-*Figure 8. Decomposition of each property's R² = 0 to 1 range into achieved (chemistry-cluster grouped R²), headroom to the combined label-noise ceiling, digitization noise and measurement noise, with the ungrouped random-80/20 R² marked to show how much apparent performance is validation artefact rather than real headroom closed.*
+*Figure 8. Decomposition of each property's R² = 0 to 1 range into achieved (chemistry-cluster grouped R²), headroom to the combined label-noise ceiling, digitization noise and measurement noise, with the ungrouped random-80/20 R² marked to show how much apparent performance is validation artefact rather than real headroom closed. Each Δ label is the headroom to the lower (conservative) ceiling estimate; the text quotes the range across the lower and upper estimates.*
 
 
 
@@ -347,7 +347,7 @@ To test this we refit each target under chemistry-cluster grouped CV using three
 
 ![Figure 9](figures/descriptor_ablation.png){width=100%}
 
-*Figure 9. Chemistry-cluster grouped R² at 133 (MAGPIE), 265 (CBFV) and 397 (full) features, one panel per property, against the combined label-noise ceiling band; the full-minus-MAGPIE gain closes 2.2 to 4.2% of the remaining headroom on every property.*
+*Figure 9. Gain in chemistry-cluster grouped R² over MAGPIE alone (133 features), as a percentage of the headroom to the combined label-noise ceiling, for each property: filled markers, the full set (MAGPIE plus CBFV, 397 features); open markers, CBFV alone (265 features) in place of MAGPIE. Percentages divide by the lower headroom bound, which gives the larger of the two fractions. Error bars are the standard deviation across the five repeats of the paired per-repeat gain. The full-set gain closes 2.2 to 4.2% of the remaining headroom on every property across both headroom bounds; absolute R² values are in Table 4.*
 
 
 
@@ -425,7 +425,7 @@ Models were refit on the full training set with frozen hyperparameters and appli
 
 ![Figure 10](figures/external_transfer.png){width=100%}
 
-*Figure 10. Internal chemistry-cluster, external full-set and external in-support R² by property: (a) ESTM DOI-disjoint, (b) ESTM cluster-disjoint, (c) teMatDb DOI-disjoint (no in-support split; out-of-support tail 0.12%). Out-of-support fraction annotated above each property group; zT derived is excluded as numerically unstable. teMatDb's 27-cluster chemistry-disjoint stratum is not shown.*
+*Figure 10. Internal chemistry-cluster, external full-set and external in-support R² by property: (a) ESTM DOI-disjoint, (b) ESTM cluster-disjoint, (c) teMatDb DOI-disjoint. R² for σ and κ is in log10 space. The percentage under each property in (a) and (b) is the share of external rows outside the training data's per-property range (marginal for S, σ and κ; joint for zT). teMatDb has no in-support bars because its out-of-range tail is 0.12%. zT derived is excluded as numerically unstable, and teMatDb's 27-cluster chemistry-disjoint stratum is not shown.*
 
 
 
