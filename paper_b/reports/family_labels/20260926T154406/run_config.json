@@ -1,0 +1,25 @@
+{
+  "dataset": {
+    "path": "data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "bytes": 974854507,
+    "n_rows": 280173
+  },
+  "git_head": "c3a802a709bc7aaaaeaa7e06143142211c324047",
+  "tree_clean": false,
+  "dirty_files": [
+    "paper_b/src/family_labels.py",
+    "paper_b/config/families.yaml"
+  ],
+  "rules_file": "paper_b\\config\\families.yaml",
+  "rules_sha256": "0f6ff2c83bf7cd5797fda2314fed0db70b759533f6e23dcc88a9f234ca21b179",
+  "code_sha256": "22b314bcc3ec037f045899fe38ed6c90b1e34e06acb8fb44875b5a470426f648",
+  "threshold": {
+    "min_clusters": 30,
+    "min_rows_per_target": 1000
+  },
+  "threshold_file": "paper_b\\config\\paper_b.yaml",
+  "seed": 0,
+  "n_hosts": 8908,
+  "utc_stamp": "20260926T154406"
+}

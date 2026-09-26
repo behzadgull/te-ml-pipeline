@@ -1,0 +1,81 @@
+{
+  "version_label": "v2.2",
+  "dataset": {
+    "path": "data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "bytes": 974854507,
+    "n_rows": 280173
+  },
+  "git_head": "fea39303a9188c97f79f1148a368b447e01c7374",
+  "tree_clean": false,
+  "dirty_files": [
+    "paper_b/docs/Paper_B_Objectives_Methodology_v3_FROZEN.md",
+    "paper_b/src/family_labels.py",
+    "paper_b/config/families.yaml",
+    "paper_b/config/families_v1.yaml",
+    "paper_b/config/families_v2.yaml",
+    "paper_b/config/families_v2_1.yaml",
+    "paper_b/reports/family_labels/"
+  ],
+  "rules_file": "paper_b\\config\\families.yaml",
+  "rules_sha256": "5d57eb926f3af4553c9c0233daf3f64b047ed56b59b1814403a4dd494e821fbb",
+  "prev_label": "v2.1",
+  "prev_rules_file": "paper_b\\config\\families_v2_1.yaml",
+  "prev_rules_sha256": "f8c6b33304dbb74d710c38e8ad08b7825b290d8191a0f64f991ffed49a579457",
+  "prev_run": "paper_b/reports/family_labels/20260926T164952",
+  "regression_gates": [
+    {
+      "rules": "paper_b/config/families_v1.yaml",
+      "rules_sha256": "0f6ff2c83bf7cd5797fda2314fed0db70b759533f6e23dcc88a9f234ca21b179",
+      "run": "paper_b/reports/family_labels/20260926T154406",
+      "passed": true
+    },
+    {
+      "rules": "paper_b/config/families_v2.yaml",
+      "rules_sha256": "2d0c6fe71cb762f23906f0a367c9e7c703dc394dc55cda8cc5a3370a8654f7e6",
+      "run": "paper_b/reports/family_labels/20260926T155416",
+      "passed": true
+    },
+    {
+      "rules": "paper_b/config/families_v2_1.yaml",
+      "rules_sha256": "f8c6b33304dbb74d710c38e8ad08b7825b290d8191a0f64f991ffed49a579457",
+      "run": "paper_b/reports/family_labels/20260926T164952",
+      "passed": true
+    }
+  ],
+  "expected_moves": {
+    "from": [
+      "unassignable"
+    ],
+    "to": [
+      "gete_type",
+      "iv_vi_rocksalt"
+    ],
+    "host_contains_each_of": [
+      [
+        "Ge",
+        "Pb",
+        "Sn"
+      ],
+      [
+        "Sb",
+        "Bi"
+      ],
+      [
+        "Te",
+        "Se",
+        "S"
+      ]
+    ]
+  },
+  "n_hosts_moved_from_prev": 109,
+  "code_sha256": "65ed13b6da476e8104ee549b830d4c2f7b35b200d3aa3362c6d4fa67721d0473",
+  "threshold": {
+    "min_clusters": 30,
+    "min_rows_per_target": 1000
+  },
+  "threshold_file": "paper_b\\config\\paper_b.yaml",
+  "audit_seed": 2,
+  "n_hosts": 8908,
+  "utc_stamp": "20260926T181409"
+}

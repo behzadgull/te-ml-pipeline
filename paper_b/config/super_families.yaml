@@ -1,0 +1,15 @@
+# Pre-registered super-family sensitivity analysis (methodology doc, sections 7.3
+# and 7.4). Family-level analysis is primary and unchanged; this analysis repeats
+# leave-one-family-out with each group below treated as one held-out unit. Every
+# other named family stands alone. Members are family names from families.yaml.
+# A super-family qualifies for a target under the same a priori threshold as a
+# family (paper_b.yaml), applied to the union of its members; members that fall
+# below the threshold on their own still count toward the union.
+
+super_families:
+  iv_vi: [iv_vi_rocksalt, gete_type, snse_type, gete_sb2te3_pseudobinary]
+  oxides: [cobaltite, manganite, perovskite_titanate, zno_based, in2o3_based]
+  zintl: [zintl_122, mg3x2_zintl, zintl_14_1_11]
+
+# Never held out, always kept in the training pool (methodology doc, section 7.3).
+never_held_out: [unassignable, other_oxide]

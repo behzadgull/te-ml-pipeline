@@ -293,3 +293,118 @@ Paper B imports only the top-level modules declared, with SHA256, in
 with a SHA256 check. The threshold in (a) is stored in
 `paper_b/config/paper_b.yaml`, not in the top-level `config.yaml` as (a)
 states; its values are unchanged. Introduced in commit `0009abf`.
+
+### 7.2 Family rules revised once, v1 to v2 (2026-09-26)
+
+Family rules revised once (v1 -> v2) after reviewing the unassignable hosts and
+audit sample of the v1 run, before any model training. Reasons per change
+follow. The v1 rules (`paper_b/config/families_v1.yaml`, unchanged) and the v1
+run (`paper_b/reports/family_labels/20260926T154406/`) are retained. The
+a priori threshold in (a) is unchanged and applies to the v2 families exactly
+as it did to v1; no model has been trained on either version.
+
+1. **Tolerance 10% -> 15% for every site-ratio rule** (Cu2X / Ag2X stays at
+   20%). Removing a substituted dopant makes its site look deficient, and
+   cation-deficient hosts (Ge1-xTe) are normal. Applied uniformly, not per
+   family.
+2. **iv_vi_rocksalt split into snse_type, gete_type and the remaining
+   iv_vi_rocksalt.** SnSe/SnS and GeTe are structurally distinct from the
+   rocksalt IV-VI compounds. For alloys the majority cation decides (a tie
+   has no majority and falls through to iv_vi_rocksalt). snse_type takes Sn
+   with Se or S only; gete_type takes Ge with Te only.
+3. **The oxide rule split by cation set** into layered_cobaltite (Co with Ca,
+   Na, Bi or Sr), perovskite_titanate (Ti with Sr, Ca or Ba), manganite (Mn
+   with Ca, La or Sr), zno_based (Zn the majority cation), in2o3_based (In the
+   majority cation) and other_oxide. O >= 20% is kept and every oxide rule is
+   checked after all non-oxide rules. One oxide bucket mixed chemically
+   unrelated compounds. The cation conditions test presence, not layered
+   structure, so the label layered_cobaltite is a name for the rule, not a
+   structural claim.
+4. **New rules for families that were unassignable in v1:** zinc_antimonide
+   (Zn4Sb3 or ZnSb, two variants); zintl_14_1_11 (A14MX11, M optional because
+   one M per 26 atoms is below the 5 at% dopant threshold); tm_silicide (Mn,
+   Cr, Fe, Ru or Re with 1.7 to 2.0 Si per metal, range not widened by the
+   tolerance); sige (Si and/or Ge only); i_v_vi2 (Ag or Cu, Sb or Bi, Te, Se
+   or S, 1:1:2); gete_sb2te3_pseudobinary ((Ge, Pb or Sn)Te with Sb2Te3 or
+   Bi2Te3, tested by charge balance because the tie line has no fixed ratio,
+   and placed after tetradymite and the IV-VI rules); diamond_like_cu (1:1:2,
+   3:1:4 and 2:1:3 variants); full_heusler (X2YZ); mgagsb (1:1:1).
+5. **Choices not specified in the request and open to review:** the element
+   sets of full_heusler and of the optional M site of zintl_14_1_11.
+
+### 7.3 Family rules v2.1: defect fixes, held-out set, super-families (2026-09-26)
+
+**Family rules v2.1 correct three defects found in the v2 audit; they add no
+family.** The v2 rules (`paper_b/config/families_v2.yaml`) and their run
+(`paper_b/reports/family_labels/20260926T155416/`) are retained, as are v1 and
+its run (section 7.2). No model has been trained on any version. Reasons per
+fix:
+
+1. **layered_cobaltite renamed cobaltite; Co versus Mn decided by the majority
+   transition metal.** The cation test (Co with Ca, Na, Bi or Sr) never
+   checked layering and admits perovskite Sr/Ba cobaltites, so the name
+   overclaimed; the label names the cation rule and makes no structural claim.
+   A host containing both Co and Mn now goes to cobaltite if it has strictly
+   more Co than Mn, and to manganite if it has strictly more Mn than Co (both
+   rules keep their own cation conditions); a tie matches neither and falls to
+   the later oxide rules. This is the same principle as the IV-VI majority
+   cation. In v2 such a host went to whichever rule came first.
+2. **gete_sb2te3_pseudobinary requires (Sb + Bi) to be at least 1/3 of all
+   cations** (Ge, Pb, Sn, Sb, Bi). v2 accepted any charge-balanced
+   (Ge,Pb,Sn)(Sb,Bi)Te, which swept up GeTe- and SnTe-type hosts carrying 5 to
+   10% Sb or Bi; those are not pseudobinary compounds. A host that fails the
+   1/3 test is not taken by gete_type or iv_vi_rocksalt either, because Sb and
+   Bi are not on those rules' sites, so it is unassignable.
+3. **tm_silicide follows the uniform 15% principle.** v2 left this rule out of
+   it. The 15% tolerance now applies to the metal site, so the effective Si
+   per metal runs from 1.7 up to 2.0 / 0.85 = 2.353. The lower limit is
+   unchanged.
+
+**Known remaining over-reach.** zintl_14_1_11 captures other Yb-Sb (and Ca-Sb,
+Ca-Bi) stoichiometries, because 15% on a 14:11 count accepts a wide A:X range.
+It qualifies for no target under the a priori threshold, so it is never held
+out and this over-reach does not affect a held-out-family result.
+
+**Held-out family set.** A family is held out for a target only if it is a
+named family that passes the a priori threshold of (a) for that target. The
+unassignable bucket and other_oxide are never held out; they always stay in
+the training pool.
+
+**Pre-registered super-family sensitivity analysis.** In addition to the
+primary family-level analysis, which is unchanged, the leave-one-family-out
+analysis is repeated with these groups treated as single families:
+- IV-VI = {iv_vi_rocksalt, gete_type, snse_type, gete_sb2te3_pseudobinary};
+- oxides = {cobaltite, manganite, perovskite_titanate, zno_based, in2o3_based};
+- zintl = {zintl_122, mg3x2_zintl, zintl_14_1_11}.
+
+All other families stand alone in this analysis. The primary analysis stays at
+family level.
+
+### 7.4 Family rules v2.2 and super-family qualification (2026-09-26)
+
+**v2.2 implements the intent of the v2.1 pseudobinary fix.** The v2.1
+instruction assumed that hosts failing the 1/3 test would fall through to
+gete_type or iv_vi_rocksalt by majority cation. The rules could not do that: Sb
+and Bi were not on those rules' sites, so such hosts became unassignable. v2.2
+gives gete_type and iv_vi_rocksalt an optional Sb/Bi share of the cation site,
+pooled with it in the cations:anions ratio (within the uniform 15% tolerance)
+and required to be strictly below 1/3 of the total cations, the exact
+complement of the pseudobinary rule's at-least-1/3. GeTe and IV-VI hosts with
+Sb + Bi below 1/3 of the cations therefore belong to those families, and hosts
+at or above 1/3 to gete_sb2te3_pseudobinary. The majority cation among Ge, Pb
+and Sn still decides between gete_type and iv_vi_rocksalt, and snse_type is
+unchanged. No other rule changed; only Sb and Bi were added. The v2.1 rules
+(`paper_b/config/families_v2_1.yaml`) and their run are retained. The run
+asserts, before writing anything, that the only hosts whose label differs from
+v2.1's are unassignable hosts that moved to gete_type or iv_vi_rocksalt and
+contain an element of each of Ge/Pb/Sn, Sb/Bi and Te/Se/S. The v2.2 rules are
+frozen from the commit that records them; any further change needs a dated
+amendment.
+
+**Super-family qualification (defines the open point of 7.3).** A super-family
+qualifies for a target under the same a priori threshold as a family (at least
+30 clusters and at least 1,000 rows for that target, clusters counted as those
+holding a row for the target), applied to the union of its members. Members
+that fall below the threshold on their own still count toward the union. The
+definitions are in `paper_b/config/super_families.yaml` and the calculation in
+`paper_b/scripts/super_family_qualification.py`.

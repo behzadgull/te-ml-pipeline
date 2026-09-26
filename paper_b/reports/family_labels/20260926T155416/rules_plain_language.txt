@@ -1,0 +1,55 @@
+1. [tetradymite] Tetradymite (Bi,Sb)2(Te,Se,S)3. Every atom must be one of: Bi/Sb on site A (count 2); Te/Se/S on site X (count 3). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+2. [snse_type] SnSe-type, Sn (majority cation) with Se or S. Every atom must be one of: Pb/Sn/Ge on site A (count 1, majority element must be Sn); Se/S on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+3. [gete_type] GeTe-type, Ge (majority cation) with Te. Every atom must be one of: Pb/Sn/Ge on site A (count 1, majority element must be Ge); Te on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+4. [iv_vi_rocksalt] IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type. Every atom must be one of: Pb/Sn/Ge on site A (count 1); Te/Se/S on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+5. [skutterudite] Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled. Every atom must be one of: Co/Rh/Ir/Fe/Ni on site M (count 1); Sb/As/P on site X (count 3); optionally La/Ce/Pr/Nd/Sm/Eu/Gd/Yb/Ba/Sr/Ca/In/Tl/Ga/Na/K on site filler (at most 8% of all atoms). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+6. [half_heusler] Half-Heusler XYZ 1:1:1. Every atom must be one of: Sc/Y/La/Gd/Dy/Ho/Er/Tm/Lu/Ti/Zr/Hf/V/Nb/Ta on site X (count 1); Mn/Fe/Co/Ni/Ru/Rh/Ir/Pd/Pt on site Y (count 1); Sn/Sb/Bi/Pb/Ge/Si on site Z (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+7. [mg2x] Mg2(Si,Ge,Sn). Every atom must be one of: Mg on site A (count 2); Si/Ge/Sn on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+8. [mg3x2_zintl] Mg3(Sb,Bi)2-type Zintl. Every atom must be one of: Mg on site A (count 3); Sb/Bi on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+9. [cu2x_ag2x_liquid_like] Cu2/Ag2 (Se,S,Te) liquid-like. Every atom must be one of: Cu/Ag on site A (count 2); Se/S/Te on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 20% of their mean.
+
+10. [zintl_122] 1-2-2 Zintl AB2X2. Every atom must be one of: Ca/Sr/Ba/Eu/Yb on site A (count 1); Mg/Zn/Cd/Mn on site B (count 2); Sb/Bi/As on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+11. [zintl_14_1_11] Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional. Every atom must be one of: Yb/Ca/Sr/Eu on site A (count 14); Sb/Bi/As on site X (count 11); optionally Mn/Al/Zn/Cd/Ga/In/Mg on site M (at most 10% of all atoms). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+12. [clathrate_type_i] Type-I clathrate A8B16C30. Every atom must be one of: Ba/Sr/Eu/Cs/K/Na on site A (count 8); Ga/Al/In/Zn/Cd/Cu/Ni/Ag/Au on site B (count 16); Ge/Si/Sn on site C (count 30). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+13. [tetrahedrite] Tetrahedrite Cu12Sb4S13. Every atom must be one of: Cu/Zn/Fe/Ni/Mn/Co/Ag on site M (count 12); Sb/As/Bi on site Pn (count 4); S/Se on site Ch (count 13). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+14. [bicuseo] BiCuSeO-type oxychalcogenide. Every atom must be one of: Bi/La/Pb/Ba/Sr/Ca on site A (count 1); Cu/Ag on site B (count 1); Se/Te/S on site X (count 1); O on site O (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+15. [zinc_antimonide] Zinc antimonide, Zn4Sb3 or ZnSb. Either (every atom must be one of: Zn on site A (count 4); Sb on site X (count 3). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean); or (every atom must be one of: Zn on site A (count 1); Sb on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean).
+
+16. [tm_silicide] Transition-metal silicide (Mn, Cr, Fe, Ru, Re) with 1.7 to 2.0 Si per metal. Every atom must be one of: Mn/Cr/Fe/Ru/Re on site M; Si on site X. The amount of the second site per amount of the first must lie between 1.7 and 2.0.
+
+17. [sige] Si and/or Ge only. Every atom must be one of Si/Ge.
+
+18. [i_v_vi2] I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2. Every atom must be one of: Ag/Cu on site A (count 1); Sb/Bi on site B (count 1); Te/Se/S on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+19. [gete_sb2te3_pseudobinary] (Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced. Every atom must be one of: Ge/Pb/Sn on site A (valence +2); Sb/Bi on site B (valence +3); Te on site X (valence -2), all sites non-empty. Total cation charge and total anion charge may differ by at most 15% of their mean.
+
+20. [diamond_like_cu] Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3. Either (every atom must be one of: Cu on site A (count 1); In/Ga on site B (count 1); Te/Se/S on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean); or (every atom must be one of: Cu on site A (count 3); Sb on site B (count 1); Se/S/Te on site X (count 4). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean); or (every atom must be one of: Cu on site A (count 2); Sn on site B (count 1); Se/S/Te on site X (count 3). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean).
+
+21. [full_heusler] Full-Heusler X2YZ (e.g. Fe2VAl). Every atom must be one of: Fe/Co/Ni/Cu/Ru/Rh/Pd/Ir/Pt on site X (count 2); V/Ti/Zr/Hf/Nb/Ta/Cr/Mn/Sc/Y on site Y (count 1); Al/Ga/In/Si/Ge/Sn/Sb on site Z (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+22. [mgagsb] MgAgSb 1:1:1. Every atom must be one of: Mg on site A (count 1); Ag on site B (count 1); Sb on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 15% of their mean.
+
+23. [layered_cobaltite] Layered cobaltite (Co with Ca, Na, Bi or Sr) oxide. Oxygen makes up at least 20% of the atoms; Co must be present; at least one of Ca/Na/Bi/Sr must be present (checked after every non-oxide rule).
+
+24. [perovskite_titanate] Perovskite titanate (Ti with Sr, Ca or Ba) oxide. Oxygen makes up at least 20% of the atoms; Ti must be present; at least one of Sr/Ca/Ba must be present (checked after every non-oxide rule).
+
+25. [manganite] Manganite (Mn with Ca, La or Sr) oxide. Oxygen makes up at least 20% of the atoms; Mn must be present; at least one of Ca/La/Sr must be present (checked after every non-oxide rule).
+
+26. [zno_based] ZnO-based oxide (Zn is the majority cation). Oxygen makes up at least 20% of the atoms; Zn must be the single largest non-O element (checked after every non-oxide rule).
+
+27. [in2o3_based] In2O3-based oxide (In is the majority cation). Oxygen makes up at least 20% of the atoms; In must be the single largest non-O element (checked after every non-oxide rule).
+
+28. [other_oxide] Any other oxide (O at or above one atom in five). Oxygen makes up at least 20% of the atoms (checked after every non-oxide rule).

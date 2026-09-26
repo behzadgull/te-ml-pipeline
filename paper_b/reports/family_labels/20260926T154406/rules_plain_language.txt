@@ -1,0 +1,23 @@
+1. [tetradymite] Tetradymite (Bi,Sb)2(Te,Se,S)3. Every atom of the host must be one of: Bi/Sb on site A (count 2); Te/Se/S on site X (count 3). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+2. [iv_vi_rocksalt] IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S). Every atom of the host must be one of: Pb/Sn/Ge on site A (count 1); Te/Se/S on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+3. [skutterudite] Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled. Every atom of the host must be one of: Co/Rh/Ir/Fe/Ni on site M (count 1); Sb/As/P on site X (count 3); optionally La/Ce/Pr/Nd/Sm/Eu/Gd/Yb/Ba/Sr/Ca/In/Tl/Ga/Na/K on site filler (filler, at most 8% of all atoms). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+4. [half_heusler] Half-Heusler XYZ 1:1:1. Every atom of the host must be one of: Sc/Y/La/Gd/Dy/Ho/Er/Tm/Lu/Ti/Zr/Hf/V/Nb/Ta on site X (count 1); Mn/Fe/Co/Ni/Ru/Rh/Ir/Pd/Pt on site Y (count 1); Sn/Sb/Bi/Pb/Ge/Si on site Z (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+5. [mg2x] Mg2(Si,Ge,Sn). Every atom of the host must be one of: Mg on site A (count 2); Si/Ge/Sn on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+6. [mg3x2_zintl] Mg3(Sb,Bi)2-type Zintl. Every atom of the host must be one of: Mg on site A (count 3); Sb/Bi on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+7. [cu2x_ag2x_liquid_like] Cu2/Ag2 (Se,S,Te) liquid-like. Every atom of the host must be one of: Cu/Ag on site A (count 2); Se/S/Te on site X (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 20% of their mean.
+
+8. [zintl_122] 1-2-2 Zintl AB2X2. Every atom of the host must be one of: Ca/Sr/Ba/Eu/Yb on site A (count 1); Mg/Zn/Cd/Mn on site B (count 2); Sb/Bi/As on site X (count 2). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+9. [clathrate_type_i] Type-I clathrate A8B16C30. Every atom of the host must be one of: Ba/Sr/Eu/Cs/K/Na on site A (count 8); Ga/Al/In/Zn/Cd/Cu/Ni/Ag/Au on site B (count 16); Ge/Si/Sn on site C (count 30). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+10. [tetrahedrite] Tetrahedrite Cu12Sb4S13. Every atom of the host must be one of: Cu/Zn/Fe/Ni/Mn/Co/Ag on site M (count 12); Sb/As/Bi on site Pn (count 4); S/Se on site Ch (count 13). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+11. [bicuseo] BiCuSeO-type oxychalcogenide. Every atom of the host must be one of: Bi/La/Pb/Ba/Sr/Ca on site A (count 1); Cu/Ag on site B (count 1); Se/Te/S on site X (count 1); O on site O (count 1). Divide each required site's total amount by its count; the largest and smallest results may differ by at most 10% of their mean.
+
+12. [oxide] Oxide (oxygen at or above one atom in five). A host matches if O makes up at least 20% of its atoms. Checked after every specific rule.

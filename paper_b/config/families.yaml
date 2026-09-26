@@ -1,0 +1,468 @@
+# Paper B family rules, v2.2 (2026-09-26): stoichiometric-template matching from
+# composition alone (methodology doc, sections 2.2 and 7 (d)). v2.2 implements the
+# intent of the v2.1 pseudobinary fix and adds no family (methodology doc,
+# section 7.4). Earlier versions are retained unchanged under paper_b/config/:
+# families_v1.yaml (run 20260926T154406), families_v2.yaml (run 20260926T155416)
+# and families_v2_1.yaml (run 20260926T164952), runs under
+# paper_b/reports/family_labels/.
+#
+# What is matched: the HOST formula, i.e. the snapfix `chemistry_cluster_id`
+# (dopants below 5 at% already removed, near-integer amounts snapped), parsed
+# with pymatgen. Family is therefore constant within a chemistry cluster.
+#
+# Rules are tried in order and the FIRST match wins. A host that matches no
+# rule is labelled `unassignable_label`; it is reported, never dropped.
+#
+# A rule may carry `variants`: alternative site lists, each a full template
+# (the rule's other fields, such as tolerance, apply to every variant); the
+# rule matches if any variant matches.
+#
+# rule types
+#   site_ratio: each site lists the elements allowed on it and a `count` (its
+#     share of the formula unit, e.g. 2 for the A site of A2X3). A host matches when
+#       1. every atom of the host is an element listed on some site (element
+#          sets are disjoint within a template);
+#       2. every required site holds a positive amount;
+#       3. dividing each required site's total amount by its `count`, the
+#          largest and smallest results differ by at most `tolerance` of
+#          their mean, i.e. (max - min) / mean <= tolerance;
+#       4. an `optional` site holds at most `max_atom_fraction` of all atoms
+#          (unless pooled, see 5) and is left out of the ratio in 3;
+#       5. an `optional` site with `pooled_into: S` counts toward site S in the
+#          ratio of 3 (a substituent on the same cation position), and with
+#          `max_share: {of: [S, T], below: "p/q"}` its amount must be strictly
+#          below that fraction of the atoms on sites S and T (v2.2);
+#       6. a site with `majority: [...]` has, as its single largest element
+#          (strictly larger than every other element on that site), one of
+#          the listed elements. This is how alloys are assigned: the majority
+#          cation decides.
+#     The majority test (6) looks at that site's own elements only.
+#     Solid solutions are handled by pooling: Hf0.5Zr0.5NiSn puts 1.0 on the
+#     X site of a half-Heusler.
+#   ratio_range: two required sites M and X; matches when the amount of X per
+#     amount of M lies in [min_ratio, effective max] and every atom is on a site.
+#     If `metal_site_tolerance` t is given, the effective max is max_ratio / (1 - t):
+#     the M site may be up to t deficient (v2.1). Without it, the effective max is max_ratio.
+#   valence_balance: sites carry a signed `valence`; matches when every site is
+#     non-empty, every atom is on a site, and total cation charge and total anion
+#     charge differ by at most `tolerance` of their mean. Optional `min_share`
+#     {site, of: [sites], at_least: "p/q"}: the site must hold at least that fraction
+#     of the atoms on the listed sites (v2.1).
+#   element_set_only: matches when every atom is one of `elements`.
+#   oxide: matches when the O atom fraction is at least `min_o_fraction`; optional
+#     `requires` (each listed element present), `with_any` (at least one listed
+#     element present), `majority_cation` (this element is the strictly largest
+#     non-O element) and `amount_exceeds` {element, over} (the amount of `element` is
+#     strictly greater than the amount of `over`; a tie satisfies neither of two
+#     opposing rules, v2.1). All oxide rules are checked after every non-oxide rule.
+#
+# Tolerances: 15% for every site_ratio and valence_balance rule, applied
+# uniformly; Cu2X / Ag2X stays at 20%. See tolerance_change_reason.
+
+schema_version: 2
+unassignable_label: unassignable
+
+tolerance_change_reason: >-
+  Removing a substituted dopant makes its site look deficient, and
+  cation-deficient hosts (Ge1-xTe) are normal; 10% was too tight. Applied
+  uniformly to every site_ratio rule, not per family. Cu2X / Ag2X stays at 20%.
+
+removed_from_v1:
+  oxide: >-
+    Split by cation set into cobaltite (v2: layered_cobaltite), perovskite_titanate, manganite,
+    zno_based, in2o3_based and other_oxide (O >= 20% kept, checked after all
+    non-oxide rules): one oxide bucket held a large number of chemically
+    unrelated compounds (v1 run, family_summary.csv).
+
+rules:
+  - name: tetradymite
+    description: Tetradymite (Bi,Sb)2(Te,Se,S)3
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Bi, Sb], count: 2}
+      - {site: X, elements: [Te, Se, S], count: 3}
+
+  - name: snse_type
+    description: SnSe-type, Sn (majority cation) with Se or S
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      New. Split out of iv_vi_rocksalt: SnSe and SnS are a distinct
+      (orthorhombic) family from the rocksalt IV-VI tellurides. The majority
+      cation decides for alloys; anions are Se and S only.
+    sites:
+      - {site: A, elements: [Pb, Sn, Ge], count: 1, majority: [Sn]}
+      - {site: X, elements: [Se, S], count: 1}
+
+  - name: gete_type
+    description: GeTe-type, Ge (majority cation) with Te
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      New. Split out of iv_vi_rocksalt: GeTe (rhombohedral) is a distinct family
+      from rocksalt PbTe/SnTe. The majority cation decides for alloys; the anion
+      is Te only.
+    change_from_v2_1: >-
+      v2.1's pseudobinary fix assumed that hosts with (Sb + Bi) below 1/3 of the
+      cations would fall through to this rule, but Sb and Bi were not on its
+      sites. They are now an optional cation-site substituent (site pn), pooled
+      with site A for the cations:anions ratio and required to be strictly below
+      1/3 of the cations, the exact complement of the pseudobinary rule's
+      at-least-1/3. The majority among Ge, Pb and Sn still decides.
+    sites:
+      - {site: A, elements: [Pb, Sn, Ge], count: 1, majority: [Ge]}
+      - {site: pn, elements: [Sb, Bi], optional: true, pooled_into: A,
+         max_share: {of: [A, pn], below: "1/3"}}
+      - {site: X, elements: [Te], count: 1}
+
+  - name: iv_vi_rocksalt
+    description: IV-VI 1:1 (Pb,Sn,Ge)(Te,Se,S), the rest after snse_type and gete_type
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      Now the remainder of the IV-VI 1:1 hosts after snse_type and gete_type
+      have taken theirs (first match wins); site definition unchanged.
+    change_from_v2_1: >-
+      Same fix as gete_type: Sb and Bi are an optional cation-site substituent
+      (site pn), pooled with site A in the cations:anions ratio and strictly
+      below 1/3 of the cations. A host with Sn as its majority cation and Se or S
+      as anion and no Sb or Bi is still snse_type; with Sb or Bi it can now
+      match here, because snse_type is unchanged.
+    sites:
+      - {site: A, elements: [Pb, Sn, Ge], count: 1}
+      - {site: pn, elements: [Sb, Bi], optional: true, pooled_into: A,
+         max_share: {of: [A, pn], below: "1/3"}}
+      - {site: X, elements: [Te, Se, S], count: 1}
+
+  - name: skutterudite
+    description: Skutterudite (Co,Rh,Ir,Fe,Ni)(Sb,As,P)3, optionally filled
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: M, elements: [Co, Rh, Ir, Fe, Ni], count: 1}
+      - {site: X, elements: [Sb, As, P], count: 3}
+      - {site: filler, elements: [La, Ce, Pr, Nd, Sm, Eu, Gd, Yb, Ba, Sr, Ca, In, Tl, Ga, Na, K],
+         optional: true, max_atom_fraction: 0.08}
+
+  - name: half_heusler
+    description: Half-Heusler XYZ 1:1:1
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: X, elements: [Sc, Y, La, Gd, Dy, Ho, Er, Tm, Lu, Ti, Zr, Hf, V, Nb, Ta], count: 1}
+      - {site: Y, elements: [Mn, Fe, Co, Ni, Ru, Rh, Ir, Pd, Pt], count: 1}
+      - {site: Z, elements: [Sn, Sb, Bi, Pb, Ge, Si], count: 1}
+
+  - name: mg2x
+    description: Mg2(Si,Ge,Sn)
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Mg], count: 2}
+      - {site: X, elements: [Si, Ge, Sn], count: 1}
+
+  - name: mg3x2_zintl
+    description: Mg3(Sb,Bi)2-type Zintl
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Mg], count: 3}
+      - {site: X, elements: [Sb, Bi], count: 2}
+
+  - name: cu2x_ag2x_liquid_like
+    description: Cu2/Ag2 (Se,S,Te) liquid-like
+    type: site_ratio
+    tolerance: 0.20
+    sites:
+      - {site: A, elements: [Cu, Ag], count: 2}
+      - {site: X, elements: [Se, S, Te], count: 1}
+
+  - name: zintl_122
+    description: 1-2-2 Zintl AB2X2
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Ca, Sr, Ba, Eu, Yb], count: 1}
+      - {site: B, elements: [Mg, Zn, Cd, Mn], count: 2}
+      - {site: X, elements: [Sb, Bi, As], count: 2}
+
+  - name: zintl_14_1_11
+    description: Zintl A14MX11 (A = Yb, Ca, Sr, Eu; X = Sb, Bi, As), M optional
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      New (Yb14Sb11 and relatives were unassignable). The M site is optional
+      because at one M per 26 atoms (3.8 at%) M falls below the 5 at% dopant
+      threshold and is already removed from the host; its element set (Mn, Al,
+      Zn, Cd, Ga, In, Mg) was not specified in the request and is a choice to review.
+    sites:
+      - {site: A, elements: [Yb, Ca, Sr, Eu], count: 14}
+      - {site: X, elements: [Sb, Bi, As], count: 11}
+      - {site: M, elements: [Mn, Al, Zn, Cd, Ga, In, Mg], optional: true, max_atom_fraction: 0.10}
+
+  - name: clathrate_type_i
+    description: Type-I clathrate A8B16C30
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Ba, Sr, Eu, Cs, K, Na], count: 8}
+      - {site: B, elements: [Ga, Al, In, Zn, Cd, Cu, Ni, Ag, Au], count: 16}
+      - {site: C, elements: [Ge, Si, Sn], count: 30}
+
+  - name: tetrahedrite
+    description: Tetrahedrite Cu12Sb4S13
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: M, elements: [Cu, Zn, Fe, Ni, Mn, Co, Ag], count: 12}
+      - {site: Pn, elements: [Sb, As, Bi], count: 4}
+      - {site: Ch, elements: [S, Se], count: 13}
+
+  - name: bicuseo
+    description: BiCuSeO-type oxychalcogenide
+    type: site_ratio
+    tolerance: 0.15
+    sites:
+      - {site: A, elements: [Bi, La, Pb, Ba, Sr, Ca], count: 1}
+      - {site: B, elements: [Cu, Ag], count: 1}
+      - {site: X, elements: [Se, Te, S], count: 1}
+      - {site: O, elements: [O], count: 1}
+
+  - name: zinc_antimonide
+    description: Zinc antimonide, Zn4Sb3 or ZnSb
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      New (Zn4Sb3 alone was the largest unassignable host in the v1 run). Two
+      variants, 4:3 and 1:1, so intermediate Zn:Sb ratios are not accepted.
+    variants:
+      - sites:
+          - {site: A, elements: [Zn], count: 4}
+          - {site: X, elements: [Sb], count: 3}
+      - sites:
+          - {site: A, elements: [Zn], count: 1}
+          - {site: X, elements: [Sb], count: 1}
+
+  - name: tm_silicide
+    description: Transition-metal silicide (Mn, Cr, Fe, Ru, Re), Si per metal from 1.7 up to 2.0 / 0.85
+    type: ratio_range
+    min_ratio: 1.7
+    max_ratio: 2.0
+    metal_site_tolerance: 0.15
+    change_from_v1: >-
+      New in v2 (higher manganese silicide, FeSi2, CrSi2 were unassignable);
+      the range was then 1.7 to 2.0, not widened by the tolerance (see change_from_v2).
+    change_from_v2: >-
+      Defect fix: v2 left this rule out of the uniform 15% principle, so
+      metal-deficient hosts such as Fe0.95Si2 (Si per metal 2.1) were rejected
+      although cation-deficient hosts are normal. The 15% tolerance now applies
+      to the metal site: the effective Si per metal runs up to 2.0 / 0.85 = 2.353.
+    sites:
+      - {site: M, elements: [Mn, Cr, Fe, Ru, Re]}
+      - {site: X, elements: [Si]}
+
+  - name: sige
+    description: Si and/or Ge only
+    type: element_set_only
+    elements: [Si, Ge]
+    change_from_v1: New (elemental Si, Ge and SiGe alloys were unassignable).
+
+  - name: i_v_vi2
+    description: I-V-VI2 (Ag or Cu; Sb or Bi; Te, Se or S), 1:1:2
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: New (AgSbTe2, AgBiSe2, AgSbSe2 were unassignable).
+    sites:
+      - {site: A, elements: [Ag, Cu], count: 1}
+      - {site: B, elements: [Sb, Bi], count: 1}
+      - {site: X, elements: [Te, Se, S], count: 2}
+
+  - name: gete_sb2te3_pseudobinary
+    description: (Ge, Pb or Sn)Te with Sb2Te3 or Bi2Te3, charge-balanced
+    type: valence_balance
+    tolerance: 0.15
+    change_from_v1: >-
+      New (Ge17(SbTe10)2, Ge12Sb2Te15, Sn(BiTe2)2, Bi4Te7Pb were unassignable).
+      Compositions on the (Ge,Pb,Sn)Te - (Sb,Bi)2Te3 tie line have Te = A + 1.5 B,
+      so the rule tests charge balance (A 2+, B 3+, Te 2-) rather than a fixed
+      ratio; it sits after tetradymite and the IV-VI rules, so only what they
+      did not match reaches it.
+    change_from_v2: >-
+      Defect fix: v2 accepted any (Ge,Pb,Sn)(Sb,Bi)Te with cations near Te, which
+      swept up GeTe- and SnTe-type hosts carrying 5 to 10% Sb or Bi, not
+      pseudobinary compounds. The rule now also requires (Sb + Bi) to be at least
+      1/3 of all cations (Ge + Pb + Sn + Sb + Bi), so only compositions with a real
+      (Sb,Bi)2Te3 component match. Hosts that fail this are not caught by
+      gete_type or iv_vi_rocksalt either, because Sb and Bi are not on their
+      sites; they become unassignable.
+    min_share: {site: B, of: [A, B], at_least: "1/3"}
+    sites:
+      - {site: A, elements: [Ge, Pb, Sn], valence: 2}
+      - {site: B, elements: [Sb, Bi], valence: 3}
+      - {site: X, elements: [Te], valence: -2}
+
+  - name: diamond_like_cu
+    description: Diamond-like Cu chalcogenides, CuInTe2 / CuGaTe2 1:1:2, Cu3SbSe4 3:1:4, Cu2SnSe3 2:1:3
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: New (Cu3SbSe4, InCuTe2, GaCuTe2, Cu2SnSe3 were unassignable).
+    variants:
+      - sites:
+          - {site: A, elements: [Cu], count: 1}
+          - {site: B, elements: [In, Ga], count: 1}
+          - {site: X, elements: [Te, Se, S], count: 2}
+      - sites:
+          - {site: A, elements: [Cu], count: 3}
+          - {site: B, elements: [Sb], count: 1}
+          - {site: X, elements: [Se, S, Te], count: 4}
+      - sites:
+          - {site: A, elements: [Cu], count: 2}
+          - {site: B, elements: [Sn], count: 1}
+          - {site: X, elements: [Se, S, Te], count: 3}
+
+  - name: full_heusler
+    description: Full-Heusler X2YZ (e.g. Fe2VAl)
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: >-
+      New (AlVFe2, Al0.9V1Fe2 were unassignable). Element sets were not
+      specified in the request and are a choice to review.
+    sites:
+      - {site: X, elements: [Fe, Co, Ni, Cu, Ru, Rh, Pd, Ir, Pt], count: 2}
+      - {site: Y, elements: [V, Ti, Zr, Hf, Nb, Ta, Cr, Mn, Sc, Y], count: 1}
+      - {site: Z, elements: [Al, Ga, In, Si, Ge, Sn, Sb], count: 1}
+
+  - name: mgagsb
+    description: MgAgSb 1:1:1
+    type: site_ratio
+    tolerance: 0.15
+    change_from_v1: New (MgAgSb was unassignable in the v1 run).
+    sites:
+      - {site: A, elements: [Mg], count: 1}
+      - {site: B, elements: [Ag], count: 1}
+      - {site: X, elements: [Sb], count: 1}
+
+  # Oxide rules: checked after every non-oxide rule above, in this order.
+  - name: cobaltite
+    description: Cobaltite (Co with Ca, Na, Bi or Sr; Co outweighs Mn) oxide
+    type: oxide
+    min_o_fraction: 0.20
+    requires: [Co]
+    with_any: [Ca, Na, Bi, Sr]
+    amount_exceeds: {element: Co, over: Mn}
+    renamed_from: layered_cobaltite
+    change_from_v1: New; carved out of the v1 oxide rule (see removed_from_v1).
+    change_from_v2: >-
+      Defect fix, two parts. Renamed from layered_cobaltite: the cation test never
+      checked layering, and the family contains perovskite cobaltites, so the name
+      overclaimed. And a Co-Mn oxide is now decided by the majority transition
+      metal (strictly more Co than Mn), the same principle as the IV-VI majority
+      cation; in v2 a host with both fell to whichever rule came first.
+
+  - name: perovskite_titanate
+    description: Perovskite titanate (Ti with Sr, Ca or Ba) oxide
+    type: oxide
+    min_o_fraction: 0.20
+    requires: [Ti]
+    with_any: [Sr, Ca, Ba]
+    change_from_v1: New; carved out of the v1 oxide rule (see removed_from_v1).
+
+  - name: manganite
+    description: Manganite (Mn with Ca, La or Sr) oxide
+    type: oxide
+    min_o_fraction: 0.20
+    requires: [Mn]
+    with_any: [Ca, La, Sr]
+    amount_exceeds: {element: Mn, over: Co}
+    change_from_v1: New; carved out of the v1 oxide rule (see removed_from_v1).
+    change_from_v2: >-
+      Defect fix: a Co-Mn oxide is now decided by the majority transition metal
+      (strictly more Mn than Co), the mirror of the cobaltite condition. A tie
+      matches neither rule and falls through to the later oxide rules.
+
+  - name: zno_based
+    description: ZnO-based oxide (Zn is the majority cation)
+    type: oxide
+    min_o_fraction: 0.20
+    majority_cation: Zn
+    change_from_v1: New; carved out of the v1 oxide rule (see removed_from_v1).
+
+  - name: in2o3_based
+    description: In2O3-based oxide (In is the majority cation)
+    type: oxide
+    min_o_fraction: 0.20
+    majority_cation: In
+    change_from_v1: New; carved out of the v1 oxide rule (see removed_from_v1).
+
+  - name: other_oxide
+    description: Any other oxide (O at or above one atom in five)
+    type: oxide
+    min_o_fraction: 0.20
+    change_from_v1: New; the remainder of the v1 oxide rule after the five oxide rules above.
+
+# Assertion run when a previous run is given: every host whose label differs from
+# the previous version's must have moved from one of `from` to one of `to` and
+# contain at least one element from each group of `host_contains_each_of`. Anything
+# else that moved fails the run before any file is written.
+expected_moves:
+  from: [unassignable]
+  to: [gete_type, iv_vi_rocksalt]
+  host_contains_each_of:
+    - [Ge, Pb, Sn]
+    - [Sb, Bi]
+    - [Te, Se, S]
+
+# Sanity gate run before every labelling: hosts whose family follows directly
+# from the rule wording above. A failure means the rules or the code changed meaning.
+self_checks:
+  CoSb3: skutterudite
+  Ce(FeSb3)4: skutterudite
+  TePb: iv_vi_rocksalt
+  SnTe: iv_vi_rocksalt
+  SnSe: snse_type
+  SnS: snse_type
+  GeTe: gete_type
+  Ge0.95Te1: gete_type
+  Bi0.5Sb1.5Te3: tetradymite
+  Bi2Te2.7Se0.3: tetradymite
+  Mg2Si: mg2x
+  Mg3Sb2: mg3x2_zintl
+  Cu2Se: cu2x_ag2x_liquid_like
+  Cu12Sb4S13: tetrahedrite
+  Ba4Ga8Sn15: clathrate_type_i
+  CuBiSeO: bicuseo
+  ZrNiSn: half_heusler
+  Hf0.5Zr0.5Ni1Sn1: half_heusler
+  CaMg2Bi2: zintl_122
+  Zn4Sb3: zinc_antimonide
+  ZnSb: zinc_antimonide
+  Yb14Sb11: zintl_14_1_11
+  FeSi2: tm_silicide
+  CrSi2: tm_silicide
+  Fe0.95Si2: tm_silicide
+  Si: sige
+  Si4Ge: sige
+  AgSbTe2: i_v_vi2
+  AgBiSe2: i_v_vi2
+  Ge2Sb2Te5: gete_sb2te3_pseudobinary
+  Sn(BiTe2)2: gete_sb2te3_pseudobinary
+  Ge12Sb2Te15: gete_type
+  Ge0.85Sb0.1Te1: gete_type
+  Ge17(SbTe10)2: gete_type
+  Pb0.9Bi0.1Se1: iv_vi_rocksalt
+  Cu3SbSe4: diamond_like_cu
+  Cu2SnSe3: diamond_like_cu
+  InCuTe2: diamond_like_cu
+  AlVFe2: full_heusler
+  MgAgSb: mgagsb
+  Ca3Co4O9: cobaltite
+  Ca3MnCoO6: other_oxide
+  La1Mn0.25Co0.75O3: other_oxide
+  SrTiO3: perovskite_titanate
+  CaMnO3: manganite
+  ZnO: zno_based
+  In2O3: in2o3_based
+  WO3: other_oxide
+  Te: unassignable
+  B: unassignable
