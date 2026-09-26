@@ -285,6 +285,12 @@ now on.** Earlier folders mix clocks (`20260918T200058` matches the
 timestamp of its own, so a run's folder timestamp is its file
 modification time converted to UTC.
 
+**Standing rule (2026-09-26): No hand-typed values: every number in the
+paper, figures or configs comes from a committed artifact or a script's
+output.**
+
+**Standing rule (2026-09-26): Commit only when the user says "commit".**
+
 **CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
 beyond what these numbers support:**
 
@@ -2196,6 +2202,9 @@ dataset, not yet downloaded (item 6 requires both, each touched exactly
 once).
 
 ## Paper B — Cross-Family Generalization (FROZEN)
+
+**Canonical methodology document (2026-09-26):**
+`docs/Paper_B_Objectives_Methodology_v3_FROZEN.md`.
 
 **Core claim = two falsifiable questions, not vague "granularity"
 language:**
