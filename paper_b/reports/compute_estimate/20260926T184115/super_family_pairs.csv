@@ -1,0 +1,13 @@
+target,unit,n_family,g,n_g
+S,iv_vi,28245,oxides,18779
+S,oxides,18779,skutterudite,18696
+S,zintl,4767,tm_silicide,3725
+sigma,iv_vi,28363,oxides,25197
+sigma,oxides,25197,iv_vi,28363
+sigma,zintl,4742,tm_silicide,3650
+kappa,iv_vi,23701,skutterudite,14348
+kappa,oxides,7656,half_heusler,9234
+kappa,zintl,3448,cu2x_ag2x_liquid_like,2280
+zT,iv_vi,24948,skutterudite,15825
+zT,oxides,6810,mg2x,5877
+zT,zintl,4389,mg2x,5877

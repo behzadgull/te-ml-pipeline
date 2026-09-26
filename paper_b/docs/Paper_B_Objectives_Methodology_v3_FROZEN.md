@@ -408,3 +408,96 @@ holding a row for the target), applied to the union of its members. Members
 that fall below the threshold on their own still count toward the union. The
 definitions are in `paper_b/config/super_families.yaml` and the calculation in
 `paper_b/scripts/super_family_qualification.py`.
+
+---
+
+## 8. Modelling harness (pre-registered) (2026-09-26)
+
+Design only; no harness code exists yet. It applies to the held-out set defined
+in 7.3 (named families that pass the threshold of (a) for the target, never
+unassignable or other_oxide) and, as the sensitivity analysis, to the
+super-families of 7.3 and 7.4. The rules and labels are those of the final
+family-label run recorded in section 7.4.
+
+### 8.1 Design
+
+For each target t and each held-out unit F (a family in the primary analysis; a
+super-family in the sensitivity analysis, where the test set is the union of
+its members):
+
+- **Test folds.** F's rows for t are split into 5 chemistry-cluster folds, R
+  times (R repeats, each a different randomised assignment, using the module of
+  `paper_b/SHARED_DEPENDENCIES.md`). The test fold is F's rows in that fold. All
+  conditions and the specialist use the same folds.
+- **C0, pooled.** Train on all rows for t except the test fold.
+- **C1, LOFO.** Train on all rows for t except all of F. Its training set does
+  not depend on the test fold, so it is fitted once per (t, F, model) and its
+  predictions are used for every fold and repeat.
+- **C2, size-matched random.** C0 minus a random, scattered sample of non-F rows
+  (uniform over rows, not clusters), drawn so that the training size equals C1's,
+  that is |F| minus the test-fold size rows are removed. Seeded by a
+  deterministic function of (t, F, repeat, fold); the seed and the removed row
+  identities are recorded.
+- **C3, structured.** C0 minus one whole family G, so the training set loses a
+  contiguous chemistry region other than F. G is chosen by rule, per (t, F): the
+  held-out unit for t closest to F in row count for t, outside F's own
+  super-family (F itself and its co-members in the primary analysis; F itself in
+  the sensitivity analysis), never unassignable or other_oxide; ties go to the
+  name first in alphabetical order. G is recorded.
+- **Hyperparameters.** Tuned once per (t, F, model), on the rows for t excluding
+  F, with an inner 3-fold chemistry-cluster CV, the search space and TPE/median
+  pruning setup of Paper A (`src/nested_cv.py`), and used unchanged by C0 to C3.
+  This is the LOFO fold of (c): tuning never sees F. Pooled tuning uses 20 Optuna
+  trials (added 2026-09-26).
+- **Specialist.** Trained on F's training folds only, on the same test folds, with
+  nested tuning inside each outer training fold (inner 3-fold chemistry-cluster
+  CV, the same search space, on F's training rows), using **10** Optuna trials,
+  against 20 for the pooled tuning (added 2026-09-26). Compared with C0 of the
+  same model and folds. Direction of bias: an under-tuned specialist can only
+  understate the specialist advantage, so any positive specialist-minus-C0 result
+  is conservative; a null result must be reported with this caveat.
+- **Models.** XGBoost and ridge (a StandardScaler pipeline; alpha tuned in the
+  same way over Paper A's ridge search space), reported separately and never
+  averaged (2.5).
+
+### 8.2 Metrics
+
+Per (t, F, condition, model), scored in each target's Paper A space (log10 for
+sigma and kappa, linear for S and zT), computed within F only and never pooled
+across held-out units:
+
+- R^2, per repeat on F's five pooled test folds, then mean and SD over repeats;
+  with the oracle baseline of (b) (F's own mean);
+- `skill_train = 1 - MSE_model / MSE_c`, where c is the mean of that condition's
+  training targets (the specialist's, its own training folds');
+- the Murphy decomposition of (b): offset, scale and unexplained shares of the
+  MSE;
+- the within-family Pearson correlation r between prediction and target.
+
+**Confidence intervals (added 2026-09-26).** Every metric above carries a 95%
+percentile interval from a cluster bootstrap over F's chemistry clusters: 1,000
+resamples, seeded, per (t, F, condition, model), computed on the saved
+predictions. In each resample, F's clusters are drawn with replacement; for each
+repeat, that repeat's test predictions of the drawn clusters are pooled (a
+cluster drawn twice counts twice), the metric is computed, and the metric is
+averaged over repeats. Condition differences (C0 - C1, C0 - C2, C0 - C3 and
+specialist - C0) use the same resample for both conditions of the model (paired
+resamples), and the interval is taken on the difference. The SD across repeats is
+reported separately, as split-to-split variability; it is not a confidence
+interval.
+
+### 8.3 Provenance
+
+Every run_config records: the snapfix dataset SHA256 and size; the labels run
+folder and the SHA256 of its `host_family_labels.csv`; the SHA256 of
+`families.yaml`, `super_families.yaml` and `paper_b.yaml`; the seeds; the
+tuned-hyperparameter file for each (t, F, model); the code git HEAD; and
+`tree_clean`.
+
+### 8.4 Compute and the values still to fix
+
+The number of tuning trials is fixed in 8.1 (20 pooled, 10 per specialist fold).
+The number of repeats R is fixed from the compute estimate
+(`paper_b/reports/compute_estimate/`) and recorded, before any run, in a dated
+amendment. The estimate prices the design above from Paper A's recorded fit
+times; its assumptions are stated in that folder's `run_config.json`.

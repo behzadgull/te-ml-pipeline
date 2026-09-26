@@ -1,0 +1,399 @@
+{
+  "labels_run": "paper_b\\reports\\family_labels\\20260926T181709",
+  "labels_sha256": "6d4d56ef6991f2751ab10ba5415af318279d2c80f71572d6d6b3bcb51c96934e",
+  "family_summary_sha256": "1b4eea8bf0bb27e03f8ba0496e74bc42cc3c1bc068daf04412f0c9f5ecd03384",
+  "super_units": "paper_b/reports/super_family_qualification/20260926T181743/units.csv",
+  "super_units_sha256": "0589cef2a6d6a6fadb27d4ac03bcb2e192ce77743782b0258575982b57335388",
+  "frozen_hyperparams_sha256": {
+    "S": "243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b",
+    "sigma": "b457b6f2f946b0ef32bb3b38f09cd2084d846d6683af6b5b91df01b9672d6f0f",
+    "kappa": "883e3d0b2e62b1569473f397f00bd5ffbd055be60a54c7e4c758c11c6d129d3c",
+    "zT": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5"
+  },
+  "fit_models": {
+    "faster/intercept": {
+      "t0_seconds": 2.6071607999776627,
+      "k_seconds_per_row_tree_depth": 1.3732909159117654e-08,
+      "n_logs": 5,
+      "rmse_seconds": 0.7820566124509707
+    },
+    "faster/origin": {
+      "t0_seconds": 0.0,
+      "k_seconds_per_row_tree_depth": 1.7613880680979748e-08,
+      "n_logs": 5,
+      "rmse_seconds": 1.106847532633909
+    },
+    "slower/intercept": {
+      "t0_seconds": 6.221362600097888,
+      "k_seconds_per_row_tree_depth": 2.272696109658505e-08,
+      "n_logs": 44,
+      "rmse_seconds": 2.176527236095435
+    },
+    "slower/origin": {
+      "t0_seconds": 0.0,
+      "k_seconds_per_row_tree_depth": 3.205471085873892e-08,
+      "n_logs": 44,
+      "rmse_seconds": 3.007242540124616
+    }
+  },
+  "n_logs_used": 49,
+  "logs": [
+    {
+      "log": "checkpoints\\ladder_regen_dl\\S_composition_f5\\progress.log",
+      "log_sha256": "f95f53a2710a57c944aedf6e3ce3c75f9337cef59677a7b29de3e364261cea2d",
+      "target": "S",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\S_kfold_f10\\progress.log",
+      "log_sha256": "8b3c2068f84cdc69abf4db5af9591fb366e1776ae254bf68f5e17202fad4aeab",
+      "target": "S",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\S_kfold_f5\\progress.log",
+      "log_sha256": "7e0e1e97a487911b5716aaef364addb41da96674ffef0abd3e2607728fd5f6a1",
+      "target": "S",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\S_random_f20\\progress.log",
+      "log_sha256": "fba95ea28e3e45772a8ead4227cc1953e0705fb496799884c3151a5739ba97a6",
+      "target": "S",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\kappa_composition_f5\\progress.log",
+      "log_sha256": "0d34de0911a0470f95e3789e49f6ea4ca37b38b5e78996286684456d45f57771",
+      "target": "kappa",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\kappa_kfold_f10\\progress.log",
+      "log_sha256": "b28d82612ed0415bdf85a27d9832b77dd37aa4f8609c2d9bd769183f8caee760",
+      "target": "kappa",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\kappa_kfold_f5\\progress.log",
+      "log_sha256": "5386d3e65c96961ea4111bd707daacde7b7f53ad3553bc4ff45e52a19f202cbe",
+      "target": "kappa",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\kappa_random_f20\\progress.log",
+      "log_sha256": "ac0e67f7bd641cd0e652e347cacf5b10d862e847b20509a21af08908c89dc09b",
+      "target": "kappa",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\sigma_composition_f5\\progress.log",
+      "log_sha256": "95b150b9a2e443f4f5467ede21b42fb1a74e8e834d2b02a10112ee9a2591b33e",
+      "target": "sigma",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\sigma_kfold_f10\\progress.log",
+      "log_sha256": "d27d5eaa2cc64cdc78dcf499d38020106adba0039112309a06e6f1f6e230c0ed",
+      "target": "sigma",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\sigma_kfold_f5\\progress.log",
+      "log_sha256": "d1dcbc553201bd789208d3c137618ff15262fac80d9762b4ede906dbe6ae7a46",
+      "target": "sigma",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\sigma_random_f20\\progress.log",
+      "log_sha256": "8f5583506644d349143d9034008cb656af1be931405438aac2563d02850839ad",
+      "target": "sigma",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\zT_composition_f5\\progress.log",
+      "log_sha256": "1b9c70412f10558016d37d72921f5a568b3e7cd6a34730990b1997a04441a373",
+      "target": "zT",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\zT_kfold_f10\\progress.log",
+      "log_sha256": "2203ab1537abfdbf6889ac3b17e6696f2b5f605e52a8eaf700acfec2569182ca",
+      "target": "zT",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\zT_kfold_f5\\progress.log",
+      "log_sha256": "b45da3b6b1bf24e74f243a37777ffdcd6970117817db4cba449aea7746063b8a",
+      "target": "zT",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\ladder_regen_dl\\zT_random_f20\\progress.log",
+      "log_sha256": "2295522aca0b1abd7187c6711440227abaa7c25b7cfc09a5499a5c13ea2e03ac",
+      "target": "zT",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "checkpoints\\saved_predictions\\checkpoints\\S_chemistry\\progress.log",
+      "log_sha256": "6d8412c30336506e8f5256c594e5a3e28450e069936060a63f54bd5a41213d73",
+      "target": "S",
+      "split": "chemistry",
+      "regime": "faster"
+    },
+    {
+      "log": "checkpoints\\saved_predictions\\checkpoints\\kappa_chemistry\\progress.log",
+      "log_sha256": "1b01165867e80cbc60f678fb65f36cc829938b2838e2c39a9427d41354ea9e28",
+      "target": "kappa",
+      "split": "chemistry",
+      "regime": "faster"
+    },
+    {
+      "log": "checkpoints\\saved_predictions\\checkpoints\\sigma_chemistry\\progress.log",
+      "log_sha256": "3ae671a3e68fbad1c4ea241dcc49152dc2c0dbfe6becd98eb26df928e81d13b5",
+      "target": "sigma",
+      "split": "chemistry",
+      "regime": "faster"
+    },
+    {
+      "log": "checkpoints\\saved_predictions\\checkpoints\\zT_chemistry\\progress.log",
+      "log_sha256": "489cfac8970ab587e57eead0a39b069e7a7ef3880adb17cfae432e3a56cbfb1c",
+      "target": "zT",
+      "split": "chemistry",
+      "regime": "faster"
+    },
+    {
+      "log": "kaggle_out\\S_chemistry_full\\progress.log",
+      "log_sha256": "b9e303d50e2cc7ef56483a438bbace4016677f8270f9d6bcf92436f34f7b6b16",
+      "target": "S",
+      "split": "chemistry",
+      "regime": "faster"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\S_chemistry_full\\progress.log",
+      "log_sha256": "eaec7d9135237983698ae83985e73acfc207bf7465810f2828fa0c9d7c467a15",
+      "target": "S",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\S_composition_full\\progress.log",
+      "log_sha256": "3bf46ea6e41d190ab53211dc8085e58e6df7f144bbedae3a0f7d88139be976f0",
+      "target": "S",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\kappa_chemistry_full\\progress.log",
+      "log_sha256": "8dd43afd665440c66085a5aad3d29947e24f770c629a04b57be2e0b7eec64b55",
+      "target": "kappa",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\kappa_composition_full\\progress.log",
+      "log_sha256": "376c21f603a0f506242a590580cc01717518b10de0812c088ad1e2783d14adcd",
+      "target": "kappa",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\sigma_chemistry_full\\progress.log",
+      "log_sha256": "4fd368b63cacdaf4a1bc82c5053c849e43910b69b53bc1c5e33cf814fc8c9c68",
+      "target": "sigma",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\sigma_composition_full\\progress.log",
+      "log_sha256": "25054287ceb2efb5fd06bd26eae25d862fcf503be63a7f9e4e609d4dae5a8dbb",
+      "target": "sigma",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\zT_chemistry_full\\progress.log",
+      "log_sha256": "58ff5bf598130f70484b3e481fdc155447c7db5198468c298e9736f813bd04b1",
+      "target": "zT",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_postfix\\zT_composition_full\\progress.log",
+      "log_sha256": "55aa2a41060718a6418e0f0da0af450f802b1dedba13086c6be1668b69838ef6",
+      "target": "zT",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\S_chemistry_full\\progress.log",
+      "log_sha256": "09807e63b4e368742f500cd84df0a409d22fd33dffa38a90c3e27aba6ea0e799",
+      "target": "S",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\S_composition_full\\progress.log",
+      "log_sha256": "0b45557ac197761c2be7b8898e3856021c4549dba114c3c9484f1952d0dca923",
+      "target": "S",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\kappa_chemistry_full\\progress.log",
+      "log_sha256": "41381722b2bf463b416082a9aa0dff39be20798bd10fe3dae85ece0947c1742a",
+      "target": "kappa",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\kappa_composition_full\\progress.log",
+      "log_sha256": "6a9e57403b0db57ecece81b90e4f9ef3c56687b75d04700fd204b490d97495cc",
+      "target": "kappa",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\sigma_chemistry_full\\progress.log",
+      "log_sha256": "2981eb752facaea03d7dbb585b2c73fd03042423363cda8f6746292e7da594c9",
+      "target": "sigma",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\sigma_composition_full\\progress.log",
+      "log_sha256": "ee61f0f9503cc2e57c08145915b4cbe19f5239a5238cc08a970dd59be0d95d2e",
+      "target": "sigma",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\zT_chemistry_full\\progress.log",
+      "log_sha256": "733f98b4c1c55efbc84458584026dff45931cec2071f26ad1d656729b858341e",
+      "target": "zT",
+      "split": "chemistry",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\regen_snapfix\\zT_composition_full\\progress.log",
+      "log_sha256": "99559510bf10d96a451b699268b94f2c33c69e00b74fdcbf4c5627095dac2864",
+      "target": "zT",
+      "split": "composition",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\S_kfold_f10\\progress.log",
+      "log_sha256": "be7cf5227488598252573d89245c03efbdffc638e6ba5fd22c42608c1dd6739f",
+      "target": "S",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\S_kfold_f5\\progress.log",
+      "log_sha256": "6147b78d78a8fc6531f040c9391ef6472bbe016f6f36976b24ff6e0829c4da06",
+      "target": "S",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\S_random_f20\\progress.log",
+      "log_sha256": "98c2d1d4a867822141837d719cf6e67eb4cf65312419a8c7b1dd83f1ca2f393a",
+      "target": "S",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\kappa_kfold_f10\\progress.log",
+      "log_sha256": "5033e7e6e1bdced08a03d11dc873bb932b79c95a5a65e8c16df493daf8799ea9",
+      "target": "kappa",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\kappa_kfold_f5\\progress.log",
+      "log_sha256": "0c89a1f5b11fde6f639e6f6933dc88cba91c26cb98a58efa78c3b7b248664e97",
+      "target": "kappa",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\kappa_random_f20\\progress.log",
+      "log_sha256": "22d8468547c9138e65a49ef8566419d043c5b3490cf9b47d08bf01f3f59af104",
+      "target": "kappa",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\sigma_kfold_f10\\progress.log",
+      "log_sha256": "5d09d729c9cd73a832398245cbcd2c2e556e64c22057a65f911752e3d875b944",
+      "target": "sigma",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\sigma_kfold_f5\\progress.log",
+      "log_sha256": "8bddefe9180adac1376d43e1824dadbb80e01b5dc612e367499fdb55da0d4049",
+      "target": "sigma",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\sigma_random_f20\\progress.log",
+      "log_sha256": "ad71f9b6ab9286de056f6a731d61da07a0a0a4891f4b3cc3f2bd0e74b4f2d506",
+      "target": "sigma",
+      "split": "random",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\zT_kfold_f10\\progress.log",
+      "log_sha256": "0270e8c204cd5e2ac925ee2c0d491067b7826c810c5e7f7a8671309226a735f9",
+      "target": "zT",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\zT_kfold_f5\\progress.log",
+      "log_sha256": "8dc42b92de43684eff7b1904cfa509822c77e3259d2e618b5ef4fc525baced96",
+      "target": "zT",
+      "split": "kfold",
+      "regime": "slower"
+    },
+    {
+      "log": "kaggle_out\\ungrouped_snapfix\\zT_random_f20\\progress.log",
+      "log_sha256": "2a2c4e787df6641c8c018536cf570ec664f0c02f981eead19d228a7ac24fffd2",
+      "target": "zT",
+      "split": "random",
+      "regime": "slower"
+    }
+  ],
+  "assumptions": {
+    "ridge_sec_per_row": 1e-05,
+    "search_space_mean_n_estimators": 350.0,
+    "search_space_mean_depth": 6.5,
+    "no_pruning_credit": true,
+    "depth_linear": true,
+    "evaluation_params": "Paper A frozen per target"
+  },
+  "git_head": "1a52e92f1e8c9127fdd8d48157a615bbe6f914d1",
+  "tree_clean": false,
+  "dirty_files": [
+    "paper_b/scripts/compute_estimate.py"
+  ],
+  "utc_stamp": "20260926T184115"
+}
