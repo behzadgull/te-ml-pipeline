@@ -2345,7 +2345,15 @@ test" without this qualifier.
     composition; Seebeck R² 0.9653 under a random split falling to 0.871
     under the composition split (drop 0.094); electrical and thermal
     conductivity are scored in linear units, so their drops are not
-    comparable to this paper's log10 sigma and kappa.
+    comparable to this paper's log10 sigma and kappa. **Family-wise
+    result, verified from the paper 2026-09-24, recorded here 2026-09-26:**
+    the same study compared random, composition-wise and family-wise
+    single splits on its 3,879-row ESTM subset; the family-wise split gave
+    negative R² for all targets, and a constant-mean baseline was also
+    negative in every seed-target cell. The family-wise and
+    composition-wise results are both from this one study. This is prior
+    evidence for Paper B question (a); see `paper_b/docs/
+    Paper_B_Objectives_Methodology_v3_FROZEN.md`, section 7 (e).
   - Na & Chang (2022, `na2022public`): R² 0.13 for zT prediction on
     material groups absent from training, before transfer learning
     (abstract).

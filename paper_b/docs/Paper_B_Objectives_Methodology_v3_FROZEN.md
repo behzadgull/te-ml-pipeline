@@ -258,3 +258,38 @@ exactly which held-out unit that study used; CLAUDE.md records its
 verified split as composition-wise (all temperature records of a
 composition held out), so any statement that it is family-wise must be
 checked against the paper before it is written.
+
+### 7.1 Further amendments (2026-09-26, after the first commit of section 7)
+
+These are additions and corrections dated after items (a) to (e) above were
+committed (`6f88f9d`). Items (a) to (e) are left as committed; where a
+sub-item below is more specific, it governs.
+
+**(e) correction.** Ho et al. (2026, `ho2026physicsinspired`) compared random,
+composition-wise and family-wise single splits on a 3,879-row ESTM subset.
+The family-wise split gave negative R^2 for all targets, and a constant-mean
+baseline was also negative in every seed-target cell. Verified from the paper
+on 2026-09-24. This is the check that item (e) required, and it confirms the
+study has a family-wise result; the composition-wise result recorded in
+CLAUDE.md comes from the same study. The introduction states this as prior
+evidence for question (a), alongside the composition-wise result.
+
+**(b) completion.** The skill baselines are defined here, before any
+implementation:
+- `skill_train = 1 - MSE_model / MSE_c`, where `c` is the mean of the target
+  over the training families of that LOFO fold (the constant a practitioner
+  could have used without seeing the held-out family), and `MSE_c` is the mean
+  squared error of predicting `c` for every row of the held-out family;
+- R^2, whose baseline is the held-out family's own mean (an oracle no
+  practitioner has), is reported alongside `skill_train`, not instead of it.
+Both are computed in each target's Paper A scoring space (log10 for sigma and
+kappa, linear for S and zT). This replaces the sentence in (b) that left the
+constant's definition to the implementing step.
+
+**(f) code layout.** All Paper B code, configuration, documents, results and
+reports live under `paper_b/`, so the paper can be handed over separately.
+Paper B imports only the top-level modules declared, with SHA256, in
+`paper_b/SHARED_DEPENDENCIES.md`, and loads the snapfix CSV by explicit path
+with a SHA256 check. The threshold in (a) is stored in
+`paper_b/config/paper_b.yaml`, not in the top-level `config.yaml` as (a)
+states; its values are unchanged. Introduced in commit `0009abf`.
