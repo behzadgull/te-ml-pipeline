@@ -196,3 +196,65 @@ Phase 1 (five-way ladder) are complete:
    across two model families (2.5).
 4. Apply the Section 5 decision rule: standalone paper, or fold into
    Paper A.
+
+---
+
+## 7. v4 amendments (2026-09-26)
+
+Recorded before any Paper B family count was computed. Sections 1 to 6
+above are unchanged; where an amendment below is more specific than the
+text above, the amendment governs. Items (a) to (e) are frozen on the
+same terms as the rest of this document.
+
+**(a) A priori family-size threshold (fills the open value in 2.4).**
+A family qualifies for a target only if it has at least 30 chemistry
+clusters AND at least 1,000 rows for that target. The threshold is
+applied per target, so a family can qualify for one property and not
+another. It is stored in `config.yaml` as `paper_b.min_family_sample_size`
+(`min_clusters: 30`, `min_rows_per_target: 1000`). Reasons: within-family
+5-fold grouped CV puts whole chemistry clusters in folds, so 30 clusters
+gives at least 6 per fold; 1,000 rows gives about 200 test rows per fold,
+enough for a stable three-term MSE decomposition (see (b)). The threshold
+was committed before any family counts were computed, so it cannot have
+been tuned to them.
+
+**(b) Primary metric for question (b).** Per held-out family, the Murphy
+decomposition of the mean squared error,
+
+    MSE = (mean(y_hat) - mean(y))^2 + (s_yhat - r s_y)^2 + (1 - r^2) s_y^2
+
+that is, an offset term, a scale term and an unexplained-variance term,
+with each reported as a share of the MSE. Alongside it: the within-family
+Pearson correlation r, and skill against a constant baseline. Raw R^2 is
+reported next to these, not instead of them. Reason: R^2 computed on a
+single family folds the family-level offset and the intra-family signal
+into one number, which is the confound question (b) asks about; the
+decomposition separates them. The definition of the constant baseline is
+fixed in the step that implements the metric, before any held-out-family
+result is computed.
+
+**(c) Hyperparameters are retuned inside each LOFO fold, on the remaining
+families only.** Paper A's frozen hyperparameters were tuned with every
+family present, so they carry information about the held-out family;
+reusing them for LOFO would let the held-out family influence the model
+it is meant to be foreign to. The same rule applies to both controls in
+2.3 and to the specialists in 2.1, each tuned on its own training data
+only.
+
+**(d) Family labels come from the host formula of the snapfix
+`chemistry_cluster_id`, not from the raw formula.** Reason: the label must
+be constant within a chemistry cluster, so that family and the grouping
+key nest (Section 3) and no cluster can straddle a train/test boundary
+by carrying two labels. A raw formula would put La-doped and Yb-doped
+CoSb3 in the same family only if the matcher tolerated the dopants; the
+cluster host has already removed them at the frozen 5 at% threshold.
+Source dataset: the snapfix featurized CSV recorded in CLAUDE.md
+(SHA256 `d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489`).
+
+**(e) Prior evidence for question (a).** Ho et al. (2026,
+`ho2026physicsinspired`) is acknowledged as prior evidence bearing on
+question (a) and must be cited in the introduction. The paper must state
+exactly which held-out unit that study used; CLAUDE.md records its
+verified split as composition-wise (all temperature records of a
+composition held out), so any statement that it is family-wise must be
+checked against the paper before it is written.
