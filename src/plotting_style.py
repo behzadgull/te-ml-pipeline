@@ -105,4 +105,4 @@ def save_figure(fig, path_without_ext):
     (str or Path) with no file extension.
     """
     fig.savefig(f"{path_without_ext}.png", dpi=DPI_PNG, bbox_inches="tight")
-    fig.savefig(f"{path_without_ext}.pdf", bbox_inches="tight")
+    fig.savefig(f"{path_without_ext}.pdf", bbox_inches="tight", metadata={"CreationDate": None})  # reproducible PDFs

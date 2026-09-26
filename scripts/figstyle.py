@@ -148,7 +148,7 @@ def save(fig, path_without_ext, expect_width_cm=None):
     if expect_width_cm is not None:
         assert abs(w_cm - expect_width_cm) < 0.01, (w_cm, expect_width_cm)
     fig.savefig(f"{path_without_ext}.png", dpi=DPI)
-    fig.savefig(f"{path_without_ext}.pdf")
+    fig.savefig(f"{path_without_ext}.pdf", metadata={"CreationDate": None})  # no timestamp: reproducible PDFs
     with Image.open(f"{path_without_ext}.png") as im:
         got_cm = im.size[0] / DPI * 2.54
     assert abs(got_cm - w_cm) < 0.02, (path_without_ext, got_cm, w_cm)
