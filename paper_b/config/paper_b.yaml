@@ -1,0 +1,8 @@
+paper_b:
+  # A priori family-size threshold, set 2026-09-26 before any family counts
+  # were computed (see paper_b/docs/Paper_B_Objectives_Methodology_v3_FROZEN.md,
+  # section 7, "v4 amendments"). A family qualifies for a target only if BOTH hold.
+  # Moved here from the top-level config.yaml on 2026-09-26; values unchanged.
+  min_family_sample_size:
+    min_clusters: 30
+    min_rows_per_target: 1000

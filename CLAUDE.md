@@ -2204,7 +2204,26 @@ once).
 ## Paper B — Cross-Family Generalization (FROZEN)
 
 **Canonical methodology document (2026-09-26):**
-`docs/Paper_B_Objectives_Methodology_v3_FROZEN.md`.
+`paper_b/docs/Paper_B_Objectives_Methodology_v3_FROZEN.md` (moved from
+`docs/` on 2026-09-26; section 7 holds the dated v4 amendments).
+
+**Layout rule (2026-09-26): all Paper B code, configuration, documents,
+results and reports live under `paper_b/`** (`src/`, `config/`, `docs/`,
+`results/`, `reports/`, `scripts/`), so the paper can be handed over
+separately. The Paper B threshold lives in `paper_b/config/paper_b.yaml`,
+not in the top-level `config.yaml`; nothing in Paper A reads it. Paper B
+outputs never go in the top-level `results/` or `reports/`.
+
+**Shared-dependency rule (2026-09-26): Paper B may import only the
+modules listed in `paper_b/SHARED_DEPENDENCIES.md`** (currently
+`src/canonicalization.py` and `src/nested_cv.py`), each pinned there by
+SHA256, and nothing else from top-level `src/` or `scripts/`. Paper B
+loads the snapfix CSV by explicit path with a SHA256 check, not through
+`src.nested_cv.load_target_data`, whose "most recent CSV" glob is the
+failure mode this file records elsewhere. Run
+`python paper_b/scripts/check_shared_dependencies.py` before every Paper B
+commit; a change to a listed module updates its manifest hash in the same
+commit.
 
 **Core claim = two falsifiable questions, not vague "granularity"
 language:**
@@ -2467,8 +2486,10 @@ test" without this qualifier.
 - Structure: `src/data_cleaning.py`, `src/canonicalization.py` (chemistry-
   cluster definition), `src/featurization.py`, `src/validation_ladder.py`,
   `src/nested_cv.py`, `src/noise_floor.py`, `src/screening.py`,
-  `src/external_validation.py`, `src/family_labels.py`,
-  `src/lofo_paperb.py`, `scripts/run_pipeline.py`, `figures/`.
+  `src/external_validation.py`, `scripts/run_pipeline.py`, `figures/`.
+  Paper B code is separate: `paper_b/src/family_labels.py`,
+  `paper_b/src/lofo_paperb.py` (moved from `src/` on 2026-09-26; see the
+  Paper B layout rule).
 - `config.yaml` for paths, seeds, fold counts, extraction date, the 5 at%
   cluster threshold (and its sensitivity-table alternates).
 - `.gitignore` raw/processed data and any API keys — never commit data files.
