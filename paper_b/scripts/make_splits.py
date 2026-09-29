@@ -196,10 +196,15 @@ def build_one_pair(df, target, unit, members, g, supers, level, n_total, out_dir
     return npz_path, json_path
 
 
-def git_state():
-    """Return (HEAD, tree clean, dirty files)."""
+def git_state(exclude_dir):
+    """Return (HEAD, tree clean ignoring exclude_dir, dirty files ignoring exclude_dir). exclude_dir is this
+    run's own output directory: it is necessarily untracked while this run writes into it, which is not what
+    tree_clean is meant to report (whether the CODE and INPUTS were clean when the run started)."""
     head = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
-    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True, check=True).stdout
+    status = subprocess.run(
+        ["git", "status", "--porcelain", "--", ".", f":(exclude){exclude_dir.as_posix()}"],
+        capture_output=True, text=True, check=True,
+    ).stdout
     dirty = [line[3:] for line in status.splitlines()]
     return head, not dirty, dirty
 
@@ -234,7 +239,7 @@ def main(argv=None):
 
     manifest = {str(p.relative_to(out_dir)): sha256_file(p) for p in sorted(written)}
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    head, clean, dirty = git_state()
+    head, clean, dirty = git_state(out_dir)
     config = {
         "dataset": identity, "labels_run": str(labels_run), "labels_sha256": sha256_file(labels_run / "host_family_labels.csv"),
         "super_units": args.super_units, "super_units_sha256": sha256_file(args.super_units),
