@@ -1,0 +1,41 @@
+loaded 129,419 rows x 397 features for zT in 19 s
+cupy unavailable (ImportError); timing host arrays only, as Paper A did
+xgboost host n=2,000 depth=3 trees=100: fit medians 0.21 s [0.3 min elapsed]
+xgboost host n=2,000 depth=6 trees=350: fit medians 1.65 s [0.4 min elapsed]
+xgboost host n=2,000 depth=10 trees=600: fit medians 7.63 s [0.8 min elapsed]
+xgboost host n=8,000 depth=3 trees=100: fit medians 0.35 s [0.8 min elapsed]
+xgboost host n=8,000 depth=6 trees=350: fit medians 2.08 s [0.9 min elapsed]
+xgboost host n=8,000 depth=10 trees=600: fit medians 11.41 s [1.5 min elapsed]
+xgboost host n=15,000 depth=3 trees=100: fit medians 0.54 s [1.5 min elapsed]
+xgboost host n=15,000 depth=6 trees=350: fit medians 2.41 s [1.7 min elapsed]
+xgboost host n=15,000 depth=10 trees=600: fit medians 13.72 s [2.3 min elapsed]
+xgboost host n=40,000 depth=3 trees=100: fit medians 1.19 s [2.4 min elapsed]
+xgboost host n=40,000 depth=6 trees=350: fit medians 3.63 s [2.6 min elapsed]
+xgboost host n=40,000 depth=10 trees=600: fit medians 19.56 s [3.6 min elapsed]
+xgboost host n=124,419 depth=3 trees=100: fit medians 3.45 s [3.8 min elapsed]
+xgboost host n=124,419 depth=6 trees=350: fit medians 7.69 s [4.1 min elapsed]
+xgboost host n=124,419 depth=10 trees=600: fit medians 30.05 s [5.7 min elapsed]
+ridge n=15,000: fit median 0.17 s
+ridge n=40,000: fit median 0.51 s
+ridge n=124,419: fit median 1.34 s
+
+Wrote /kaggle/working/paper_b_calibration and /kaggle/working/paper_b_calibration.zip; total 5.8 min; truncated=False
+  model device placement  n_requested  n_fit  max_depth  n_estimators  fit_seconds  predict_seconds
+  ridge    cpu      host        15000  15000        NaN           NaN     0.172219         0.012539
+  ridge    cpu      host        40000  40000        NaN           NaN     0.508983         0.013806
+  ridge    cpu      host       150000 124419        NaN           NaN     1.338305         0.012317
+xgboost   cuda      host         2000   2000        3.0         100.0     0.209727         0.023185
+xgboost   cuda      host         2000   2000        6.0         350.0     1.645856         0.029233
+xgboost   cuda      host         2000   2000       10.0         600.0     7.626422         0.040738
+xgboost   cuda      host         8000   8000        3.0         100.0     0.353807         0.023255
+xgboost   cuda      host         8000   8000        6.0         350.0     2.078723         0.029788
+xgboost   cuda      host         8000   8000       10.0         600.0    11.413834         0.044012
+xgboost   cuda      host        15000  15000        3.0         100.0     0.535773         0.023614
+xgboost   cuda      host        15000  15000        6.0         350.0     2.408078         0.029947
+xgboost   cuda      host        15000  15000       10.0         600.0    13.719872         0.046014
+xgboost   cuda      host        40000  40000        3.0         100.0     1.191689         0.023461
+xgboost   cuda      host        40000  40000        6.0         350.0     3.630513         0.029010
+xgboost   cuda      host        40000  40000       10.0         600.0    19.558806         0.048889
+xgboost   cuda      host       150000 124419        3.0         100.0     3.446449         0.024779
+xgboost   cuda      host       150000 124419        6.0         350.0     7.693283         0.029814
+xgboost   cuda      host       150000 124419       10.0         600.0    30.052987         0.052220

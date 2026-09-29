@@ -501,3 +501,24 @@ The number of repeats R is fixed from the compute estimate
 (`paper_b/reports/compute_estimate/`) and recorded, before any run, in a dated
 amendment. The estimate prices the design above from Paper A's recorded fit
 times; its assumptions are stated in that folder's `run_config.json`.
+
+### 8.5 Compute estimate refitted on Kaggle calibration (2026-09-29)
+
+**Superseded: the compute estimate at `paper_b/reports/compute_estimate/20260926T184115/`.**
+It priced fits from Paper A's own progress.log times (two inferred speed
+regimes, GPU model unknown, and a trial-count grid before the trial counts
+were fixed in 8.1). It is retained, not deleted.
+
+**Current: `paper_b/reports/compute_estimate/<latest>/`**, priced from a
+direct Kaggle calibration (`paper_b/scripts/calibrate_fit_cost.py`,
+bundle at `paper_b/reports/calibration/20260929T093951/`, 2x Tesla T4, cupy
+unavailable so XGBoost ran via its host-array DMatrix-fallback path per
+`src/nested_cv.py`'s own `_to_device` docstring). Fitted per calibrated
+(max_depth, n_estimators) bundle, not as a single depth-linear model: the
+calibration shows the depth-linear assumption in `src/nested_cv.py`'s
+search-space comment does not hold on this GPU (R^2 0.76 for that form,
+against 0.94 to 0.9999 fitting each bundle separately with n_estimators held
+at its calibrated value); the bundle nearest a fit's own max_depth prices it,
+reusing that bundle's fixed per-fit cost and its per-(row,tree) marginal
+cost against the fit's own n_estimators. Ridge is now measured, not assumed.
+`paper_b/scripts/compute_estimate.py`'s own docstring gives the full method.

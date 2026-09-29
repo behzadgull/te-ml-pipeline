@@ -1,0 +1,107 @@
+{
+  "target": "zT",
+  "device": "cuda",
+  "placements_timed": [
+    "host"
+  ],
+  "seed": 0,
+  "n_predict_rows": 5000,
+  "timings_per_config": 3,
+  "n_grid": [
+    2000,
+    8000,
+    15000,
+    40000,
+    150000
+  ],
+  "configs_depth_trees": [
+    [
+      3,
+      100
+    ],
+    [
+      6,
+      350
+    ],
+    [
+      10,
+      600
+    ]
+  ],
+  "ridge_n": [
+    15000,
+    40000,
+    150000
+  ],
+  "ridge_alpha": 1.0,
+  "n_features": 397,
+  "dataset": {
+    "path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "bytes": 974854507,
+    "n_rows_with_target": 129419
+  },
+  "frozen_hyperparams_file": "checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json",
+  "frozen_hyperparams_sha256": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5",
+  "frozen_params_used": {
+    "learning_rate": 0.021879194372117446,
+    "subsample": 0.6803687069914941,
+    "colsample_bytree": 0.6984141242996358,
+    "min_child_weight": 4,
+    "reg_lambda": 1.7133930619789375,
+    "reg_alpha": 0.050328646865956124
+  },
+  "script_sha256": "3bc6d7084ad9507dc18cba80e1078a1e3c901e656bf7fa575eff00973672df0f",
+  "git_head": "8cdae67e1208f5bedbb167d1764f9436cbcb555e",
+  "tree_clean": true,
+  "dirty_files": [],
+  "budget_minutes": 25.0,
+  "truncated_by_budget": false,
+  "total_minutes": 5.779444337200001,
+  "smoke": false,
+  "utc_stamp": "20260929T093951",
+  "system": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "cpu_count": 4,
+    "nvidia_smi": "name, driver_version, memory.total [MiB]\nTesla T4, 580.159.04, 15360 MiB\nTesla T4, 580.159.04, 15360 MiB",
+    "nvidia_smi_L": "GPU 0: Tesla T4 (UUID: GPU-bbbfe5a9-ad55-3a1c-9a31-cb3e864761ef)\nGPU 1: Tesla T4 (UUID: GPU-8b7d7fe4-f0dd-4ba8-d6b6-f3271139136c)",
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "sklearn": "1.4.2",
+    "xgboost": "2.0.3",
+    "optuna": "3.6.1",
+    "cupy": "unavailable (ImportError)",
+    "threadpoolctl": "3.6.0",
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 4,
+        "prefix": "libopenblas",
+        "filepath": "/usr/local/lib/python3.12/dist-packages/numpy.libs/libopenblas64_p-r0-0cf96a72.3.23.dev.so",
+        "version": "0.3.23.dev",
+        "threading_layer": "pthreads",
+        "architecture": "SkylakeX"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 4,
+        "prefix": "libgomp",
+        "filepath": "/usr/local/lib/python3.12/dist-packages/scikit_learn.libs/libgomp-a34b3233.so.1.0.0",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 4,
+        "prefix": "libscipy_openblas",
+        "filepath": "/usr/local/lib/python3.12/dist-packages/scipy.libs/libscipy_openblas-b75cc656.so",
+        "version": "0.3.29.dev",
+        "threading_layer": "pthreads",
+        "architecture": "SkylakeX"
+      }
+    ]
+  }
+}
