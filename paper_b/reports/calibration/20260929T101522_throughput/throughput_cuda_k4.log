@@ -1,0 +1,8 @@
+loaded 129,419 rows x 397 features for zT in 18 s; device=cuda concurrency=4 n_jobs_per_worker=-1
+tuning (n=2,000, depth=6, trees=350): sequential median 6.72 s, concurrent median 13.95 s, speedup 0.48x [1.4 min elapsed]
+specialist (n=15,000, depth=10, trees=600): sequential median 57.04 s, concurrent median 71.38 s, speedup 0.80x [7.9 min elapsed]
+
+Wrote /kaggle/working/throughput_cuda_k4 and /kaggle/working/throughput_cuda_k4.zip; total 7.9 min; truncated=False
+    config     n  max_depth  n_estimators  concurrency device  n_jobs_per_worker  sequential_median_seconds  concurrent_median_seconds  speedup
+specialist 15000         10           600            4   cuda                 -1                  57.043605                  71.376284 0.799195
+    tuning  2000          6           350            4   cuda                 -1                   6.723328                  13.952172 0.481884

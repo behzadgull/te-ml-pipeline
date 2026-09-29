@@ -1,0 +1,56 @@
+{
+  "target": "zT",
+  "device": "cuda",
+  "concurrency": 4,
+  "n_jobs_per_worker": -1,
+  "cpu_count": 4,
+  "configs": {
+    "tuning": [
+      2000,
+      6,
+      350
+    ],
+    "specialist": [
+      15000,
+      10,
+      600
+    ]
+  },
+  "seed": 0,
+  "n_predict_rows": 2000,
+  "timings_per_config": 3,
+  "dataset": {
+    "path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "bytes": 974854507,
+    "n_rows_with_target": 129419
+  },
+  "frozen_hyperparams_file": "checkpoints/saved_predictions/checkpoints/frozen_hyperparams/zT.json",
+  "frozen_hyperparams_sha256": "6b461276523817f5df3b6f9ef9b8da9758c1da95c458aa0da99b8cd7eddf44b5",
+  "frozen_params_used": {
+    "learning_rate": 0.021879194372117446,
+    "subsample": 0.6803687069914941,
+    "colsample_bytree": 0.6984141242996358,
+    "min_child_weight": 4,
+    "reg_lambda": 1.7133930619789375,
+    "reg_alpha": 0.050328646865956124
+  },
+  "script_sha256": "7a9f9098f9a63f83219414c4b1de236a1be0b296846b6d877cb5099e336cdfb4",
+  "git_head": "e2ef43406a46b4db1e5fb72274f4eb087596eeb2",
+  "tree_clean": true,
+  "dirty_files": [],
+  "budget_minutes": 12.0,
+  "truncated_by_budget": false,
+  "total_minutes": 7.9003722785666675,
+  "utc_stamp": "20260929T101942",
+  "system": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "cpu_count": 4,
+    "nvidia_smi": "name, driver_version, memory.total [MiB]\nTesla T4, 580.159.04, 15360 MiB\nTesla T4, 580.159.04, 15360 MiB",
+    "nvidia_smi_L": "GPU 0: Tesla T4 (UUID: GPU-ae6bdacf-c803-73a9-a327-8acea59828f0)\nGPU 1: Tesla T4 (UUID: GPU-603a8141-1db7-d0ff-a5bd-5c9bd36c3776)",
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "xgboost": "2.0.3"
+  }
+}

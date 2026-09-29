@@ -522,3 +522,53 @@ at its calibrated value); the bundle nearest a fit's own max_depth prices it,
 reusing that bundle's fixed per-fit cost and its per-(row,tree) marginal
 cost against the fit's own n_estimators. Ridge is now measured, not assumed.
 `paper_b/scripts/compute_estimate.py`'s own docstring gives the full method.
+
+### 8.6 Throughput calibration and three device/concurrency plans (2026-09-29)
+
+**GPU concurrency on this hardware gave no benefit; measured speedup < 1 at
+every calibrated concurrency.** `paper_b/scripts/calibrate_throughput.py`,
+run at commit `e2ef434` on the same 2x Tesla T4 box, timed k=2 and k=4
+concurrent small fits against sequential, at both the tuning-scale and
+specialist-scale configs. Every measured speedup was below 1.0 (concurrent
+was slower, not faster); the most likely cause is that every worker's
+`device='cuda'` resolves to the same physical GPU, so concurrent workers
+contend for one GPU rather than spreading across the two available. Plan
+(ii) below (GPU with the best measured concurrency) is therefore, on this
+evidence, identical to plan (i): the best measured concurrency is 1, i.e.
+none. This is a property of the measurement, not a general claim that GPU
+concurrency cannot help; a version of the script that pins each worker to a
+distinct GPU index would test the real question.
+
+**CPU is measured at 2.8x to 3.7x slower than this GPU**, at the
+tuning-scale and specialist-scale configs respectively (single-point
+measurement per config, device=cpu, concurrency=1; not a fitted line, since
+only one row count was timed per config). Running specialist-scale fits
+concurrently on CPU (k=4, one thread each) DID help: 2.28x speedup at the
+specialist scale, 1.87x at the tuning scale -- a single four-threaded CPU
+fit does not use four threads efficiently at this problem size, so four
+single-threaded fits running at once make better use of the same cores.
+This concurrency benefit is not applied to the CPU pricing in section 8.5's
+`compute_estimate.py --plans` mode (that mode prices CPU specialists as
+sequential, matching the "specialists on CPU" plan literally as posed); it
+would further reduce plan (iii)'s CPU-hours below, roughly by that same
+factor, if specialist fits were also run concurrently on the CPU session.
+
+**Three plans, R=3** (`compute_estimate.py --plans i,ii,iii --plan-repeats 3
+--throughput-dir <bundle>`), family level plus the super-family analysis,
+20 pooled / 10 specialist trials:
+
+| Plan | GPU xgboost-hours | CPU xgboost-hours | CPU ridge-hours |
+|---|---|---|---|
+| (i) all-GPU, sequential | 78.35 | 0.00 | 4.99 |
+| (ii) GPU, best measured concurrency | 78.35 | 0.00 | 4.99 |
+| (iii) specialists on CPU, everything else on GPU | 53.09 | 75.65 | 4.99 |
+
+Plan (iii) moves only the specialist component (its own nested tuning and
+final fit) to CPU; the once-per-pair pooled tuning and C0 to C3 stay on GPU
+in every plan. Its CPU hours are not directly comparable to the other
+plans' GPU hours (different hardware, and CPU sessions do not queue for the
+GPU at all, which is the actual benefit plan (iii) offers, not raw speed).
+
+Provenance: `paper_b/reports/calibration/20260929T101522_throughput/`
+(4 runs, dataset SHA and commit `e2ef434` verified, `tree_clean` true in
+each); estimate at `paper_b/reports/compute_estimate/<latest>/`.

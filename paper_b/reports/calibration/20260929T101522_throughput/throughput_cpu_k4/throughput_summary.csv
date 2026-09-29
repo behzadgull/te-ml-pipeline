@@ -1,0 +1,3 @@
+config,n,max_depth,n_estimators,concurrency,device,n_jobs_per_worker,sequential_median_seconds,concurrent_median_seconds,speedup
+specialist,15000,10,600,4,cpu,1,325.1911807920003,142.93432283600032,2.275109115430011
+tuning,2000,6,350,4,cpu,1,31.045383661000187,16.609148861999984,1.8691736656072013

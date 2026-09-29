@@ -1,0 +1,8 @@
+loaded 129,419 rows x 397 features for zT in 18 s; device=cpu concurrency=4 n_jobs_per_worker=1
+tuning (n=2,000, depth=6, trees=350): sequential median 31.05 s, concurrent median 16.61 s, speedup 1.87x [2.7 min elapsed]
+specialist (n=15,000, depth=10, trees=600): sequential median 325.19 s, concurrent median 142.93 s, speedup 2.28x [26.0 min elapsed]
+
+Wrote /kaggle/working/throughput_cpu_k4 and /kaggle/working/throughput_cpu_k4.zip; total 26.0 min; truncated=False
+    config     n  max_depth  n_estimators  concurrency device  n_jobs_per_worker  sequential_median_seconds  concurrent_median_seconds  speedup
+specialist 15000         10           600            4    cpu                  1                 325.191181                 142.934323 2.275109
+    tuning  2000          6           350            4    cpu                  1                  31.045384                  16.609149 1.869174
