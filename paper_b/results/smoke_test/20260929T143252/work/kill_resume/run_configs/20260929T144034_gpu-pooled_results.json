@@ -1,0 +1,114 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 27.74360359995626,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 38.68875739991199,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 42.84814329992514,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 41.432781300041825,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\family\\zT\\manganite\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 9.15850710007362,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 7.099496099981479,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260929T143252\\work\\kill_resume\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null
+  }
+]

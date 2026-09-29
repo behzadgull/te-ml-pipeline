@@ -1,0 +1,13 @@
+{
+  "level": "family",
+  "target": "zT",
+  "unit": "i_v_vi2",
+  "model": "ridge",
+  "device": "cpu",
+  "n_trials": 2,
+  "best_params": {
+    "alpha": 0.004887214252419782
+  },
+  "inner_cv_r2": 0.48575253996380097,
+  "smoke_cap": true
+}

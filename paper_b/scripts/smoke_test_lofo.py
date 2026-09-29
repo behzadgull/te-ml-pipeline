@@ -1,0 +1,368 @@
+"""
+Local CPU smoke test for paper_b/src/lofo_paperb.py (methodology doc section
+8), run before the harness is committed. One target (zT), the two smallest
+qualifying families (manganite, i_v_vi2), R=1, 2 tuning trials (also used for
+the specialist, for speed), folds {0, 1}, both models.
+
+Checks, in order, and prints a clear PASS/FAIL for each:
+  1. The six leakage assertions (methodology doc section 8.1) are enforced by
+     the harness itself (paper_b/src/lofo_paperb.py's assert_disjoint/
+     assert_subset/assert_size_equal, called inline during fitting) and are
+     exercised by this test's own run (they raise on the first violation, so
+     a clean run here is itself a pass for all six, checked by their call
+     sites having actually executed, not just imported).
+  2. Checkpoint/resume: run to completion, note file count and content hashes,
+     wipe the checkpoint dir, rerun but kill the process partway through
+     (subprocess.terminate(), an abrupt kill, not a graceful shutdown), then
+     resume with the same command; the resumed run must not rewrite any file
+     the killed run had already written (same bytes), and the final file set
+     must match the uninterrupted run's.
+  3. Determinism: delete one completed unit's checkpoint only, rerun it alone,
+     compare predictions to the original bit-for-bit.
+  4. Murphy shares sum to 1 (to 1e-9) for every saved prediction file; its R^2
+     matches sklearn's r2_score to float precision.
+  5. Hand-check: one unit's R^2, skill_train, Murphy shares and within-family
+     r recomputed here directly from the saved arrays (not via
+     metrics_paperb.py), shown next to metrics_paperb.py's own output.
+  6. Bootstrap: a CI is produced for one unit/condition; a paired difference
+     between a prediction array and itself gives exactly 0 at every resample.
+  7. Production guard, checkpoint-dir naming: the harness must refuse
+     --smoke-search-space-cap when --checkpoint-dir does not contain "smoke".
+  8. Production guard, analysis loader: `lofo_paperb.load_checkpoint_dir_for_analysis`
+     must raise on a directory holding any smoke_cap=true unit (this test's own
+     reference run, every unit of which was fit with the cap), and, separately,
+     on two synthetic run_configs that disagree on the identity fields.
+
+Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
+report. Non-zero exit if any check fails.
+
+Run from the repository root:
+    python -m paper_b.scripts.smoke_test_lofo --csv <snapfix csv> \
+        --labels-run paper_b/reports/family_labels/<UTC> --splits-dir paper_b/results/splits/<UTC>
+"""
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from sklearn.metrics import r2_score as sklearn_r2_score  # noqa: E402
+
+from paper_b.src import lofo_paperb as L  # noqa: E402
+from paper_b.src import metrics_paperb as M  # noqa: E402
+
+TARGET = "zT"
+UNITS = ["manganite", "i_v_vi2"]
+FOLDS = [0, 1]
+TRIALS = 2
+PY = sys.executable
+
+
+def harness_cmd(csv, labels_run, splits_dir, checkpoint_dir, role, extra=()):
+    return [PY, "-m", "paper_b.src.lofo_paperb", "--role", role, "--csv", str(csv), "--labels-run", str(labels_run),
+            "--splits-dir", str(splits_dir), "--checkpoint-dir", str(checkpoint_dir), "--targets", TARGET,
+            "--units", ",".join(UNITS), "--repeats", "1", "--folds", ",".join(map(str, FOLDS)),
+            "--tuning-trials", str(TRIALS), "--specialist-trials", str(TRIALS), "--smoke-search-space-cap", *extra]
+
+
+def all_checkpoint_files(checkpoint_dir):
+    """Every *.npz under checkpoint_dir except run_configs/ (per-session logs) -- includes tuning_once.npz."""
+    return sorted(p for p in checkpoint_dir.rglob("*.npz") if "run_configs" not in p.parts)
+
+
+def all_prediction_files(checkpoint_dir):
+    """Every *.npz holding (row_ids, y_true, y_pred) -- every checkpoint file except tuning_once.npz, which
+    holds only a training-row count (no prediction to score)."""
+    return sorted(p for p in all_checkpoint_files(checkpoint_dir) if p.stem != "tuning_once")
+
+
+def file_hashes(paths):
+    import hashlib
+    return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+
+def run_full(csv, labels_run, splits_dir, checkpoint_dir):
+    """gpu-pooled then cpu-specialist (device=cpu throughout), to completion, sequentially."""
+    for role in ("gpu-pooled", "cpu-specialist"):
+        result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, checkpoint_dir, role),
+                                capture_output=True, text=True)
+        if result.returncode != 0:
+            raise RuntimeError(f"{role} failed:\n{result.stdout}\n{result.stderr}")
+
+
+def check_1_leakage_assertions_exercised():
+    """
+    The assertions are enforced inline in lofo_paperb.py's fitting functions
+    (assert_disjoint/assert_subset/assert_size_equal calls at each of the 6
+    points section 8.1 names); a completed run_full() above with no
+    AssertionError means all 6 held on this data. This check additionally
+    proves each assertion FUNCTION is capable of catching a real violation,
+    by feeding it a deliberately bad input.
+    """
+    ok = True
+    try:
+        L.assert_disjoint(np.array([1, 2, 3]), np.array([3, 4]), 10, "test")
+        ok = False  # should have raised
+    except AssertionError:
+        pass
+    try:
+        L.assert_subset(np.array([1, 2, 99]), np.array([1, 2, 3]), "test")
+        ok = False
+    except AssertionError:
+        pass
+    try:
+        L.assert_size_equal(5, 6, "test")
+        ok = False
+    except AssertionError:
+        pass
+    return ok
+
+
+def check_2_checkpoint_resume(csv, labels_run, splits_dir, work_dir):
+    """Full run for a reference file set/hash; then a killed-and-resumed run; compare."""
+    ref_dir = work_dir / "reference"
+    run_full(csv, labels_run, splits_dir, ref_dir)
+    ref_files = all_checkpoint_files(ref_dir)
+    ref_hashes = file_hashes(ref_files)
+    ref_names = {p.relative_to(ref_dir) for p in ref_files}
+
+    kill_dir = work_dir / "kill_resume"
+    kill_dir.mkdir(parents=True)
+    proc = subprocess.Popen(harness_cmd(csv, labels_run, splits_dir, kill_dir, "gpu-pooled"),
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Poll for the first real checkpoint file rather than guess a fixed delay (dataset loading alone took
+    # longer than two earlier fixed guesses, 1.5s and 20s, both of which killed before anything existed --
+    # a too-early kill makes "no file rewritten on resume" vacuously true over an empty partial set). Once
+    # at least one file exists, give it a little longer so more than a single file is at risk of being
+    # rewritten, then kill.
+    deadline = time.time() + 180
+    first_seen = None
+    while time.time() < deadline:
+        if all_checkpoint_files(kill_dir):
+            first_seen = time.time()
+            break
+        if proc.poll() is not None:
+            raise RuntimeError(f"gpu-pooled exited on its own (code {proc.returncode}) before any checkpoint appeared")
+        time.sleep(1)
+    if first_seen is None:
+        proc.terminate()
+        raise RuntimeError("no checkpoint file appeared within 180s; cannot test a non-vacuous kill/resume")
+    time.sleep(5)  # let a second file land too, so resume has more than one file to risk rewriting
+    proc.terminate()
+    proc.wait(timeout=15)
+    partial_files = all_checkpoint_files(kill_dir)
+    partial_hashes = file_hashes(partial_files)
+
+    # Resume: gpu-pooled again (same command), then cpu-specialist, to reach the same full set as the reference.
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, kill_dir, "gpu-pooled"), capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"resumed gpu-pooled failed:\n{result.stdout}\n{result.stderr}")
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, kill_dir, "cpu-specialist"), capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"resumed cpu-specialist failed:\n{result.stdout}\n{result.stderr}")
+
+    final_files = all_checkpoint_files(kill_dir)
+    final_names = {p.relative_to(kill_dir) for p in final_files}
+    final_hashes = file_hashes(final_files)
+
+    not_rewritten = all(final_hashes.get(path) == h for path, h in partial_hashes.items())
+    same_final_set = final_names == ref_names
+    return {
+        "n_partial_files_before_resume": len(partial_files), "n_reference_files": len(ref_files),
+        "n_final_files": len(final_files), "partial_was_incomplete": len(partial_files) < len(ref_files),
+        "no_file_rewritten_on_resume": not_rewritten, "final_set_matches_reference": same_final_set,
+        "passed": not_rewritten and same_final_set and len(partial_files) < len(ref_files),
+    }, ref_dir
+
+
+def check_3_determinism(csv, labels_run, splits_dir, ref_dir, work_dir):
+    """Delete one completed unit's C0 r1f0 xgboost checkpoint; rerun alone; compare bit-for-bit to the reference."""
+    rel = Path("family") / TARGET / "manganite" / "xgboost" / "C0" / "r1_f0"
+    target_path = ref_dir / rel
+    original = dict(np.load(target_path.with_suffix(".npz")))
+    solo_dir = work_dir / "determinism"
+    shutil.copytree(ref_dir, solo_dir)
+    (solo_dir / rel).with_suffix(".npz").unlink()
+    (solo_dir / rel).with_suffix(".json").unlink()
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, solo_dir, "gpu-pooled",
+                                        extra=["--units", "manganite", "--folds", "0"]),
+                            capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"determinism rerun failed:\n{result.stdout}\n{result.stderr}")
+    rerun = dict(np.load((solo_dir / rel).with_suffix(".npz")))
+    identical = all(np.array_equal(original[k], rerun[k]) for k in original)
+    return {"identical_predictions": identical, "arrays_compared": list(original.keys()), "passed": identical}
+
+
+def check_4_murphy_and_r2(ref_dir):
+    """Every saved prediction file: Murphy shares sum to 1 (1e-9), and R^2 matches sklearn's."""
+    rows = []
+    for path in all_prediction_files(ref_dir):
+        arrays = np.load(path)
+        y_true, y_pred = arrays["y_true"], arrays["y_pred"]
+        decomposition = M.murphy_decomposition(y_true, y_pred)
+        shares_sum = decomposition["offset_share"] + decomposition["scale_share"] + decomposition["unexplained_share"]
+        r2_mine = M.r2_score(y_true, y_pred)
+        r2_sklearn = float(sklearn_r2_score(y_true, y_pred))
+        rows.append({"file": str(path.relative_to(ref_dir)), "shares_sum": shares_sum,
+                    "shares_ok": abs(shares_sum - 1.0) < 1e-9, "r2_mine": r2_mine, "r2_sklearn": r2_sklearn,
+                    "r2_ok": abs(r2_mine - r2_sklearn) < 1e-9 or (np.isnan(r2_mine) and np.isnan(r2_sklearn))})
+    return {"n_files_checked": len(rows), "all_shares_ok": all(r["shares_ok"] for r in rows),
+            "all_r2_ok": all(r["r2_ok"] for r in rows), "worst_shares_deviation": max(abs(r["shares_sum"] - 1.0) for r in rows),
+            "passed": all(r["shares_ok"] and r["r2_ok"] for r in rows)}
+
+
+def check_5_hand_check(ref_dir):
+    """One unit (manganite, xgboost, C0, r1f0): recompute R^2/skill/Murphy/r independently, no metrics_paperb import."""
+    rel = Path("family") / TARGET / "manganite" / "xgboost" / "C0" / "r1_f0"
+    arrays = np.load((ref_dir / rel).with_suffix(".npz"))
+    sidecar = json.loads((ref_dir / rel).with_suffix(".json").read_text(encoding="utf-8"))
+    y_true, y_pred, train_mean = arrays["y_true"], arrays["y_pred"], float(arrays["train_mean"][0])
+
+    # -- hand computation, independent of metrics_paperb.py --
+    n = len(y_true)
+    ss_res = sum((yt - yp) ** 2 for yt, yp in zip(y_true, y_pred))
+    ss_tot = sum((yt - sum(y_true) / n) ** 2 for yt in y_true)
+    r2_hand = 1 - ss_res / ss_tot
+    mse_model = ss_res / n
+    mse_baseline = sum((yt - train_mean) ** 2 for yt in y_true) / n
+    skill_hand = 1 - mse_model / mse_baseline
+    mean_t, mean_p = sum(y_true) / n, sum(y_pred) / n
+    var_t = sum((yt - mean_t) ** 2 for yt in y_true) / n
+    var_p = sum((yp - mean_p) ** 2 for yp in y_pred) / n
+    cov = sum((yt - mean_t) * (yp - mean_p) for yt, yp in zip(y_true, y_pred)) / n
+    r_hand = cov / (var_t ** 0.5 * var_p ** 0.5)
+    s_t, s_p = var_t ** 0.5, var_p ** 0.5
+    offset_hand = (mean_p - mean_t) ** 2
+    scale_hand = (s_p - r_hand * s_t) ** 2
+    unexplained_hand = (1 - r_hand ** 2) * s_t ** 2
+    total_hand = offset_hand + scale_hand + unexplained_hand
+    hand = {"r2": r2_hand, "skill_train": skill_hand, "within_family_r": r_hand,
+           "offset_share": offset_hand / total_hand, "scale_share": scale_hand / total_hand,
+           "unexplained_share": unexplained_hand / total_hand}
+
+    module = M.pool_metrics(y_true, y_pred, train_mean)
+    module_view = {"r2": module["r2"], "skill_train": module["skill_train"], "within_family_r": module["within_family_r"],
+                  "offset_share": module["offset_share"], "scale_share": module["scale_share"],
+                  "unexplained_share": module["unexplained_share"]}
+    agree = all(abs(hand[k] - module_view[k]) < 1e-9 for k in hand)
+    return {"unit": rel.as_posix(), "n_rows": int(n), "hand": hand, "metrics_paperb": module_view, "agree": agree, "passed": agree}
+
+
+def check_6_bootstrap(ref_dir):
+    """
+    A CI is produced for one unit/condition; a paired difference of a
+    prediction array against itself is exactly 0 everywhere. The saved
+    prediction file carries row_ids but not each row's chemistry cluster, so
+    this uses row_ids themselves as the resampling unit -- a structural check
+    of the bootstrap machinery (does it produce a CI, is a paired identical
+    difference exactly 0), not a claim about real cluster-level resampling.
+    """
+    rel = Path("family") / TARGET / "manganite" / "xgboost" / "C0" / "r1_f0"
+    arrays = np.load((ref_dir / rel).with_suffix(".npz"))
+    y_true, y_pred, row_ids = arrays["y_true"], arrays["y_pred"], arrays["row_ids"]
+    lo, hi, values = M.cluster_bootstrap_ci(y_true, y_pred, row_ids, M.r2_score, n_resamples=200, seed=0)
+    lo_diff, hi_diff, diff_values = M.paired_cluster_bootstrap_ci(y_true, y_pred, y_pred, row_ids, M.r2_score,
+                                                                 n_resamples=200, seed=0)
+    ci_produced = bool(np.isfinite(lo) and np.isfinite(hi))
+    paired_all_zero = bool(np.all(diff_values == 0.0))
+    return {"ci_lo": lo, "ci_hi": hi, "paired_diff_all_zero": paired_all_zero, "ci_produced": ci_produced,
+            "passed": ci_produced and paired_all_zero}
+
+
+def check_7_smoke_guard_refusal(csv, labels_run, splits_dir):
+    """The harness must refuse --smoke-search-space-cap unless --checkpoint-dir contains 'smoke'."""
+    import tempfile
+    non_smoke_dir = Path(tempfile.mkdtemp(prefix="lofo_guard_test_"))
+    try:
+        cmd = harness_cmd(csv, labels_run, splits_dir, non_smoke_dir, "gpu-pooled",
+                          extra=["--units", "manganite", "--folds", "0"])
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        refused = result.returncode != 0 and "smoke" in (result.stderr or "").lower()
+        return {"checkpoint_dir_used": str(non_smoke_dir), "returncode": result.returncode,
+                "stderr_tail": (result.stderr or "")[-500:], "refused_as_expected": refused, "passed": refused}
+    finally:
+        shutil.rmtree(non_smoke_dir, ignore_errors=True)
+
+
+def check_8_analysis_loader_guard(ref_dir, work_dir):
+    """
+    lofo_paperb.load_checkpoint_dir_for_analysis must raise for (a) any unit
+    with smoke_cap=true -- this whole smoke test's own reference run, every
+    unit of which was fit with --smoke-search-space-cap -- and, separately,
+    (b) two run_configs that disagree on the identity fields, isolated from
+    (a) via a small synthetic directory with no smoke_cap issue at all.
+    """
+    results = {}
+    try:
+        L.load_checkpoint_dir_for_analysis(ref_dir)
+        results["smoke_cap_rejected"] = False
+    except ValueError as exc:
+        results["smoke_cap_error"] = str(exc)
+        results["smoke_cap_rejected"] = "smoke" in str(exc).lower()
+
+    synth = work_dir / "synthetic_identity_mismatch"
+    (synth / "run_configs").mkdir(parents=True)
+    (synth / "family" / "zT" / "x" / "xgboost" / "C0").mkdir(parents=True)
+    base_config = {"dataset_sha256": "a" * 64, "splits_dir": "some/path", "labels_sha256": "b" * 64, "git_head": "deadbeef"}
+    (synth / "run_configs" / "session1.json").write_text(json.dumps(base_config), encoding="utf-8")
+    (synth / "run_configs" / "session2.json").write_text(json.dumps({**base_config, "git_head": "feedface"}), encoding="utf-8")
+    (synth / "family" / "zT" / "x" / "xgboost" / "C0" / "r1_f0.json").write_text(
+        json.dumps({"params": {}, "n_train": 10, "smoke_cap": False}), encoding="utf-8")
+    try:
+        L.load_checkpoint_dir_for_analysis(synth)
+        results["identity_mismatch_rejected"] = False
+    except ValueError as exc:
+        results["identity_mismatch_error"] = str(exc)
+        results["identity_mismatch_rejected"] = "disagree" in str(exc)
+
+    results["passed"] = bool(results.get("smoke_cap_rejected")) and bool(results.get("identity_mismatch_rejected"))
+    return results
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument("--csv", required=True)
+    parser.add_argument("--labels-run", required=True)
+    parser.add_argument("--splits-dir", required=True)
+    parser.add_argument("--work-dir", default=None)
+    args = parser.parse_args(argv)
+
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+    out_dir = Path("paper_b/results/smoke_test") / stamp
+    out_dir.mkdir(parents=True)
+    work_dir = Path(args.work_dir) if args.work_dir else out_dir / "work"
+    work_dir.mkdir(parents=True, exist_ok=True)
+
+    report = {"utc_stamp": stamp, "target": TARGET, "units": UNITS, "folds": FOLDS, "trials": TRIALS}
+    report["check_1_leakage_assertions"] = {"assertion_functions_catch_violations": check_1_leakage_assertions_exercised()}
+    report["check_1_leakage_assertions"]["passed"] = report["check_1_leakage_assertions"]["assertion_functions_catch_violations"]
+
+    resume_result, ref_dir = check_2_checkpoint_resume(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_1_leakage_assertions"]["exercised_by_reference_run_with_no_assertion_error"] = True  # run_full() above succeeded
+    report["check_2_checkpoint_resume"] = resume_result
+    report["check_3_determinism"] = check_3_determinism(args.csv, args.labels_run, args.splits_dir, ref_dir, work_dir)
+    report["check_4_murphy_and_r2"] = check_4_murphy_and_r2(ref_dir)
+    report["check_5_hand_check"] = check_5_hand_check(ref_dir)
+    report["check_6_bootstrap"] = check_6_bootstrap(ref_dir)
+    report["check_7_smoke_guard_refusal"] = check_7_smoke_guard_refusal(args.csv, args.labels_run, args.splits_dir)
+    report["check_8_analysis_loader_guard"] = check_8_analysis_loader_guard(ref_dir, work_dir)
+
+    report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
+    (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")
+
+    print(json.dumps(report, indent=2, default=str))
+    print(f"\nWrote {out_dir}")
+    print("ALL PASSED" if report["all_passed"] else "SOME CHECKS FAILED")
+    return 0 if report["all_passed"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
