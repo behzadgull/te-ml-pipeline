@@ -572,3 +572,61 @@ GPU at all, which is the actual benefit plan (iii) offers, not raw speed).
 Provenance: `paper_b/reports/calibration/20260929T101522_throughput/`
 (4 runs, dataset SHA and commit `e2ef434` verified, `tree_clean` true in
 each); estimate at `paper_b/reports/compute_estimate/<latest>/`.
+
+### 8.7 Execution plan (2026-09-29)
+
+**R = 3.** Fixed by the 8.4 decision, from the compute estimate at section
+8.5/8.6: plan (i) and (iii) both scale acceptably at R=3, and R=3 gives three
+independent per-repeat estimates (mean and SD) rather than one, at a cost
+still well inside a small number of Kaggle sessions.
+
+**Pooled tuning and C0-C3 on GPU: two worker processes, pinned to `cuda:0`
+and `cuda:1`, pulling (t, F) units off a shared queue.** Section 8.6's
+throughput calibration found no benefit from several small fits sharing one
+GPU (every worker's unindexed `device='cuda'` resolved to the same physical
+device), so this session does not repeat that mistake: each of the two
+worker processes is started with its own explicit GPU index, so both of the
+box's Tesla T4s are actually used, one full (t, F) unit's tuning_once/C0-C3
+work at a time per worker.
+
+**Specialists on Kaggle CPU sessions: 4 workers, 1 thread each.** This is
+the concurrency section 8.6 measured a real benefit from (2.28x at the
+specialist scale), applied here as the default rather than as an
+afterthought: each of the 4 CPU worker processes runs `xgboost`'s `n_jobs=1`
+and takes specialist units off its own queue.
+
+**Device control, 3 (t, F) pairs, chosen now, before any run.** Rule: for
+target zT, the largest, the median (by rank, odd count so no averaging
+needed) and the smallest family that qualifies for zT under the frozen
+threshold (`family_summary.csv`, `qualifies_zT`), excluding `unassignable`
+and `other_oxide` (never held out). Chosen:
+
+| Rank | Family | Rows (zT) | Clusters (zT) |
+|---|---|---|---|
+| Largest | iv_vi_rocksalt | 17,754 | 420 |
+| Median (rank 10 of 19) | zintl_122 | 2,228 | 88 |
+| Smallest | manganite | 1,153 | 53 |
+
+For these 3 pairs, the specialist also runs on GPU (in addition to its
+normal CPU run), same folds and repeats, same tuning trial count. Report the
+max |metric difference| between the GPU and CPU specialist runs, per
+metric (R^2, skill_train, Murphy shares, within-family r). **If that
+difference exceeds 10% of |specialist - C0| for a family** (on the same
+metric), flag that family's specialist-vs-pooled comparison as
+device-sensitive rather than reporting it uncaveated; a small, genuine
+device difference in a metric that itself only differs from C0 by a little
+would otherwise read as more meaningful than it is.
+
+**The measured two-GPU speed-up is reported from session 1's own logs, not
+assumed.** This section states the plan and the acceptance rule; it does
+not state a speed-up number, because none exists yet. `paper_b/src/
+lofo_paperb.py`'s `run_config.json` for the `gpu-pooled` role records each
+worker's GPU index and wall-clock time per unit, so the actual two-worker
+throughput (against the same units run single-worker, or against 8.5's
+per-fit cost model) is computed after session 1, not guessed here.
+
+**Fixed the same day: `calibrate_throughput.py`'s budget check.** It only
+checked between the two named configs, not inside one, so the device=cpu,
+concurrency=4 run in section 8.6 ran 26 minutes against a 12-minute budget
+with `truncated_by_budget` left `false`. It now checks before each repeat's
+sequential half and again before its concurrent half.

@@ -30,7 +30,11 @@ This script does not decide the speedup; it only measures it. Loads the
 snapfix CSV (SHA-checked) once, for zT's frozen hyperparameters and rows, as
 calibrate_fit_cost.py does. Records the GPU/CPU, library versions, dataset
 SHA256, git HEAD, tree_clean. Writes a CSV and a run_config into a bundle to
-download. Stops starting new timings after --budget-minutes (default 12).
+download. Checks --budget-minutes (default 12) before each repeat's sequential
+half and again before its concurrent half, not only between the two named
+configs (2026-09-29 fix: the first version only checked between configs, so a
+single slow config -- device=cpu, concurrency=4, specialist scale -- ran for
+26 minutes against a 12-minute budget with truncated_by_budget left false).
 
 Run from the repository root:
     python paper_b/scripts/calibrate_throughput.py --csv <snapfix csv> --device cuda --concurrency 2 \
@@ -210,17 +214,26 @@ def main(argv=None):
     pred_idx, pool = order[:N_PREDICT], order[N_PREDICT:]
     mp_context = mp.get_context("spawn")
 
+    def over_budget():
+        return (time.perf_counter() - started) / 60.0 > args.budget_minutes
+
     rows, truncated = [], False
     for config_name in CONFIGS:
-        if (time.perf_counter() - started) / 60.0 > args.budget_minutes:
+        if over_budget():
             truncated = True
-            continue
+            break
         n, depth, trees = CONFIGS[config_name]
         sequential_totals, concurrent_walls, concurrent_fit_times = [], [], []
         for repeat in range(TIMINGS):
+            if over_budget():
+                truncated = True
+                break
             worker_args = build_worker_args(X, y, pred_idx, pool, config_name, args.concurrency,
                                              SEED + repeat, base_params, args.device, n_jobs)
             sequential_totals.append(time_sequential(worker_args))
+            if over_budget():  # the sequential half alone may already have used the remaining budget
+                truncated = True
+                break
             worker_args = build_worker_args(X, y, pred_idx, pool, config_name, args.concurrency,
                                              1000 + SEED + repeat, base_params, args.device, n_jobs)
             wall, fit_times = time_concurrent(worker_args, mp_context)
@@ -230,19 +243,27 @@ def main(argv=None):
                          "concurrency": args.concurrency, "device": args.device, "n_jobs_per_worker": n_jobs,
                          "repeat": repeat, "sequential_total_seconds": sequential_totals[-1],
                          "concurrent_wall_seconds": wall, "concurrent_fit_seconds": fit_times})
-        seq_med, conc_med = float(np.median(sequential_totals)), float(np.median(concurrent_walls))
-        speedup = seq_med / conc_med if conc_med > 0 else float("nan")
-        print(f"{config_name} (n={n:,}, depth={depth}, trees={trees}): sequential median {seq_med:.2f} s, "
-              f"concurrent median {conc_med:.2f} s, speedup {speedup:.2f}x "
-              f"[{(time.perf_counter() - started) / 60:.1f} min elapsed]", flush=True)
+        if concurrent_walls:
+            seq_med, conc_med = float(np.median(sequential_totals)), float(np.median(concurrent_walls))
+            speedup = seq_med / conc_med if conc_med > 0 else float("nan")
+            print(f"{config_name} (n={n:,}, depth={depth}, trees={trees}): sequential median {seq_med:.2f} s, "
+                  f"concurrent median {conc_med:.2f} s, speedup {speedup:.2f}x "
+                  f"[{(time.perf_counter() - started) / 60:.1f} min elapsed]"
+                  + (" -- truncated, fewer than 3 repeats completed" if len(concurrent_walls) < TIMINGS else ""), flush=True)
+        elif truncated:
+            print(f"{config_name}: skipped, over budget before any repeat completed", flush=True)
 
     timings = pd.DataFrame(rows)
     timings.to_csv(out_dir / "throughput_timings.csv", index=False)
-    summary = timings.groupby(["config", "n", "max_depth", "n_estimators", "concurrency", "device", "n_jobs_per_worker"]).agg(
-        sequential_median_seconds=("sequential_total_seconds", "median"),
-        concurrent_median_seconds=("concurrent_wall_seconds", "median"),
-    ).reset_index()
-    summary["speedup"] = summary["sequential_median_seconds"] / summary["concurrent_median_seconds"]
+    if rows:
+        summary = timings.groupby(["config", "n", "max_depth", "n_estimators", "concurrency", "device", "n_jobs_per_worker"]).agg(
+            sequential_median_seconds=("sequential_total_seconds", "median"),
+            concurrent_median_seconds=("concurrent_wall_seconds", "median"),
+        ).reset_index()
+        summary["speedup"] = summary["sequential_median_seconds"] / summary["concurrent_median_seconds"]
+    else:
+        summary = pd.DataFrame(columns=["config", "n", "max_depth", "n_estimators", "concurrency", "device",
+                                        "n_jobs_per_worker", "sequential_median_seconds", "concurrent_median_seconds", "speedup"])
     summary.to_csv(out_dir / "throughput_summary.csv", index=False)
 
     git_head = run(["git", "rev-parse", "HEAD"])
