@@ -541,14 +541,35 @@ def assert_size_equal(a, b, context):
 # ---------------------------------------------------------------------------
 
 def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target, cluster_ids, checkpoint_dir,
-                        splits_dir, tuning_trials=TUNING_TRIALS, repeats=None, folds=None, smoke_cap=False):
+                        splits_dir, tuning_trials=TUNING_TRIALS, repeats=None, folds=None, smoke_cap=False,
+                        deadline=None, on_unit_done=None):
     """
     tuning_once + C0/C1/C2/C3 for one (level, target, unit, model) pair.
-    Returns a list of (component, path, wrote) for what ran; anything already
-    checkpointed is skipped. `repeats`/`folds` restrict which repeat numbers
-    (1-based) and fold indices (0-based) are processed this call, leaving the
-    rest for a later invocation.
+    Returns (log, deadline_hit): `log` is a list of (component, path, wrote)
+    for what ran (anything already checkpointed is skipped); `deadline_hit`
+    is True if this call stopped early because `deadline` (an absolute
+    `time.time()` value, or None for no budget) had passed.
+
+    A single call can span tuning_once + C1 + C0/C2/C3 across every repeat
+    and fold -- potentially a long-running unit of work, since `run_pool`'s
+    own --time-budget-hours check only gates which TASK gets dispatched
+    next, not what happens inside one already-dispatched task (found
+    2026-09-30: a task that started before the deadline ran ~70+ minutes
+    unbroken against a 5-minute budget). This function therefore checks the
+    SAME deadline itself, immediately after every piece of real work it
+    does (tuning_once, C1, and each (component, repeat, fold) fit) -- never
+    mid-fit (a single model.fit() call is not preemptable), only between
+    them -- and returns as soon as it finds the deadline passed, leaving
+    whatever remains for a later invocation to pick up via the usual
+    write_if_absent skip-logic. `repeats`/`folds` restrict which repeat
+    numbers (1-based) and fold indices (0-based) are processed this call,
+    same as before. `on_unit_done(component, repeat, fold, seconds)`, if
+    given, is called immediately after each piece of real work (not after a
+    skip) for progress logging -- see log_unit_progress.
     """
+    def deadline_passed():
+        return deadline is not None and time.time() >= deadline
+
     y = transform_target(y_by_target[target], target)
     n_rows = len(y)
     not_nan = ~np.isnan(y)
@@ -568,6 +589,7 @@ def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target,
     else:
         _, tuning_sidecar = load_checkpoint(base / "tuning_once")
         if tuning_sidecar is None:
+            unit_started = time.perf_counter()
             excl_mask = exclude_unit_mask(npz, n_rows) & not_nan
             assert_disjoint(excl_mask, unit_row_ids(npz), n_rows, f"tuning_once {level}/{target}/{unit}: contains a row of F")
             best_params, inner_cv_r2 = tune_once(model_type, device, seed_for(level, target, unit, model_type, "tuning"),
@@ -577,12 +599,17 @@ def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target,
                                             "device": device, "n_trials": tuning_trials,
                                             "best_params": best_params, "inner_cv_r2": inner_cv_r2, "smoke_cap": smoke_cap})
             log.append(("tuning_once", base / "tuning_once", wrote))
+            if on_unit_done is not None:
+                on_unit_done("tuning_once", None, None, time.perf_counter() - unit_started)
+            if deadline_passed():
+                return log, True
         else:
             best_params = tuning_sidecar["best_params"]
 
         c1_train_size = int((exclude_unit_mask(npz, n_rows) & not_nan).sum())
         c1_path = base / "C1"
         if not c1_path.with_suffix(".npz").exists():
+            unit_started = time.perf_counter()
             excl_mask = exclude_unit_mask(npz, n_rows) & not_nan
             assert_disjoint(excl_mask, unit_row_ids(npz), n_rows, f"C1 {level}/{target}/{unit}: training contains a row of F")
             f_row_ids = unit_row_ids(npz)
@@ -593,6 +620,10 @@ def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target,
                                                      "train_mean": np.array([y[excl_mask].mean()])},
                                     sidecar={"params": best_params, "n_train": int(excl_mask.sum()), "smoke_cap": smoke_cap})
             log.append(("C1", c1_path, wrote))
+            if on_unit_done is not None:
+                on_unit_done("C1", None, None, time.perf_counter() - unit_started)
+            if deadline_passed():
+                return log, True
 
     repeat_range = repeats if repeats is not None else range(1, R + 1)
     fold_range = folds if folds is not None else range(N_FOLDS)
@@ -615,6 +646,7 @@ def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target,
                 path = base / component / f"r{repeat}_f{fold}"
                 if path.with_suffix(".npz").exists():
                     continue
+                unit_started = time.perf_counter()
                 train_mask = c0_train_mask.copy()
                 if extra_removed_key is not None:
                     train_mask[npz[extra_removed_key]] = False
@@ -631,7 +663,11 @@ def process_pooled_pair(level, target, unit, model_type, device, X, y_by_target,
                                                       "train_mean": np.array([y[train_mask].mean()])},
                                         sidecar={"params": best_params, "n_train": int(train_mask.sum()), "smoke_cap": smoke_cap})
                 log.append((component, path, wrote))
-    return log
+                if on_unit_done is not None:
+                    on_unit_done(component, repeat, fold, time.perf_counter() - unit_started)
+                if deadline_passed():
+                    return log, True
+    return log, False
 
 
 # ---------------------------------------------------------------------------
@@ -683,7 +719,7 @@ _WORKER_STATE = {}
 
 
 def _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials, specialist_trials,
-                      repeats, folds, smoke_cap=False):
+                      repeats, folds, smoke_cap=False, deadline=None):
     """Runs once per worker process (or once, directly, for --workers<=1): load the dataset, resolve this worker's slot/GPU index."""
     if smoke_cap:
         apply_smoke_search_space_cap()
@@ -695,25 +731,46 @@ def _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter
     _WORKER_STATE.update(X=X, y_by_target=y_by_target, cluster_ids=cluster_ids, identity=identity,
                          splits_dir=Path(splits_dir), checkpoint_dir=Path(checkpoint_dir), worker_gpu=worker_gpu,
                          worker_slot=slot, tuning_trials=tuning_trials, specialist_trials=specialist_trials,
-                         repeats=repeats, folds=folds, smoke_cap=smoke_cap)
+                         repeats=repeats, folds=folds, smoke_cap=smoke_cap, deadline=deadline)
 
 
 def _device():
     return f"cuda:{_WORKER_STATE['worker_gpu']}" if _WORKER_STATE["worker_gpu"] is not None else "cpu"
 
 
+def log_unit_progress(worker_slot, gpu_index, level, target, unit, condition, repeat, fold, model_type, seconds):
+    """
+    One flushed stdout line per finished unit: UTC time, worker, GPU index,
+    target (t), unit (F), condition, repeat, fold, model, seconds. Kaggle
+    buffers stdout by default, which is why the 70+-minute hang (2026-09-30)
+    produced no visible output at all until cancelled -- run every Kaggle
+    cell with `python -u` so these lines appear as they happen, not only at
+    process exit.
+    """
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    print(f"{ts} worker={worker_slot} gpu={gpu_index} level={level} target={target} unit={unit} "
+          f"condition={condition} repeat={repeat} fold={fold} model={model_type} seconds={seconds:.2f}", flush=True)
+
+
 def _pooled_task(task):
     """One gpu-pooled task: (level, target, unit, model_type)."""
     level, target, unit, model_type = task
     device = _device()
+    worker_slot, gpu_index = _WORKER_STATE["worker_slot"], _WORKER_STATE["worker_gpu"]
     started = time.perf_counter()
-    log = process_pooled_pair(level, target, unit, model_type, device, _WORKER_STATE["X"], _WORKER_STATE["y_by_target"],
-                              _WORKER_STATE["cluster_ids"], _WORKER_STATE["checkpoint_dir"], _WORKER_STATE["splits_dir"],
-                              tuning_trials=_WORKER_STATE["tuning_trials"], repeats=_WORKER_STATE["repeats"],
-                              folds=_WORKER_STATE["folds"], smoke_cap=_WORKER_STATE["smoke_cap"])
+
+    def on_unit_done(component, repeat, fold, seconds):
+        log_unit_progress(worker_slot, gpu_index, level, target, unit, component, repeat, fold, model_type, seconds)
+
+    log, deadline_hit = process_pooled_pair(
+        level, target, unit, model_type, device, _WORKER_STATE["X"], _WORKER_STATE["y_by_target"],
+        _WORKER_STATE["cluster_ids"], _WORKER_STATE["checkpoint_dir"], _WORKER_STATE["splits_dir"],
+        tuning_trials=_WORKER_STATE["tuning_trials"], repeats=_WORKER_STATE["repeats"],
+        folds=_WORKER_STATE["folds"], smoke_cap=_WORKER_STATE["smoke_cap"],
+        deadline=_WORKER_STATE.get("deadline"), on_unit_done=on_unit_done)
     return {"task": list(task), "device": device, "seconds": time.perf_counter() - started,
-            "wrote": [str(p) for _, p, wrote in log if wrote], "gpu_index": _WORKER_STATE["worker_gpu"],
-            "worker_slot": _WORKER_STATE["worker_slot"]}
+            "wrote": [str(p) for _, p, wrote in log if wrote], "gpu_index": gpu_index,
+            "worker_slot": worker_slot, "deadline_hit": deadline_hit}
 
 
 def _specialist_task(task):
@@ -727,23 +784,33 @@ def _specialist_task(task):
                                      trials=_WORKER_STATE["specialist_trials"], checkpoint_suffix=suffix,
                                      smoke_cap=_WORKER_STATE["smoke_cap"])
     wrote = bool(result[2]) if result is not None else False
-    return {"task": list(task), "device": device, "seconds": time.perf_counter() - started, "wrote": [] if not wrote else [str(result[1])],
+    elapsed = time.perf_counter() - started
+    log_unit_progress(_WORKER_STATE["worker_slot"], _WORKER_STATE["worker_gpu"], level, target, unit,
+                      f"specialist{suffix}", repeat, fold, model_type, elapsed)
+    return {"task": list(task), "device": device, "seconds": elapsed, "wrote": [] if not wrote else [str(result[1])],
             "gpu_index": _WORKER_STATE["worker_gpu"], "worker_slot": _WORKER_STATE["worker_slot"]}
 
 
 def _budgeted(tasks, deadline):
     """
     Yield `tasks` in order, stopping (a plain StopIteration, no partial task
-    yielded) once `time.perf_counter() >= deadline`. `deadline` of None means
-    no budget: yield everything. This is how --time-budget-hours "starts no
-    new unit" after the budget: a task already pulled by an idle worker
-    always runs to completion (this only gates what gets pulled NEXT), and
-    with workers > 1 a multiprocessing.Pool may have a small number of tasks
+    yielded) once `time.time() >= deadline`. `deadline` of None means no
+    budget: yield everything. This is how --time-budget-hours "starts no new
+    unit" between TASKS -- a task already pulled by an idle worker used to
+    always run to completion regardless of the deadline (this only gated
+    what got pulled NEXT); as of 2026-09-30 that is no longer the whole
+    story for gpu-pooled, since process_pooled_pair now also checks the
+    SAME deadline between the components inside one task (see its own
+    docstring) -- both checks share this one wall-clock deadline value.
+    `time.time()`, not `time.perf_counter()`, because this deadline is
+    computed once in the parent process and must also be read correctly
+    inside spawned worker processes (see main()'s own note on this).  With
+    workers > 1 a multiprocessing.Pool may have a small number of tasks
     already buffered for dispatch at the moment the deadline is crossed, so
     the cutoff is close to H hours, not exact to the second.
     """
     for task in tasks:
-        if deadline is not None and time.perf_counter() >= deadline:
+        if deadline is not None and time.time() >= deadline:
             return
         yield task
 
@@ -752,15 +819,27 @@ def run_pool(tasks, task_fn, csv_path, splits_dir, checkpoint_dir, gpu_indices, 
             repeats, folds, smoke_cap=False, deadline=None):
     """
     Run `tasks` through `task_fn`, in this process if workers<=1, else via a
-    `workers`-process pool (a shared work queue). Returns (results,
-    n_not_started): n_not_started is how many of `tasks` were never even
-    attempted this session because `deadline` (an absolute time.perf_counter()
-    value; see --time-budget-hours) had already passed.
+    `workers`-process pool (a shared work queue). `deadline` (an absolute
+    `time.time()` value; see --time-budget-hours) is passed into every
+    worker's `_WORKER_STATE` too (not just used to gate `_budgeted` here),
+    so gpu-pooled's `process_pooled_pair` can also check it between the
+    components INSIDE one task -- a single (level, target, unit, model) task
+    can run tuning_once + C1 + C0/C2/C3 across every repeat and fold, which
+    without that finer check could run for a long time uninterrupted even
+    after the deadline passed (found 2026-09-30: a Kaggle smoke run hung for
+    70+ minutes against a 5-minute budget, one gpu-pooled task running
+    unbroken). Returns (results, n_not_started): n_not_started is how many
+    of `tasks` were never even attempted this session because the deadline
+    had already passed before `_budgeted` reached them. A task that WAS
+    attempted but stopped partway through (gpu-pooled only, deadline hit
+    between components) still appears in `results`, with `deadline_hit=True`
+    in its dict -- see main()'s session_summary, which folds these into
+    units_remaining too.
     """
     tasks = list(tasks)
     if workers <= 1:
         _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, mp.Value("i", 0), tuning_trials,
-                          specialist_trials, repeats, folds, smoke_cap)
+                          specialist_trials, repeats, folds, smoke_cap, deadline)
         # check the deadline live, right before each task, not once up front against the whole list
         results = [task_fn(task) for task in _budgeted(tasks, deadline)]
     else:
@@ -769,7 +848,7 @@ def run_pool(tasks, task_fn, csv_path, splits_dir, checkpoint_dir, gpu_indices, 
         context = mp.get_context("spawn")
         with context.Pool(processes=workers, initializer=_pool_initializer,
                           initargs=(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials,
-                                   specialist_trials, repeats, folds, smoke_cap)) as pool:
+                                   specialist_trials, repeats, folds, smoke_cap, deadline)) as pool:
             results = list(pool.imap_unordered(task_fn, budgeted))
     return results, len(tasks) - len(results)
 
@@ -853,7 +932,11 @@ def main(argv=None):
         print(f"--restore-from {args.restore_from}: {restore_result['n_copied']} file(s) copied, "
               f"{restore_result['n_already_present']} already present, of {restore_result['n_manifest_entries']} listed")
 
-    deadline = time.perf_counter() + args.time_budget_hours * 3600 if args.time_budget_hours is not None else None
+    # time.time(), not time.perf_counter(): this deadline is read inside spawned worker processes too (run_pool
+    # passes it into _WORKER_STATE, for process_pooled_pair's own in-pair check), and perf_counter()'s reference
+    # point is documented as undefined -- only valid to diff within the process that produced it. time.time() is
+    # an ordinary wall-clock timestamp, unambiguous across processes on the same machine.
+    deadline = time.time() + args.time_budget_hours * 3600 if args.time_budget_hours is not None else None
 
     started = time.perf_counter()
     if args.role == "gpu-pooled":
@@ -896,9 +979,16 @@ def main(argv=None):
         entry["total_seconds"] += r.get("seconds", 0.0)
     for entry in per_worker.values():
         entry["mean_seconds_per_unit"] = entry["total_seconds"] / entry["n_units"] if entry["n_units"] else None
+    # A gpu-pooled task that hit the deadline mid-pair (process_pooled_pair's own in-pair check, not just
+    # run_pool's between-task one) is neither "not started" nor fully done -- it appears in `results` (some
+    # component(s) checkpointed, wrote may be non-empty) but n_not_started never counted it. Fold it into
+    # units_remaining so the summary reflects real remaining work, not just whole never-dispatched tasks.
+    n_partial = sum(1 for r in results if r.get("deadline_hit"))
     session_summary = {
-        "units_done_this_session": len(results), "units_remaining": n_not_started,
-        "time_budget_hours": args.time_budget_hours, "budget_exhausted": n_not_started > 0 and deadline is not None,
+        "units_done_this_session": len(results) - n_partial, "units_partial_this_session": n_partial,
+        "units_remaining": n_not_started + n_partial,
+        "time_budget_hours": args.time_budget_hours,
+        "budget_exhausted": (n_not_started > 0 or n_partial > 0) and deadline is not None,
         "per_worker": {str(k): v for k, v in sorted(per_worker.items(), key=lambda kv: (kv[0] is None, kv[0]))},
     }
 
@@ -922,6 +1012,7 @@ def main(argv=None):
     write_checkpoint_manifest(checkpoint_dir)
     print(f"role={args.role} tasks={len(tasks)} wrote={config['n_wrote']} seconds={config['total_seconds']:.1f}")
     print(f"session summary: done={session_summary['units_done_this_session']} "
+          f"partial={session_summary['units_partial_this_session']} "
           f"remaining={session_summary['units_remaining']} budget_exhausted={session_summary['budget_exhausted']}")
     for slot, entry in session_summary["per_worker"].items():
         print(f"  worker {slot} (gpu_index={entry['gpu_index']}): {entry['n_units']} unit(s), "

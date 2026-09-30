@@ -1,0 +1,25 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 22.62871560000349,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget_timing\\family\\zT\\manganite\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

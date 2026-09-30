@@ -665,3 +665,38 @@ checked between the two named configs, not inside one, so the device=cpu,
 concurrency=4 run in section 8.6 ran 26 minutes against a 12-minute budget
 with `truncated_by_budget` left `false`. It now checks before each repeat's
 sequential half and again before its concurrent half.
+
+**Fixed 2026-09-30: `lofo_paperb.py`'s own `--time-budget-hours` had the
+exact same shape of bug, found on Kaggle rather than caught locally first.**
+A Kaggle gpu-pooled smoke run hung 70+ minutes against a 5-minute budget
+with no log output, cancelled by hand. `run_pool`'s deadline check (via
+`_budgeted`) only gates which TASK gets dispatched next; it says nothing
+about what happens once a task starts. A single gpu-pooled task
+(`process_pooled_pair`) can run tuning_once + C1 + C0/C2/C3 across every
+repeat and fold, all inside one call -- with the smoke cells passing no
+`--tuning-trials`/`--specialist-trials`/`--folds`/`--repeats` override
+(defaulting to 20 trials, all `N_FOLDS`, all `R` repeats), one such call
+plausibly runs for a long time uninterrupted, exactly what was observed.
+`process_pooled_pair` now checks the same deadline itself, immediately
+after tuning_once, after C1, and after each (component, repeat, fold) fit
+-- never mid-fit (a single `model.fit()` call cannot be safely
+preempted), only between pieces of work -- and returns as soon as it finds
+the deadline passed, leaving the rest for a later invocation via the usual
+`write_if_absent` skip-logic. The session summary's `units_remaining` now
+folds in tasks that were dispatched but only partially completed this way
+(a new `units_partial_this_session` field), not only tasks never
+dispatched at all. The deadline value itself changed from
+`time.perf_counter()` to `time.time()`: the in-pair check now has to be
+read correctly inside spawned worker processes too (`_WORKER_STATE`), and
+`perf_counter()`'s reference point is documented as undefined across
+processes, whereas `time.time()` is an ordinary, unambiguous wall-clock
+timestamp. Progress is now also logged one flushed stdout line per
+finished unit (UTC time, worker, GPU index, level, target, unit,
+condition, repeat, fold, model, seconds) -- Kaggle buffers stdout by
+default, which is why the original hang produced no visible output at all
+before it was cancelled; every Kaggle cell should run with `python -u`.
+Covered by `smoke_test_lofo.py`'s check_13: times one small pair
+unrestricted, reruns it at half that wall time, requires it to stop with
+some but not all files written and `units_partial_this_session > 0`, then
+resumes and requires the pair to complete without rewriting any
+already-checkpointed file.

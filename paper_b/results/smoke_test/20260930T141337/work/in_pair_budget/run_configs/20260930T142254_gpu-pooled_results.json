@@ -1,0 +1,18 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 8.386579800047912,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20260930T141337\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\tuning_once"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": true
+  }
+]

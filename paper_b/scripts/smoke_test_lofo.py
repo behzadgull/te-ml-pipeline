@@ -54,6 +54,17 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      check_splits_manifest and restore_from's manifest reader a synthetic
      manifest with one backslash-style key and one forward-slash-style key
      each; both must resolve to their real files and pass.
+  13. In-pair time budget (2026-09-30 fix): a single gpu-pooled task can run
+     tuning_once + C1 + C0/C2/C3 across every fold unbroken -- run_pool's own
+     --time-budget-hours check only gated which TASK got dispatched next, not
+     what happened inside one already-dispatched task (a Kaggle smoke run hung
+     70+ minutes against a 5-minute budget this way). Times one small pair
+     unrestricted, then reruns it with a budget of half that measured time --
+     long enough that tuning_once (the first, necessary piece) should finish,
+     short enough that the whole pair should not -- and requires it to stop
+     with SOME but not all of that pair's files written and
+     units_partial_this_session > 0; a resume (no budget) must then complete
+     the pair without rewriting any already-checkpointed file.
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -505,6 +516,71 @@ def latest_run_config(checkpoint_dir, role):
     return json.loads(candidates[-1].read_text(encoding="utf-8"))
 
 
+def check_13_in_pair_time_budget(csv, labels_run, splits_dir, work_dir):
+    """
+    2026-09-30 fix: process_pooled_pair now checks --time-budget-hours itself,
+    between tuning_once/C1/each (component, repeat, fold) fit, not only
+    between whole tasks (run_pool's own, coarser check) -- a single
+    gpu-pooled task can otherwise run for a long time unbroken regardless of
+    the budget (the Kaggle incident this fixes: 70+ minutes against a
+    5-minute budget, one task, no --folds/--trials override).
+
+    Rather than guess a fixed number of seconds for a budget that lands
+    mid-pair (fragile -- the local machine's speed and the exact split
+    between tuning_once and the fold fits are not known in advance), this
+    times ONE small pair unrestricted first, then reruns the same pair with
+    a budget of half that measured wall time: long enough that tuning_once
+    (the first, necessary piece of work) should complete, short enough that
+    the whole pair (tuning_once + C1 + C0/C2/C3 x 2 folds, 8 checkpoint
+    files) should not. Requires: some but not all files written, and
+    units_partial_this_session > 0 in the session summary; then a resume
+    (same command, no budget) must complete the pair without rewriting any
+    file the partial run had already checkpointed.
+    """
+    timing_dir = work_dir / "in_pair_budget_timing"
+    t0 = time.time()
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, timing_dir, "gpu-pooled",
+                                        extra=["--units", "manganite", "--models", "xgboost"]),
+                            capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"in-pair-budget timing run failed:\n{result.stdout}\n{result.stderr}")
+    full_pair_seconds = time.time() - t0
+    n_full_files = len(all_checkpoint_files(timing_dir))
+
+    budget_seconds = full_pair_seconds / 2
+    budget_dir = work_dir / "in_pair_budget"
+    cmd = harness_cmd(csv, labels_run, splits_dir, budget_dir, "gpu-pooled",
+                      extra=["--units", "manganite", "--models", "xgboost",
+                            "--time-budget-hours", str(budget_seconds / 3600.0)])
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        return {"returncode": result.returncode, "stderr_tail": (result.stderr or "")[-800:], "passed": False}
+    partial_files = all_checkpoint_files(budget_dir)
+    config = latest_run_config(budget_dir, "gpu-pooled")
+    stopped_mid_pair = 0 < len(partial_files) < n_full_files
+    partial_flagged = config["session_summary"]["units_partial_this_session"] > 0
+    partial_hashes = file_hashes(partial_files)
+
+    result2 = subprocess.run(harness_cmd(csv, labels_run, splits_dir, budget_dir, "gpu-pooled",
+                                        extra=["--units", "manganite", "--models", "xgboost"]),
+                            capture_output=True, text=True)
+    if result2.returncode != 0:
+        return {"returncode": result2.returncode, "stderr_tail": (result2.stderr or "")[-800:], "passed": False}
+    final_files = all_checkpoint_files(budget_dir)
+    final_hashes = file_hashes(final_files)
+    not_rewritten = all(final_hashes.get(p) == h for p, h in partial_hashes.items())
+    complete = len(final_files) == n_full_files
+
+    return {
+        "full_pair_seconds": round(full_pair_seconds, 2), "n_full_files": n_full_files,
+        "budget_seconds": round(budget_seconds, 2), "n_partial_files": len(partial_files),
+        "stopped_mid_pair": stopped_mid_pair, "partial_flagged_in_summary": partial_flagged,
+        "n_final_files": len(final_files), "resume_complete": complete,
+        "no_file_rewritten_on_resume": not_rewritten,
+        "passed": bool(stopped_mid_pair and partial_flagged and complete and not_rewritten),
+    }
+
+
 def check_9_time_budget(csv, labels_run, splits_dir, work_dir):
     """
     --time-budget-hours, a budget of a few seconds: the harness must still
@@ -618,6 +694,7 @@ def main(argv=None):
     report["check_10_restore_from"] = check_10_restore_from(args.csv, args.labels_run, args.splits_dir, pooled_ref_dir, work_dir)
     report["check_11_specialist_independence"] = check_11_specialist_independence(pooled_ref_dir, specialist_ref_dir)
     report["check_12_path_separator_normalization"] = check_12_path_separator_normalization(work_dir)
+    report["check_13_in_pair_time_budget"] = check_13_in_pair_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")
