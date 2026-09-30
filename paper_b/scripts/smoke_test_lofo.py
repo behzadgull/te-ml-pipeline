@@ -37,6 +37,17 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      a failure -- loading the dataset alone can exceed it).
   10. --restore-from a .tar.gz of the reference run: every unit is skipped
      (n_wrote == 0), reaching the same file set; a tampered copy is refused.
+  11. Role independence (section 8.1): gpu-pooled and cpu-specialist write to
+     SEPARATE reference directories throughout this test (methodology doc
+     section 8.7's Kaggle plan -- one checkpoint dir per role). cpu-specialist
+     completing every unit in a directory that never held a single gpu-pooled
+     file (no tuning_once/C0/C1/C2/C3 anywhere under it) is a structural proof
+     that it never reads gpu-pooled's output, checked directly here rather
+     than only by reading process_specialist_unit's source. The new
+     load_checkpoint_dirs_for_analysis is also exercised: it must merge two
+     identity-agreeing role directories into one unit list, and must raise
+     when two individually-clean directories disagree with EACH OTHER on
+     identity (not just within one).
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -93,23 +104,21 @@ def file_hashes(paths):
     return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
 
 
-def run_full(csv, labels_run, splits_dir, checkpoint_dir):
-    """gpu-pooled then cpu-specialist (device=cpu throughout), to completion, sequentially."""
-    for role in ("gpu-pooled", "cpu-specialist"):
-        result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, checkpoint_dir, role),
-                                capture_output=True, text=True)
-        if result.returncode != 0:
-            raise RuntimeError(f"{role} failed:\n{result.stdout}\n{result.stderr}")
+def run_role(csv, labels_run, splits_dir, checkpoint_dir, role):
+    """Run one --role to completion (device=cpu throughout) into its own checkpoint_dir; raise on failure."""
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, checkpoint_dir, role), capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"{role} failed:\n{result.stdout}\n{result.stderr}")
 
 
 def check_1_leakage_assertions_exercised():
     """
     The assertions are enforced inline in lofo_paperb.py's fitting functions
     (assert_disjoint/assert_subset/assert_size_equal calls at each of the 6
-    points section 8.1 names); a completed run_full() above with no
-    AssertionError means all 6 held on this data. This check additionally
-    proves each assertion FUNCTION is capable of catching a real violation,
-    by feeding it a deliberately bad input.
+    points section 8.1 names); the reference gpu-pooled/cpu-specialist runs
+    below completing with no AssertionError means all 6 held on this data.
+    This check additionally proves each assertion FUNCTION is capable of
+    catching a real violation, by feeding it a deliberately bad input.
     """
     ok = True
     try:
@@ -131,9 +140,16 @@ def check_1_leakage_assertions_exercised():
 
 
 def check_2_checkpoint_resume(csv, labels_run, splits_dir, work_dir):
-    """Full run for a reference file set/hash; then a killed-and-resumed run; compare."""
-    ref_dir = work_dir / "reference"
-    run_full(csv, labels_run, splits_dir, ref_dir)
+    """
+    Full gpu-pooled run for a reference file set/hash; then a killed-and-resumed
+    gpu-pooled run; compare. Role-separated (methodology doc section 8.7): this
+    checks only the gpu-pooled role, in its own directory -- cpu-specialist's
+    resume behavior shares the same write_if_absent mechanism, exercised
+    separately in its own reference directory in main() (see check_11, which
+    depends on that directory never having held a gpu-pooled file).
+    """
+    ref_dir = work_dir / "reference_gpu_pooled"
+    run_role(csv, labels_run, splits_dir, ref_dir, "gpu-pooled")
     ref_files = all_checkpoint_files(ref_dir)
     ref_hashes = file_hashes(ref_files)
     ref_names = {p.relative_to(ref_dir) for p in ref_files}
@@ -165,13 +181,8 @@ def check_2_checkpoint_resume(csv, labels_run, splits_dir, work_dir):
     partial_files = all_checkpoint_files(kill_dir)
     partial_hashes = file_hashes(partial_files)
 
-    # Resume: gpu-pooled again (same command), then cpu-specialist, to reach the same full set as the reference.
-    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, kill_dir, "gpu-pooled"), capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"resumed gpu-pooled failed:\n{result.stdout}\n{result.stderr}")
-    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, kill_dir, "cpu-specialist"), capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"resumed cpu-specialist failed:\n{result.stdout}\n{result.stderr}")
+    # Resume: gpu-pooled again (same command, same directory) to reach the reference's full gpu-pooled file set.
+    run_role(csv, labels_run, splits_dir, kill_dir, "gpu-pooled")
 
     final_files = all_checkpoint_files(kill_dir)
     final_names = {p.relative_to(kill_dir) for p in final_files}
@@ -206,19 +217,20 @@ def check_3_determinism(csv, labels_run, splits_dir, ref_dir, work_dir):
     return {"identical_predictions": identical, "arrays_compared": list(original.keys()), "passed": identical}
 
 
-def check_4_murphy_and_r2(ref_dir):
-    """Every saved prediction file: Murphy shares sum to 1 (1e-9), and R^2 matches sklearn's."""
+def check_4_murphy_and_r2(ref_dirs):
+    """Every saved prediction file, across all ref_dirs (role-separated): Murphy shares sum to 1 (1e-9), R^2 matches sklearn's."""
     rows = []
-    for path in all_prediction_files(ref_dir):
-        arrays = np.load(path)
-        y_true, y_pred = arrays["y_true"], arrays["y_pred"]
-        decomposition = M.murphy_decomposition(y_true, y_pred)
-        shares_sum = decomposition["offset_share"] + decomposition["scale_share"] + decomposition["unexplained_share"]
-        r2_mine = M.r2_score(y_true, y_pred)
-        r2_sklearn = float(sklearn_r2_score(y_true, y_pred))
-        rows.append({"file": str(path.relative_to(ref_dir)), "shares_sum": shares_sum,
-                    "shares_ok": abs(shares_sum - 1.0) < 1e-9, "r2_mine": r2_mine, "r2_sklearn": r2_sklearn,
-                    "r2_ok": abs(r2_mine - r2_sklearn) < 1e-9 or (np.isnan(r2_mine) and np.isnan(r2_sklearn))})
+    for ref_dir in ref_dirs:
+        for path in all_prediction_files(ref_dir):
+            arrays = np.load(path)
+            y_true, y_pred = arrays["y_true"], arrays["y_pred"]
+            decomposition = M.murphy_decomposition(y_true, y_pred)
+            shares_sum = decomposition["offset_share"] + decomposition["scale_share"] + decomposition["unexplained_share"]
+            r2_mine = M.r2_score(y_true, y_pred)
+            r2_sklearn = float(sklearn_r2_score(y_true, y_pred))
+            rows.append({"file": f"{ref_dir.name}/{path.relative_to(ref_dir)}", "shares_sum": shares_sum,
+                        "shares_ok": abs(shares_sum - 1.0) < 1e-9, "r2_mine": r2_mine, "r2_sklearn": r2_sklearn,
+                        "r2_ok": abs(r2_mine - r2_sklearn) < 1e-9 or (np.isnan(r2_mine) and np.isnan(r2_sklearn))})
     return {"n_files_checked": len(rows), "all_shares_ok": all(r["shares_ok"] for r in rows),
             "all_r2_ok": all(r["r2_ok"] for r in rows), "worst_shares_deviation": max(abs(r["shares_sum"] - 1.0) for r in rows),
             "passed": all(r["shares_ok"] and r["r2_ok"] for r in rows)}
@@ -297,17 +309,33 @@ def check_7_smoke_guard_refusal(csv, labels_run, splits_dir):
         shutil.rmtree(non_smoke_dir, ignore_errors=True)
 
 
-def check_8_analysis_loader_guard(ref_dir, work_dir):
+def _write_synthetic_unit_dir(directory, config, unit_name, smoke_cap=False):
+    """A minimal, internally-consistent checkpoint dir: one run_config, one non-tuning_once unit sidecar."""
+    (directory / "run_configs").mkdir(parents=True)
+    (directory / "family" / "zT" / unit_name / "xgboost" / "C0").mkdir(parents=True)
+    (directory / "run_configs" / "session1.json").write_text(json.dumps(config), encoding="utf-8")
+    (directory / "family" / "zT" / unit_name / "xgboost" / "C0" / "r1_f0.json").write_text(
+        json.dumps({"params": {}, "n_train": 10, "smoke_cap": smoke_cap}), encoding="utf-8")
+
+
+def check_8_analysis_loader_guard(pooled_dir, specialist_dir, work_dir):
     """
     lofo_paperb.load_checkpoint_dir_for_analysis must raise for (a) any unit
-    with smoke_cap=true -- this whole smoke test's own reference run, every
+    with smoke_cap=true -- both of this test's real role directories, every
     unit of which was fit with --smoke-search-space-cap -- and, separately,
-    (b) two run_configs that disagree on the identity fields, isolated from
-    (a) via a small synthetic directory with no smoke_cap issue at all.
+    (b) two run_configs that disagree on the identity fields within one
+    directory, isolated from (a) via a small synthetic directory with no
+    smoke_cap issue at all. The new load_checkpoint_dirs_for_analysis
+    (methodology doc section 8.7's role-separated Kaggle plan) must
+    additionally (c) reject the real pooled+specialist pair for the same
+    smoke_cap reason, (d) merge two individually-clean, identity-agreeing
+    synthetic directories into one unit list without raising, and (e) raise
+    when two individually-clean directories disagree with EACH OTHER on
+    identity, even though neither disagrees within itself.
     """
     results = {}
     try:
-        L.load_checkpoint_dir_for_analysis(ref_dir)
+        L.load_checkpoint_dir_for_analysis(pooled_dir)
         results["smoke_cap_rejected"] = False
     except ValueError as exc:
         results["smoke_cap_error"] = str(exc)
@@ -315,14 +343,17 @@ def check_8_analysis_loader_guard(ref_dir, work_dir):
         # text elsewhere (e.g. a stray file without that field at all would raise a *different* message).
         results["smoke_cap_rejected"] = "were fit with --smoke-search-space-cap" in str(exc)
 
+    try:
+        L.load_checkpoint_dirs_for_analysis([pooled_dir, specialist_dir])
+        results["merged_real_dirs_smoke_cap_rejected"] = False
+    except ValueError as exc:
+        results["merged_real_dirs_smoke_cap_error"] = str(exc)
+        results["merged_real_dirs_smoke_cap_rejected"] = "were fit with --smoke-search-space-cap" in str(exc)
+
     synth = work_dir / "synthetic_identity_mismatch"
-    (synth / "run_configs").mkdir(parents=True)
-    (synth / "family" / "zT" / "x" / "xgboost" / "C0").mkdir(parents=True)
     base_config = {"dataset_sha256": "a" * 64, "splits_dir": "some/path", "labels_sha256": "b" * 64, "git_head": "deadbeef"}
-    (synth / "run_configs" / "session1.json").write_text(json.dumps(base_config), encoding="utf-8")
+    _write_synthetic_unit_dir(synth, base_config, "x")
     (synth / "run_configs" / "session2.json").write_text(json.dumps({**base_config, "git_head": "feedface"}), encoding="utf-8")
-    (synth / "family" / "zT" / "x" / "xgboost" / "C0" / "r1_f0.json").write_text(
-        json.dumps({"params": {}, "n_train": 10, "smoke_cap": False}), encoding="utf-8")
     try:
         L.load_checkpoint_dir_for_analysis(synth)
         results["identity_mismatch_rejected"] = False
@@ -330,8 +361,66 @@ def check_8_analysis_loader_guard(ref_dir, work_dir):
         results["identity_mismatch_error"] = str(exc)
         results["identity_mismatch_rejected"] = "disagree" in str(exc)
 
-    results["passed"] = bool(results.get("smoke_cap_rejected")) and bool(results.get("identity_mismatch_rejected"))
+    # (d) two clean, identity-agreeing directories: the merge loader must succeed and return both units.
+    agree_config = {"dataset_sha256": "c" * 64, "splits_dir": "some/other/path", "labels_sha256": "d" * 64, "git_head": "cafefeed"}
+    merge_ok_a, merge_ok_b = work_dir / "synthetic_merge_ok_a", work_dir / "synthetic_merge_ok_b"
+    _write_synthetic_unit_dir(merge_ok_a, agree_config, "unit_a")
+    _write_synthetic_unit_dir(merge_ok_b, agree_config, "unit_b")
+    try:
+        merged = L.load_checkpoint_dirs_for_analysis([merge_ok_a, merge_ok_b])
+        results["merge_ok_n_units"] = len(merged)
+        results["merge_ok"] = len(merged) == 2
+    except ValueError as exc:
+        results["merge_ok_error"] = str(exc)
+        results["merge_ok"] = False
+
+    # (e) two clean directories that disagree WITH EACH OTHER, though neither disagrees within itself.
+    merge_bad_a, merge_bad_b = work_dir / "synthetic_merge_bad_a", work_dir / "synthetic_merge_bad_b"
+    _write_synthetic_unit_dir(merge_bad_a, agree_config, "unit_a")
+    _write_synthetic_unit_dir(merge_bad_b, {**agree_config, "git_head": "deadfeed"}, "unit_b")
+    try:
+        L.load_checkpoint_dirs_for_analysis([merge_bad_a, merge_bad_b])
+        results["cross_dir_identity_mismatch_rejected"] = False
+    except ValueError as exc:
+        results["cross_dir_identity_mismatch_error"] = str(exc)
+        results["cross_dir_identity_mismatch_rejected"] = "disagree" in str(exc)
+
+    results["passed"] = bool(
+        results.get("smoke_cap_rejected") and results.get("merged_real_dirs_smoke_cap_rejected")
+        and results.get("identity_mismatch_rejected") and results.get("merge_ok")
+        and results.get("cross_dir_identity_mismatch_rejected")
+    )
     return results
+
+
+def check_11_specialist_independence(pooled_dir, specialist_dir):
+    """
+    Methodology doc section 8.1: the specialist must never depend on
+    gpu-pooled's tuning_once/C0-C3. Structural proof, not just code
+    inspection: cpu-specialist wrote every one of its checkpoints into
+    specialist_dir, a directory gpu-pooled never touched (role-separated
+    checkpoint dirs, section 8.7's Kaggle plan) -- if it held a hidden
+    dependency on gpu-pooled's output, main()'s cpu-specialist reference run
+    would have failed outright rather than reaching this check. This check
+    additionally confirms the absence directly on disk, rather than trusting
+    that failure would have been loud: no tuning_once/C0/C1/C2/C3 file
+    anywhere under specialist_dir, and no specialist/specialist_gpu_control
+    file anywhere under pooled_dir (the reverse direction, for symmetry).
+    """
+    pooled_only_stems = {"tuning_once", "C0", "C1", "C2", "C3"}
+    specialist_only_stems = {"specialist", "specialist_gpu_control"}
+    pooled_files_in_specialist_dir = [
+        p for p in specialist_dir.rglob("*.npz") if p.parent.name in pooled_only_stems or p.stem in pooled_only_stems
+    ]
+    specialist_files_in_pooled_dir = [
+        p for p in pooled_dir.rglob("*.npz") if p.parent.name in specialist_only_stems
+    ]
+    ok = not pooled_files_in_specialist_dir and not specialist_files_in_pooled_dir
+    return {
+        "pooled_files_in_specialist_dir": [str(p) for p in pooled_files_in_specialist_dir],
+        "specialist_files_in_pooled_dir": [str(p) for p in specialist_files_in_pooled_dir],
+        "passed": ok,
+    }
 
 
 def latest_run_config(checkpoint_dir, role):
@@ -438,17 +527,24 @@ def main(argv=None):
     report["check_1_leakage_assertions"] = {"assertion_functions_catch_violations": check_1_leakage_assertions_exercised()}
     report["check_1_leakage_assertions"]["passed"] = report["check_1_leakage_assertions"]["assertion_functions_catch_violations"]
 
-    resume_result, ref_dir = check_2_checkpoint_resume(args.csv, args.labels_run, args.splits_dir, work_dir)
-    report["check_1_leakage_assertions"]["exercised_by_reference_run_with_no_assertion_error"] = True  # run_full() above succeeded
+    resume_result, pooled_ref_dir = check_2_checkpoint_resume(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_1_leakage_assertions"]["exercised_by_reference_run_with_no_assertion_error"] = True  # gpu-pooled ref run above succeeded
+
+    # cpu-specialist's own reference run, role-separated (methodology doc section 8.7): its own directory,
+    # never touching pooled_ref_dir -- this is check_11's structural independence proof.
+    specialist_ref_dir = work_dir / "reference_cpu_specialist"
+    run_role(args.csv, args.labels_run, args.splits_dir, specialist_ref_dir, "cpu-specialist")
+
     report["check_2_checkpoint_resume"] = resume_result
-    report["check_3_determinism"] = check_3_determinism(args.csv, args.labels_run, args.splits_dir, ref_dir, work_dir)
-    report["check_4_murphy_and_r2"] = check_4_murphy_and_r2(ref_dir)
-    report["check_5_hand_check"] = check_5_hand_check(ref_dir)
-    report["check_6_bootstrap"] = check_6_bootstrap(ref_dir)
+    report["check_3_determinism"] = check_3_determinism(args.csv, args.labels_run, args.splits_dir, pooled_ref_dir, work_dir)
+    report["check_4_murphy_and_r2"] = check_4_murphy_and_r2([pooled_ref_dir, specialist_ref_dir])
+    report["check_5_hand_check"] = check_5_hand_check(pooled_ref_dir)
+    report["check_6_bootstrap"] = check_6_bootstrap(pooled_ref_dir)
     report["check_7_smoke_guard_refusal"] = check_7_smoke_guard_refusal(args.csv, args.labels_run, args.splits_dir)
-    report["check_8_analysis_loader_guard"] = check_8_analysis_loader_guard(ref_dir, work_dir)
+    report["check_8_analysis_loader_guard"] = check_8_analysis_loader_guard(pooled_ref_dir, specialist_ref_dir, work_dir)
     report["check_9_time_budget"] = check_9_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
-    report["check_10_restore_from"] = check_10_restore_from(args.csv, args.labels_run, args.splits_dir, ref_dir, work_dir)
+    report["check_10_restore_from"] = check_10_restore_from(args.csv, args.labels_run, args.splits_dir, pooled_ref_dir, work_dir)
+    report["check_11_specialist_independence"] = check_11_specialist_independence(pooled_ref_dir, specialist_ref_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

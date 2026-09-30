@@ -40,6 +40,20 @@ across workers), so concurrent GPU workers use *different* physical GPUs --
 section 8.6 found no benefit, and a probable contention cause, when they did
 not.
 
+Role independence (methodology doc section 8.1): `cpu-specialist` (and
+`gpu-specialist-control`) never read anything `gpu-pooled` writes.
+`process_specialist_unit` calls `tune_once` fresh, every (repeat, fold) --
+it never opens a tuning_once/C0/C1/C2/C3 checkpoint. This is not just a
+claim to trust from reading the code: the recommended Kaggle usage (section
+8.7) points each role at its OWN --checkpoint-dir, never shared (e.g.
+/kaggle/working/ckpt_gpu_pooled, ckpt_cpu_specialist, ckpt_gpu_control), so
+a specialist directory that never held a single gpu-pooled file, yet
+completes every unit, is a structural proof, checked directly by
+smoke_test_lofo.py's check_11. An analysis/aggregation step reading
+role-separated directories uses `load_checkpoint_dirs_for_analysis` below,
+which merges them and checks identity agreement ACROSS directories, not
+only within each one.
+
 No cupy: unlike Paper A's src/nested_cv.py, this module does not convert X/y
 to cupy arrays before a device='cuda' fit. paper_b/SHARED_DEPENDENCIES.md
 does not list nested_cv.py's private `_to_device`, and section 8.6's
@@ -252,6 +266,43 @@ def load_checkpoint_dir_for_analysis(checkpoint_dir):
             f"usable for analysis, e.g. {smoke_capped[0]}"
         )
     return unit_paths
+
+
+def load_checkpoint_dirs_for_analysis(checkpoint_dirs):
+    """
+    Merge several role-separated checkpoint directories (methodology doc
+    section 8.7's Kaggle plan: one directory per --role -- gpu-pooled's
+    tuning_once/C0-C3, cpu-specialist's specialist/, gpu-specialist-control's
+    specialist_gpu_control/) into one analysis-ready unit list.
+
+    Runs load_checkpoint_dir_for_analysis on each directory unchanged first
+    (so each directory's own smoke_cap check and its own within-directory
+    identity check still apply, independently), then additionally requires
+    every directory's sessions to agree with every OTHER directory's on
+    ANALYSIS_IDENTITY_FIELDS -- so a gpu-pooled directory from one dataset or
+    commit can never be silently combined with a cpu-specialist directory
+    built against a different one. Raises ValueError on any violation (from
+    either the per-directory check or this cross-directory one); returns the
+    concatenated, sorted list of unit sidecar paths across all directories on
+    success.
+    """
+    checkpoint_dirs = [Path(d) for d in checkpoint_dirs]
+    all_identities = set()
+    all_unit_paths = []
+    for checkpoint_dir in checkpoint_dirs:
+        unit_paths = load_checkpoint_dir_for_analysis(checkpoint_dir)  # per-directory smoke_cap + within-dir identity
+        for path in sorted((checkpoint_dir / "run_configs").glob("*.json")):
+            if path.name.endswith("_results.json"):
+                continue
+            config = json.loads(path.read_text(encoding="utf-8"))
+            all_identities.add(tuple(config.get(field) for field in ANALYSIS_IDENTITY_FIELDS))
+        all_unit_paths.extend(unit_paths)
+    if len(all_identities) > 1:
+        raise ValueError(
+            f"role checkpoint dirs disagree on {ANALYSIS_IDENTITY_FIELDS} across "
+            f"{[str(d) for d in checkpoint_dirs]}: {sorted(all_identities)}"
+        )
+    return sorted(all_unit_paths)
 
 
 def write_checkpoint_manifest(checkpoint_dir):
