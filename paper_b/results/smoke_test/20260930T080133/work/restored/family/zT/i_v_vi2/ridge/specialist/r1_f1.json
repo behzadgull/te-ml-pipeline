@@ -1,0 +1,9 @@
+{
+  "params": {
+    "alpha": 1.3605373969701315
+  },
+  "inner_cv_r2": -4.825821940785629,
+  "n_train": 1039,
+  "device": "cpu",
+  "smoke_cap": true
+}

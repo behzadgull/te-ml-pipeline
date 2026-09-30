@@ -625,6 +625,41 @@ worker's GPU index and wall-clock time per unit, so the actual two-worker
 throughput (against the same units run single-worker, or against 8.5's
 per-fit cost model) is computed after session 1, not guessed here.
 
+**Unit ordering (added 2026-09-30), so the most valuable and the
+device-control units are never at risk of a session running out of time
+before reaching them.** Within a session, `paper_b/src/lofo_paperb.py`
+processes (target, unit) pairs in this fixed order: zT first, with its 3
+device-control pairs (the table above) first within zT; then S, sigma,
+kappa, in that order. Within a target, family-level pairs before
+super-family pairs before the super-family analysis's C3-only standalone
+reruns (which in any case each need their own (target, unit)'s family-level
+tuning_once to already exist). `order_pairs()`/`pair_sort_key()` implement
+this; every session's `run_config.json` logs the resulting order it actually
+processed, under `task_order`.
+
+**Multi-session runs (added 2026-09-30): `--time-budget-hours`,
+`--restore-from`, and the checkpoint manifest.** A Kaggle GPU session has a
+hard wall-clock limit well under the total estimated compute (8.5/8.6), so
+one session is never expected to finish the design; `--time-budget-hours H`
+makes this safe to run unattended (e.g. under "Save & Run All"): after H
+hours the harness starts no new unit, lets whatever is already running
+finish, writes a session summary (units done this session, units remaining,
+and, per worker, how many units and the mean seconds per unit) into
+`run_config.json`, and exits 0. A too-short budget can, honestly, finish
+zero units (loading the dataset alone can exceed a very small budget); this
+is a clean, reported outcome, not a hang. Every session, on exit, writes
+`manifest.json` (every checkpoint file's path and SHA256) into its
+checkpoint directory, via `write_checkpoint_manifest()`. `--restore-from
+PATH` (a directory, or a `.tar.gz` of one, from a prior session) merges that
+prior checkpoint output into `--checkpoint-dir` before any new unit runs,
+after two checks, in order: the prior session's own `dataset_sha256`,
+`splits_dir`, `labels_sha256` and `git_head` must equal this session's (a
+restore from a different dataset, labels run, splits folder or code commit
+is refused); then every file the prior manifest lists must still hash to
+what the manifest recorded (a refusal if anything was altered since). Only
+after both pass does it copy files in, so a resumed session's `write_if_absent`
+skip-logic treats them as already done.
+
 **Fixed the same day: `calibrate_throughput.py`'s budget check.** It only
 checked between the two named configs, not inside one, so the device=cpu,
 concurrency=4 run in section 8.6 ran 26 minutes against a 12-minute budget

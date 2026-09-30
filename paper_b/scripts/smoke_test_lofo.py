@@ -32,6 +32,11 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      must raise on a directory holding any smoke_cap=true unit (this test's own
      reference run, every unit of which was fit with the cap), and, separately,
      on two synthetic run_configs that disagree on the identity fields.
+  9. --time-budget-hours, a few seconds: must still exit 0 and write a session
+     summary (a too-small budget honestly finishing zero units is a pass, not
+     a failure -- loading the dataset alone can exceed it).
+  10. --restore-from a .tar.gz of the reference run: every unit is skipped
+     (n_wrote == 0), reaching the same file set; a tampered copy is refused.
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -306,7 +311,9 @@ def check_8_analysis_loader_guard(ref_dir, work_dir):
         results["smoke_cap_rejected"] = False
     except ValueError as exc:
         results["smoke_cap_error"] = str(exc)
-        results["smoke_cap_rejected"] = "smoke" in str(exc).lower()
+        # must be rejected for the real reason (a unit with smoke_cap=true), not any incidental "smoke_cap"
+        # text elsewhere (e.g. a stray file without that field at all would raise a *different* message).
+        results["smoke_cap_rejected"] = "were fit with --smoke-search-space-cap" in str(exc)
 
     synth = work_dir / "synthetic_identity_mismatch"
     (synth / "run_configs").mkdir(parents=True)
@@ -325,6 +332,92 @@ def check_8_analysis_loader_guard(ref_dir, work_dir):
 
     results["passed"] = bool(results.get("smoke_cap_rejected")) and bool(results.get("identity_mismatch_rejected"))
     return results
+
+
+def latest_run_config(checkpoint_dir, role):
+    """The most recently written run_configs/*_<role>.json (not _results.json) under checkpoint_dir."""
+    candidates = sorted(
+        p for p in (checkpoint_dir / "run_configs").glob(f"*_{role}.json") if not p.name.endswith("_results.json")
+    )
+    if not candidates:
+        raise FileNotFoundError(f"no run_configs/*_{role}.json under {checkpoint_dir}")
+    return json.loads(candidates[-1].read_text(encoding="utf-8"))
+
+
+def check_9_time_budget(csv, labels_run, splits_dir, work_dir):
+    """
+    --time-budget-hours, a budget of a few seconds: the harness must still
+    exit 0 and write a session summary (a too-small budget can honestly
+    finish zero units -- loading the dataset alone can exceed it -- that is
+    a clean reported outcome, not a failure).
+    """
+    budget_dir = work_dir / "time_budget_smoke"
+    seconds_budget = 3
+    cmd = harness_cmd(csv, labels_run, splits_dir, budget_dir, "gpu-pooled",
+                      extra=["--time-budget-hours", str(seconds_budget / 3600.0)])
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        return {"returncode": result.returncode, "stderr_tail": (result.stderr or "")[-800:], "passed": False}
+    config = latest_run_config(budget_dir, "gpu-pooled")
+    summary = config["session_summary"]
+    ok = (
+        summary["time_budget_hours"] == seconds_budget / 3600.0
+        and summary["units_done_this_session"] + summary["units_remaining"] == config["n_tasks"]
+        and summary["units_remaining"] > 0  # a 3-second budget cannot finish this task list (dataset load alone exceeds it)
+    )
+    return {"returncode": result.returncode, "n_tasks": config["n_tasks"], "session_summary": summary, "passed": ok}
+
+
+def check_10_restore_from(csv, labels_run, splits_dir, ref_dir, work_dir):
+    """
+    --restore-from a .tar.gz of a completed session: (a) a fresh session
+    restoring from it must skip every restored unit (n_wrote == 0, since
+    ref_dir already covers this test's exact scope) and reach the same file
+    set as ref_dir; (b) a tampered copy of that tar.gz must be refused.
+    """
+    import tarfile as tf
+    archive = work_dir / "restore_source.tar.gz"
+    with tf.open(archive, "w:gz") as tar:
+        for child in sorted(ref_dir.iterdir()):
+            tar.add(child, arcname=child.name)
+
+    restored_dir = work_dir / "restored"
+    result = subprocess.run(harness_cmd(csv, labels_run, splits_dir, restored_dir, "gpu-pooled",
+                                        extra=["--restore-from", str(archive)]), capture_output=True, text=True)
+    restore_ok = result.returncode == 0
+    n_wrote_after_restore = None
+    same_as_reference = None
+    if restore_ok:
+        config = latest_run_config(restored_dir, "gpu-pooled")
+        n_wrote_after_restore = config["n_wrote"]
+        ref_names = {p.relative_to(ref_dir) for p in all_checkpoint_files(ref_dir)}
+        restored_names = {p.relative_to(restored_dir) for p in all_checkpoint_files(restored_dir)}
+        same_as_reference = ref_names == restored_names  # gpu-pooled alone; n_wrote==0 means nothing new was added
+
+    tampered_dir = work_dir / "tampered_extract"
+    with tf.open(archive, "r:gz") as tar:
+        tar.extractall(tampered_dir)
+    victim = next(p for p in tampered_dir.rglob("*.npz") if p.name != "manifest.json")
+    data = bytearray(victim.read_bytes())
+    data[-1] ^= 0xFF  # flip the last byte: same length, different content, still a loadable-looking file
+    victim.write_bytes(bytes(data))
+    tampered_archive = work_dir / "restore_source_tampered.tar.gz"
+    with tf.open(tampered_archive, "w:gz") as tar:
+        for child in sorted(tampered_dir.iterdir()):
+            tar.add(child, arcname=child.name)
+
+    tampered_restore_dir = work_dir / "restored_tampered"
+    result2 = subprocess.run(harness_cmd(csv, labels_run, splits_dir, tampered_restore_dir, "gpu-pooled",
+                                         extra=["--restore-from", str(tampered_archive)]), capture_output=True, text=True)
+    tamper_refused = result2.returncode != 0 and "sha256" in (result2.stderr or "").lower()
+
+    return {
+        "restore_returncode": result.returncode, "restore_ok": restore_ok,
+        "n_wrote_after_restore": n_wrote_after_restore, "same_as_reference": same_as_reference,
+        "tampered_returncode": result2.returncode, "tampered_stderr_tail": (result2.stderr or "")[-500:],
+        "tamper_refused": tamper_refused,
+        "passed": bool(restore_ok and n_wrote_after_restore == 0 and same_as_reference and tamper_refused),
+    }
 
 
 def main(argv=None):
@@ -354,6 +447,8 @@ def main(argv=None):
     report["check_6_bootstrap"] = check_6_bootstrap(ref_dir)
     report["check_7_smoke_guard_refusal"] = check_7_smoke_guard_refusal(args.csv, args.labels_run, args.splits_dir)
     report["check_8_analysis_loader_guard"] = check_8_analysis_loader_guard(ref_dir, work_dir)
+    report["check_9_time_budget"] = check_9_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_10_restore_from"] = check_10_restore_from(args.csv, args.labels_run, args.splits_dir, ref_dir, work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

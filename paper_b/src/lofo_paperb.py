@@ -63,8 +63,11 @@ import hashlib
 import json
 import multiprocessing as mp
 import platform
+import shutil
 import subprocess
 import sys
+import tarfile
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -87,6 +90,12 @@ SPECIALIST_TRIALS = 10  # nested inside each outer training fold, section 8.1
 DEFAULT_CHECKPOINT_DIR = Path("paper_b/checkpoints/lofo")
 # The 3 device-control pairs, methodology doc section 8.7 (largest/median/smallest qualifying family for zT).
 DEFAULT_DEVICE_CONTROL_PAIRS = [["family", "zT", "iv_vi_rocksalt"], ["family", "zT", "zintl_122"], ["family", "zT", "manganite"]]
+# Unit ordering, methodology doc section 8.7: zT first, its 3 device-control pairs first within zT, then S,
+# sigma, kappa; family level before super_family before the super_analysis_standalone C3-only reruns (which
+# in any case each depend on their own (target, unit)'s family-level tuning_once already existing).
+TARGET_ORDER = ("zT", "S", "sigma", "kappa")
+LEVEL_ORDER = ("family", "super_family", "super_analysis_standalone")
+DEVICE_CONTROL_UNITS_ZT = [unit for level, target, unit in DEFAULT_DEVICE_CONTROL_PAIRS if target == "zT" and level == "family"]
 
 assert TUNING_TRIALS == 20, "methodology doc section 8.1 fixes pooled tuning at 20 trials"
 
@@ -178,6 +187,29 @@ def list_pairs(splits_dir, levels=LEVELS, targets=TARGETS, units=None):
     return pairs
 
 
+def pair_sort_key(pair):
+    """
+    Sort key for a (level, target, unit) pair implementing the section 8.7
+    order: target (zT, S, sigma, kappa), then level (family, super_family,
+    super_analysis_standalone), then, only for zT's family-level pairs, the
+    3 device-control units first (in DEFAULT_DEVICE_CONTROL_PAIRS's own
+    order), then every other unit alphabetically.
+    """
+    level, target, unit = pair
+    target_rank = TARGET_ORDER.index(target) if target in TARGET_ORDER else len(TARGET_ORDER)
+    level_rank = LEVEL_ORDER.index(level) if level in LEVEL_ORDER else len(LEVEL_ORDER)
+    if target == "zT" and level == "family" and unit in DEVICE_CONTROL_UNITS_ZT:
+        control_rank = DEVICE_CONTROL_UNITS_ZT.index(unit)
+    else:
+        control_rank = len(DEVICE_CONTROL_UNITS_ZT)
+    return (target_rank, level_rank, control_rank, unit)
+
+
+def order_pairs(pairs):
+    """Sort (level, target, unit) pairs into the section 8.7 processing order."""
+    return sorted(pairs, key=pair_sort_key)
+
+
 # The run_config identity fields that must agree across every session that wrote into one checkpoint directory,
 # before its units are aggregated into any analysis (a mix of sessions run against different data/code is not
 # one analysis).
@@ -206,7 +238,7 @@ def load_checkpoint_dir_for_analysis(checkpoint_dir):
         raise ValueError(
             f"{checkpoint_dir}: sessions disagree on {ANALYSIS_IDENTITY_FIELDS}: {sorted(identities)}"
         )
-    unit_paths = sorted(p for p in checkpoint_dir.rglob("*.json") if "run_configs" not in p.parts)
+    unit_paths = sorted(p for p in checkpoint_dir.rglob("*.json") if "run_configs" not in p.parts and p.name != "manifest.json")
     smoke_capped = []
     for path in unit_paths:
         sidecar = json.loads(path.read_text(encoding="utf-8"))
@@ -220,6 +252,106 @@ def load_checkpoint_dir_for_analysis(checkpoint_dir):
             f"usable for analysis, e.g. {smoke_capped[0]}"
         )
     return unit_paths
+
+
+def write_checkpoint_manifest(checkpoint_dir):
+    """
+    Write manifest.json (relative path -> SHA256) for every file under
+    checkpoint_dir except manifest.json itself -- every unit's .npz/.json and
+    every session's run_configs/*.json. Called at the end of every session
+    (main() below) and again before packaging for upload/download, so a
+    manifest is always current for --restore-from's tamper check.
+    """
+    checkpoint_dir = Path(checkpoint_dir)
+    manifest = {}
+    for path in sorted(checkpoint_dir.rglob("*")):
+        if path.is_file() and path.name != "manifest.json":
+            manifest[str(path.relative_to(checkpoint_dir).as_posix())] = sha256_file(path)
+    (checkpoint_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return manifest
+
+
+def restore_from(restore_path, checkpoint_dir, current_identity):
+    """
+    Merge a prior session's checkpoint output into checkpoint_dir, before any
+    new unit runs. `restore_path` is a directory (an already-extracted prior
+    checkpoint dir) or a .tar.gz of one; either must hold a manifest.json
+    (from `write_checkpoint_manifest`) and a run_configs/ folder.
+
+    Two checks, in this order, BEFORE any file is copied:
+      1. identity: the prior session's own run_configs must all agree on
+         ANALYSIS_IDENTITY_FIELDS, and that identity must equal
+         `current_identity` (this session's dataset/labels/splits/git_head) --
+         refuses a restore from a different dataset, labels run, splits
+         folder or code commit.
+      2. tamper: every file the manifest lists must still hash to what the
+         manifest recorded -- refuses if anything was altered since the
+         manifest was written.
+    Only after both pass does it copy every manifest-listed file into
+    checkpoint_dir (skipping any that already exist there). Returns a dict
+    with counts; raises ValueError/FileNotFoundError on either check's failure.
+    """
+    restore_path = Path(restore_path)
+    checkpoint_dir = Path(checkpoint_dir)
+    tmp_extract = None
+    if restore_path.is_file():
+        tmp_extract = Path(tempfile.mkdtemp(prefix="lofo_restore_"))
+        with tarfile.open(restore_path, "r:gz") as tar:
+            tar.extractall(tmp_extract)
+        entries = list(tmp_extract.iterdir())
+        source_dir = entries[0] if len(entries) == 1 and entries[0].is_dir() else tmp_extract
+    elif restore_path.is_dir():
+        source_dir = restore_path
+    else:
+        raise FileNotFoundError(f"--restore-from {restore_path}: neither a directory nor a file")
+
+    try:
+        manifest_path = source_dir / "manifest.json"
+        if not manifest_path.exists():
+            raise FileNotFoundError(f"{restore_path}: no manifest.json (every session must write one; see write_checkpoint_manifest)")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+        prior_identities = set()
+        for path in sorted((source_dir / "run_configs").glob("*.json")):
+            if path.name.endswith("_results.json"):
+                continue
+            config = json.loads(path.read_text(encoding="utf-8"))
+            prior_identities.add(tuple(config.get(field) for field in ANALYSIS_IDENTITY_FIELDS))
+        if not prior_identities:
+            raise FileNotFoundError(f"{restore_path}: no session run_config under run_configs/ to verify identity against")
+        if len(prior_identities) > 1:
+            raise ValueError(f"{restore_path}: its own prior sessions disagree on {ANALYSIS_IDENTITY_FIELDS}: {sorted(prior_identities)}")
+        prior_identity = next(iter(prior_identities))
+        if prior_identity != current_identity:
+            raise ValueError(
+                f"--restore-from identity mismatch on {ANALYSIS_IDENTITY_FIELDS}: "
+                f"prior session {prior_identity} != this session {current_identity}"
+            )
+
+        for rel_path, expected_sha in manifest.items():
+            source_file = source_dir / rel_path
+            if not source_file.exists():
+                raise FileNotFoundError(f"{restore_path}: manifest lists {rel_path}, missing from the archive/directory")
+            got = sha256_file(source_file)
+            if got != expected_sha:
+                raise ValueError(
+                    f"{restore_path}: {rel_path} does not match its manifest SHA256 "
+                    f"(expected {expected_sha}, got {got}); refusing a possibly tampered restore"
+                )
+
+        copied = 0
+        for rel_path in manifest:
+            dest_file = checkpoint_dir / rel_path
+            if dest_file.exists():
+                continue
+            dest_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_dir / rel_path, dest_file)
+            copied += 1
+        return {"source": str(restore_path), "n_manifest_entries": len(manifest), "n_copied": copied,
+                "n_already_present": len(manifest) - copied}
+    finally:
+        if tmp_extract is not None:
+            shutil.rmtree(tmp_extract, ignore_errors=True)
 
 
 def write_if_absent(path, arrays, sidecar):
@@ -486,20 +618,18 @@ _WORKER_STATE = {}
 
 def _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials, specialist_trials,
                       repeats, folds, smoke_cap=False):
-    """Runs once per worker process (or once, directly, for --workers<=1): load the dataset, resolve this worker's GPU index."""
+    """Runs once per worker process (or once, directly, for --workers<=1): load the dataset, resolve this worker's slot/GPU index."""
     if smoke_cap:
         apply_smoke_search_space_cap()
     X, y_by_target, cluster_ids, identity = load_dataset(Path(csv_path))
-    worker_gpu = None
-    if gpu_indices:
-        with counter.get_lock():
-            slot = counter.value
-            counter.value += 1
-        worker_gpu = gpu_indices[slot % len(gpu_indices)]
+    with counter.get_lock():
+        slot = counter.value
+        counter.value += 1
+    worker_gpu = gpu_indices[slot % len(gpu_indices)] if gpu_indices else None
     _WORKER_STATE.update(X=X, y_by_target=y_by_target, cluster_ids=cluster_ids, identity=identity,
                          splits_dir=Path(splits_dir), checkpoint_dir=Path(checkpoint_dir), worker_gpu=worker_gpu,
-                         tuning_trials=tuning_trials, specialist_trials=specialist_trials, repeats=repeats, folds=folds,
-                         smoke_cap=smoke_cap)
+                         worker_slot=slot, tuning_trials=tuning_trials, specialist_trials=specialist_trials,
+                         repeats=repeats, folds=folds, smoke_cap=smoke_cap)
 
 
 def _device():
@@ -516,7 +646,8 @@ def _pooled_task(task):
                               tuning_trials=_WORKER_STATE["tuning_trials"], repeats=_WORKER_STATE["repeats"],
                               folds=_WORKER_STATE["folds"], smoke_cap=_WORKER_STATE["smoke_cap"])
     return {"task": list(task), "device": device, "seconds": time.perf_counter() - started,
-            "wrote": [str(p) for _, p, wrote in log if wrote], "gpu_index": _WORKER_STATE["worker_gpu"]}
+            "wrote": [str(p) for _, p, wrote in log if wrote], "gpu_index": _WORKER_STATE["worker_gpu"],
+            "worker_slot": _WORKER_STATE["worker_slot"]}
 
 
 def _specialist_task(task):
@@ -531,22 +662,50 @@ def _specialist_task(task):
                                      smoke_cap=_WORKER_STATE["smoke_cap"])
     wrote = bool(result[2]) if result is not None else False
     return {"task": list(task), "device": device, "seconds": time.perf_counter() - started, "wrote": [] if not wrote else [str(result[1])],
-            "gpu_index": _WORKER_STATE["worker_gpu"]}
+            "gpu_index": _WORKER_STATE["worker_gpu"], "worker_slot": _WORKER_STATE["worker_slot"]}
+
+
+def _budgeted(tasks, deadline):
+    """
+    Yield `tasks` in order, stopping (a plain StopIteration, no partial task
+    yielded) once `time.perf_counter() >= deadline`. `deadline` of None means
+    no budget: yield everything. This is how --time-budget-hours "starts no
+    new unit" after the budget: a task already pulled by an idle worker
+    always runs to completion (this only gates what gets pulled NEXT), and
+    with workers > 1 a multiprocessing.Pool may have a small number of tasks
+    already buffered for dispatch at the moment the deadline is crossed, so
+    the cutoff is close to H hours, not exact to the second.
+    """
+    for task in tasks:
+        if deadline is not None and time.perf_counter() >= deadline:
+            return
+        yield task
 
 
 def run_pool(tasks, task_fn, csv_path, splits_dir, checkpoint_dir, gpu_indices, workers, tuning_trials, specialist_trials,
-            repeats, folds, smoke_cap=False):
-    """Run `tasks` through `task_fn`, in this process if workers<=1, else via a `workers`-process pool (a shared work queue)."""
+            repeats, folds, smoke_cap=False, deadline=None):
+    """
+    Run `tasks` through `task_fn`, in this process if workers<=1, else via a
+    `workers`-process pool (a shared work queue). Returns (results,
+    n_not_started): n_not_started is how many of `tasks` were never even
+    attempted this session because `deadline` (an absolute time.perf_counter()
+    value; see --time-budget-hours) had already passed.
+    """
+    tasks = list(tasks)
     if workers <= 1:
         _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, mp.Value("i", 0), tuning_trials,
                           specialist_trials, repeats, folds, smoke_cap)
-        return [task_fn(task) for task in tasks]
-    counter = mp.Value("i", 0)
-    context = mp.get_context("spawn")
-    with context.Pool(processes=workers, initializer=_pool_initializer,
-                      initargs=(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials,
-                               specialist_trials, repeats, folds, smoke_cap)) as pool:
-        return list(pool.imap_unordered(task_fn, tasks))
+        # check the deadline live, right before each task, not once up front against the whole list
+        results = [task_fn(task) for task in _budgeted(tasks, deadline)]
+    else:
+        budgeted = _budgeted(tasks, deadline)
+        counter = mp.Value("i", 0)
+        context = mp.get_context("spawn")
+        with context.Pool(processes=workers, initializer=_pool_initializer,
+                          initargs=(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials,
+                                   specialist_trials, repeats, folds, smoke_cap)) as pool:
+            results = list(pool.imap_unordered(task_fn, budgeted))
+    return results, len(tasks) - len(results)
 
 
 # ---------------------------------------------------------------------------
@@ -595,6 +754,10 @@ def main(argv=None):
     parser.add_argument("--smoke-search-space-cap", action="store_true",
                         help="tiny XGBoost search space (see apply_smoke_search_space_cap); local smoke tests only, "
                              "never for a reported result")
+    parser.add_argument("--time-budget-hours", type=float, default=None,
+                        help="after H hours, start no new unit, finish the running ones, write a session summary, exit 0")
+    parser.add_argument("--restore-from", default=None,
+                        help="a prior session's checkpoint directory or .tar.gz (see restore_from); merged in before any unit runs")
     args = parser.parse_args(argv)
 
     csv_path, splits_dir, checkpoint_dir = Path(args.csv), Path(args.splits_dir), Path(args.checkpoint_dir)
@@ -612,52 +775,91 @@ def main(argv=None):
     units = set(args.units.split(",")) if args.units else None
     gpu_indices = [int(g) for g in args.gpu_index.split(",")] if args.gpu_index else None
 
+    # Identity is fixed at the start of the session (code, dataset, labels, splits), before any restore or fit,
+    # matching how tree_clean is meant to be read elsewhere in this project (state at run start, not run end).
+    head, clean, dirty = git_state()
+    dataset_sha, dataset_bytes = expected_dataset_identity()
+    labels_sha = sha256_file(Path(args.labels_run) / "host_family_labels.csv")
+    current_identity = (dataset_sha, str(splits_dir), labels_sha, head)  # must match ANALYSIS_IDENTITY_FIELDS's order
+    restore_result = None
+    if args.restore_from:
+        restore_result = restore_from(args.restore_from, checkpoint_dir, current_identity)
+        print(f"--restore-from {args.restore_from}: {restore_result['n_copied']} file(s) copied, "
+              f"{restore_result['n_already_present']} already present, of {restore_result['n_manifest_entries']} listed")
+
+    deadline = time.perf_counter() + args.time_budget_hours * 3600 if args.time_budget_hours is not None else None
+
     started = time.perf_counter()
     if args.role == "gpu-pooled":
         levels = tuple(args.levels.split(",")) if args.levels else LEVELS
-        pairs = list_pairs(splits_dir, levels=levels, targets=targets, units=units)
+        pairs = order_pairs(list_pairs(splits_dir, levels=levels, targets=targets, units=units))
         tasks = [(level, target, unit, model) for level, target, unit in pairs for model in models]
-        results = run_pool(tasks, _pooled_task, csv_path, splits_dir, checkpoint_dir, gpu_indices, args.workers,
-                           args.tuning_trials, args.specialist_trials, repeats, folds, args.smoke_search_space_cap)
+        results, n_not_started = run_pool(tasks, _pooled_task, csv_path, splits_dir, checkpoint_dir, gpu_indices,
+                                          args.workers, args.tuning_trials, args.specialist_trials, repeats, folds,
+                                          args.smoke_search_space_cap, deadline)
     elif args.role in ("cpu-specialist", "gpu-specialist-control"):
         if args.role == "gpu-specialist-control":
             pairs = (json.loads(args.device_control_pairs) if args.device_control_pairs else DEFAULT_DEVICE_CONTROL_PAIRS)
+            pairs = order_pairs([tuple(p) for p in pairs])
             suffix = "_gpu_control"
             if not gpu_indices:
                 gpu_indices = [0]
         else:
-            pairs = list_pairs(splits_dir, levels=("family", "super_family"), targets=targets, units=units)
+            pairs = order_pairs(list_pairs(splits_dir, levels=("family", "super_family"), targets=targets, units=units))
             suffix = ""
             gpu_indices = None
         rep_range = repeats or list(range(1, R + 1))
         fold_range = folds or list(range(N_FOLDS))
         tasks = [(level, target, unit, model, repeat, fold, suffix)
                 for level, target, unit in pairs for model in models for repeat in rep_range for fold in fold_range]
-        results = run_pool(tasks, _specialist_task, csv_path, splits_dir, checkpoint_dir, gpu_indices, args.workers,
-                           args.tuning_trials, args.specialist_trials, None, None, args.smoke_search_space_cap)
+        results, n_not_started = run_pool(tasks, _specialist_task, csv_path, splits_dir, checkpoint_dir, gpu_indices,
+                                          args.workers, args.tuning_trials, args.specialist_trials, None, None,
+                                          args.smoke_search_space_cap, deadline)
     else:
         raise ValueError(args.role)
 
-    head, clean, dirty = git_state()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
     run_config_dir = checkpoint_dir / "run_configs"
     run_config_dir.mkdir(parents=True, exist_ok=True)
-    dataset_sha, dataset_bytes = expected_dataset_identity()
+
+    per_worker = {}
+    for r in results:
+        slot = r.get("worker_slot")
+        entry = per_worker.setdefault(slot, {"n_units": 0, "total_seconds": 0.0, "gpu_index": r.get("gpu_index")})
+        entry["n_units"] += 1
+        entry["total_seconds"] += r.get("seconds", 0.0)
+    for entry in per_worker.values():
+        entry["mean_seconds_per_unit"] = entry["total_seconds"] / entry["n_units"] if entry["n_units"] else None
+    session_summary = {
+        "units_done_this_session": len(results), "units_remaining": n_not_started,
+        "time_budget_hours": args.time_budget_hours, "budget_exhausted": n_not_started > 0 and deadline is not None,
+        "per_worker": {str(k): v for k, v in sorted(per_worker.items(), key=lambda kv: (kv[0] is None, kv[0]))},
+    }
+
     config = {
         "role": args.role, "workers": args.workers, "gpu_index": gpu_indices,
         "dataset_sha256": dataset_sha, "dataset_bytes": dataset_bytes,
-        "labels_run": args.labels_run, "labels_sha256": sha256_file(Path(args.labels_run) / "host_family_labels.csv"),
+        "labels_run": args.labels_run, "labels_sha256": labels_sha,
         "splits_dir": str(splits_dir), "splits_manifest_n_files": len(manifest), "splits_run_config": splits_config,
         "targets": list(targets), "models": list(models), "repeats_filter": repeats, "folds_filter": folds,
         "tuning_trials": args.tuning_trials, "specialist_trials": args.specialist_trials,
-        "smoke_search_space_cap": args.smoke_search_space_cap,
+        "smoke_search_space_cap": args.smoke_search_space_cap, "time_budget_hours": args.time_budget_hours,
+        "restore_from": args.restore_from, "restore_result": restore_result,
+        "task_order": [f"{level}/{target}/{unit}" for level, target, unit in pairs],  # section 8.7, logged
         "n_tasks": len(tasks), "n_wrote": sum(1 for r in results if r.get("wrote")), "total_seconds": time.perf_counter() - started,
+        "session_summary": session_summary,
         "git_head": head, "tree_clean": clean, "dirty_files": dirty, "library_versions": library_versions(), "utc_stamp": stamp,
     }
     config_path = run_config_dir / f"{stamp}_{args.role}.json"
     config_path.write_text(json.dumps(config, indent=2, default=str) + "\n", encoding="utf-8")
     (run_config_dir / f"{stamp}_{args.role}_results.json").write_text(json.dumps(results, indent=2, default=str) + "\n", encoding="utf-8")
+    write_checkpoint_manifest(checkpoint_dir)
     print(f"role={args.role} tasks={len(tasks)} wrote={config['n_wrote']} seconds={config['total_seconds']:.1f}")
+    print(f"session summary: done={session_summary['units_done_this_session']} "
+          f"remaining={session_summary['units_remaining']} budget_exhausted={session_summary['budget_exhausted']}")
+    for slot, entry in session_summary["per_worker"].items():
+        print(f"  worker {slot} (gpu_index={entry['gpu_index']}): {entry['n_units']} unit(s), "
+              f"mean {entry['mean_seconds_per_unit']:.2f} s/unit")
     print(f"run_config: {config_path}")
 
 

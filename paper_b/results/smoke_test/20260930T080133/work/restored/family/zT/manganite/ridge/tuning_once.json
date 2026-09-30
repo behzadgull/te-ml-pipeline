@@ -1,0 +1,13 @@
+{
+  "level": "family",
+  "target": "zT",
+  "unit": "manganite",
+  "model": "ridge",
+  "device": "cpu",
+  "n_trials": 2,
+  "best_params": {
+    "alpha": 2.5129618823022932
+  },
+  "inner_cv_r2": 0.49026089226321506,
+  "smoke_cap": true
+}

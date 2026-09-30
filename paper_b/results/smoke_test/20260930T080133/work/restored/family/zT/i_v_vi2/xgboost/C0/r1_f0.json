@@ -1,0 +1,14 @@
+{
+  "params": {
+    "n_estimators": 20,
+    "max_depth": 2,
+    "learning_rate": 0.26984577925805986,
+    "subsample": 0.8357150218900194,
+    "colsample_bytree": 0.8209312810764765,
+    "min_child_weight": 1,
+    "reg_lambda": 0.9184150242336374,
+    "reg_alpha": 0.013175581589322437
+  },
+  "n_train": 129036,
+  "smoke_cap": true
+}
