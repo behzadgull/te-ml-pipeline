@@ -467,7 +467,7 @@ def load_cluster_table():
     table = df.groupby(GROUP_COL).agg(
         rows=("S", "size"), **{target: (target, "count") for target in TARGETS}
     )
-    identity = {"path": str(path), "sha256": sha, "bytes": size, "n_rows": int(len(df))}
+    identity = {"path": Path(path).as_posix(), "sha256": sha, "bytes": size, "n_rows": int(len(df))}
     return table, identity
 
 
@@ -694,18 +694,18 @@ def main(argv=None):
         "git_head": head,
         "tree_clean": tree_clean,
         "dirty_files": dirty,
-        "rules_file": str(args.rules),
+        "rules_file": Path(args.rules).as_posix(),
         "rules_sha256": sha256_file(args.rules),
         "prev_label": args.prev_label if prev_spec else None,
-        "prev_rules_file": str(args.prev_rules) if prev_spec else None,
+        "prev_rules_file": Path(args.prev_rules).as_posix() if prev_spec else None,
         "prev_rules_sha256": sha256_file(args.prev_rules) if prev_spec else None,
-        "prev_run": str(args.prev_run) if args.prev_run else None,
+        "prev_run": Path(args.prev_run).as_posix() if args.prev_run else None,
         "regression_gates": gates,
         "expected_moves": expected if n_moved is not None else None,
         "n_hosts_moved_from_prev": n_moved,
         "code_sha256": sha256_file(Path(__file__)),
         "threshold": threshold,
-        "threshold_file": str(THRESHOLD_PATH),
+        "threshold_file": THRESHOLD_PATH.as_posix(),
         "audit_seed": args.audit_seed,
         "n_hosts": int(len(labelled)),
         "utc_stamp": stamp,

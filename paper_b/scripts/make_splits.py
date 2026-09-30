@@ -237,7 +237,7 @@ def main(argv=None):
             written.append(json_path)
             print(f"{level}/{row.target}/{row.unit}: n_family={row.n_family}, G={row.g} (n_g={row.n_g}) -- ok", flush=True)
 
-    manifest = {str(p.relative_to(out_dir)): sha256_file(p) for p in sorted(written)}
+    manifest = {p.relative_to(out_dir).as_posix(): sha256_file(p) for p in sorted(written)}
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     head, clean, dirty = git_state(out_dir)
     config = {

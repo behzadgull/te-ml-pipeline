@@ -48,6 +48,12 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      identity-agreeing role directories into one unit list, and must raise
      when two individually-clean directories disagree with EACH OTHER on
      identity (not just within one).
+  12. Path-separator normalisation (2026-09-30 fix): the committed splits
+     manifest was written on Windows, backslash-separated -- Kaggle (Linux)
+     failed check_splits_manifest with FileNotFoundError on it. Feeds
+     check_splits_manifest and restore_from's manifest reader a synthetic
+     manifest with one backslash-style key and one forward-slash-style key
+     each; both must resolve to their real files and pass.
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -423,6 +429,72 @@ def check_11_specialist_independence(pooled_dir, specialist_dir):
     }
 
 
+def check_12_path_separator_normalization(work_dir):
+    """
+    check_splits_manifest and restore_from's manifest reader must resolve a
+    manifest entry correctly whether it was written with '/' or '\\' as the
+    separator (2026-09-30 fix: the committed splits manifest.json was written
+    on Windows, backslash-separated; Kaggle is Linux, and check_splits_manifest
+    raised FileNotFoundError on every entry). Each synthetic manifest below
+    carries one entry of EACH style, pointing at real files, so a regression
+    in the read-side normalisation (normalize_rel_path) would fail this on
+    whichever style it broke, not just the other.
+    """
+    results = {}
+
+    # -- check_splits_manifest --
+    splits_dir = work_dir / "path_sep_splits"
+    (splits_dir / "family" / "zT").mkdir(parents=True)
+    file_a = splits_dir / "family" / "zT" / "unit_a.json"
+    file_b = splits_dir / "family" / "zT" / "unit_b.json"
+    file_a.write_text("{}", encoding="utf-8")
+    file_b.write_text("{}", encoding="utf-8")
+    manifest = {
+        "family\\zT\\unit_a.json": L.sha256_file(file_a),  # backslash, as the committed splits manifest has
+        "family/zT/unit_b.json": L.sha256_file(file_b),  # forward-slash
+    }
+    (splits_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    try:
+        L.check_splits_manifest(splits_dir)
+        results["check_splits_manifest_ok"] = True
+    except Exception as exc:
+        results["check_splits_manifest_error"] = str(exc)
+        results["check_splits_manifest_ok"] = False
+
+    # -- restore_from's manifest reader --
+    source_dir = work_dir / "path_sep_restore_source"
+    (source_dir / "family" / "zT" / "unit_a" / "xgboost" / "C0").mkdir(parents=True)
+    (source_dir / "family" / "zT" / "unit_b" / "xgboost" / "C0").mkdir(parents=True)
+    npz_a = source_dir / "family" / "zT" / "unit_a" / "xgboost" / "C0" / "r1_f0.npz"
+    npz_b = source_dir / "family" / "zT" / "unit_b" / "xgboost" / "C0" / "r1_f0.npz"
+    np.savez_compressed(npz_a, x=np.array([1]))
+    np.savez_compressed(npz_b, x=np.array([2]))
+    (source_dir / "run_configs").mkdir()
+    identity_config = {"dataset_sha256": "e" * 64, "splits_dir": "some/path", "labels_sha256": "f" * 64, "git_head": "beadfeed"}
+    (source_dir / "run_configs" / "session1.json").write_text(json.dumps(identity_config), encoding="utf-8")
+    restore_manifest = {
+        "family\\zT\\unit_a\\xgboost\\C0\\r1_f0.npz": L.sha256_file(npz_a),  # backslash
+        "family/zT/unit_b/xgboost/C0/r1_f0.npz": L.sha256_file(npz_b),  # forward-slash
+    }
+    (source_dir / "manifest.json").write_text(json.dumps(restore_manifest), encoding="utf-8")
+
+    dest_dir = work_dir / "path_sep_restore_dest"
+    current_identity = (identity_config["dataset_sha256"], identity_config["splits_dir"],
+                       identity_config["labels_sha256"], identity_config["git_head"])
+    try:
+        restore_result = L.restore_from(source_dir, dest_dir, current_identity)
+        both_present = ((dest_dir / "family" / "zT" / "unit_a" / "xgboost" / "C0" / "r1_f0.npz").exists()
+                        and (dest_dir / "family" / "zT" / "unit_b" / "xgboost" / "C0" / "r1_f0.npz").exists())
+        results["restore_from_ok"] = bool(restore_result["n_copied"] == 2 and both_present)
+        results["restore_from_n_copied"] = restore_result["n_copied"]
+    except Exception as exc:
+        results["restore_from_error"] = str(exc)
+        results["restore_from_ok"] = False
+
+    results["passed"] = bool(results.get("check_splits_manifest_ok")) and bool(results.get("restore_from_ok"))
+    return results
+
+
 def latest_run_config(checkpoint_dir, role):
     """The most recently written run_configs/*_<role>.json (not _results.json) under checkpoint_dir."""
     candidates = sorted(
@@ -545,6 +617,7 @@ def main(argv=None):
     report["check_9_time_budget"] = check_9_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
     report["check_10_restore_from"] = check_10_restore_from(args.csv, args.labels_run, args.splits_dir, pooled_ref_dir, work_dir)
     report["check_11_specialist_independence"] = check_11_specialist_independence(pooled_ref_dir, specialist_ref_dir)
+    report["check_12_path_separator_normalization"] = check_12_path_separator_normalization(work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

@@ -84,7 +84,7 @@ import tarfile
 import tempfile
 import time
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import numpy as np
 import pandas as pd
@@ -136,11 +136,25 @@ def expected_dataset_identity():
     raise ValueError(f"no snapfix data row in {SHARED_MANIFEST_PATH}")
 
 
+def normalize_rel_path(rel_path):
+    """
+    A manifest/run_config relative path, forward-slash always, regardless of
+    which OS wrote it. PureWindowsPath parses both '/' and '\\' as
+    separators, so this is a no-op on an already-POSIX path and a real fix
+    on one written by a Windows os.path.relpath/str(Path) call (as
+    make_splits.py's splits manifest was, before that write site was fixed
+    to call .as_posix() too) -- read-side normalisation so a manifest
+    committed with backslashes still resolves correctly on Linux (Kaggle),
+    without rewriting or re-hashing the committed file.
+    """
+    return PureWindowsPath(rel_path).as_posix()
+
+
 def check_splits_manifest(splits_dir):
     """Verify every file the splits manifest lists against its recorded SHA256; raise on the first mismatch."""
     manifest = json.loads((splits_dir / "manifest.json").read_text(encoding="utf-8"))
     for rel_path, expected in manifest.items():
-        path = splits_dir / rel_path
+        path = splits_dir / normalize_rel_path(rel_path)
         if not path.exists():
             raise FileNotFoundError(f"splits manifest lists {rel_path}, missing under {splits_dir}")
         got = sha256_file(path)
@@ -170,7 +184,7 @@ def load_dataset(csv_path):
     X = df[features].to_numpy(dtype=np.float64)
     y_by_target = {t: df[t].to_numpy(dtype=np.float64) for t in TARGETS}
     cluster_ids = df["chemistry_cluster_id"].to_numpy()
-    identity = {"path": str(csv_path), "sha256": sha, "bytes": size, "n_rows": int(len(df)), "n_features": len(features)}
+    identity = {"path": Path(csv_path).as_posix(), "sha256": sha, "bytes": size, "n_rows": int(len(df)), "n_features": len(features)}
     return X, y_by_target, cluster_ids, identity
 
 
@@ -380,7 +394,7 @@ def restore_from(restore_path, checkpoint_dir, current_identity):
             )
 
         for rel_path, expected_sha in manifest.items():
-            source_file = source_dir / rel_path
+            source_file = source_dir / normalize_rel_path(rel_path)
             if not source_file.exists():
                 raise FileNotFoundError(f"{restore_path}: manifest lists {rel_path}, missing from the archive/directory")
             got = sha256_file(source_file)
@@ -392,11 +406,12 @@ def restore_from(restore_path, checkpoint_dir, current_identity):
 
         copied = 0
         for rel_path in manifest:
-            dest_file = checkpoint_dir / rel_path
+            norm_rel_path = normalize_rel_path(rel_path)
+            dest_file = checkpoint_dir / norm_rel_path
             if dest_file.exists():
                 continue
             dest_file.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source_dir / rel_path, dest_file)
+            shutil.copy2(source_dir / norm_rel_path, dest_file)
             copied += 1
         return {"source": str(restore_path), "n_manifest_entries": len(manifest), "n_copied": copied,
                 "n_already_present": len(manifest) - copied}
