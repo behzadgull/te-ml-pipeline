@@ -76,6 +76,7 @@ import argparse
 import hashlib
 import json
 import multiprocessing as mp
+import os
 import platform
 import shutil
 import subprocess
@@ -83,6 +84,7 @@ import sys
 import tarfile
 import tempfile
 import time
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path, PureWindowsPath
 
@@ -424,12 +426,33 @@ def restore_from(restore_path, checkpoint_dir, current_identity):
 
 
 def write_if_absent(path, arrays, sidecar):
-    """Write `path`.npz (from `arrays`) and `path`.json (from `sidecar`) unless a checkpoint already exists; returns whether it wrote."""
+    """
+    Write `path`.npz (from `arrays`) and `path`.json (from `sidecar`) unless
+    a checkpoint already exists; returns whether it wrote.
+
+    Atomic (2026-10-01): the .npz -- the file every caller's "is this
+    already done" check tests for -- is written to a temp file in the same
+    directory and atomically renamed into place (os.replace, atomic on both
+    POSIX and Windows for a same-filesystem rename) only once the write has
+    fully succeeded. A crash (an exception elsewhere in the run, or a
+    Pool.terminate() call when ANOTHER worker's task raises -- see main()'s
+    crash-safety wrapper) can therefore never leave a truncated/corrupt .npz
+    at the final path that a later session would mistake for a complete
+    checkpoint and skip recomputing. The .json sidecar is written first, in
+    full, before that rename, so a reader that observes the .npz existing
+    can always assume the .json exists too.
+    """
     if path.with_suffix(".npz").exists():
         return False
     path.parent.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(path.with_suffix(".npz"), **arrays)
     path.with_suffix(".json").write_text(json.dumps(sidecar, indent=2, default=float) + "\n", encoding="utf-8")
+    # Must itself end in ".npz": numpy's savez_compressed silently APPENDS ".npz" to any target path that
+    # doesn't already end with it (verified directly -- "foo.npz.tmp123" gets written to
+    # "foo.npz.tmp123.npz", not to the path given), which would make the os.replace below look for a file
+    # numpy never actually created.
+    tmp_path = path.with_name(f"{path.name}.tmp{os.getpid()}.npz")
+    np.savez_compressed(tmp_path, **arrays)
+    os.replace(tmp_path, path.with_suffix(".npz"))
     return True
 
 
@@ -758,6 +781,12 @@ def log_unit_progress(worker_slot, gpu_index, level, target, unit, condition, re
 def _pooled_task(task):
     """One gpu-pooled task: (level, target, unit, model_type)."""
     level, target, unit, model_type = task
+    # Test-only crash injection (2026-10-01): LOFO_PAPERB_TEST_CRASH_TASK="level/target/unit/model_type" raises
+    # before any work starts, for smoke_test_lofo.py's crash-safety test -- never set in a real run. Inert by
+    # default (the env var does not exist), so this needs no --smoke-search-space-cap-style production guard.
+    crash_task = os.environ.get("LOFO_PAPERB_TEST_CRASH_TASK")
+    if crash_task and crash_task == f"{level}/{target}/{unit}/{model_type}":
+        raise RuntimeError(f"LOFO_PAPERB_TEST_CRASH_TASK: injected test crash for {crash_task}")
     device = _device()
     worker_slot, gpu_index = _WORKER_STATE["worker_slot"], _WORKER_STATE["worker_gpu"]
     started = time.perf_counter()
@@ -949,85 +978,195 @@ def main(argv=None):
     deadline = time.time() + args.time_budget_hours * 3600 if args.time_budget_hours is not None else None
 
     started = time.perf_counter()
-    if args.role == "gpu-pooled":
-        levels = tuple(args.levels.split(",")) if args.levels else LEVELS
-        pairs = order_pairs(list_pairs(splits_dir, levels=levels, targets=targets, units=units))
-        tasks = [(level, target, unit, model) for level, target, unit in pairs for model in models]
-        results, n_not_started = run_pool(tasks, _pooled_task, csv_path, splits_dir, checkpoint_dir, gpu_indices,
-                                          args.workers, args.tuning_trials, args.specialist_trials, repeats, folds,
-                                          args.smoke_search_space_cap, deadline)
-    elif args.role in ("cpu-specialist", "gpu-specialist-control"):
-        if args.role == "gpu-specialist-control":
-            pairs = (json.loads(args.device_control_pairs) if args.device_control_pairs else DEFAULT_DEVICE_CONTROL_PAIRS)
-            pairs = order_pairs([tuple(p) for p in pairs])
-            suffix = "_gpu_control"
-            if not gpu_indices:
-                gpu_indices = [0]
+    status = "completed"
+    error_info = None
+    results = []
+    n_not_started = 0
+    n_skipped_dependency = 0
+    skipped_dependency_units = []
+    pairs = []
+    tasks = []
+
+    try:
+        if args.role == "gpu-pooled":
+            # Dependency-safe scheduling (2026-10-01). The ONLY cross-task dependency anywhere in this harness:
+            # a super_analysis_standalone pair's C3 rerun needs its family-level pair's tuning_once checkpoint
+            # to already exist (process_pooled_pair raises FileNotFoundError otherwise -- confirmed by reading
+            # every level's branch in process_pooled_pair and process_specialist_unit: cpu-specialist/
+            # gpu-specialist-control depend on nothing from gpu-pooled, see the module docstring's Role
+            # independence note; super_family computes its own tuning_once fresh, same as family; no target,
+            # repeat, fold or model ever reads another one's checkpoint). A single shared task queue cannot
+            # guarantee this under --workers > 1: two tasks pulled by two workers at nearly the same moment run
+            # CONCURRENTLY regardless of their position in the queue, so a standalone task ordered after its
+            # dependency can still start before that dependency's worker finishes (the Kaggle crash this fixes).
+            # Phase 1 (family + super_family, mutually independent) therefore runs to FULL completion -- every
+            # worker has returned from run_pool, not merely been dispatched in the right order -- before phase
+            # 2's task list is even built.
+            levels_requested = tuple(args.levels.split(",")) if args.levels else LEVELS
+            phase1_levels = tuple(lvl for lvl in ("family", "super_family") if lvl in levels_requested)
+            phase2_requested = "super_analysis_standalone" in levels_requested
+
+            phase1_pairs = (order_pairs(list_pairs(splits_dir, levels=phase1_levels, targets=targets, units=units))
+                            if phase1_levels else [])
+            phase1_tasks = [(level, target, unit, model) for level, target, unit in phase1_pairs for model in models]
+            # Skip run_pool entirely for an empty task list (e.g. --levels super_analysis_standalone alone):
+            # run_pool's own workers<=1 branch calls _pool_initializer (loading the whole dataset) even with
+            # zero tasks, and workers>1 spins up a Pool (each worker running that same initializer) just the
+            # same -- real, avoidable cost for a phase that was never going to do anything.
+            if phase1_tasks:
+                phase1_results, phase1_not_started = run_pool(
+                    phase1_tasks, _pooled_task, csv_path, splits_dir, checkpoint_dir, gpu_indices, args.workers,
+                    args.tuning_trials, args.specialist_trials, repeats, folds, args.smoke_search_space_cap, deadline)
+                results.extend(phase1_results)
+                n_not_started += phase1_not_started
+
+            # Time budget checked again HERE, between phases, not assumed carried over from phase 1's own
+            # run_pool call: phase 1 finishing (however it finished) is exactly the event that makes it safe to
+            # even ask the question "is phase 2 ready."
+            phase2_candidate_pairs = (
+                order_pairs(list_pairs(splits_dir, levels=("super_analysis_standalone",), targets=targets, units=units))
+                if phase2_requested else []
+            )
+            budget_open = deadline is None or time.time() < deadline
+            phase2_pairs = []
+            if phase2_candidate_pairs and not budget_open:
+                skipped_dependency_units.extend(f"{level}/{target}/{unit} (time budget exhausted before phase 2)"
+                                                for level, target, unit in phase2_candidate_pairs)
+            else:
+                for level, target, unit in phase2_candidate_pairs:
+                    ready = all((checkpoint_dir / "family" / target / unit / model_type / "tuning_once")
+                               .with_suffix(".npz").exists() for model_type in models)
+                    if ready:
+                        phase2_pairs.append((level, target, unit))
+                    else:
+                        skipped_dependency_units.append(f"{level}/{target}/{unit} (family tuning_once not ready)")
+
+            phase2_tasks = [(level, target, unit, model) for level, target, unit in phase2_pairs for model in models]
+            if phase2_tasks:
+                phase2_results, phase2_not_started = run_pool(
+                    phase2_tasks, _pooled_task, csv_path, splits_dir, checkpoint_dir, gpu_indices, args.workers,
+                    args.tuning_trials, args.specialist_trials, repeats, folds, args.smoke_search_space_cap, deadline)
+                results.extend(phase2_results)
+                n_not_started += phase2_not_started
+
+            n_skipped_dependency = len(skipped_dependency_units) * len(models)
+            pairs = phase1_pairs + phase2_candidate_pairs  # task_order logs the full intent, not just what ran
+            tasks = phase1_tasks + [(level, target, unit, model)
+                                    for level, target, unit in phase2_candidate_pairs for model in models]
+
+        elif args.role in ("cpu-specialist", "gpu-specialist-control"):
+            if args.role == "gpu-specialist-control":
+                pairs = (json.loads(args.device_control_pairs) if args.device_control_pairs else DEFAULT_DEVICE_CONTROL_PAIRS)
+                pairs = order_pairs([tuple(p) for p in pairs])
+                suffix = "_gpu_control"
+                if not gpu_indices:
+                    gpu_indices = [0]
+            else:
+                pairs = order_pairs(list_pairs(splits_dir, levels=("family", "super_family"), targets=targets, units=units))
+                suffix = ""
+                gpu_indices = None
+            rep_range = repeats or list(range(1, R + 1))
+            fold_range = folds or list(range(N_FOLDS))
+            tasks = [(level, target, unit, model, repeat, fold, suffix)
+                    for level, target, unit in pairs for model in models for repeat in rep_range for fold in fold_range]
+            results, n_not_started = run_pool(tasks, _specialist_task, csv_path, splits_dir, checkpoint_dir, gpu_indices,
+                                              args.workers, args.tuning_trials, args.specialist_trials, None, None,
+                                              args.smoke_search_space_cap, deadline)
         else:
-            pairs = order_pairs(list_pairs(splits_dir, levels=("family", "super_family"), targets=targets, units=units))
-            suffix = ""
-            gpu_indices = None
-        rep_range = repeats or list(range(1, R + 1))
-        fold_range = folds or list(range(N_FOLDS))
-        tasks = [(level, target, unit, model, repeat, fold, suffix)
-                for level, target, unit in pairs for model in models for repeat in rep_range for fold in fold_range]
-        results, n_not_started = run_pool(tasks, _specialist_task, csv_path, splits_dir, checkpoint_dir, gpu_indices,
-                                          args.workers, args.tuning_trials, args.specialist_trials, None, None,
-                                          args.smoke_search_space_cap, deadline)
-    else:
-        raise ValueError(args.role)
+            raise ValueError(args.role)
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
-    run_config_dir = checkpoint_dir / "run_configs"
-    run_config_dir.mkdir(parents=True, exist_ok=True)
+        n_partial = sum(1 for r in results if r.get("deadline_hit"))
+        if n_not_started > 0 or n_partial > 0 or n_skipped_dependency > 0:
+            status = "stopped_by_budget"
 
-    per_worker = {}
-    for r in results:
-        slot = r.get("worker_slot")
-        entry = per_worker.setdefault(slot, {"n_units": 0, "total_seconds": 0.0, "gpu_index": r.get("gpu_index")})
-        entry["n_units"] += 1
-        entry["total_seconds"] += r.get("seconds", 0.0)
-    for entry in per_worker.values():
-        entry["mean_seconds_per_unit"] = entry["total_seconds"] / entry["n_units"] if entry["n_units"] else None
-    # A gpu-pooled task that hit the deadline mid-pair (process_pooled_pair's own in-pair check, not just
-    # run_pool's between-task one) is neither "not started" nor fully done -- it appears in `results` (some
-    # component(s) checkpointed, wrote may be non-empty) but n_not_started never counted it. Fold it into
-    # units_remaining so the summary reflects real remaining work, not just whole never-dispatched tasks.
-    n_partial = sum(1 for r in results if r.get("deadline_hit"))
-    session_summary = {
-        "units_done_this_session": len(results) - n_partial, "units_partial_this_session": n_partial,
-        "units_remaining": n_not_started + n_partial,
-        "time_budget_hours": args.time_budget_hours,
-        "budget_exhausted": (n_not_started > 0 or n_partial > 0) and deadline is not None,
-        "per_worker": {str(k): v for k, v in sorted(per_worker.items(), key=lambda kv: (kv[0] is None, kv[0]))},
-    }
+    except Exception as exc:
+        # Leakage-assertion failures (AssertionError) land here like any other exception: status "crashed",
+        # the exception re-raised unchanged -- never swallowed, never downgraded to a clean exit. KeyboardInterrupt
+        # and SystemExit are deliberately NOT caught here (plain Exception only), so an interrupt or an
+        # earlier SystemExit (e.g. the --smoke-search-space-cap guard, which runs before this block anyway)
+        # is never mistaken for a normal "crashed" run outcome.
+        status = "crashed"
+        error_info = {"type": type(exc).__name__, "message": str(exc), "traceback": traceback.format_exc()}
+        raise
+    finally:
+        # Crash-safe sessions (2026-10-01): this block runs whether the try above succeeded, hit the time
+        # budget, or raised -- manifest.json and this session's run_config.json are ALWAYS written, so a
+        # crashed session's completed units (each checkpointed atomically by write_if_absent, see its own
+        # docstring) remain restorable by a later --restore-from, which is exactly what broke before this fix
+        # (a crash used to exit before any of this ran, leaving no manifest.json to restore from at all).
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+        run_config_dir = checkpoint_dir / "run_configs"
+        run_config_dir.mkdir(parents=True, exist_ok=True)
 
-    config = {
-        "role": args.role, "workers": args.workers, "gpu_index": gpu_indices,
-        "dataset_sha256": dataset_sha, "dataset_bytes": dataset_bytes,
-        "labels_run": args.labels_run, "labels_sha256": labels_sha,
-        "splits_dir": str(splits_dir), "splits_manifest_n_files": len(manifest), "splits_run_config": splits_config,
-        "targets": list(targets), "models": list(models), "repeats_filter": repeats, "folds_filter": folds,
-        "tuning_trials": args.tuning_trials, "specialist_trials": args.specialist_trials,
-        "smoke_search_space_cap": args.smoke_search_space_cap, "time_budget_hours": args.time_budget_hours,
-        "restore_from": args.restore_from, "restore_result": restore_result,
-        "task_order": [f"{level}/{target}/{unit}" for level, target, unit in pairs],  # section 8.7, logged
-        "n_tasks": len(tasks), "n_wrote": sum(1 for r in results if r.get("wrote")), "total_seconds": time.perf_counter() - started,
-        "session_summary": session_summary,
-        "git_head": head, "tree_clean": clean, "dirty_files": dirty, "library_versions": library_versions(), "utc_stamp": stamp,
-    }
-    config_path = run_config_dir / f"{stamp}_{args.role}.json"
-    config_path.write_text(json.dumps(config, indent=2, default=str) + "\n", encoding="utf-8")
-    (run_config_dir / f"{stamp}_{args.role}_results.json").write_text(json.dumps(results, indent=2, default=str) + "\n", encoding="utf-8")
-    write_checkpoint_manifest(checkpoint_dir)
-    print(f"role={args.role} tasks={len(tasks)} wrote={config['n_wrote']} seconds={config['total_seconds']:.1f}")
-    print(f"session summary: done={session_summary['units_done_this_session']} "
-          f"partial={session_summary['units_partial_this_session']} "
-          f"remaining={session_summary['units_remaining']} budget_exhausted={session_summary['budget_exhausted']}")
-    for slot, entry in session_summary["per_worker"].items():
-        print(f"  worker {slot} (gpu_index={entry['gpu_index']}): {entry['n_units']} unit(s), "
-              f"mean {entry['mean_seconds_per_unit']:.2f} s/unit")
-    print(f"run_config: {config_path}")
+        per_worker = {}
+        for r in results:
+            slot = r.get("worker_slot")
+            entry = per_worker.setdefault(slot, {"n_units": 0, "total_seconds": 0.0, "gpu_index": r.get("gpu_index")})
+            entry["n_units"] += 1
+            entry["total_seconds"] += r.get("seconds", 0.0)
+        for entry in per_worker.values():
+            entry["mean_seconds_per_unit"] = entry["total_seconds"] / entry["n_units"] if entry["n_units"] else None
+        # A gpu-pooled task that hit the deadline mid-pair (process_pooled_pair's own in-pair check, not just
+        # run_pool's between-task one) is neither "not started" nor fully done -- it appears in `results` (some
+        # component(s) checkpointed, wrote may be non-empty) but n_not_started never counted it. Fold it into
+        # units_remaining so the summary reflects real remaining work, not just whole never-dispatched tasks.
+        n_partial = sum(1 for r in results if r.get("deadline_hit"))
+        # Written here, before session_summary, not after: on a crash, `results` only ever reflects what
+        # run_pool's own list(...)/imap_unordered call managed to RETURN to this process -- Python's list()
+        # discards everything it had accumulated so far the moment ANY item raises, so a crash partway through
+        # a Pool run leaves `results` empty (or short) even when many units completed and were correctly
+        # checkpointed to disk by write_if_absent before the crash. write_checkpoint_manifest re-scans the
+        # checkpoint directory directly, so its count is accurate regardless of what `results` lost -- this is
+        # the authoritative "how much did this session actually get done" number on a crashed run, not
+        # units_done_this_session below (which can read misleadingly low on exactly the runs where it matters).
+        disk_manifest = write_checkpoint_manifest(checkpoint_dir)
+        session_summary = {
+            "units_done_this_session": len(results) - n_partial, "units_partial_this_session": n_partial,
+            # Includes n_skipped_dependency: those phase-2 tasks never reached run_pool at all (filtered out
+            # before dispatch, so n_not_started -- which only counts what run_pool itself didn't get to -- never
+            # saw them), but they are just as much "remaining work" as anything else here. Needed for
+            # units_done_this_session + units_remaining == n_tasks to hold (n_tasks counts every phase-2
+            # CANDIDATE, ready or not) -- verified by smoke_test_lofo.py's check_9.
+            "units_remaining": n_not_started + n_partial + n_skipped_dependency,
+            "units_skipped_dependency_not_ready": n_skipped_dependency,
+            "n_checkpoint_files_on_disk": len(disk_manifest),
+            "time_budget_hours": args.time_budget_hours,
+            "budget_exhausted": (n_not_started > 0 or n_partial > 0 or n_skipped_dependency > 0) and deadline is not None,
+            "per_worker": {str(k): v for k, v in sorted(per_worker.items(), key=lambda kv: (kv[0] is None, kv[0]))},
+        }
+
+        config = {
+            "role": args.role, "workers": args.workers, "gpu_index": gpu_indices,
+            "dataset_sha256": dataset_sha, "dataset_bytes": dataset_bytes,
+            "labels_run": args.labels_run, "labels_sha256": labels_sha,
+            "splits_dir": str(splits_dir), "splits_manifest_n_files": len(manifest), "splits_run_config": splits_config,
+            "targets": list(targets), "models": list(models), "repeats_filter": repeats, "folds_filter": folds,
+            "tuning_trials": args.tuning_trials, "specialist_trials": args.specialist_trials,
+            "smoke_search_space_cap": args.smoke_search_space_cap, "time_budget_hours": args.time_budget_hours,
+            "restore_from": args.restore_from, "restore_result": restore_result,
+            "task_order": [f"{level}/{target}/{unit}" for level, target, unit in pairs],  # section 8.7, logged
+            "skipped_dependency_units": skipped_dependency_units,
+            "n_tasks": len(tasks), "n_wrote": sum(1 for r in results if r.get("wrote")),
+            "total_seconds": time.perf_counter() - started,
+            "session_summary": session_summary, "status": status, "error": error_info,
+            "git_head": head, "tree_clean": clean, "dirty_files": dirty, "library_versions": library_versions(), "utc_stamp": stamp,
+        }
+        config_path = run_config_dir / f"{stamp}_{args.role}.json"
+        config_path.write_text(json.dumps(config, indent=2, default=str) + "\n", encoding="utf-8")
+        (run_config_dir / f"{stamp}_{args.role}_results.json").write_text(json.dumps(results, indent=2, default=str) + "\n", encoding="utf-8")
+        write_checkpoint_manifest(checkpoint_dir)  # re-run so the FINAL manifest also covers this session's own run_config/results files
+        print(f"role={args.role} status={status} tasks={len(tasks)} wrote={config['n_wrote']} seconds={config['total_seconds']:.1f}")
+        print(f"session summary: done={session_summary['units_done_this_session']} "
+              f"partial={session_summary['units_partial_this_session']} "
+              f"skipped_dependency={session_summary['units_skipped_dependency_not_ready']} "
+              f"on_disk={session_summary['n_checkpoint_files_on_disk']} "
+              f"remaining={session_summary['units_remaining']} budget_exhausted={session_summary['budget_exhausted']}")
+        for slot, entry in session_summary["per_worker"].items():
+            print(f"  worker {slot} (gpu_index={entry['gpu_index']}): {entry['n_units']} unit(s), "
+                  f"mean {entry['mean_seconds_per_unit']:.2f} s/unit")
+        print(f"run_config: {config_path}")
+        if status == "crashed":
+            print(f"CRASHED: {error_info['type']}: {error_info['message']}")
 
 
 if __name__ == "__main__":

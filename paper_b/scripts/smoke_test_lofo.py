@@ -87,6 +87,26 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      check runs --workers 2 for the first time in this suite, catching any
      OTHER multi-worker regression Windows can see; only a Linux run (the
      Kaggle CPU smoke cells) can prove the specific crash itself is fixed.
+  16. Dependency-safe scheduling (2026-10-01 fix): a --workers 2 Kaggle run
+     crashed with FileNotFoundError -- a super_analysis_standalone task was
+     dispatched before the family-level pair its tuning_once depends on (the
+     ONLY cross-task dependency in this harness) had finished; a shared queue
+     cannot guarantee ordering under real concurrency. Fixed with explicit,
+     non-interleaved phases plus a per-pair dependency check before phase 2 is
+     built. Two --workers 2 scenarios: (a) adversarial -- request ONLY
+     --levels super_analysis_standalone, whose dependency can never exist yet;
+     must cleanly skip, never crash; (b) the real crash scenario -- every
+     level together for a unit with a standalone pair; must finish with
+     status "completed", standalone files included.
+  17. Crash injection and restore (2026-10-01 fix): a crash used to exit
+     before manifest.json/run_config.json were ever written, so a crashed
+     session's completed units -- checkpointed atomically by write_if_absent
+     -- could not be restored (the Kaggle crash's own symptom). A test-only
+     env var (LOFO_PAPERB_TEST_CRASH_TASK) raises inside one named task;
+     requires a nonzero exit, status "crashed" with a recorded traceback,
+     the units that completed before the crash to be real files, and a
+     following --restore-from to pick those up (not recompute) and finish
+     everything, including the task that crashed the first time.
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -98,6 +118,7 @@ Run from the repository root:
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -691,6 +712,138 @@ def check_15_multiworker_pool(csv, labels_run, splits_dir, work_dir):
     }
 
 
+def check_16_dependency_safe_scheduling(csv, labels_run, splits_dir, work_dir):
+    """
+    2026-10-01 fix: a Kaggle run with --workers 2 crashed with FileNotFoundError --
+    a super_analysis_standalone task was dispatched before the family-level pair
+    its tuning_once depends on (the ONLY cross-task dependency anywhere in this
+    harness) had finished. A single shared task queue cannot guarantee ordering
+    under real concurrency: two tasks pulled by two workers run at nearly the
+    same moment regardless of their position in the queue. Fixed with explicit
+    phases (family+super_family, then super_analysis_standalone, never
+    interleaved) plus a per-pair dependency check before phase 2 is even built.
+
+    Two --workers 2 scenarios:
+      (a) adversarial: request ONLY --levels super_analysis_standalone, so its
+          dependency can never exist yet in a fresh directory -- must not crash,
+          must cleanly skip (units_skipped_dependency_not_ready > 0, 0 files
+          written, exit 0).
+      (b) the real scenario the crash happened in: request every level together
+          (the default) for one unit that has a standalone pair -- must finish
+          with status "completed", including the standalone unit's own files.
+    """
+    results = {}
+
+    adversarial_dir = work_dir / "dependency_adversarial"
+    cmd_a = harness_cmd(csv, labels_run, splits_dir, adversarial_dir, "gpu-pooled",
+                        extra=["--units", "i_v_vi2", "--models", "xgboost",
+                              "--levels", "super_analysis_standalone", "--workers", "2"])
+    try:
+        result_a = subprocess.run(cmd_a, capture_output=True, text=True, timeout=180)
+    except subprocess.TimeoutExpired:
+        return {"adversarial_timed_out": True, "passed": False}
+    config_a = latest_run_config(adversarial_dir, "gpu-pooled") if result_a.returncode == 0 else None
+    adversarial_ok = bool(
+        result_a.returncode == 0 and config_a is not None
+        and config_a["session_summary"]["units_skipped_dependency_not_ready"] > 0
+        and config_a["n_wrote"] == 0
+    )
+    results["adversarial"] = {
+        "returncode": result_a.returncode,
+        "skipped_dependency": config_a["session_summary"]["units_skipped_dependency_not_ready"] if config_a else None,
+        "n_wrote": config_a["n_wrote"] if config_a else None,
+        "stderr_tail": None if result_a.returncode == 0 else (result_a.stderr or "")[-500:],
+        "passed": adversarial_ok,
+    }
+
+    full_dir = work_dir / "dependency_full"
+    cmd_b = harness_cmd(csv, labels_run, splits_dir, full_dir, "gpu-pooled",
+                        extra=["--units", "i_v_vi2", "--models", "xgboost", "--workers", "2"])
+    try:
+        result_b = subprocess.run(cmd_b, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        return {"adversarial": results["adversarial"], "full_timed_out": True, "passed": False}
+    config_b = latest_run_config(full_dir, "gpu-pooled") if result_b.returncode == 0 else None
+    standalone_files = [p for p in all_checkpoint_files(full_dir) if "super_analysis_standalone" in p.parts] if config_b else []
+    full_ok = bool(result_b.returncode == 0 and config_b is not None
+                  and config_b["status"] == "completed" and len(standalone_files) > 0)
+    results["full"] = {
+        "returncode": result_b.returncode, "status": config_b["status"] if config_b else None,
+        "n_standalone_files": len(standalone_files),
+        "stderr_tail": None if result_b.returncode == 0 else (result_b.stderr or "")[-500:],
+        "passed": full_ok,
+    }
+
+    results["passed"] = bool(adversarial_ok and full_ok)
+    return results
+
+
+def check_17_crash_injection_and_restore(csv, labels_run, splits_dir, work_dir):
+    """
+    2026-10-01 fix: a crash used to exit main() before manifest.json/
+    run_config.json were ever written, so a crashed session's completed units --
+    genuinely checkpointed, atomically, by write_if_absent -- could not be
+    restored afterward (the Kaggle crash's own symptom: "no manifest.json").
+    LOFO_PAPERB_TEST_CRASH_TASK deliberately raises inside one named task (see
+    _pooled_task), simulating ANY mid-session crash (not just the dependency
+    one above), including a leakage-assertion failure -- both are plain
+    exceptions from this harness's point of view, caught and handled identically.
+
+    Requires: (a) the session exits nonzero: a crash must never be swallowed;
+    (b) run_config.json still exists, with status "crashed" and a recorded
+    error type/message/traceback; (c) the units that completed BEFORE the
+    crashing task are real, checkpointed files (xgboost's full set, since the
+    crash is injected on manganite's ridge task, dispatched after xgboost's);
+    (d) a following --restore-from of that crashed directory into a fresh one
+    copies those completed units in (not rewritten) and goes on to finish
+    everything, including the task that crashed the first time.
+    """
+    crash_dir = work_dir / "crash_injection"
+    crash_task = "family/zT/manganite/ridge"
+    env = dict(os.environ, LOFO_PAPERB_TEST_CRASH_TASK=crash_task)
+    cmd = harness_cmd(csv, labels_run, splits_dir, crash_dir, "gpu-pooled",
+                      extra=["--units", "manganite", "--levels", "family"])
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=180)
+    except subprocess.TimeoutExpired:
+        return {"crash_timed_out": True, "passed": False}
+
+    crashed_cleanly = result.returncode != 0
+    try:
+        config = latest_run_config(crash_dir, "gpu-pooled")
+    except FileNotFoundError:
+        config = None
+    status_recorded = bool(config and config.get("status") == "crashed")
+    error = config.get("error") if config else None
+    error_recorded = bool(error and error.get("type") == "RuntimeError" and "traceback" in error and error["traceback"])
+    xgboost_complete = (crash_dir / "family" / "zT" / "manganite" / "xgboost" / "tuning_once.npz").exists()
+    ridge_absent = not (crash_dir / "family" / "zT" / "manganite" / "ridge" / "tuning_once.npz").exists()
+
+    restore_dir = work_dir / "crash_restore"
+    cmd2 = harness_cmd(csv, labels_run, splits_dir, restore_dir, "gpu-pooled",
+                       extra=["--units", "manganite", "--levels", "family", "--restore-from", str(crash_dir)])
+    try:
+        result2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=180)
+    except subprocess.TimeoutExpired:
+        return {"restore_timed_out": True, "passed": False}
+    restore_ok = result2.returncode == 0
+    config2 = latest_run_config(restore_dir, "gpu-pooled") if restore_ok else None
+    restore_completed = bool(config2 and config2.get("status") == "completed")
+    n_files_after_restore = len(all_checkpoint_files(restore_dir)) if restore_ok else 0
+    ridge_now_complete = (restore_dir / "family" / "zT" / "manganite" / "ridge" / "tuning_once.npz").exists()
+
+    return {
+        "crashed_returncode": result.returncode, "crashed_cleanly": crashed_cleanly,
+        "status_recorded": status_recorded, "error_recorded": error_recorded,
+        "xgboost_complete_before_crash": xgboost_complete, "ridge_absent_before_restore": ridge_absent,
+        "restore_returncode": result2.returncode, "restore_ok": restore_ok,
+        "restore_status": config2.get("status") if config2 else None, "restore_completed": restore_completed,
+        "n_checkpoint_files_after_restore": n_files_after_restore, "ridge_now_complete": ridge_now_complete,
+        "passed": bool(crashed_cleanly and status_recorded and error_recorded and xgboost_complete
+                      and ridge_absent and restore_ok and restore_completed and ridge_now_complete),
+    }
+
+
 def check_9_time_budget(csv, labels_run, splits_dir, work_dir):
     """
     --time-budget-hours, a budget of a few seconds: the harness must still
@@ -807,6 +960,8 @@ def main(argv=None):
     report["check_13_in_pair_time_budget"] = check_13_in_pair_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
     report["check_14_lf_hash_verification"] = check_14_lf_hash_verification(Path(args.splits_dir), work_dir)
     report["check_15_multiworker_pool"] = check_15_multiworker_pool(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_16_dependency_safe_scheduling"] = check_16_dependency_safe_scheduling(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_17_crash_injection_and_restore"] = check_17_crash_injection_and_restore(args.csv, args.labels_run, args.splits_dir, work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

@@ -1,0 +1,24 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 23.225136999972165,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T111327\\work\\in_pair_budget\\family\\zT\\manganite\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

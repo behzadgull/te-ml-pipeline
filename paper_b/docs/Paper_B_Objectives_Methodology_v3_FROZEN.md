@@ -821,3 +821,118 @@ an actual Linux run, which section 8.7's Kaggle CPU smoke cells now
 provide: a GPU-free notebook that clones this commit, installs the pinned
 versions, and runs `smoke_test_lofo.py`'s full 15 checks end to end on
 Kaggle's own Linux host.
+
+**Confirmed on Kaggle (Linux CPU, no GPU), 2026-10-01**: `paper_b/results/
+smoke_test_linux/20261001T091603/` -- `all_passed: true`, all 15 checks,
+including check_15's real `--workers 2` run, the one that could actually
+hit the fork/spawn crash and didn't. Committed as-is (report + full run
+log + a short README) alongside a `filter="data"` (PEP 706) fix to both
+of this module's `tarfile.extractall()` calls (`restore_from`, and the
+smoke test's own tamper-check extraction), prompted by a
+`DeprecationWarning` visible in that run's own log.
+
+**Fixed 2026-10-01: a fourth Kaggle crash, GPU this time, found once all
+three fixes above were confirmed on Linux.** `FileNotFoundError:
+super_analysis_standalone/zT/i_v_vi2: needs the family-level pair's
+tuning_once checkpoint first`, with `--workers 2`. Root cause: the ONLY
+cross-task dependency anywhere in this harness (confirmed by re-reading
+every branch of `process_pooled_pair` and `process_specialist_unit`: a
+`super_analysis_standalone` pair's C3 rerun needs its `family`-level
+pair's `tuning_once`; `super_family` computes its own fresh, same as
+`family`; `cpu-specialist`/`gpu-specialist-control` depend on nothing
+from `gpu-pooled` at all, see the module docstring's Role independence
+note; no target, repeat, fold or model ever reads another one's
+checkpoint) -- was being dispatched through ONE shared task queue. A
+linear order that puts `family` before `super_analysis_standalone` is not
+enough once `--workers > 1`: two tasks pulled by two workers run
+CONCURRENTLY regardless of their position in the queue, so a
+later-ordered task can start before an earlier-ordered one, on a slower
+worker, has actually finished. The crash then left no `manifest.json` or
+`run_config.json` at all (the original code only wrote them AFTER a
+successful `run_pool()` call returned), so the units that HAD completed
+before the crash could not be restored either -- a second, compounding
+bug, "no manifest.json" being the crash's own reported symptom.
+
+**Fixed with two changes.** (1) Explicit, non-interleaved phases: `main()`
+now runs every `family`/`super_family` pair to FULL completion (every
+worker returned from `run_pool`, not merely dispatched in the right
+order) before `super_analysis_standalone`'s task list is even built; that
+list is then further filtered to only the (target, unit) pairs whose
+family-level `tuning_once` file already exists on disk for every
+requested model, with the time budget re-checked at this same boundary --
+anything not ready is cleanly SKIPPED this session (recorded, by name, in
+`skipped_dependency_units`), never attempted. (2) Crash-safe sessions: the
+whole dispatch block is now wrapped in try/except/finally -- the `finally`
+always writes `run_config.json` and (via `write_checkpoint_manifest`)
+`manifest.json`, with a `status` field ("completed" / "stopped_by_budget"
+/ "crashed") and, on a crash, an `error` object (exception type, message,
+full traceback). The `except` clause catches plain `Exception` only (never
+`BaseException`), re-raises unchanged after recording -- a leakage
+assertion failure is an `AssertionError`, caught and reported exactly like
+any other crash, never swallowed, and the process still exits nonzero.
+
+**Two further bugs found verifying this, both fixed in the same pass, not
+pre-existing issues this entry invented a reason to look for:**
+- `write_if_absent`'s new atomic rename (temp file + `os.replace`, added
+  so a unit killed mid-write -- `Pool.terminate()` fires on every other
+  worker the instant one task raises -- can never leave a corrupt `.npz`
+  masquerading as a complete checkpoint) picked a temp name that did NOT
+  itself end in `.npz` (`tuning_once.npz.tmp12345`). `numpy.savez_compressed`
+  silently APPENDS `.npz` to any target that doesn't already end with it,
+  so it was actually writing to `tuning_once.npz.tmp12345.npz` -- a file
+  `os.replace` was never told about -- and every single write failed with
+  `FileNotFoundError`. Verified directly before and after
+  (`numpy.savez_compressed` on a path ending `.tmp999` really does produce
+  `.tmp999.npz`); fixed by naming the temp file `name.tmpPID.npz` instead,
+  ending in `.npz` itself.
+- A crash that propagates through `list(pool.imap_unordered(...))` (or the
+  plain list comprehension `workers<=1` uses) makes Python's `list()`
+  discard everything it had already accumulated -- standard, well-defined
+  behavior, not a bug in `multiprocessing` -- so `results` in `main()` can
+  read as empty even when many units completed and were correctly
+  checkpointed to disk first. `session_summary` now also reports
+  `n_checkpoint_files_on_disk`, from a `write_checkpoint_manifest` call
+  moved earlier (a genuine re-scan of the directory, not the in-memory
+  `results` list), as the crash-proof "how much did this session actually
+  get done" number -- confirmed directly: an injected crash on one task
+  after 8 other units had completed showed `units_done_this_session: 0`
+  but `n_checkpoint_files_on_disk: 16` (8 units x 2 files each), the true
+  count.
+
+**Known cost of the phase split, stated plainly, not smoothed over:** each
+phase builds its own `multiprocessing.Pool`, so `_pool_initializer` (which
+loads the full dataset) runs again for phase 2 even though phase 1's
+workers just did the identical load moments earlier -- confirmed directly
+in a local run, a ~60 second gap between the last family-level task
+finishing and the first `super_analysis_standalone` task starting, pure
+reload time. This is a fixed, bounded, once-per-session cost (not
+per-task), paid only when `super_analysis_standalone` pairs are actually
+requested alongside `family`/`super_family` in the same invocation; it was
+not optimized away here in favour of keeping the fix itself simple and
+auditable. Revisit (e.g. a pool shared across phases) only if this
+measurably matters against the section 8.5/8.6 compute budget.
+
+**Covered by `smoke_test_lofo.py`'s check_16 and check_17.** check_16,
+`--workers 2` both times: (a) adversarial -- `--levels
+super_analysis_standalone` alone, whose dependency cannot possibly exist
+yet in a fresh directory, must cleanly skip
+(`units_skipped_dependency_not_ready > 0`, zero files written, exit 0),
+not crash; (b) the real scenario the crash happened in -- every level
+together for a unit with a standalone pair -- must finish with status
+`"completed"`, standalone files included. check_17 uses a test-only env
+var, `LOFO_PAPERB_TEST_CRASH_TASK`, to raise inside one named task (inert
+by default, no production guard needed -- the env var simply does not
+exist in a real run) and requires: a nonzero exit; `run_config.json` still
+written, with status `"crashed"` and a recorded traceback; the units that
+completed before the crash to be real, checkpointed files; and a following
+`--restore-from` of that crashed directory to pick those up (not
+recompute) and finish everything, including the task that crashed the
+first time. Both verified by hand against the real harness (not just the
+smoke-test wrapper) before being written into the suite: the adversarial
+run exits in under 10 seconds (no dataset load at all now that an empty
+phase skips `run_pool` entirely, a related fix in the same pass), the full
+scenario completes with `status: "completed"` and the standalone files
+present, the crash run exits 1 with `status: "crashed"` and a full
+traceback while 16 files from the non-crashing task are already on disk,
+and the restore run completes with `status: "completed"`, the previously
+crashing unit now finished, nothing already-checkpointed rewritten.
