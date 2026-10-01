@@ -1,0 +1,9 @@
+{
+  "worker_slot": 0,
+  "gpu_index": null,
+  "role": "gpu-pooled",
+  "last_unit": "family/zT/manganite/ridge/C3",
+  "n_units_done_this_worker": 8,
+  "last_unit_seconds": 1.42,
+  "last_update_utc": "2026-10-01T13:11:18Z"
+}

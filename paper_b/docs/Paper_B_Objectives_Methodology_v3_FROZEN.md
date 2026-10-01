@@ -936,3 +936,82 @@ present, the crash run exits 1 with `status: "crashed"` and a full
 traceback while 16 files from the non-crashing task are already on disk,
 and the restore run completes with `status: "completed"`, the previously
 crashing unit now finished, nothing already-checkpointed rewritten.
+
+**GPU smoke, Kaggle 2x Tesla T4, commit `6b57be0`, 2026-10-01: PASS.** The
+first real GPU exercise of the dependency-safe phases and crash-safe
+sessions above (the local and Kaggle-CPU suites above only ever ran on
+CPU). Two versions of one notebook, `--smoke-search-space-cap`, the same
+smoke scope as the rest of this section (zT, `manganite`/`i_v_vi2`, 2
+folds, 2 tuning trials):
+
+- **Version A**: `--role gpu-pooled --workers 2 --gpu-index 0,1`. Both
+  GPUs used (confirmed from the run's own per-worker log, not assumed):
+  3 units each, ~25 s/unit, GPU peak utilization 46% / 40%. Phase 1
+  (`family`) completed before phase 2 (`super_analysis_standalone`)
+  started -- the ordering the dependency-safe scheduling fix exists to
+  guarantee, observed directly on the hardware the original crash
+  happened on. `status: "completed"`, 72 checkpoint files, `run_config.
+  json` and `manifest.json` both written. All 6 tasks finished inside the
+  `--time-budget-hours 0.04` budget, so this smoke run did not exercise a
+  genuine mid-run GPU resume -- that path is covered by the CPU-side
+  checks (10, 13, 17) and by production session N's own restore (section
+  8.7 below), not independently re-verified on GPU here.
+- **Version B** (`--restore-from` version A's packaged output, attached as
+  that notebook's own Notebook Output): copied 74/74 manifest-listed
+  files, `n_wrote: 0`, `status: "completed"`, `units_remaining: 0` --
+  nothing recomputed. (The notebook's own inline check had asserted
+  `restore_result.n_already_present > 0`, which is not a field
+  `restore_from` returns -- `n_copied`/`n_already_present` as named in its
+  own docstring, with `n_copied` being the correct one to check against 0
+  for "nothing new was needed"; the run itself is unaffected, a PASS.)
+
+**Fixed 2026-10-01, found from reading version B's own report rather than
+from a new crash: `units_done_this_session` conflated two different
+things.** A task that appears in `results` was dispatched and returned,
+but that alone does not mean it computed anything -- `write_if_absent`'s
+own skip-check means a task whose files were already there (restored from
+a prior session, or already done from an earlier phase of this one)
+returns just as validly as one that genuinely fit a model. Version B's own
+session summary read `done=6` at an arithmetic mean of 0.003 seconds per
+unit -- a number that was never real compute time, since all 6 were
+restored skips, and would have been actively misleading if read as
+"session B did 6 units of work" when judging how a chain of sessions is
+progressing.
+
+`session_summary` now reports three numbers instead of one:
+`units_computed_this_session` (non-empty `wrote`, excluding any
+deadline-hit partial), `units_skipped_already_on_disk` (empty `wrote`,
+excluding partial), and `units_restored` (`restore_from`'s own `n_copied`,
+a FILE count, not a task count -- task-level and file-level skips do not
+correspond cleanly, since one task spans several checkpoint files, and
+`write_if_absent`'s skip-check has no way to tell "restored this session"
+apart from "already there for some other reason" at the task level alone).
+`units_done_this_session` is kept, now computed as
+`units_computed_this_session + units_skipped_already_on_disk`, purely so
+the pre-existing `units_done_this_session + units_remaining == n_tasks`
+invariant (`smoke_test_lofo.py`'s check_9) still holds unchanged.
+Per-worker timing (`mean_seconds_per_unit`) now counts computed units
+only -- an instant restored/skipped task no longer drags the mean toward
+zero.
+
+Covered by `smoke_test_lofo.py`'s check_10, extended: a restore-only run
+(ref_dir's full scope restored into a fresh directory, nothing left to
+compute) must report `units_computed_this_session == 0`,
+`units_skipped_already_on_disk == n_tasks`, and empty `per_worker` --
+verified directly before being written into the suite (a small
+manganite/xgboost-only restore-only run showed exactly
+`computed=0, skipped_on_disk=1, restored=18, per_worker={}`).
+
+**Added the same day: a per-worker `status_worker<slot>.json` progress
+file**, requested for the production sessions below -- `/kaggle/working`
+(a session's checkpoint directory) is visible in that version's Output tab
+WHILE a "Save & Run All" is still executing, not only once it finishes, so
+a small, frequently-overwritten file there gives a live progress view
+without waiting for a session to end. Each worker owns and only ever
+writes its own file (no cross-process contention), updated after every
+unit -- every COMPONENT for `gpu-pooled` (`tuning_once`, `C1`, each
+`C0`/`C2`/`C3` fold), not only every whole task -- with the worker's slot,
+GPU index, role, the last unit's identifier, a running count, and a UTC
+timestamp. Soft/informational only, a plain overwrite, not atomic-renamed
+like a real checkpoint: a briefly stale or torn read has no correctness
+consequence here, unlike a torn `.npz`.

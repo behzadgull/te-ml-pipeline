@@ -1,0 +1,20 @@
+{
+  "family/zT/i_v_vi2/ridge/specialist/r1_f0.json": "a941250887c5a8b07f5c30ecd52f7efd5f3c4fe193ef675ea5ee6bf12c9b248e",
+  "family/zT/i_v_vi2/ridge/specialist/r1_f0.npz": "9a222924d7be7a82d566974d3d561dc622b8168c552cc5bbc00fb83e6aebbe1f",
+  "family/zT/i_v_vi2/ridge/specialist/r1_f1.json": "071e9ff274862b4f6e54ccdc1c21e447755d8a5369d2bf3f74a22669f9342e5e",
+  "family/zT/i_v_vi2/ridge/specialist/r1_f1.npz": "bef5245ca1c4b37aa4203c2563574dbf5985c6790b2f5d95d3637db7c26277b6",
+  "family/zT/i_v_vi2/xgboost/specialist/r1_f0.json": "0eba114e080d3649f059b2ca3cca44488df3fc3fd81ad94795597c2d3081dc74",
+  "family/zT/i_v_vi2/xgboost/specialist/r1_f0.npz": "e58ed69f1aa2b060becfc6df8b086657a945aae52e4708f07b2b5344e792a87a",
+  "family/zT/i_v_vi2/xgboost/specialist/r1_f1.json": "5d1de3652704bc0e47d5cd14d4fc1e4c3d5114585076e277a54422b1de3b112e",
+  "family/zT/i_v_vi2/xgboost/specialist/r1_f1.npz": "cd50767336dd7a6ab2471f50432a67a746739d68baf60c671a679f294bf0a843",
+  "family/zT/manganite/ridge/specialist/r1_f0.json": "3e870bc77d27be7cd46b7495ae4de0ae3a5253b87513be9a09927aa4f463d4bf",
+  "family/zT/manganite/ridge/specialist/r1_f0.npz": "d6641f843d6c836c2b521e3f4be8340bf5f329f6ab7850113c01b4603f7acf2f",
+  "family/zT/manganite/ridge/specialist/r1_f1.json": "7fa6c4c35decf1284c500cb733dec96191fe81573fdcf6a96f7c70ced56d035c",
+  "family/zT/manganite/ridge/specialist/r1_f1.npz": "86e1c4e67f70eda6bcbb41a701b49cd16507cbd6e0183a4c014877b2856007b6",
+  "family/zT/manganite/xgboost/specialist/r1_f0.json": "3dafbdd9d3d6f7310424d8afa2de869c96ee0a999198559f9f47dc26a3bc0d2a",
+  "family/zT/manganite/xgboost/specialist/r1_f0.npz": "76e7c1af7a24911fcd19f5d767287921075684d3ab9571502055c147e330f142",
+  "family/zT/manganite/xgboost/specialist/r1_f1.json": "2f73c0a7c04c3447c91c649b7d01e2e818af5b583a852a3209d0cea1d10e1edc",
+  "family/zT/manganite/xgboost/specialist/r1_f1.npz": "e0eb9ceb385fe9e47883a6589aebd6001b2c0742602da88dc56e6b32e32e424f",
+  "run_configs/20261001T130415_cpu-specialist.json": "cefc0be7a934e4fbc6560bdaf135e53a42e9545eb1b2d22fbd01bf57fa323e7d",
+  "run_configs/20261001T130415_cpu-specialist_results.json": "6f46e2b70996111fe441d49993d5451b009299d17203a8dc618ad3241738e685"
+}

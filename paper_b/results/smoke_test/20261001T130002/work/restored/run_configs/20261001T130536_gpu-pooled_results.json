@@ -1,0 +1,86 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 0.008226700010709465,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 0.005143700051121414,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 0.004648200003430247,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 0.004632199998013675,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 0.0032455999171361327,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 0.0020667000208050013,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

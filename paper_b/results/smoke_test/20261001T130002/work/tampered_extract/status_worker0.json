@@ -1,0 +1,9 @@
+{
+  "worker_slot": 0,
+  "gpu_index": null,
+  "role": "gpu-pooled",
+  "last_unit": "super_analysis_standalone/zT/i_v_vi2/ridge/C3",
+  "n_units_done_this_worker": 36,
+  "last_unit_seconds": 1.45,
+  "last_update_utc": "2026-10-01T13:01:47Z"
+}

@@ -1,0 +1,9 @@
+{
+  "worker_slot": 0,
+  "gpu_index": null,
+  "role": "gpu-pooled",
+  "last_unit": "family/zT/manganite/xgboost/C0",
+  "n_units_done_this_worker": 1,
+  "last_unit_seconds": 1.28,
+  "last_update_utc": "2026-10-01T13:04:37Z"
+}

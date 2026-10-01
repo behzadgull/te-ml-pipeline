@@ -1,0 +1,9 @@
+{
+  "worker_slot": 0,
+  "gpu_index": null,
+  "role": "cpu-specialist",
+  "last_unit": "family/zT/i_v_vi2/ridge/specialist/r1f1",
+  "n_units_done_this_worker": 8,
+  "last_unit_seconds": 0.13,
+  "last_update_utc": "2026-10-01T13:04:15Z"
+}

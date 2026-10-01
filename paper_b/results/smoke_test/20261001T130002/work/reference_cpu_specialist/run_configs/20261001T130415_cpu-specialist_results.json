@@ -1,0 +1,146 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost",
+      1,
+      0,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.2299815999576822,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\manganite\\xgboost\\specialist\\r1_f0"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost",
+      1,
+      1,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.1769203000003472,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\manganite\\xgboost\\specialist\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge",
+      1,
+      0,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.13579650002066046,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\manganite\\ridge\\specialist\\r1_f0"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge",
+      1,
+      1,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.09867569990456104,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\manganite\\ridge\\specialist\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost",
+      1,
+      0,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.17534219997469336,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\i_v_vi2\\xgboost\\specialist\\r1_f0"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost",
+      1,
+      1,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.20649700006470084,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\i_v_vi2\\xgboost\\specialist\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge",
+      1,
+      0,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.1300696999533102,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\i_v_vi2\\ridge\\specialist\\r1_f0"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge",
+      1,
+      1,
+      ""
+    ],
+    "device": "cpu",
+    "seconds": 0.13450980000197887,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\reference_cpu_specialist\\family\\zT\\i_v_vi2\\ridge\\specialist\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0
+  }
+]

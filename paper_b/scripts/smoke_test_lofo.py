@@ -36,7 +36,10 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      summary (a too-small budget honestly finishing zero units is a pass, not
      a failure -- loading the dataset alone can exceed it).
   10. --restore-from a .tar.gz of the reference run: every unit is skipped
-     (n_wrote == 0), reaching the same file set; a tampered copy is refused.
+     (n_wrote == 0), reaching the same file set; a tampered copy is refused;
+     a restore-only run reports units_computed_this_session == 0 and
+     units_skipped_already_on_disk == n_tasks, not lumped into one
+     "done" count, and empty per-worker timing (2026-10-01 fix).
   11. Role independence (section 8.1): gpu-pooled and cpu-specialist write to
      SEPARATE reference directories throughout this test (methodology doc
      section 8.7's Kaggle plan -- one checkpoint dir per role). cpu-specialist
@@ -873,7 +876,15 @@ def check_10_restore_from(csv, labels_run, splits_dir, ref_dir, work_dir):
     --restore-from a .tar.gz of a completed session: (a) a fresh session
     restoring from it must skip every restored unit (n_wrote == 0, since
     ref_dir already covers this test's exact scope) and reach the same file
-    set as ref_dir; (b) a tampered copy of that tar.gz must be refused.
+    set as ref_dir; (b) a tampered copy of that tar.gz must be refused; (c)
+    2026-10-01 fix -- a restore-only run (everything already on disk via
+    restore, nothing left to compute) must report
+    units_computed_this_session == 0 and units_skipped_already_on_disk ==
+    n_tasks, NOT units_done_this_session == n_tasks lumping the two
+    together (the bug a Kaggle restore-only run exposed directly: it
+    reported "done=6" at an impossible 0.003 s/unit, since every one of
+    those 6 was a restored skip, not real work); per-worker timing must
+    also be absent/empty, since it counts computed units only.
     """
     import tarfile as tf
     archive = work_dir / "restore_source.tar.gz"
@@ -887,12 +898,21 @@ def check_10_restore_from(csv, labels_run, splits_dir, ref_dir, work_dir):
     restore_ok = result.returncode == 0
     n_wrote_after_restore = None
     same_as_reference = None
+    units_computed, units_skipped_on_disk, n_tasks = None, None, None
+    per_worker_empty = None
     if restore_ok:
         config = latest_run_config(restored_dir, "gpu-pooled")
         n_wrote_after_restore = config["n_wrote"]
+        n_tasks = config["n_tasks"]
+        units_computed = config["session_summary"]["units_computed_this_session"]
+        units_skipped_on_disk = config["session_summary"]["units_skipped_already_on_disk"]
+        per_worker_empty = config["session_summary"]["per_worker"] == {}
         ref_names = {p.relative_to(ref_dir) for p in all_checkpoint_files(ref_dir)}
         restored_names = {p.relative_to(restored_dir) for p in all_checkpoint_files(restored_dir)}
         same_as_reference = ref_names == restored_names  # gpu-pooled alone; n_wrote==0 means nothing new was added
+    restore_only_accounting_ok = bool(
+        restore_ok and units_computed == 0 and units_skipped_on_disk == n_tasks and per_worker_empty
+    )
 
     tampered_dir = work_dir / "tampered_extract"
     with tf.open(archive, "r:gz") as tar:
@@ -914,9 +934,13 @@ def check_10_restore_from(csv, labels_run, splits_dir, ref_dir, work_dir):
     return {
         "restore_returncode": result.returncode, "restore_ok": restore_ok,
         "n_wrote_after_restore": n_wrote_after_restore, "same_as_reference": same_as_reference,
+        "n_tasks": n_tasks, "units_computed_this_session": units_computed,
+        "units_skipped_already_on_disk": units_skipped_on_disk, "per_worker_empty": per_worker_empty,
+        "restore_only_accounting_ok": restore_only_accounting_ok,
         "tampered_returncode": result2.returncode, "tampered_stderr_tail": (result2.stderr or "")[-500:],
         "tamper_refused": tamper_refused,
-        "passed": bool(restore_ok and n_wrote_after_restore == 0 and same_as_reference and tamper_refused),
+        "passed": bool(restore_ok and n_wrote_after_restore == 0 and same_as_reference and tamper_refused
+                      and restore_only_accounting_ok),
     }
 
 

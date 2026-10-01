@@ -1,0 +1,128 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 22.723443700000644,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 27.972330400021747,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\manganite\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 1,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 29.371920500067063,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 28.291398599976674,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 1,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 4.094156499952078,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 1,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 4.197184899938293,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T130002\\work\\multiworker_pool\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

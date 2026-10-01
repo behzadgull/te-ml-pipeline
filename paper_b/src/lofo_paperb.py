@@ -268,7 +268,8 @@ def load_checkpoint_dir_for_analysis(checkpoint_dir):
         raise ValueError(
             f"{checkpoint_dir}: sessions disagree on {ANALYSIS_IDENTITY_FIELDS}: {sorted(identities)}"
         )
-    unit_paths = sorted(p for p in checkpoint_dir.rglob("*.json") if "run_configs" not in p.parts and p.name != "manifest.json")
+    unit_paths = sorted(p for p in checkpoint_dir.rglob("*.json") if "run_configs" not in p.parts
+                        and p.name != "manifest.json" and not p.name.startswith("status_worker"))
     smoke_capped = []
     for path in unit_paths:
         sidecar = json.loads(path.read_text(encoding="utf-8"))
@@ -328,11 +329,18 @@ def write_checkpoint_manifest(checkpoint_dir):
     every session's run_configs/*.json. Called at the end of every session
     (main() below) and again before packaging for upload/download, so a
     manifest is always current for --restore-from's tamper check.
+
+    status_worker<slot>.json files are also excluded (2026-10-01, same
+    reason as manifest.json itself): they are soft, frequently-overwritten
+    progress indicators (write_worker_status), not checkpoints -- including
+    them would mean a --restore-from copies a stale prior session's
+    progress file into a new session that may use a different number of
+    workers, and there is no "tamper" concept worth protecting here anyway.
     """
     checkpoint_dir = Path(checkpoint_dir)
     manifest = {}
     for path in sorted(checkpoint_dir.rglob("*")):
-        if path.is_file() and path.name != "manifest.json":
+        if path.is_file() and path.name != "manifest.json" and not path.name.startswith("status_worker"):
             manifest[str(path.relative_to(checkpoint_dir).as_posix())] = sha256_file(path)
     (checkpoint_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
@@ -778,6 +786,29 @@ def log_unit_progress(worker_slot, gpu_index, level, target, unit, condition, re
           f"condition={condition} repeat={repeat} fold={fold} model={model_type} seconds={seconds:.2f}", flush=True)
 
 
+def write_worker_status(checkpoint_dir, worker_slot, gpu_index, role, last_unit, n_units_done, seconds):
+    """
+    `checkpoint_dir/status_worker<slot>.json`: a small, frequently-overwritten
+    progress file, one per worker, updated after every unit (every COMPONENT
+    for gpu-pooled -- tuning_once, C1, each C0/C2/C3 fold -- not only every
+    whole task). Each worker owns its own file (no cross-process write
+    contention; a Kaggle checkpoint directory under /kaggle/working is
+    visible in that version's Output tab WHILE a "Save & Run All" is still
+    executing, not only after it finishes), so reading all `status_worker*
+    .json` files together gives a live view of every worker's progress
+    without waiting for the session to end. Soft/informational only --
+    unlike write_if_absent's checkpoints, a stale or briefly-inconsistent
+    status file has no correctness consequence, so this is a plain
+    overwrite, not atomic-renamed.
+    """
+    status = {
+        "worker_slot": worker_slot, "gpu_index": gpu_index, "role": role, "last_unit": last_unit,
+        "n_units_done_this_worker": n_units_done, "last_unit_seconds": round(seconds, 2),
+        "last_update_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    (Path(checkpoint_dir) / f"status_worker{worker_slot}.json").write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
+
+
 def _pooled_task(task):
     """One gpu-pooled task: (level, target, unit, model_type)."""
     level, target, unit, model_type = task
@@ -793,6 +824,9 @@ def _pooled_task(task):
 
     def on_unit_done(component, repeat, fold, seconds):
         log_unit_progress(worker_slot, gpu_index, level, target, unit, component, repeat, fold, model_type, seconds)
+        _WORKER_STATE["n_units_done"] = _WORKER_STATE.get("n_units_done", 0) + 1
+        write_worker_status(_WORKER_STATE["checkpoint_dir"], worker_slot, gpu_index, "gpu-pooled",
+                            f"{level}/{target}/{unit}/{model_type}/{component}", _WORKER_STATE["n_units_done"], seconds)
 
     log, deadline_hit = process_pooled_pair(
         level, target, unit, model_type, device, _WORKER_STATE["X"], _WORKER_STATE["y_by_target"],
@@ -819,6 +853,11 @@ def _specialist_task(task):
     elapsed = time.perf_counter() - started
     log_unit_progress(_WORKER_STATE["worker_slot"], _WORKER_STATE["worker_gpu"], level, target, unit,
                       f"specialist{suffix}", repeat, fold, model_type, elapsed)
+    _WORKER_STATE["n_units_done"] = _WORKER_STATE.get("n_units_done", 0) + 1
+    write_worker_status(_WORKER_STATE["checkpoint_dir"], _WORKER_STATE["worker_slot"], _WORKER_STATE["worker_gpu"],
+                        "gpu-specialist-control" if suffix else "cpu-specialist",
+                        f"{level}/{target}/{unit}/{model_type}/specialist{suffix}/r{repeat}f{fold}",
+                        _WORKER_STATE["n_units_done"], elapsed)
     return {"task": list(task), "device": device, "seconds": elapsed, "wrote": [] if not wrote else [str(result[1])],
             "gpu_index": _WORKER_STATE["worker_gpu"], "worker_slot": _WORKER_STATE["worker_slot"]}
 
@@ -1098,8 +1137,15 @@ def main(argv=None):
         run_config_dir = checkpoint_dir / "run_configs"
         run_config_dir.mkdir(parents=True, exist_ok=True)
 
+        # per_worker timing counts COMPUTED units only (2026-10-01 fix): a task whose checkpoint(s) were already
+        # on disk (restored from a prior session, or already done from an earlier phase of this one) returns
+        # from _pooled_task/_specialist_task in a few milliseconds with wrote=[] -- including those in the mean
+        # seconds/unit silently drags it toward zero and makes a restore-heavy session look like it fit unrealistically
+        # fast, exactly the bug a restore-only run exposed (0.003 s/unit on a run that computed nothing at all).
         per_worker = {}
         for r in results:
+            if not r.get("wrote"):
+                continue
             slot = r.get("worker_slot")
             entry = per_worker.setdefault(slot, {"n_units": 0, "total_seconds": 0.0, "gpu_index": r.get("gpu_index")})
             entry["n_units"] += 1
@@ -1111,6 +1157,23 @@ def main(argv=None):
         # component(s) checkpointed, wrote may be non-empty) but n_not_started never counted it. Fold it into
         # units_remaining so the summary reflects real remaining work, not just whole never-dispatched tasks.
         n_partial = sum(1 for r in results if r.get("deadline_hit"))
+        # units_computed_this_session / units_skipped_already_on_disk (2026-10-01 fix): a task that appears in
+        # `results` was DISPATCHED and RETURNED, but that alone does not mean it did any work -- write_if_absent's
+        # own skip-check means a task whose files were already there (restored from a prior session, or already
+        # done from an earlier phase of this one) returns with wrote=[] just as validly as one that genuinely
+        # computed something. The two were previously conflated into one "units_done_this_session" count, which
+        # read as "6 units done" on a run that restored everything and computed nothing. units_restored reports
+        # restore_from's own file-level n_copied directly (not a task-level figure -- the two granularities don't
+        # correspond cleanly, since one task spans several checkpoint files) rather than trying to attribute each
+        # task-level skip to "restored this session" vs "already there for some other reason", a distinction
+        # write_if_absent's own skip-check has no way to make (a file's existence on disk does not record how it
+        # got there). units_done_this_session is kept, as computed + skipped, purely so the pre-existing
+        # units_done_this_session + units_remaining == n_tasks invariant (smoke_test_lofo.py's check_9) still
+        # holds unchanged.
+        non_partial_results = [r for r in results if not r.get("deadline_hit")]
+        n_computed = sum(1 for r in non_partial_results if r.get("wrote"))
+        n_skipped_on_disk = sum(1 for r in non_partial_results if not r.get("wrote"))
+        n_restored = restore_result["n_copied"] if restore_result else 0
         # Written here, before session_summary, not after: on a crash, `results` only ever reflects what
         # run_pool's own list(...)/imap_unordered call managed to RETURN to this process -- Python's list()
         # discards everything it had accumulated so far the moment ANY item raises, so a crash partway through
@@ -1121,7 +1184,9 @@ def main(argv=None):
         # units_done_this_session below (which can read misleadingly low on exactly the runs where it matters).
         disk_manifest = write_checkpoint_manifest(checkpoint_dir)
         session_summary = {
-            "units_done_this_session": len(results) - n_partial, "units_partial_this_session": n_partial,
+            "units_computed_this_session": n_computed, "units_skipped_already_on_disk": n_skipped_on_disk,
+            "units_restored": n_restored,
+            "units_done_this_session": n_computed + n_skipped_on_disk, "units_partial_this_session": n_partial,
             # Includes n_skipped_dependency: those phase-2 tasks never reached run_pool at all (filtered out
             # before dispatch, so n_not_started -- which only counts what run_pool itself didn't get to -- never
             # saw them), but they are just as much "remaining work" as anything else here. Needed for
@@ -1156,7 +1221,9 @@ def main(argv=None):
         (run_config_dir / f"{stamp}_{args.role}_results.json").write_text(json.dumps(results, indent=2, default=str) + "\n", encoding="utf-8")
         write_checkpoint_manifest(checkpoint_dir)  # re-run so the FINAL manifest also covers this session's own run_config/results files
         print(f"role={args.role} status={status} tasks={len(tasks)} wrote={config['n_wrote']} seconds={config['total_seconds']:.1f}")
-        print(f"session summary: done={session_summary['units_done_this_session']} "
+        print(f"session summary: computed={session_summary['units_computed_this_session']} "
+              f"skipped_on_disk={session_summary['units_skipped_already_on_disk']} "
+              f"restored={session_summary['units_restored']} "
               f"partial={session_summary['units_partial_this_session']} "
               f"skipped_dependency={session_summary['units_skipped_dependency_not_ready']} "
               f"on_disk={session_summary['n_checkpoint_files_on_disk']} "
