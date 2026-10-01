@@ -743,7 +743,7 @@ def check_10_restore_from(csv, labels_run, splits_dir, ref_dir, work_dir):
 
     tampered_dir = work_dir / "tampered_extract"
     with tf.open(archive, "r:gz") as tar:
-        tar.extractall(tampered_dir)
+        tar.extractall(tampered_dir, filter="data")  # PEP 706; matches restore_from's own extractall call
     victim = next(p for p in tampered_dir.rglob("*.npz") if p.name != "manifest.json")
     data = bytearray(victim.read_bytes())
     data[-1] ^= 0xFF  # flip the last byte: same length, different content, still a loadable-looking file

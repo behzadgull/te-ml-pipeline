@@ -362,7 +362,10 @@ def restore_from(restore_path, checkpoint_dir, current_identity):
     if restore_path.is_file():
         tmp_extract = Path(tempfile.mkdtemp(prefix="lofo_restore_"))
         with tarfile.open(restore_path, "r:gz") as tar:
-            tar.extractall(tmp_extract)
+            # filter="data" (PEP 706): refuses absolute paths, paths that escape tmp_extract, device/special
+            # files, and strips owner/permission bits -- this archive is our own checkpoint output, trusted,
+            # but the restore path can point anywhere a caller names, so extraction stays hardened regardless.
+            tar.extractall(tmp_extract, filter="data")
         entries = list(tmp_extract.iterdir())
         source_dir = entries[0] if len(entries) == 1 and entries[0].is_dir() else tmp_extract
     elif restore_path.is_dir():
