@@ -836,16 +836,23 @@ def run_pool(tasks, task_fn, csv_path, splits_dir, checkpoint_dir, gpu_indices, 
     in its dict -- see main()'s session_summary, which folds these into
     units_remaining too.
     """
+    # Every multiprocessing primitive here is built from THIS SAME explicit context, not the module-level
+    # mp.Value/mp.Lock/etc (which use the platform DEFAULT context -- 'fork' on Linux, 'spawn' on Windows and
+    # macOS). Found 2026-10-01 on Kaggle (Linux): a counter built via the bare mp.Value("i", 0) call carries a
+    # fork-context SemLock, and handing that to a Pool explicitly constructed with mp.get_context("spawn")
+    # raised "A SemLock created in a fork context is being shared with a process in a spawn context" at pool
+    # start. Windows has no fork context at all, so mp.Value's default there already happened to be spawn --
+    # this local smoke test cannot reproduce the crash no matter what it does, only the Kaggle Linux run can.
+    context = mp.get_context("spawn")
     tasks = list(tasks)
     if workers <= 1:
-        _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, mp.Value("i", 0), tuning_trials,
+        _pool_initializer(csv_path, splits_dir, checkpoint_dir, gpu_indices, context.Value("i", 0), tuning_trials,
                           specialist_trials, repeats, folds, smoke_cap, deadline)
         # check the deadline live, right before each task, not once up front against the whole list
         results = [task_fn(task) for task in _budgeted(tasks, deadline)]
     else:
         budgeted = _budgeted(tasks, deadline)
-        counter = mp.Value("i", 0)
-        context = mp.get_context("spawn")
+        counter = context.Value("i", 0)
         with context.Pool(processes=workers, initializer=_pool_initializer,
                           initargs=(csv_path, splits_dir, checkpoint_dir, gpu_indices, counter, tuning_trials,
                                    specialist_trials, repeats, folds, smoke_cap, deadline)) as pool:

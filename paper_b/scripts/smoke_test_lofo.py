@@ -75,6 +75,18 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      on the LF copy (simulating a fresh Linux checkout) and to raise on the
      CRLF copy (proving the manifest is genuinely pinned to LF content, not
      accidentally EOL-agnostic).
+  15. Multi-worker pool (2026-10-01 fix): every other check leaves --workers
+     at its default (1), never constructing a real multiprocessing.Pool --
+     this is why a third Kaggle (Linux-only) crash, "A SemLock created in a
+     fork context is being shared with a process in a spawn context", went
+     unseen here: a counter built via the bare mp.Value("i", 0) call (the
+     platform DEFAULT context -- fork on Linux, already spawn on Windows,
+     which is why this suite could never reproduce it) was being handed to
+     a Pool explicitly built with mp.get_context("spawn"). Fixed by building
+     every multiprocessing primitive from that same explicit context. This
+     check runs --workers 2 for the first time in this suite, catching any
+     OTHER multi-worker regression Windows can see; only a Linux run (the
+     Kaggle CPU smoke cells) can prove the specific crash itself is fixed.
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -647,6 +659,38 @@ def check_14_lf_hash_verification(splits_dir, work_dir):
     }
 
 
+def check_15_multiworker_pool(csv, labels_run, splits_dir, work_dir):
+    """
+    2026-10-01 fix: every multiprocessing.Pool() path (--workers > 1) is
+    otherwise untouched by this whole suite -- every other check leaves
+    --workers at its default (1), which never constructs a
+    multiprocessing.Pool at all (run_pool's workers<=1 branch calls
+    _pool_initializer directly, in-process). The actual Kaggle Linux crash
+    this fixes ("A SemLock created in a fork context is being shared with a
+    process in a spawn context") can only happen when a Pool is really
+    built, from a counter built via the platform DEFAULT context, which on
+    Windows already happens to be 'spawn' -- so this check cannot reproduce
+    THAT crash specifically no matter what it does (only a Linux run can;
+    see the Kaggle CPU smoke cells), but it exercises the Pool code path at
+    all for the first time in this suite, catching any other multi-worker
+    regression (pickling, initializer argument mismatches, a hang) that the
+    rest of the suite would otherwise never touch.
+    """
+    pool_dir = work_dir / "multiworker_pool"
+    cmd = harness_cmd(csv, labels_run, splits_dir, pool_dir, "gpu-pooled", extra=["--workers", "2"])
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        return {"timed_out": True, "passed": False}
+    passed = result.returncode == 0
+    n_files = len(all_checkpoint_files(pool_dir)) if passed else 0
+    return {
+        "returncode": result.returncode, "n_checkpoint_files": n_files,
+        "stderr_tail": None if passed else (result.stderr or "")[-800:],
+        "passed": passed,
+    }
+
+
 def check_9_time_budget(csv, labels_run, splits_dir, work_dir):
     """
     --time-budget-hours, a budget of a few seconds: the harness must still
@@ -762,6 +806,7 @@ def main(argv=None):
     report["check_12_path_separator_normalization"] = check_12_path_separator_normalization(work_dir)
     report["check_13_in_pair_time_budget"] = check_13_in_pair_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
     report["check_14_lf_hash_verification"] = check_14_lf_hash_verification(Path(args.splits_dir), work_dir)
+    report["check_15_multiworker_pool"] = check_15_multiworker_pool(args.csv, args.labels_run, args.splits_dir, work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

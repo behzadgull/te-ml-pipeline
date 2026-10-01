@@ -772,3 +772,52 @@ this whole fix that genuinely cannot be exercised by this project's own
 local smoke test running on the SAME Windows machine both times, since
 Windows-to-Windows never saw this bug; it is run as a within-process
 simulation of the cross-platform case instead.
+
+**Fixed 2026-10-01: a third, Linux-only Kaggle crash, found once both
+crashes above were fixed.** `RuntimeError: A SemLock created in a fork
+context is being shared with a process in a spawn context`, at pool start.
+Cause: `run_pool`'s worker counter was built via the bare `mp.Value("i",
+0)` call, which uses the PLATFORM DEFAULT multiprocessing context -- `fork`
+on Linux, `spawn` on Windows and macOS -- while the Pool itself was built
+explicitly via `mp.get_context("spawn").Pool(...)`. On Linux those are two
+different contexts; handing a fork-context primitive's underlying SemLock
+to a spawn-context Pool is exactly what the error describes. On Windows
+there is no fork context at all, so the bare call's default already
+happened to be spawn, matching the explicit Pool by coincidence -- this
+project's own local smoke test could never have reproduced this crash, on
+any run, regardless of what it tested. Fixed by building EVERY
+multiprocessing primitive in `run_pool` from one explicit
+`mp.get_context("spawn")` object, used for both the counter (`context.
+Value(...)`, in both the `workers<=1` and the real-Pool branches) and the
+Pool itself. Audited for the same pattern elsewhere: `calibrate_
+throughput.py` already built its Pool from an explicit context and never
+constructed a separate Value/Lock/Queue/Manager/Event alongside it -- clean.
+
+**Audited for other Windows-vs-Linux differences, none found beyond the
+three fixed so far**: no hardcoded backslash path strings or `os.sep`
+literal (`\\` only ever appears inside PureWindowsPath-based path
+normalisation, already fixed 2026-09-30); no `shell=True` subprocess call;
+no hardcoded `/tmp` or Windows drive-letter path (temp directories
+go through Python's own `tempfile` module, already cross-platform
+correct); no file-locking primitive (`fcntl`/`msvcrt`) anywhere in this
+code; no case-sensitive path assumption (every directory/file name is
+derived from the lowercase `TARGETS`/`MODELS`/`LEVELS`/component-name
+constants, never a separately-typed literal that could drift in case).
+check_2's kill-and-resume test's `proc.terminate()` sends `SIGTERM` on
+Linux and calls `TerminateProcess()` on Windows -- different APIs, same
+practical effect here (immediate termination, no handler installed either
+side), and since that check always runs at `--workers` default (1, no
+child Pool workers exist to be orphaned), this is not actually exercised
+differently cross-platform either.
+
+**Covered by `smoke_test_lofo.py`'s check_15**: runs `--workers 2` for the
+first time in this whole suite -- every other check leaves `--workers` at
+its default, which never constructs a `multiprocessing.Pool` at all. This
+cannot reproduce the fork/spawn crash itself (Windows has no fork context
+to get wrong), but it does exercise the Pool code path mechanically for
+the first time, catching any other multi-worker regression this suite
+would otherwise never touch. Proving the SPECIFIC crash is fixed requires
+an actual Linux run, which section 8.7's Kaggle CPU smoke cells now
+provide: a GPU-free notebook that clones this commit, installs the pinned
+versions, and runs `smoke_test_lofo.py`'s full 15 checks end to end on
+Kaggle's own Linux host.
