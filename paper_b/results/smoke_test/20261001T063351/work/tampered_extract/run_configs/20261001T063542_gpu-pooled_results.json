@@ -1,0 +1,128 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 17.336447600042447,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 18.300294500077143,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\manganite\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 18.975955000030808,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 16.502687699976377,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\tuning_once",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C0\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C2\\r1_f1",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\family\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 3.4380987000185996,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\super_analysis_standalone\\zT\\i_v_vi2\\xgboost\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "super_analysis_standalone",
+      "zT",
+      "i_v_vi2",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 2.972520599956624,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f0",
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\reference_gpu_pooled\\super_analysis_standalone\\zT\\i_v_vi2\\ridge\\C3\\r1_f1"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

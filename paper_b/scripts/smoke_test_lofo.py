@@ -65,6 +65,16 @@ Checks, in order, and prints a clear PASS/FAIL for each:
      with SOME but not all of that pair's files written and
      units_partial_this_session > 0; a resume (no budget) must then complete
      the pair without rewriting any already-checkpointed file.
+  14. LF hash verification (2026-10-01 fix): the committed splits manifest
+     was regenerated from LF-normalised content after .gitattributes started
+     forcing `paper_b/**/*.json text eol=lf` -- a Windows-hashed, CRLF-based
+     manifest entry does not match the same content checked out as plain LF
+     on Linux (Kaggle), which is exactly how the second Kaggle crash
+     happened. Builds an LF-forced and a CRLF-forced copy of the real
+     manifest-listed text files and requires check_splits_manifest to pass
+     on the LF copy (simulating a fresh Linux checkout) and to raise on the
+     CRLF copy (proving the manifest is genuinely pinned to LF content, not
+     accidentally EOL-agnostic).
 
 Writes paper_b/results/smoke_test/<UTC>/report.json and prints the same
 report. Non-zero exit if any check fails.
@@ -581,6 +591,62 @@ def check_13_in_pair_time_budget(csv, labels_run, splits_dir, work_dir):
     }
 
 
+def check_14_lf_hash_verification(splits_dir, work_dir):
+    """
+    2026-10-01 fix: the committed splits manifest.json was regenerated from
+    LF-normalised content (rehash_splits_manifest.py), after .gitattributes
+    started forcing `paper_b/**/*.json text eol=lf`. Kaggle (Linux) had
+    crashed verifying a SHA256 that had been computed from a Windows (CRLF)
+    working copy of the identical, LF-stored git blob.
+
+    Builds two synthetic copies of splits_dir's manifest-listed TEXT entries
+    (every .npz is binary, untouched by eol handling, and is not part of
+    this check) -- one forced to pure LF (what a fresh Linux checkout, or
+    this fix's forced recheckout, produces) and one forced to pure CRLF
+    (what an un-normalised Windows checkout used to produce) -- each with
+    its own manifest.json covering only those text entries. Requires
+    check_splits_manifest to PASS on the LF copy (simulating Linux) and to
+    RAISE on the CRLF copy (proving the manifest is genuinely pinned to LF
+    content specifically, not accidentally EOL-agnostic).
+    """
+    manifest = json.loads((splits_dir / "manifest.json").read_text(encoding="utf-8"))
+    text_entries = {rel: h for rel, h in manifest.items() if not rel.endswith(".npz")}
+
+    def build_variant(eol):
+        variant_dir = work_dir / f"lf_hash_check_{eol}"
+        variant_dir.mkdir(parents=True)
+        (variant_dir / "manifest.json").write_text(json.dumps(text_entries), encoding="utf-8")
+        for rel in text_entries:
+            dest = variant_dir / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            data = (splits_dir / rel).read_bytes().replace(b"\r\n", b"\n")
+            if eol == "crlf":
+                data = data.replace(b"\n", b"\r\n")
+            dest.write_bytes(data)
+        return variant_dir
+
+    lf_dir = build_variant("lf")
+    crlf_dir = build_variant("crlf")
+
+    lf_passed, lf_error = True, None
+    try:
+        L.check_splits_manifest(lf_dir)
+    except Exception as exc:
+        lf_passed, lf_error = False, str(exc)
+
+    crlf_rejected, crlf_error = False, None
+    try:
+        L.check_splits_manifest(crlf_dir)
+    except ValueError as exc:
+        crlf_rejected, crlf_error = True, str(exc)
+
+    return {
+        "n_text_entries_checked": len(text_entries), "lf_verification_passed": lf_passed, "lf_error": lf_error,
+        "crlf_verification_rejected": crlf_rejected, "crlf_error_tail": (crlf_error or "")[-300:],
+        "passed": bool(lf_passed and crlf_rejected),
+    }
+
+
 def check_9_time_budget(csv, labels_run, splits_dir, work_dir):
     """
     --time-budget-hours, a budget of a few seconds: the harness must still
@@ -695,6 +761,7 @@ def main(argv=None):
     report["check_11_specialist_independence"] = check_11_specialist_independence(pooled_ref_dir, specialist_ref_dir)
     report["check_12_path_separator_normalization"] = check_12_path_separator_normalization(work_dir)
     report["check_13_in_pair_time_budget"] = check_13_in_pair_time_budget(args.csv, args.labels_run, args.splits_dir, work_dir)
+    report["check_14_lf_hash_verification"] = check_14_lf_hash_verification(Path(args.splits_dir), work_dir)
 
     report["all_passed"] = all(report[k]["passed"] for k in report if k.startswith("check_"))
     (out_dir / "report.json").write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")

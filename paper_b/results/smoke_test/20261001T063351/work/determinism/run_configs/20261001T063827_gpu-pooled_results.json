@@ -1,0 +1,32 @@
+[
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "xgboost"
+    ],
+    "device": "cpu",
+    "seconds": 1.2895095000276342,
+    "wrote": [
+      "paper_b\\results\\smoke_test\\20261001T063351\\work\\determinism\\family\\zT\\manganite\\xgboost\\C0\\r1_f0"
+    ],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  },
+  {
+    "task": [
+      "family",
+      "zT",
+      "manganite",
+      "ridge"
+    ],
+    "device": "cpu",
+    "seconds": 0.005679000052623451,
+    "wrote": [],
+    "gpu_index": null,
+    "worker_slot": 0,
+    "deadline_hit": false
+  }
+]

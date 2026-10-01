@@ -1,2 +1,13 @@
 *.npz filter=lfs diff=lfs merge=lfs -text
 results/raw_pull_metadata/extraction_metadata.json -text
+
+# 2026-10-01: paper_b/** text files must check out as LF on every OS. A Kaggle
+# (Linux) smoke run crashed verifying a splits-manifest SHA256 that had been
+# computed from a Windows (CRLF) working copy of the same, LF-stored git blob.
+# Binary files (*.npz, caught by the LFS rule above) are untouched.
+paper_b/**/*.json text eol=lf
+paper_b/**/*.yaml text eol=lf
+paper_b/**/*.yml text eol=lf
+paper_b/**/*.csv text eol=lf
+paper_b/**/*.txt text eol=lf
+paper_b/**/*.md text eol=lf

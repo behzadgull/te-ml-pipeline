@@ -700,3 +700,75 @@ unrestricted, reruns it at half that wall time, requires it to stop with
 some but not all files written and `units_partial_this_session > 0`, then
 resumes and requires the pair to complete without rewriting any
 already-checkpointed file.
+
+**Fixed 2026-10-01: the splits manifest's hashes were computed on Windows
+(CRLF), a second, different crash from the in-pair-budget one above, found
+on the same Kaggle smoke session once that first crash was fixed.** Kaggle
+(Linux) raised `ValueError: ...bicuseo.json: SHA256 ... != manifest's ...`
+at `check_splits_manifest`, before any fitting began. Cause: `core.autocrlf
+=true` on the Windows machine that ran `make_splits.py` meant its working
+copy of every split JSON was CRLF, even though the git blob committed from
+it was (and always had been) plain LF -- `make_splits.py`'s manifest writer
+hashed that CRLF working copy, so the recorded hash never matched the
+file's own committed, canonical bytes on any platform that checks it out
+without CRLF conversion, Linux included. The 30-minute "hang" reported
+earlier that same session was this same crash, not a slow run: a
+background `nvidia-smi` logger in that cell kept the cell alive after the
+Python process had already exited.
+
+Fixed two ways, read and write: `.gitattributes` now forces `paper_b/**/
+*.json`, `*.yaml`, `*.yml`, `*.csv`, `*.txt`, `*.md` to `text eol=lf`
+(binary files, caught by the pre-existing `*.npz` LFS rule, are untouched),
+so every checkout of these files on every OS is byte-identical going
+forward -- verified directly: `git add --renormalize` plus a forced
+working-tree recheckout left the git blob content itself completely
+unchanged (it was always LF; `git diff --cached` showed zero bytes
+different), and a full scan of all 483 text files under `paper_b/`
+afterward found zero remaining CRLF files. Second, `paper_b/scripts/
+rehash_splits_manifest.py` regenerated ONLY the splits manifest's hash
+values from this now-canonical LF content -- the splits themselves are
+unchanged, not regenerated: for every text entry, it required the current
+(LF) bytes to be byte-identical to the committed blob at the pre-fix
+commit, required the OLD (broken) hash to be reproduced EXACTLY by
+converting that same content back to CRLF, and required the parsed JSON
+value to be identical between old and new, before replacing a single
+hash -- a mismatch on any of the three would have aborted the whole
+regeneration rather than silently writing a wrong value. All 139 text
+entries passed; the 139 `.npz` entries (binary, untouched by any of this)
+kept their original hashes unchanged. The regenerated manifest's keys were
+also normalised to forward slashes while the file was being rewritten
+anyway (on top of, not instead of, the read-side `normalize_rel_path` fix
+from 2026-09-30, which stays in place for any manifest this script has not
+yet touched). No production run had used the old, CRLF-based manifest for
+anything; the fix changes only how it is verified, not its own split
+assignments.
+
+Audited every OTHER SHA the harness verifies (not just records), for the
+same risk (a text file hashed on one OS and verified on another):
+`check_shared_dependencies.py`'s check on `src/canonicalization.py`/
+`src/nested_cv.py` was already immune, via its own pre-existing
+`lf_sha256()` helper (CRLF normalised before hashing). The snapfix CSV
+identity check (`load_dataset`/`expected_dataset_identity`, duplicated
+across `family_labels.py`, `calibrate_fit_cost.py`,
+`calibrate_throughput.py`, `make_splits.py`) is not at risk: the CSV is
+gitignored and uploaded to Kaggle directly, never checked out via git, so
+no autocrlf path ever touches it. `restore_from`'s checkpoint-manifest
+tamper check is not at risk either: the manifest and the files it lists
+are produced and hashed within the same run, on the same machine, with no
+git-checkout step in between, and Python's `tarfile` module is binary-safe
+(no newline translation) regardless of OS. `ANALYSIS_IDENTITY_FIELDS`'s
+`labels_sha256` (hash of `host_family_labels.csv`, cross-session-compared
+by `restore_from`, not verified against a fixed value) was a latent risk
+for a cross-platform restore chain, never actually triggered in the
+current Kaggle-only-to-Kaggle workflow; it is covered by the same
+`.gitattributes` fix (confirmed LF in the same 483-file scan).
+
+Covered by `smoke_test_lofo.py`'s check_14: builds an LF-forced and a
+CRLF-forced copy of the real manifest-listed text files and requires
+`check_splits_manifest` to pass on the LF copy (simulating a fresh Linux
+checkout) and to raise on the CRLF copy (proving the manifest is genuinely
+pinned to LF content, not accidentally EOL-agnostic) -- the one check in
+this whole fix that genuinely cannot be exercised by this project's own
+local smoke test running on the SAME Windows machine both times, since
+Windows-to-Windows never saw this bug; it is run as a within-process
+simulation of the cross-platform case instead.
