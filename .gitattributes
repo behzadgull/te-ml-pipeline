@@ -11,3 +11,10 @@ paper_b/**/*.yml text eol=lf
 paper_b/**/*.csv text eol=lf
 paper_b/**/*.txt text eol=lf
 paper_b/**/*.md text eol=lf
+
+# thesis_paper: text files check out as LF on every OS; the source docx is binary and must never be converted
+thesis_paper/**/*.json text eol=lf
+thesis_paper/**/*.csv text eol=lf
+thesis_paper/**/*.md text eol=lf
+thesis_paper/**/*.py text eol=lf
+thesis_paper/source/*.docx -text
