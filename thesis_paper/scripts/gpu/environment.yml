@@ -1,0 +1,24 @@
+# Conda environment for the thesis-paper GPU runs. Versions are those of requirements.txt and of the Kaggle runs that produced the Paper A
+# results (results/*/environment.txt: Python 3.12, numpy 1.26.4, xgboost 2.0.3, scikit-learn 1.4.2, optuna 3.6.1). The pip wheel of xgboost 2.0.3
+# bundles its CUDA 12 runtime, so only an NVIDIA driver that supports CUDA 12 is needed on the host (a V100S is compute capability 7.0, supported).
+name: thesis-te
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - numpy==1.26.4
+      - pandas==2.2.2
+      - scipy==1.17.1
+      - scikit-learn==1.4.2
+      - xgboost==2.0.3
+      - lightgbm==4.3.0
+      - optuna==3.6.1
+      - matplotlib==3.11.1
+      - pymatgen==2024.5.1
+      - matminer==0.9.2
+      - CBFV==1.1.0
+      - setuptools<81
+      - openpyxl
+      - tqdm

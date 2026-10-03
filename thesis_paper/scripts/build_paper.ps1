@@ -1,12 +1,25 @@
-# Build a draft docx of the thesis paper from thesis_paper/paper/paper.md, to check that the converted manuscript renders
-# (tables, equations, figures). Output goes to thesis_paper/paper/build/ (gitignored).
-# Toolchain: pandoc (set $env:PANDOC to the binary if it is not on PATH). Run from the repository root.
-# The in-text references are plain numbered text, not pandoc citations, so no bibliography or CSL is used yet; refs.bib is filled
-# when the reference list is converted. ";" separates resource-path entries on Windows.
+# Build a draft docx of the thesis paper from thesis_paper/paper/paper.md (tables, equations, figures, citations). Output goes to
+# thesis_paper/paper/build/ (gitignored). Before building, the generated values and tables are checked against the committed artifacts,
+# the pinned dependencies are verified, and the reused Paper A figures are compared with their sources. The draft may still contain
+# [[PENDING: NAx]] markers; make_thesis_values.py --list-pending prints them.
+# Citations are pandoc keys resolved against thesis_paper/paper/refs.bib with a numbered style (Nature CSL copied from Paper A; the
+# journal's own style replaces it at submission).
+# Toolchain: pandoc (set $env:PANDOC if it is not on PATH) and python (set $env:PYTHON). Run from the repository root.
+# ";" separates resource-path entries on Windows.
 $ErrorActionPreference = "Stop"
 
 $pandoc = if ($env:PANDOC) { $env:PANDOC } else { "pandoc" }
+$python = if ($env:PYTHON) { $env:PYTHON } else { "python" }
+$env:PYTHONIOENCODING = "utf-8"
 New-Item -ItemType Directory -Force thesis_paper/paper/build | Out-Null
 
-& $pandoc thesis_paper/paper/paper.md --resource-path="thesis_paper/paper;." -o thesis_paper/paper/build/thesis_paper_draft.docx
+& $python thesis_paper/scripts/make_thesis_values.py --check
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+& $python thesis_paper/scripts/check_shared_dependencies.py
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+& $python thesis_paper/scripts/import_paper_a_figures.py --check
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+& $pandoc thesis_paper/paper/paper.md --resource-path="thesis_paper/paper;." --citeproc --bibliography=thesis_paper/paper/refs.bib `
+  --csl=thesis_paper/paper/csl/nature.csl -o thesis_paper/paper/build/thesis_paper_draft.docx
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

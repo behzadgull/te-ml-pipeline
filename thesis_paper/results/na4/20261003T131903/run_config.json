@@ -1,0 +1,36 @@
+{
+  "inputs": {
+    "featurized_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "family_summary": {
+      "path": "paper_b/reports/family_labels/20260926T181709/family_summary.csv",
+      "sha256": "342ebeddc060977346a69ae537f728f0859d8329b55b0199354337c2d44d1e33",
+      "bytes": 2377
+    }
+  },
+  "git_head": "c02bb46f2bc5c2432fae44fdc865164b03331fc6",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/figures/fig9_estm_external.pdf",
+    "thesis_paper/figures/fig9_estm_external.png",
+    "thesis_paper/figures/paper_a/",
+    "thesis_paper/results/na5/",
+    "thesis_paper/scripts/figstyle.py",
+    "thesis_paper/scripts/import_paper_a_figures.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/na4_dataset_statistics.py",
+    "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+    "thesis_paper/scripts/run_record.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/na4_dataset_statistics.py",
+  "script_sha256": "f2e6a53628abd6cdada216a5e00e0097ab050de09223a054c80492e24cc8b4fb",
+  "python": "3.12.10"
+}

@@ -18,3 +18,8 @@ thesis_paper/**/*.csv text eol=lf
 thesis_paper/**/*.md text eol=lf
 thesis_paper/**/*.py text eol=lf
 thesis_paper/source/*.docx -text
+
+# 2026-10-03: thesis_paper text outputs check out as LF on every OS (Kaggle runs hash and restore them).
+thesis_paper/**/*.json text eol=lf
+thesis_paper/**/*.csv text eol=lf
+thesis_paper/**/*.py text eol=lf

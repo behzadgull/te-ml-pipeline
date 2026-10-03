@@ -1,0 +1,33 @@
+{
+  "inventory": {
+    "estm_raw_rows": 5205,
+    "n_dropped_temperature_filter": 666,
+    "n_survive_temperature_filter": 4539,
+    "n_parse_failures": 0,
+    "n_featurize_failures_unique_formulas": 0,
+    "n_rows_after_featurization": 4539,
+    "feature_columns_match": true,
+    "n_feature_columns": 397,
+    "unique_estm_dois_overlapping_training": 69,
+    "n_would_drop_doi_dedup": 1416,
+    "unique_estm_clusters_overlapping_training": 300,
+    "n_would_drop_cluster_dedup": 3091
+  },
+  "estm_rows_in_scope": 4539,
+  "estm_unique_formulas": 853,
+  "estm_unique_clusters": 528,
+  "formulas_seen_in_training": 343,
+  "formulas_unseen_in_training": 510,
+  "rows_seen_formula": 1837,
+  "rows_unseen_formula": 2702,
+  "clusters_seen_in_training": 300,
+  "clusters_unseen_in_training": 228,
+  "rows_with_property": {
+    "S": 4539,
+    "sigma": 4539,
+    "kappa": 4539,
+    "zT": 4539
+  },
+  "rows_surviving_pass_a": 3123,
+  "rows_surviving_pass_b": 1448
+}

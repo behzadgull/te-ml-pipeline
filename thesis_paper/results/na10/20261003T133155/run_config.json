@@ -1,0 +1,67 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "src/external_validation.py": {
+      "path": "src/external_validation.py",
+      "sha256": "f38f1ab71d48fae7e1dd3e19418718569546733d690d298656523fece34930c2",
+      "bytes": 21023
+    }
+  },
+  "git_head": "c02bb46f2bc5c2432fae44fdc865164b03331fc6",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/scripts/check_shared_dependencies.py",
+    "thesis_paper/figures/fig6_property_distributions.pdf",
+    "thesis_paper/figures/fig6_property_distributions.png",
+    "thesis_paper/figures/fig7_predicted_vs_measured.pdf",
+    "thesis_paper/figures/fig7_predicted_vs_measured.png",
+    "thesis_paper/figures/fig9_estm_external.pdf",
+    "thesis_paper/figures/fig9_estm_external.png",
+    "thesis_paper/figures/paper_a/",
+    "thesis_paper/results/na4/",
+    "thesis_paper/results/na5/",
+    "thesis_paper/results/na8/",
+    "thesis_paper/results/na9/",
+    "thesis_paper/scripts/figstyle.py",
+    "thesis_paper/scripts/import_paper_a_figures.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/na10_jarvis_prep.py",
+    "thesis_paper/scripts/na4_dataset_statistics.py",
+    "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+    "thesis_paper/scripts/na8_error_metrics.py",
+    "thesis_paper/scripts/na9_estm_counts.py",
+    "thesis_paper/scripts/run_record.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/na10_jarvis_prep.py",
+  "script_sha256": "62d0b1f1b19fb03e51348ffabd39a3a2304f4f0782f07adb939a496038d32c2a",
+  "python": "3.12.10",
+  "jarvis": {
+    "jarvis_tools_version": "2026.6.12",
+    "dataset": "dft_3d",
+    "url": "https://ndownloader.figshare.com/files/64391379",
+    "json_name": "jdft_3d-9-24-2025.json",
+    "zip_file": "data\\external\\jarvis\\jdft_3d-9-24-2025.json.zip",
+    "zip_sha256": "f9e0a3309f0000d5de1ec9e49c93963109ea45e63f451103f8f6595d2eabf7f5",
+    "zip_bytes": 48447610,
+    "json_sha256": "9dacb55ac8371c7c2bf0332933b55c98e9cca6201e92eb9d6fcd03aab0975907",
+    "json_bytes": 254061560,
+    "n_entries_total": 93902
+  },
+  "featurised_matrix": {
+    "path": "data\\external\\jarvis\\jarvis_dft3d_seebeck_featurized.csv",
+    "sha256": "3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49",
+    "bytes": 72098294
+  },
+  "seebeck_temperature_K": 600,
+  "entries_csv_sha256": "7e451f90ff36cd992e7156c77504542773df1c4279496b1bcbbec6458e93770a"
+}

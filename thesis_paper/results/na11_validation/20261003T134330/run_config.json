@@ -1,0 +1,52 @@
+{
+  "inputs": {
+    "jarvis_zip": {
+      "path": "data/external/jarvis/jdft_3d-9-24-2025.json.zip",
+      "sha256": "f9e0a3309f0000d5de1ec9e49c93963109ea45e63f451103f8f6595d2eabf7f5",
+      "bytes": 48447610
+    },
+    "perovskite_test": {
+      "path": "thesis_paper/scripts/perovskite_test.py",
+      "sha256": "9e66c29d47d8402457c1001634909666f948ff12389a90a70b1eb44e45e1415f",
+      "bytes": 6543
+    }
+  },
+  "git_head": "c02bb46f2bc5c2432fae44fdc865164b03331fc6",
+  "tree_clean": false,
+  "dirty_files": [
+    ".gitignore",
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/scripts/check_shared_dependencies.py",
+    "thesis_paper/figures/fig6_property_distributions.pdf",
+    "thesis_paper/figures/fig6_property_distributions.png",
+    "thesis_paper/figures/fig7_predicted_vs_measured.pdf",
+    "thesis_paper/figures/fig7_predicted_vs_measured.png",
+    "thesis_paper/figures/fig9_estm_external.pdf",
+    "thesis_paper/figures/fig9_estm_external.png",
+    "thesis_paper/figures/paper_a/",
+    "thesis_paper/results/na10/",
+    "thesis_paper/results/na4/",
+    "thesis_paper/results/na5/",
+    "thesis_paper/results/na8/",
+    "thesis_paper/results/na9/",
+    "thesis_paper/scripts/figstyle.py",
+    "thesis_paper/scripts/import_paper_a_figures.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/na10_jarvis_prep.py",
+    "thesis_paper/scripts/na11_validate_perovskite_test.py",
+    "thesis_paper/scripts/na4_dataset_statistics.py",
+    "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+    "thesis_paper/scripts/na8_error_metrics.py",
+    "thesis_paper/scripts/na9_estm_counts.py",
+    "thesis_paper/scripts/perovskite_test.py",
+    "thesis_paper/scripts/run_record.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/na11_validate_perovskite_test.py",
+  "script_sha256": "b58bb478d7a42b2f44bfd46adb94e20d89bb397106e0f493b39c02d108eb9bed",
+  "python": "3.12.10"
+}

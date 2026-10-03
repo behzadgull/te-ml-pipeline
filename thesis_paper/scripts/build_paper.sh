@@ -4,5 +4,9 @@
 set -euo pipefail
 
 PANDOC="${PANDOC:-pandoc}"
+PYTHON="${PYTHON:-python}"
 mkdir -p thesis_paper/paper/build
-"$PANDOC" thesis_paper/paper/paper.md --resource-path="thesis_paper/paper:." -o thesis_paper/paper/build/thesis_paper_draft.docx
+PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/make_thesis_values.py --check
+PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/check_shared_dependencies.py
+PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/import_paper_a_figures.py --check
+"$PANDOC" thesis_paper/paper/paper.md --resource-path="thesis_paper/paper:." --citeproc --bibliography=thesis_paper/paper/refs.bib --csl=thesis_paper/paper/csl/nature.csl -o thesis_paper/paper/build/thesis_paper_draft.docx

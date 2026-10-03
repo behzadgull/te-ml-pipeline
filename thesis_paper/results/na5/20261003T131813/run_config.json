@@ -1,0 +1,54 @@
+{
+  "inputs": {
+    "raw_papers": {
+      "path": "checkpoints/saved_predictions/te-ml-pipeline/data/raw/ThermoelectricMaterials_papers.csv.gz",
+      "sha256": "01e2a866e7ea19140b3fdfd07ca8095342ac243ee61ec3ca083457fa386fde78",
+      "bytes": 1460211
+    },
+    "raw_samples": {
+      "path": "checkpoints/saved_predictions/te-ml-pipeline/data/raw/ThermoelectricMaterials_samples.csv.gz",
+      "sha256": "43840ba5fba22189a92af3eea1304697d366b3e67fcc48d215ddc482ce97eafe",
+      "bytes": 2060454
+    },
+    "raw_curves": {
+      "path": "checkpoints/saved_predictions/te-ml-pipeline/data/raw/ThermoelectricMaterials_curves.csv.gz",
+      "sha256": "820be8566916c5b39e3d78dec20a4174eb5f3e0c93c112556cf4445f9c8c98ab",
+      "bytes": 25218275
+    },
+    "funnel_counts": {
+      "path": "results/cleaning_funnel/20260914T100914/funnel_counts.json",
+      "sha256": "54866573118ab36fc0702cb59f091b43f0e6417a00bc186a177c00ea5d6598e5",
+      "bytes": 1472
+    },
+    "cleaned_csv_file_a": {
+      "path": "checkpoints/saved_predictions/te-ml-pipeline/data/processed/cleaned_ThermoelectricMaterials_2026-08-15.csv",
+      "sha256": "0275c5088521580a1156acf2078f77f0eb7d4a8c6b4e724864f0de0875d8a393",
+      "bytes": 33498368
+    },
+    "src/data_cleaning.py": {
+      "path": "src/data_cleaning.py",
+      "sha256": "e18715a51d81a8768142712793d3e9be948a8208272e845b575bef40e6fbf160",
+      "bytes": 19567
+    }
+  },
+  "git_head": "c02bb46f2bc5c2432fae44fdc865164b03331fc6",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/figures/fig9_estm_external.pdf",
+    "thesis_paper/figures/fig9_estm_external.png",
+    "thesis_paper/figures/paper_a/",
+    "thesis_paper/scripts/figstyle.py",
+    "thesis_paper/scripts/import_paper_a_figures.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+    "thesis_paper/scripts/run_record.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+  "script_sha256": "6a1daea9087a25bf7bc526fda8a57e4aaee4cf2b99354b4bf5f3ae03547ac133",
+  "python": "3.12.10"
+}

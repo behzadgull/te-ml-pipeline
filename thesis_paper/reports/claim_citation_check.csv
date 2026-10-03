@@ -1,0 +1,63 @@
+﻿id,location,claim_value,cited_refs,numbers_checked,numbers_found_in_abstract,numbers_not_found,abstract_check,verdict
+C018,Section 1,72%,1,72%,,72%,[1] no abstract,full text needed
+C019,Section 1,≈2,4,,,,[4] no abstract,no numbers to check
+C020,Section 1,1.0–1.4,5,1.0 1.4,1.4,1.0,[5] 1/2 numbers in abstract,full text needed
+C021,Section 1,≈0.2–0.4,10,0.2 0.4,,0.2 0.4,[10] 0/2 numbers in abstract,full text needed
+C022,Section 1,weeks,11,,,,[11] no abstract,no numbers to check
+C023,Section 1,0.815,12 13 14,0.815,0.815,,[12] 1/1 numbers in abstract; [13] no abstract; [14] 0/1 numbers in abstract,all numbers in an abstract
+C024,Section 1,≈ 0.90,12 13 14,0.90,0.90,,[12] 0/1 numbers in abstract; [13] no abstract; [14] 1/1 numbers in abstract,all numbers in an abstract
+C025,Section 1,> 0.95,12 13 14,0.95,0.95,,[12] 0/1 numbers in abstract; [13] no abstract; [14] 1/1 numbers in abstract,all numbers in an abstract
+C027,Section 1,novelty claim,,,,,,no citation number in the text
+C036,Section 2.1,1821,,1821,,1821,,no citation number in the text
+C037,Figure 2 caption,≈1019–1020 cm−3,,1019 1020,,1019 1020,,no citation number in the text
+C038,Section 2.2,0.80 to 1.05,,0.80 1.05,,0.80 1.05,,no citation number in the text
+C039,Section 2.2,τ,22,,,,[22] 0/0 numbers in abstract,no numbers to check
+C040,Section 2.2,≈ −700 µV K−1,,700,,700,,no citation number in the text
+C041,Section 2.2,10–12 W m−1 K−1; zT below 0.01,,10 12 0.01,,10 12 0.01,,no citation number in the text
+C042,Section 2.2,≈ −350 µV K−1; zT < 0.1,23,350 0.1,0.1,350,[23] 1/2 numbers in abstract,full text needed
+C043,Section 2.2,≈0.2,23,0.2,0.2,,[23] 1/1 numbers in abstract,all numbers in an abstract
+C044,Section 2.2,200–600 µV K−1,24,200 600,,200 600,[24] 0/2 numbers in abstract,full text needed
+C045,Section 2.2,below 0.5 W m−1 K−1,7 9 25,0.5,,0.5,[7] 0/1 numbers in abstract; [9] 0/1 numbers in abstract; [25] 0/1 numbers in abstract,full text needed
+C046,Section 2.2,zT ≈ 1.0 at 800 K; S ≈ −254 µV K−1,,1.0 800 254,,1.0 800 254,,no citation number in the text
+C047,Section 2.2,low κ,,,,,,no citation number in the text
+C048,Section 2.3,days to weeks,,,,,,no citation number in the text
+C050,Section 2.3,"150,000",31,150000,,150000,[31] 0/1 numbers in abstract,full text needed
+C051,Section 2.3,"5,205 / 880",32,5205 880,,5205 880,[32] 0/2 numbers in abstract,full text needed
+C052,Section 2.3,thousands,33,,,,[33] 0/0 numbers in abstract,no numbers to check
+C054,"Table 1, row 1",23.7K rows; zT R2 0.815; 5-fold CV,12,23.7 0.815,0.815,23.7,[12] 1/2 numbers in abstract,full text needed
+C055,"Table 1, row 2",92K rows; zT R2 0.89–0.90; composition CV,13,92 0.89 0.90,,92 0.89 0.90,[13] no abstract,full text needed
+C056,"Table 1, row 3",14.1K rows; S R2 0.80; zT R2 0.86; split not stated,35,14.1 0.80 0.86,,14.1 0.80 0.86,[35] 0/3 numbers in abstract,full text needed
+C057,"Table 1, row 4",~50K rows; zT R2 > 0.95; random split,14,50 0.95,0.95,50,[14] 1/2 numbers in abstract,full text needed
+C058,"Table 1, row 5",~160K rows; zT R2 ~0.80,36,160 0.80,160 0.80,,[36] 2/2 numbers in abstract,all numbers in an abstract
+C059,"Table 1, row 6",5.2K rows; zT R2 0.97; 10-fold CV,37,5.2 0.97 10,0.97 10,5.2,[37] 2/3 numbers in abstract,full text needed
+C060,"Table 1, row 7",small; S R2 0.99; zT R2 0.92; random split,38,0.99 0.92,0.99 0.92,,[38] 2/2 numbers in abstract,all numbers in an abstract
+C061,Section 2.4,"0.89–0.90; 92,000",13,0.89 0.90 92000,,0.89 0.90 92000,[13] no abstract,full text needed
+C063,Section 2.4,"50,000; R2 > 0.95; combination outperforms",14,50000 0.95,0.95,50000,[14] 1/2 numbers in abstract,full text needed
+C064,Section 2.4,descriptor claim,35,,,,[35] 0/0 numbers in abstract,no numbers to check
+C065,Section 2.4,"≈160,000; ≈0.80",36,160000 0.80,160000 0.80,,[36] 2/2 numbers in abstract,all numbers in an abstract
+C066,Section 2.4,0.92–0.99,37 38,0.92 0.99,0.92 0.99,,[37] 0/2 numbers in abstract; [38] 2/2 numbers in abstract,all numbers in an abstract
+C068,Section 2.5,nearly unbiased,42,,,,[42] 0/0 numbers in abstract,no numbers to check
+C069,Section 2.5,widespread,15,,,,[15] 0/0 numbers in abstract,no numbers to check
+C071,Section 2.5,Roberts et al.,43,,,,[43] 0/0 numbers in abstract,no numbers to check
+C072,Section 2.5,Meredig et al.,16 44 45,,,,[16] 0/0 numbers in abstract; [44] no abstract; [45] 0/0 numbers in abstract,no numbers to check
+C073,Section 2.5,Xiong et al.,16 44 45,,,,[16] 0/0 numbers in abstract; [44] no abstract; [45] 0/0 numbers in abstract,no numbers to check
+C074,Section 2.5,Li et al.,16 44 45,,,,[16] 0/0 numbers in abstract; [44] no abstract; [45] 0/0 numbers in abstract,no numbers to check
+C075,Section 2.6,polynomial time,46,,,,[46] 0/0 numbers in abstract,no numbers to check
+C076,Section 2.7,no study compares,,,,,,no citation number in the text
+C077,Section 2.7,existing screens,,,,,,no citation number in the text
+C082,Section 3.2.2,Cahill–Pohl,3 48,,,,[3] no abstract; [48] 0/0 numbers in abstract,no numbers to check
+C083,Section 3.2.2,zT ≤ 4,3 48,,,,[3] no abstract; [48] 0/0 numbers in abstract,no numbers to check
+C092,Section 3.2.2,Leys et al.,50,,,,[50] no abstract,no numbers to check
+C094,Section 3.2.2,≈2.6,20,2.6,,2.6,[20] no abstract,full text needed
+C123,Section 3.4,citations,56 57,,,,[56] no abstract; [57] 0/0 numbers in abstract,no numbers to check
+C210,Section 4.5,family membership,26,,,,[26] 0/0 numbers in abstract,no numbers to check
+C214,Section 4.5,PBE underestimates gaps,58,,,,[58] 0/0 numbers in abstract,no numbers to check
+C229,Section 4.6,≈ 0.80,36,0.80,0.80,,[36] 1/1 numbers in abstract,all numbers in an abstract
+C233,"Table 13, row 3","Table 13, Sun",14,13,,13,[14] 0/1 numbers in abstract,full text needed
+C234,"Table 13, row 4","Table 13, Jia",13,13,,13,[13] no abstract,full text needed
+C235,"Table 13, row 5","Table 13, Parse",12,13,,13,[12] 0/1 numbers in abstract,full text needed
+C236,"Table 13, row 6","Table 13, Barua",36,13,,13,[36] 0/1 numbers in abstract,full text needed
+C237,"Table 13, row 7","Table 13, Ma and Poon",35,13,,13,[35] 0/1 numbers in abstract,full text needed
+C244,Section 4.7,conformal prediction,61,,,,[61] no abstract,no numbers to check
+C259,References,ref [14],,14,,14,,no citation number in the text
+C260,References,ref [30],,30,,30,,no citation number in the text

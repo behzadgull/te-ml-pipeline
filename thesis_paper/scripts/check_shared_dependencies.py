@@ -1,16 +1,20 @@
 """
-Check (or write) thesis_paper/SHARED_DEPENDENCIES.md: the committed Paper A files the thesis paper reads, each pinned by SHA256,
-and the rule that nothing under thesis_paper/ imports from the top-level src/ package.
+Check (or write) thesis_paper/SHARED_DEPENDENCIES.md: everything outside thesis_paper/ that the thesis paper reads, each pinned by SHA256.
 
+Three kinds of pinned file:
+  - committed Paper A artifacts read by paper_a_values.py (results, reports, frozen hyperparameters, the pinned source docx);
+  - the results of the thesis paper's own analyses that the manuscript uses (thesis_values.NA_RUNS: results.json and run_config.json);
+  - the top-level src/ modules its scripts import, found by following the imports (ast) from every script under thesis_paper/scripts/.
 Text files are hashed with CRLF converted to LF, so a Windows checkout with core.autocrlf hashes the same as the committed blob;
 binary files (the Git LFS .npz) are hashed as they are, and need `git lfs pull` in a fresh clone.
 
 Usage (from the repository root):
-    python thesis_paper/scripts/check_shared_dependencies.py            # verify; exit 1 on a missing file, a changed hash or a src import
+    python thesis_paper/scripts/check_shared_dependencies.py            # verify; exit 1 on a missing file or a changed hash
     python thesis_paper/scripts/check_shared_dependencies.py --write    # regenerate the manifest (after a deliberate change)
 """
 
 import argparse
+import ast
 import hashlib
 import re
 import sys
@@ -19,6 +23,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import paper_a_values as pav  # noqa: E402
+import thesis_values as tv  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 MANIFEST = REPO / "thesis_paper" / "SHARED_DEPENDENCIES.md"
@@ -26,12 +31,12 @@ SOURCE_DOCX = "thesis_paper/source/Perovskite_Thermoelectric_Manuscript.docx"
 TEXT_SUFFIXES = {".json", ".py", ".md", ".csv", ".txt", ".yaml", ".yml"}
 HEAD = """# Thesis paper shared dependencies
 
-The thesis paper lives under `thesis_paper/` so it can be handed over separately. It may READ the committed Paper A files below
-(by path, never by a glob for "the most recent" file) and import nothing from the top-level `src/` package. Every file is pinned by
-SHA256; text files are hashed with CRLF converted to LF, and the `.npz` is a Git LFS object (run `git lfs pull` in a fresh clone).
+The thesis paper lives under `thesis_paper/` so it can be handed over separately. It READS the files below by explicit path (never a glob for
+"the most recent" file) and imports only the `src/` modules listed under "Shared code". Every file is pinned by SHA256; text files are hashed with
+CRLF converted to LF, and the `.npz` files are Git LFS objects (run `git lfs pull` in a fresh clone).
 
-`thesis_paper/scripts/check_shared_dependencies.py` verifies this table and that no file under `thesis_paper/` imports `src.*`.
-Run it before every thesis-paper commit. If a listed file changes, regenerate the table with `--write` in the same commit and say why.
+`thesis_paper/scripts/check_shared_dependencies.py` verifies this table. Run it before every thesis-paper commit. If a listed file changes,
+regenerate the table with `--write` in the same commit and say why.
 
 | Path | SHA256 |
 |---|---|
@@ -47,18 +52,43 @@ def sha256(rel):
     return hashlib.sha256(data).hexdigest()
 
 
+def src_imports(path):
+    """Names (relative paths, e.g. 'src/nested_cv.py') of the top-level src modules a Python file imports."""
+    out = set()
+    tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            if node.module == "src":
+                out |= {f"src/{a.name}.py" for a in node.names}
+            elif node.module.startswith("src."):
+                out.add("src/" + node.module.split(".")[1] + ".py")
+        elif isinstance(node, ast.Import):
+            out |= {"src/" + a.name.split(".")[1] + ".py" for a in node.names if a.name.startswith("src.")}
+    return {m for m in out if (REPO / m).exists()}
+
+
+def shared_code():
+    """The closure of src modules imported (directly or through each other) by the thesis scripts."""
+    todo = set()
+    for f in (HERE).glob("*.py"):
+        todo |= src_imports(f)
+    seen = set()
+    while todo:
+        m = todo.pop()
+        if m in seen:
+            continue
+        seen.add(m)
+        todo |= src_imports(REPO / m)
+    return sorted(seen)
+
+
 def wanted():
-    """(path, hash) for every pinned file."""
-    return [(p, sha256(p)) for p in (*pav.ARTIFACT_PATHS, SOURCE_DOCX)]
-
-
-def src_imports():
-    """Files under thesis_paper/ that import from the top-level src package."""
-    bad = []
-    for f in (REPO / "thesis_paper").rglob("*.py"):
-        if re.search(r"(?m)^\s*(from|import)\s+src(\.|\s)", f.read_text(encoding="utf-8")):
-            bad.append(str(f.relative_to(REPO)))
-    return bad
+    """(path, hash) for every pinned file, in manifest order."""
+    new = []
+    for name in tv.NA_RUNS:
+        new += [tv.na_path(name), f"{tv.NA_RUNS[name]}/run_config.json"]
+    paths = [*pav.ARTIFACT_PATHS, SOURCE_DOCX, *new, *shared_code()]
+    return [(p, sha256(p)) for p in dict.fromkeys(paths)]
 
 
 def main():
@@ -68,17 +98,21 @@ def main():
     args = ap.parse_args()
     cur = wanted()
     if args.write:
-        MANIFEST.write_text(HEAD + "\n".join(f"| `{p}` | `{h}` |" for p, h in cur) + "\n", encoding="utf-8")
+        code = set(shared_code())
+        rows = []
+        for p, h in cur:
+            kind = "shared code" if p in code else ("thesis analysis result" if p.startswith("thesis_paper/results/") else "Paper A artifact / source")
+            rows.append(f"| `{p}` | `{h}` |  <!-- {kind} -->")
+        MANIFEST.write_text(HEAD + "\n".join(r.replace("|  <!--", "| <!--") for r in rows) + "\n", encoding="utf-8")
         print(f"wrote {MANIFEST} ({len(cur)} files)")
         return 0
     pinned = dict(re.findall(r"\| `([^`]+)` \| `([0-9a-f]{64})` \|", MANIFEST.read_text(encoding="utf-8")))
     bad = [f"{p}: {'not pinned' if p not in pinned else 'hash changed'}" for p, h in cur if pinned.get(p) != h]
     bad += [f"{p}: pinned but no longer read" for p in pinned if p not in dict(cur)]
-    bad += [f"{f}: imports from src" for f in src_imports()]
     if bad:
         print("\n".join(bad))
         return 1
-    print(f"OK: {len(cur)} pinned files match; no src imports")
+    print(f"OK: {len(cur)} pinned files match ({len(shared_code())} shared src modules)")
     return 0
 
 

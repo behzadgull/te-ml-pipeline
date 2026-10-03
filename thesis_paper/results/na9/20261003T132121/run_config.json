@@ -1,0 +1,50 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "estm_xlsx": {
+      "path": "data/external/estm.xlsx",
+      "sha256": "f3853d4e25cc471e8e07734fd520ce27402d3a3da16fb5917a412d3cdf28b850",
+      "bytes": 680110
+    },
+    "estm_results": {
+      "path": "results/external_snapfix/20260917T160553/estm_results.json",
+      "sha256": "36547b4bc7dec90702f75f99dddd1cbe554a986768d7129a8f24d65a03bc8a26",
+      "bytes": 3092
+    },
+    "src/external_validation.py": {
+      "path": "src/external_validation.py",
+      "sha256": "f38f1ab71d48fae7e1dd3e19418718569546733d690d298656523fece34930c2",
+      "bytes": 21023
+    }
+  },
+  "git_head": "c02bb46f2bc5c2432fae44fdc865164b03331fc6",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/figures/fig9_estm_external.pdf",
+    "thesis_paper/figures/fig9_estm_external.png",
+    "thesis_paper/figures/paper_a/",
+    "thesis_paper/results/na4/",
+    "thesis_paper/results/na5/",
+    "thesis_paper/results/na8/",
+    "thesis_paper/scripts/figstyle.py",
+    "thesis_paper/scripts/import_paper_a_figures.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/na4_dataset_statistics.py",
+    "thesis_paper/scripts/na5_cleaning_diagnostics.py",
+    "thesis_paper/scripts/na8_error_metrics.py",
+    "thesis_paper/scripts/na9_estm_counts.py",
+    "thesis_paper/scripts/run_record.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/na9_estm_counts.py",
+  "script_sha256": "5771a7e2b5c503479dbf537ff1279c56297a0ac213cd2820dad1163ef4a5cb4c",
+  "python": "3.12.10"
+}

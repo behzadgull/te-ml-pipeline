@@ -1,0 +1,47 @@
+{
+  "raw_curves_rows": 156101,
+  "raw_papers_rows": 9494,
+  "points_all_curves": 2679279,
+  "points_target_curves_before_range_filter": 2068554,
+  "target_curve_rows": 116283,
+  "rows_after_step": {
+    "1": 1996047,
+    "2": 1996047,
+    "3": 1096324,
+    "4": 398763,
+    "5": 393381,
+    "6": 388669,
+    "7": 387683,
+    "8": 308998,
+    "9": 289637,
+    "10": 284987,
+    "11": 280664
+  },
+  "zT_before_step6": {
+    "n": 174375,
+    "mean": 0.3828258050747695
+  },
+  "zT_after_step6": {
+    "n": 169663,
+    "mean": 0.38689738210828795
+  },
+  "zT_final": {
+    "n": 129633,
+    "mean": 0.42647996353591555,
+    "n_above_3": 15
+  },
+  "step11_spikes_set_to_nan": {
+    "S": 7125,
+    "sigma": 7460,
+    "kappa": 6407,
+    "zT": 4174
+  },
+  "step11_spikes_set_to_nan_total": 25166,
+  "step11_rows_removed": 4323,
+  "extra_filters_on_final_rows": {
+    "published_before_2005": 15476,
+    "year_unknown": 2887,
+    "fewer_than_2_properties": 105499,
+    "final_rows": 280664
+  }
+}
