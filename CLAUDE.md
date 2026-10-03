@@ -2374,6 +2374,32 @@ test" without this qualifier.
   behavior-preservation, and say explicitly that GPU behavior/performance
   is unverified until run on Kaggle.
 
+- **Kaggle Python (added 2026-10-04):** Kaggle's latest image is Python 3.13
+  as of 2026-10-03, and the pinned numpy 1.26.4, pandas 2.2.2 and
+  scikit-learn 1.4.2 have no cp313 wheels (pip tries to build numpy from
+  source and fails). The pins stay, because the Paper A results were
+  produced with them. **All Kaggle cells must run in a uv-managed Python
+  3.12 venv:** `pip install uv`, `uv venv /kaggle/working/venv --python
+  3.12`, `uv pip install --python /kaggle/working/venv/bin/python <pins>`,
+  assert the venv's Python is 3.12.x and print every package version, then
+  call `/kaggle/working/venv/bin/python` in every later cell (never a bare
+  `python`). The reference implementation is Cell 1 of
+  `thesis_paper/scripts/kaggle/KAGGLE_CELLS.md`. This applies to Paper B when
+  it resumes (its Kaggle sessions, including the Linux smoke test, must use
+  the same venv). **xgboost 2.0.3 CUDA evidence:** PyPI lists one Linux
+  x86_64 wheel for it (`py3-none-manylinux2014_x86_64`, 297.1 MB, the CUDA
+  build; the aarch64 wheel is 3.9 MB, CPU only), and it is `py3-none`, so the
+  same wheel installs under Python 3.12 or 3.13 and the interpreter does not
+  change which build runs. It has run with `device="cuda"`: (1) in this
+  repository, `results/descriptor_ablation/20260912T184318/environment.txt`
+  records `xgboost==2.0.3` on a Tesla P100 (driver 580.159.04); (2) per the
+  maintainer, in the Paper B GPU smoke session on both T4s of a Kaggle T4 x2
+  notebook (that session's output is not among the committed Paper B smoke
+  results, which are Linux CPU runs, so item 2 rests on the maintainer's
+  report, not on a committed artifact). The wheel was not downloaded and
+  inspected here. G1's Cell 2 repeats a tiny `device="cuda"` fit on each GPU
+  before any long work starts.
+
 ## Manuscript build (added 2026-09-24)
 - `paper/paper.md` is Pandoc markdown with a YAML front matter block
   (title, author, affiliation, `bibliography: refs.bib`); citations are

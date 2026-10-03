@@ -52,12 +52,33 @@ dirty = subprocess.run(["git", "status", "--porcelain"], capture_output=True, te
 assert head == COMMIT, f"HEAD {head} != {COMMIT}"
 assert dirty == "", f"working tree not clean:\n{dirty}"
 print("HEAD", head, "tree clean")
-subprocess.run([sys.executable, "-m", "pip", "install", "-q", "numpy==1.26.4", "pandas==2.2.2", "scipy", "scikit-learn==1.4.2", "xgboost==2.0.3",
-                "optuna==3.6.1", "lightgbm==4.3.0"], check=True)
-print(subprocess.run([sys.executable, "-c", "import numpy,pandas,sklearn,xgboost,optuna,lightgbm as l;"
-                      "print(numpy.__version__,pandas.__version__,sklearn.__version__,xgboost.__version__,optuna.__version__,l.__version__)"],
-                     capture_output=True, text=True).stdout)
+
+# The Kaggle image is Python 3.13 (as of 2026-10-03) and the pinned numpy 1.26.4 / pandas 2.2.2 / scikit-learn 1.4.2 have no cp313 wheels.
+# The pins stay (the Paper A results were produced with them), so everything runs in a uv-managed Python 3.12 venv.
+VENV = "/kaggle/working/venv"
+PY = f"{VENV}/bin/python"
+PINS = ["numpy==1.26.4", "pandas==2.2.2", "scipy", "scikit-learn==1.4.2", "xgboost==2.0.3", "optuna==3.6.1", "lightgbm==4.3.0"]
+subprocess.run([sys.executable, "-m", "pip", "install", "-q", "uv"], check=True)
+subprocess.run([sys.executable, "-m", "uv", "venv", VENV, "--python", "3.12"], check=True)
+subprocess.run([sys.executable, "-m", "uv", "pip", "install", "--python", PY, *PINS], check=True)
+probe = subprocess.run([PY, "-c", """
+import sys, importlib.metadata as m
+print("python", sys.version.split()[0])
+assert sys.version_info[:2] == (3, 12), sys.version
+want = {"numpy": "1.26.4", "pandas": "2.2.2", "scikit-learn": "1.4.2", "xgboost": "2.0.3", "optuna": "3.6.1", "lightgbm": "4.3.0"}
+for d in sorted(m.distributions(), key=lambda d: d.metadata["Name"].lower()):
+    n = d.metadata["Name"]
+    print(f"  {n}=={d.version}")
+    if n.lower() in want:
+        assert d.version == want.pop(n.lower()), (n, d.version)
+assert not want, f"not installed: {want}"
+"""], capture_output=True, text=True)
+print(probe.stdout, probe.stderr)
+assert probe.returncode == 0, "the venv is not Python 3.12 with the exact pins"
 ```
+
+Every later cell calls `/kaggle/working/venv/bin/python` (never a bare `python`).
+Save Version runs every cell from the top, so Cell 1 rebuilds the venv each time; in an interactive session, rerun Cell 1 after a restart.
 
 Cell 2 (bash): the smoke test, run the way the real sessions run (no `--allow-dirty`). It fits the four final models but skips the JARVIS scoring
 unit (the JARVIS CSV is not in the clone).
@@ -67,7 +88,7 @@ unit (the JARVIS CSV is not in the clone).
 cd /kaggle/working/te-ml-pipeline
 DS=$(find /kaggle/input -name 'featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv' | head -1)
 echo "dataset: $DS"
-python thesis_paper/scripts/kaggle/smoke_test_kaggle.py --dataset "$DS" --work-dir /kaggle/working/smoke \
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/smoke_test_kaggle.py --dataset "$DS" --work-dir /kaggle/working/smoke \
     --expect-commit "$(git rev-parse HEAD)" --report /kaggle/working/smoke_report.json 2>&1 | tee /kaggle/working/logs/smoke.log | tail -70
 sha256sum /kaggle/working/smoke_report.json
 ```
@@ -86,11 +107,15 @@ Cell 2 (bash): confirm both GPUs, then run the 25 units as two shards, one per G
 %%bash
 cd /kaggle/working/te-ml-pipeline
 nvidia-smi --query-gpu=index,name,memory.total --format=csv
+# the xgboost 2.0.3 wheel must have CUDA support: a tiny GPU fit on each device, before anything long starts
+for g in 0 1; do
+  CUDA_VISIBLE_DEVICES=$g /kaggle/working/venv/bin/python -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('GPU $g: xgboost', x.__version__, 'cuda fit ok')" || { echo "GPU $g: xgboost cuda fit FAILED"; exit 1; }
+done
 H=$(git rev-parse HEAD)
 S=thesis_paper/scripts/kaggle/na7_random_dvd.py
-CUDA_VISIBLE_DEVICES=0 python $S --out-dir /kaggle/working/na7_a --shard 0/2 --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na7_a.log 2>&1 &
+CUDA_VISIBLE_DEVICES=0 /kaggle/working/venv/bin/python $S --out-dir /kaggle/working/na7_a --shard 0/2 --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na7_a.log 2>&1 &
 PA=$!
-CUDA_VISIBLE_DEVICES=1 python $S --out-dir /kaggle/working/na7_b --shard 1/2 --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na7_b.log 2>&1 &
+CUDA_VISIBLE_DEVICES=1 /kaggle/working/venv/bin/python $S --out-dir /kaggle/working/na7_b --shard 1/2 --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na7_b.log 2>&1 &
 PB=$!
 wait $PA; RA=$?
 wait $PB; RB=$?
@@ -105,7 +130,7 @@ Cell 3 (bash): merge the two shards into the final result. `--max-units 0` forbi
 ```bash
 %%bash
 cd /kaggle/working/te-ml-pipeline
-python thesis_paper/scripts/kaggle/na7_random_dvd.py --out-dir /kaggle/working/na7 \
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na7_random_dvd.py --out-dir /kaggle/working/na7 \
     --restore-from /kaggle/working/na7_a.tar.gz,/kaggle/working/na7_b.tar.gz \
     --expect-commit "$(git rev-parse HEAD)" --max-units 0 2>&1 | tee /kaggle/working/logs/na7_merge.log | tail -30
 cat /kaggle/working/na7/status.json; echo
@@ -129,7 +154,7 @@ Cell 2 (bash):
 %%bash
 cd /kaggle/working/te-ml-pipeline
 nproc; free -g | head -2
-python thesis_paper/scripts/kaggle/na2_trees.py --model random_forest --out-dir /kaggle/working/na2_random_forest \
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na2_trees.py --model random_forest --out-dir /kaggle/working/na2_random_forest \
     --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.5 2>&1 | tee /kaggle/working/logs/na2_random_forest.log
 cat /kaggle/working/na2_random_forest/status.json; echo
 ls -la /kaggle/working/na2_random_forest.tar.gz && sha256sum /kaggle/working/na2_random_forest.tar.gz
