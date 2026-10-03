@@ -1,6 +1,6 @@
 # Kaggle cells for the thesis-paper compute
 
-The scripts are pinned to code commit `@@COMMIT@@` (every cell checks out exactly that commit, asserts HEAD equals it and the tree is clean, and
+The scripts are pinned to code commit `b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5` (every cell checks out exactly that commit, asserts HEAD equals it and the tree is clean, and
 every script refuses to start otherwise). This file was committed afterwards, in a later commit that changes nothing but this file, so the cells'
 commit is not this file's own commit; that is intended.
 
@@ -39,7 +39,7 @@ Cell 1 (Python): clone at the commit, verify, install the pins.
 
 ```python
 import os, subprocess, sys
-COMMIT = "@@COMMIT@@"
+COMMIT = "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5"
 os.makedirs("/kaggle/working/logs", exist_ok=True)
 env = {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"}
 os.chdir("/kaggle/working")
