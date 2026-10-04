@@ -207,6 +207,7 @@ NA_RUNS = {
 # unit file), run_configs/session_*.json and the 50 unit files. It has no run_config.json, so it is not in NA_RUNS.
 NA7_RUN = "thesis_paper/results/na7/20261004T093502"
 NA7_FILES = [f"{NA7_RUN}/results.json", f"{NA7_RUN}/status.json", f"{NA7_RUN}/manifest.json"]
+NA10_ANALYSIS = "thesis_paper/results/na10_analysis/20261004T190444"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
 
@@ -241,6 +242,45 @@ def na7_values():
             "na7_gap": _r3(gap_random), "na7_grouped_gap": _r3(gap_grouped), "na7_ratio": f"{gap_grouped / gap_random:.1f}",
             "na7_sigma": _r3(r["sigma_log10"]["pooled_r2"]), "na7_S": _r3(r["S"]["pooled_r2"]), "na7_kappa": _r3(r["kappa_log10"]["pooled_r2"]),
             "na7_n": _n(r["zT_direct"]["n"])}
+
+
+def na10_values():
+    """NA10: the JARVIS comparison, from the committed analysis (counts per step, Spearman and sign agreement by stratum with cluster-bootstrap intervals)."""
+    a = pav._json(f"{NA10_ANALYSIS}/analysis.json")
+    cfg = pav._json(f"{NA10_ANALYSIS}/run_config.json")
+    assert cfg["tree_clean"] and a["predicted_sign_source"] == "regressor"
+    c, st = a["counts_per_step"], a["strata"]
+    assert c["predicted"] == c["featurised"] == c["with_seebeck_n_and_p"]
+    assert c["same_sign_in_metals"] + c["same_sign_in_semiconductors"] == c["same_sign_entries"]
+    assert c["same_sign_ref_ge_20_in_metals"] + c["same_sign_ref_ge_20_in_semiconductors"] == c["same_sign_with_reference_ge_20_uV_per_K"]
+    assert c["same_sign_entries"] + c["opposite_sign_entries"] + c["neither"] == c["predicted"]
+    assert a["gap_metal_threshold_eV"] == 0.05 and a["min_reference_uV_per_K"] == 20.0
+    v = {"jv_total": _n(c["jarvis_entries_total"]), "jv_both": _n(c["with_seebeck_n_and_p"]), "jv_same": _n(c["same_sign_entries"]), "jv_opp": _n(c["opposite_sign_entries"]),
+         "jv_metal": _n(c["metal_or_semimetal_gap_lt_0.05"]), "jv_semi": _n(c["semiconductor_gap_ge_0.05"]),
+         "jv_same_metal": _n(c["same_sign_in_metals"]), "jv_same_semi": _n(c["same_sign_in_semiconductors"]), "jv_opp_semi": _n(c["opposite_sign_in_semiconductors"]),
+         "jv_ref_n": _n(c["same_sign_with_reference_ge_20_uV_per_K"]), "jv_ref_metal": _n(c["same_sign_ref_ge_20_in_metals"]), "jv_ref_semi": _n(c["same_sign_ref_ge_20_in_semiconductors"]),
+         "jv_cluster_seen": _n(c["cluster_seen"]), "jv_n_clusters": _n(st["all"]["n_clusters"]),
+         "jv_metal_share_ref": f"{100 * c['same_sign_ref_ge_20_in_metals'] / c['same_sign_with_reference_ge_20_uV_per_K']:.0f}"}
+
+    def put(key, stratum, sign=False):
+        s = st[stratum]
+        if sign:
+            s = s["sign_analysis_same_sign_entries_with_reference_ge_20"]
+            val, ci, n = s["sign_agreement"], s["sign_agreement_ci95_cluster_bootstrap"], s["n"]
+        else:
+            val, ci, n = s["spearman_abs_pred_vs_mean_abs_jarvis"], s["spearman_ci95_cluster_bootstrap"], s["n"]
+        v[f"{key}"], v[f"{key}_lo"], v[f"{key}_hi"], v[f"{key}_n"] = f"{val:.2f}", f"{ci[0]:.2f}", f"{ci[1]:.2f}", _n(n)
+
+    for key, stratum in (("jv_rho_all", "all"), ("jv_rho_metal", "metal_or_semimetal"), ("jv_rho_semi", "semiconductor"), ("jv_rho_mseen", "metal_cluster_seen"),
+                         ("jv_rho_munseen", "metal_cluster_unseen"), ("jv_rho_seen", "cluster_seen"), ("jv_rho_unseen", "cluster_unseen"), ("jv_rho_abx3", "abx3_stoichiometry")):
+        put(key, stratum)
+    for key, stratum in (("jv_sign_all", "all"), ("jv_sign_metal", "metal_or_semimetal"), ("jv_sign_semi", "semiconductor"), ("jv_sign_mseen", "metal_cluster_seen"),
+                         ("jv_sign_munseen", "metal_cluster_unseen")):
+        put(key, stratum, sign=True)
+    s_all = st["all"]["sign_analysis_same_sign_entries_with_reference_ge_20"]
+    v["jv_pred_pos"], v["jv_jarvis_pos"] = f"{100 * s_all['share_predicted_positive']:.0f}", f"{100 * s_all['share_jarvis_positive']:.0f}"
+    assert "sign_analysis_same_sign_entries_with_reference_ge_20" not in st["semiconductor_cluster_seen"]
+    return v
 
 
 def config_value(pointer):
@@ -355,4 +395,5 @@ def new_analysis_values():
     g = pav._json(GROUPED_DVD)  # the grouped run behind Table 10: its R2 values must be the ones printed there (the gap is taken from unrounded values)
     assert _r3(g["zT_direct"]["pooled_r2"]) == base["dvd_direct"] and _r3(g["zT_derived"]["pooled_r2"]) == base["dvd_derived"]
     v.update(v7)
+    v.update(na10_values())
     return v
