@@ -1,0 +1,172 @@
+{
+  "n_rows": 185056,
+  "n_clusters": 7810,
+  "n_repeats": 5,
+  "n_boot": 2000,
+  "small_S_threshold_uV_per_K": 20.0,
+  "design": "the classifier refitted on the S regressor's own folds (same partition for both rules), CPU, frozen S hyperparameters, 397 features",
+  "strata": {
+    "all": {
+      "n_rows": 185056,
+      "regressor_sign_accuracy": {
+        "mean": 0.9409605740964897,
+        "ci95_cluster_bootstrap": [
+          0.9335373101164983,
+          0.9479196094149099
+        ],
+        "per_repeat": [
+          0.941693325263704,
+          0.940936797509943,
+          0.9403748054642919,
+          0.9400992132111361,
+          0.9416987290333737
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.9492186149057582,
+        "ci95_cluster_bootstrap": [
+          0.9404568613567864,
+          0.9571018936538321
+        ],
+        "per_repeat": [
+          0.9489938180874978,
+          0.9509013487809096,
+          0.9498476136953139,
+          0.9479130641535535,
+          0.9484372298115166
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.008258040809268553,
+        "ci95_cluster_bootstrap": [
+          0.0043084247451248255,
+          0.01211800773394979
+        ],
+        "ci95_t_across_repeats": [
+          0.0065229244891176165,
+          0.009993157129419488
+        ],
+        "per_repeat": [
+          0.007300492823793858,
+          0.009964551270966626,
+          0.009472808231022034,
+          0.007813850942417377,
+          0.006738500778142864
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 18009,
+        "regressor_right_classifier_wrong": 10368
+      }
+    },
+    "abs_S_lt_20": {
+      "n_rows": 7307,
+      "regressor_sign_accuracy": {
+        "mean": 0.7032708361844806,
+        "ci95_cluster_bootstrap": [
+          0.676329178794273,
+          0.7290428970861591
+        ],
+        "per_repeat": [
+          0.712467496920761,
+          0.7135623374846038,
+          0.6990557000136856,
+          0.7023402217052142,
+          0.6889284247981388
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.7614889831668263,
+        "ci95_cluster_bootstrap": [
+          0.7322324809296035,
+          0.7918459134636808
+        ],
+        "per_repeat": [
+          0.7678938004653072,
+          0.7561242644039962,
+          0.7402490762282743,
+          0.7594087860955249,
+          0.7837689886410292
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.05821814698234569,
+        "ci95_cluster_bootstrap": [
+          0.03293503795385626,
+          0.08302371210114665
+        ],
+        "ci95_t_across_repeats": [
+          0.03126175746568845,
+          0.08517453649900293
+        ],
+        "per_repeat": [
+          0.05542630354454625,
+          0.04256192691939231,
+          0.04119337621458874,
+          0.057068564390310716,
+          0.09484056384289041
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 4489,
+        "regressor_right_classifier_wrong": 2362
+      }
+    },
+    "abs_S_ge_20": {
+      "n_rows": 177749,
+      "regressor_sign_accuracy": {
+        "mean": 0.9507316496857928,
+        "ci95_cluster_bootstrap": [
+          0.9431470809110359,
+          0.9577935224753928
+        ],
+        "per_repeat": [
+          0.9511164619772826,
+          0.9502838271945271,
+          0.9502950790159157,
+          0.9498731357138437,
+          0.9520897445273954
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.95693590399946,
+        "ci95_cluster_bootstrap": [
+          0.9477576969753589,
+          0.9650366982514471
+        ],
+        "per_repeat": [
+          0.9564385734940843,
+          0.9589083482888793,
+          0.95846390134403,
+          0.9556621978182719,
+          0.955206499052034
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.006204254313667024,
+        "ci95_cluster_bootstrap": [
+          0.002299767798156937,
+          0.00993750964528662
+        ],
+        "ci95_t_across_repeats": [
+          0.0034139315271310474,
+          0.008994577100203
+        ],
+        "per_repeat": [
+          0.005322111516801731,
+          0.008624521094352189,
+          0.008168822328114334,
+          0.0057890621044282,
+          0.003116754524638665
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 13520,
+        "regressor_right_classifier_wrong": 8006
+      }
+    }
+  },
+  "decision_rule": "classifier replaces the regressor's sign only if the lower 95% cluster-bootstrap bound of the paired accuracy difference (all rows) is above 0",
+  "decision": "classifier",
+  "regressor_dir": "results\\ladder_regen_snapfix\\20260917T150000\\S_chemistry_full"
+}

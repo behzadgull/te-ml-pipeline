@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "4e5c631b0ce4dc288b58630df74cf2769353fa9d7d206eccaa296de52e3dc7ee",
+      "bytes": 83046
+    }
+  },
+  "git_head": "b107f3feafdf9d9f0d4ed37466ff1adeefd3eb7f",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/reports/number_audit/20261004T194940/",
+    "thesis_paper/results/na6_sign_override/"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "508fb3556f43962709333f257ed244b749774e961411fbaf6681f4f9d6c9e6f0",
+  "python": "3.12.10",
+  "registry_rows": 18
+}

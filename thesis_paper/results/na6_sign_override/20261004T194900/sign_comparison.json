@@ -1,0 +1,217 @@
+{
+  "n_rows": 185056,
+  "n_clusters": 7810,
+  "n_regressor_rows": 185064,
+  "rows_with_S_zero_excluded": 8,
+  "n_repeats": 5,
+  "n_boot": 2000,
+  "small_S_threshold_uV_per_K": 20.0,
+  "fold_agreement_regressor_vs_classifier": {
+    "share_of_rows_with_identical_fold_label_per_repeat": [
+      0.5538215459104271,
+      0.6716021096316791,
+      0.5869142313678022,
+      0.5494931264049802,
+      0.5690223499913539
+    ],
+    "share_of_rows_whose_regressor_fold_maps_to_the_classifier_fold_holding_most_of_it": [
+      0.5538215459104271,
+      0.6716021096316791,
+      0.5869142313678022,
+      0.5494931264049802,
+      0.5690223499913539
+    ]
+  },
+  "strata": {
+    "all": {
+      "n_rows": 185056,
+      "regressor_sign_accuracy": {
+        "mean": 0.9409605740964897,
+        "ci95_cluster_bootstrap": [
+          0.9335373101164983,
+          0.9479196094149099
+        ],
+        "per_repeat": [
+          0.941693325263704,
+          0.940936797509943,
+          0.9403748054642919,
+          0.9400992132111361,
+          0.9416987290333737
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.948329154418122,
+        "ci95_cluster_bootstrap": [
+          0.9394534683767788,
+          0.956235677225636
+        ],
+        "per_repeat": [
+          0.9485669202835898,
+          0.9489019540031126,
+          0.9502637039598825,
+          0.9458974580667474,
+          0.9480157357772783
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.00736858032163239,
+        "ci95_cluster_bootstrap": [
+          0.0036852804589448803,
+          0.011034143590246239
+        ],
+        "ci95_t_across_repeats": [
+          0.005354492067182342,
+          0.009382668576082437
+        ],
+        "per_repeat": [
+          0.006873595019885825,
+          0.007965156493169645,
+          0.009888898495590603,
+          0.005798244855611312,
+          0.006317006743904563
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 19389,
+        "regressor_right_classifier_wrong": 12571
+      }
+    },
+    "abs_S_lt_20": {
+      "n_rows": 7307,
+      "regressor_sign_accuracy": {
+        "mean": 0.7032708361844806,
+        "ci95_cluster_bootstrap": [
+          0.676329178794273,
+          0.7290428970861591
+        ],
+        "per_repeat": [
+          0.712467496920761,
+          0.7135623374846038,
+          0.6990557000136856,
+          0.7023402217052142,
+          0.6889284247981388
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.7542904064595594,
+        "ci95_cluster_bootstrap": [
+          0.7173232413063375,
+          0.7891135349227897
+        ],
+        "per_repeat": [
+          0.7499657862323799,
+          0.7748734090598056,
+          0.7397016559463528,
+          0.751881757219105,
+          0.7550294238401533
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.05101957027507866,
+        "ci95_cluster_bootstrap": [
+          0.0187362840149876,
+          0.0807887894009371
+        ],
+        "ci95_t_across_repeats": [
+          0.035486532404152886,
+          0.06655260814600444
+        ],
+        "per_repeat": [
+          0.037498289311618915,
+          0.06131107157520177,
+          0.04064595593266729,
+          0.049541535513890844,
+          0.0661009990420145
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 4452,
+        "regressor_right_classifier_wrong": 2588
+      }
+    },
+    "abs_S_ge_20": {
+      "n_rows": 177749,
+      "regressor_sign_accuracy": {
+        "mean": 0.9507316496857928,
+        "ci95_cluster_bootstrap": [
+          0.9431470809110359,
+          0.9577935224753928
+        ],
+        "per_repeat": [
+          0.9511164619772826,
+          0.9502838271945271,
+          0.9502950790159157,
+          0.9498731357138437,
+          0.9520897445273954
+        ]
+      },
+      "classifier_sign_accuracy": {
+        "mean": 0.956305802001699,
+        "ci95_cluster_bootstrap": [
+          0.9472207649852538,
+          0.9644207838647337
+        ],
+        "per_repeat": [
+          0.9567311208501876,
+          0.9560560115668724,
+          0.9589196001102679,
+          0.9538731582174864,
+          0.9559491192636808
+        ]
+      },
+      "difference_classifier_minus_regressor": {
+        "mean": 0.005574152315906122,
+        "ci95_cluster_bootstrap": [
+          0.0019305199342670254,
+          0.009204360415947015
+        ],
+        "ci95_t_across_repeats": [
+          0.003188674211347944,
+          0.007959630420464301
+        ],
+        "per_repeat": [
+          0.005614658872905021,
+          0.005772184372345279,
+          0.008624521094352189,
+          0.004000022503642731,
+          0.0038593747362853925
+        ]
+      },
+      "discordant_rows_summed_over_repeats": {
+        "classifier_right_regressor_wrong": 14937,
+        "regressor_right_classifier_wrong": 9983
+      }
+    }
+  },
+  "decision_rule": "classifier replaces the regressor's sign only if the lower 95% cluster-bootstrap bound of the paired accuracy difference (classifier - regressor) is above 0",
+  "decision": "classifier",
+  "regressor_files_sha256": {
+    "repeat0_fold0_predictions.npz": "9b5a088998d2bd74cf8b75c7eacbee81696b4bfb5ab97e31411b213883502f65",
+    "repeat0_fold1_predictions.npz": "ee23984e2b456d3cb712d54808d629f341e661c716481dd31052968c726e480b",
+    "repeat0_fold2_predictions.npz": "c52a58f0173132c74dad6097976d8c60db3b9e1edfe9e3ac611720ee6c529252",
+    "repeat0_fold3_predictions.npz": "8c609985ebc5433e11e8876c23372b876266ac45a3afacae75f1b3a7975df6e1",
+    "repeat0_fold4_predictions.npz": "5304d2b1109510d4f94f5f71b926b994bad4a235488df833d438b681d487b140",
+    "repeat1_fold0_predictions.npz": "f644910523f8f99caf34b681bbdd4125550bbc4e1efbdc3c0798b6dc42e059ee",
+    "repeat1_fold1_predictions.npz": "78ad90f2b7bfff63307b03dce4aec05d84d188884672d6187cbae4c43c85eff0",
+    "repeat1_fold2_predictions.npz": "56c361c4ee952769ae96f1272e166b7bf440c674bfb6996703b6f1ad37aa00b2",
+    "repeat1_fold3_predictions.npz": "88ad408d0f05f35e690a11f0439385f798252ec25dd1cc3e72848a9297741927",
+    "repeat1_fold4_predictions.npz": "7cd71c735ef073f4017043f6d85c1dc830497ccd3972b4a5aa1dd03ec8f00401",
+    "repeat2_fold0_predictions.npz": "8efca0296c9bf8838c37723dfa4e9ad716bb1c53609dbe19313de521ed460d8c",
+    "repeat2_fold1_predictions.npz": "c3b0af68bca204250d37b7f82413616b3a2afde8fea8055cfb03a04c1222dd6d",
+    "repeat2_fold2_predictions.npz": "6dab9b7af8f6cb91931daf5d4715307ffc3a9d92711307776456defb4a1dd68d",
+    "repeat2_fold3_predictions.npz": "ff57f30ba1a7367f329edeba318c4075be31df4661c12eca46069d5e224bbc2f",
+    "repeat2_fold4_predictions.npz": "489eb480a247f2759195e4975149600f37df382da1ee400632757d172d331829",
+    "repeat3_fold0_predictions.npz": "e50072d93ced61d0f410a15f0c2d625a873a21cbd59892ecf614dad24e6c8f37",
+    "repeat3_fold1_predictions.npz": "5f38850fb88acb7a2500f8406396b5de19b1760d55ad07cb37ceca04af27d423",
+    "repeat3_fold2_predictions.npz": "9cde68aa3717e582a8b043df85060cc087f9a9f4ba005769581c27c20b1187a4",
+    "repeat3_fold3_predictions.npz": "91bf839eb4365f9bcc8e228bf716e3523394545d77822a58ee16cc4a1f5e6056",
+    "repeat3_fold4_predictions.npz": "5041ea9d4d8fc2c064f108a688dca978d6ed3b0c22d4c7e65ee67f82117cafb2",
+    "repeat4_fold0_predictions.npz": "55fa6a952911d78f5bf65ebd60682bc68a6fa2142138e62ae38d914cf9dc2823",
+    "repeat4_fold1_predictions.npz": "d54e3704afd90e87d7e2412e3f0046dcc53fae6d3e6992ab618d3560b17cf8a5",
+    "repeat4_fold2_predictions.npz": "9eca584e2768061e5ec037a69e4120398988224dcafa5f38e4862a32e92803fe",
+    "repeat4_fold3_predictions.npz": "7860b41dcfea823652efda51005422582d6e5ec1b21be660d0330cc16eae9d20",
+    "repeat4_fold4_predictions.npz": "a414a63d7091e5d8805daba349d0f8dda0737fc36f37e66b860c5ef910284806"
+  },
+  "regressor_dir": "results\\ladder_regen_snapfix\\20260917T150000\\S_chemistry_full",
+  "na6_dir": "thesis_paper\\results\\na6\\20261004T102905"
+}

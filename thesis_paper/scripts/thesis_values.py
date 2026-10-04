@@ -208,6 +208,8 @@ NA_RUNS = {
 NA7_RUN = "thesis_paper/results/na7/20261004T093502"
 NA7_FILES = [f"{NA7_RUN}/results.json", f"{NA7_RUN}/status.json", f"{NA7_RUN}/manifest.json"]
 NA10_ANALYSIS = "thesis_paper/results/na10_analysis/20261004T190444"
+NA6_METRICS = "thesis_paper/results/na6_metrics/20261004T135638"
+NA6_SIGN = "thesis_paper/results/na6_sign_override/20261004T194811_same_folds"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
 
@@ -280,6 +282,34 @@ def na10_values():
     s_all = st["all"]["sign_analysis_same_sign_entries_with_reference_ge_20"]
     v["jv_pred_pos"], v["jv_jarvis_pos"] = f"{100 * s_all['share_predicted_positive']:.0f}", f"{100 * s_all['share_jarvis_positive']:.0f}"
     assert "sign_analysis_same_sign_entries_with_reference_ge_20" not in st["semiconductor_cluster_seen"]
+    return v
+
+
+def na6_values():
+    """NA6: the carrier-type classifier under chemistry-cluster CV (accuracy and the like with cluster-bootstrap intervals) and its sign accuracy against the S regressor's on the same folds."""
+    m = pav._json(f"{NA6_METRICS}/metrics.json")
+    sg = pav._json(f"{NA6_SIGN}/sign_comparison_same_folds.json")
+    cfg = pav._json(f"{NA6_SIGN}/run_config.json")
+    assert cfg["tree_clean"] and sg["decision"] == "classifier" and sg["n_rows"] == m["n_rows"]
+    ac, bs = m["across_repeats"], m["cluster_bootstrap"]
+    (tn, fp), (fn, tp) = m["confusion_matrix_all_repeats_rows_true_cols_pred_n_p"]
+    assert tn + fp + fn + tp == m["n_repeats"] * m["n_rows"]
+    v = {"cl_n": _n(m["n_rows"]), "cl_clusters": _n(m["n_clusters"]), "cl_pshare": f"{100 * m['share_p_type']:.1f}",
+         "cl_tn": _n(tn), "cl_fp": _n(fp), "cl_fn": _n(fn), "cl_tp": _n(tp),
+         "cl_single_n": _n(m["accuracy_by_cluster_size"]["singleton_cluster"]["n_rows"]), "cl_single_acc": f"{m['accuracy_by_cluster_size']['singleton_cluster']['accuracy']:.2f}",
+         "cl_small_acc": f"{m['accuracy_by_cluster_size']['2_to_9_rows']['accuracy']:.2f}"}
+    for key, k in (("acc", "accuracy"), ("bacc", "balanced_accuracy"), ("prec_p", "precision_p"), ("rec_p", "recall_p"), ("prec_n", "precision_n"), ("rec_n", "recall_n")):
+        v[f"cl_{key}"], v[f"cl_{key}_lo"], v[f"cl_{key}_hi"] = _r3(ac[k]["mean"]), _r3(bs[k]["ci95"][0]), _r3(bs[k]["ci95"][1])
+    auc = bs["roc_auc_repeat0"]
+    v["cl_auc"], v["cl_auc_lo"], v["cl_auc_hi"] = _r3(ac["roc_auc"]["mean"]), _r3(auc["ci95"][0]), _r3(auc["ci95"][1])
+    st = sg["strata"]
+    d, small = st["all"], st["abs_S_lt_20"]
+    v["cl_sign_clf"], v["cl_sign_reg"] = _r3(d["classifier_sign_accuracy"]["mean"]), _r3(d["regressor_sign_accuracy"]["mean"])
+    dd = d["difference_classifier_minus_regressor"]
+    v["cl_sign_diff"], v["cl_sign_diff_lo"], v["cl_sign_diff_hi"] = f"{dd['mean']:.3f}", f"{dd['ci95_cluster_bootstrap'][0]:.3f}", f"{dd['ci95_cluster_bootstrap'][1]:.3f}"
+    v["cl_sign_small_diff"] = f"{small['difference_classifier_minus_regressor']['mean']:.3f}"
+    v["cl_sign_small_n"] = _n(small["n_rows"])
+    v["cl_sign_big_diff"] = f"{st['abs_S_ge_20']['difference_classifier_minus_regressor']['mean']:.3f}"
     return v
 
 
@@ -396,4 +426,5 @@ def new_analysis_values():
     assert _r3(g["zT_direct"]["pooled_r2"]) == base["dvd_direct"] and _r3(g["zT_derived"]["pooled_r2"]) == base["dvd_derived"]
     v.update(v7)
     v.update(na10_values())
+    v.update(na6_values())
     return v

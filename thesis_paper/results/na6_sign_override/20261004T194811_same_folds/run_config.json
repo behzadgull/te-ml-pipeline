@@ -1,0 +1,33 @@
+{
+  "inputs": {
+    "dataset": {
+      "path": "C:\\Users\\choha\\te-ml-pipeline\\data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "frozen_hyperparams": {
+      "path": "checkpoints\\saved_predictions\\checkpoints\\frozen_hyperparams\\S.json",
+      "sha256": "243ff66d96837bee02f0426f76bf2a2e358ad3b1c14bd1316c79c5250f2e505b",
+      "bytes": 517
+    }
+  },
+  "git_head": "b8e1f0a4d1a3e5c6b51295f278a5ee7b2381ae20",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na6_sign_samefolds.py",
+  "script_sha256": "67b8353bdfd7be9020837da7b63d103d32104cc32331c294766391c7ae788f73",
+  "python": "3.12.10",
+  "seed": 0,
+  "xgboost": "2.0.3",
+  "device": "cpu",
+  "hyperparameters": {
+    "n_estimators": 500,
+    "max_depth": 10,
+    "learning_rate": 0.03183308682237681,
+    "subsample": 0.8969010059780653,
+    "colsample_bytree": 0.5061521655432422,
+    "min_child_weight": 4,
+    "reg_lambda": 0.6494186419907995,
+    "reg_alpha": 8.79300330033791
+  }
+}
