@@ -1,0 +1,21 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "4907b16d727736a3d446d656d57d6ee6ae1906c0ec2e172264cb70a10f9be364",
+      "bytes": 88331
+    }
+  },
+  "git_head": "23e4f8b26ecf5d9dece010266583406a57a393f9",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/docs/design_constants.csv",
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "508fb3556f43962709333f257ed244b749774e961411fbaf6681f4f9d6c9e6f0",
+  "python": "3.12.10",
+  "registry_rows": 26
+}

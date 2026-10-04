@@ -210,6 +210,9 @@ NA7_FILES = [f"{NA7_RUN}/results.json", f"{NA7_RUN}/status.json", f"{NA7_RUN}/ma
 NA10_ANALYSIS = "thesis_paper/results/na10_analysis/20261004T190444"
 NA6_METRICS = "thesis_paper/results/na6_metrics/20261004T135638"
 NA6_SIGN = "thesis_paper/results/na6_sign_override/20261004T194811_same_folds"
+NA11_FILTER = "thesis_paper/results/na11/20261004T135055"
+NA11_SENS = "thesis_paper/results/na11_sensitivity/20261004T135205"
+NA11_NOVELTY = "thesis_paper/results/na11_candidate_novelty/20261004T185101"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
 
@@ -311,6 +314,32 @@ def na6_values():
     v["cl_sign_small_n"] = _n(small["n_rows"])
     v["cl_sign_big_diff"] = f"{st['abs_S_ge_20']['difference_classifier_minus_regressor']['mean']:.3f}"
     return v
+
+
+def na11_values():
+    """NA11: counts after each screening filter, the sensitivity lists, and how many candidates lie in chemistry clusters of the training data."""
+    c = pav._json(f"{NA11_FILTER}/counts.json")
+    sens = pav._json(f"{NA11_SENS}/counts.json")
+    nov = pav._json(f"{NA11_NOVELTY}/counts.json")
+    for d in (f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/run_config.json", f"{NA11_NOVELTY}/run_config.json"):
+        assert pav._json(d)["tree_clean"], d
+    s3, s2 = c["sensitivity_S3_e_hull_0.10"], c["sensitivity_S2_final_cap_x1.5"]
+    lists = nov["lists"]
+    assert lists["main"]["n"] == c["f6_toxic_free_ranked_list"] == sens["main_list_size"] and lists["E_hull_0.10"]["n"] == s3["f6_toxic_free_ranked_list"]
+    assert lists["gap_cap_0.9"]["n"] == s2["f6_toxic_free_ranked_list"] and lists["E_hull_0.10_cap_0.9"]["n"] == s3["S4_with_cap_0.9_f6"]
+    assert nov["seen_compounds_in_main"] == ["BaSnO3", "CaMnO3", "CsSnI3", "CsSnI3", "LaCoO3", "LaNiO3", "LaRhO3", "YCoO3", "YCoO3"], "the compounds named in the text"
+    main, e10, cap = lists["main"], nov["added_by_relaxation_relative_to_main"]["E_hull_0.10"], nov["added_by_relaxation_relative_to_main"]["gap_cap_0.9"]
+    assert main["cluster_seen_any"] + main["cluster_unseen_any"] == main["n"] and e10["cluster_seen_any"] == 0
+    return {"mp_f0": _n(c["f0_ehull_le_0.05"]), "mp_f1": _n(c["f1_gap_0.1_to_3.0"]), "mp_f2": _n(c["f2_lead_and_radioactive_free"]), "mp_f3": _n(c["f3_abx3"]),
+            "mp_anti": _n(c["f3_anti_perovskite"]), "mp_f4": _n(c["f4_connectivity_perovskite_type"]), "mp_sg_rule": _n(c["f3_space_group_rule"]),
+            "mp_sg_not_conn": _n(c["space_group_rule_but_not_connectivity"]), "mp_conn_not_sg": _n(c["f4_not_in_space_group_rule"]),
+            "mp_f5": _n(c["f5_gap_le_0.6"]), "mp_f6": _n(c["f6_toxic_free_ranked_list"]),
+            "mp_s3_f4": _n(s3["f4_connectivity_perovskite_type"]), "mp_s3_f6": _n(s3["f6_toxic_free_ranked_list"]), "mp_s2_f6": _n(s2["f6_toxic_free_ranked_list"]),
+            "mp_s4_f6": _n(s3["S4_with_cap_0.9_f6"]), "mp_surv": _n(sens["n_surviving_every_e_hull_tightening"]), "mp_stable": _n(sens["main_list_stable_only_E_hull_0"]),
+            "mp_main_in_e10": _n(sens["main_list_members_at_e_hull_0.10"]), "mp_tl": _n(len(sens["added_by_allowing_Tl_As_Be"])),
+            "nv_main_seen": _n(main["cluster_seen_any"]), "nv_main_unseen": _n(main["cluster_unseen_any"]), "nv_main_clusters": _n(main["unique_clusters"]),
+            "nv_e10_added": _n(e10["n"]), "nv_cap_added": _n(cap["n"]), "nv_cap_added_seen": _n(cap["cluster_seen_any"]),
+            "nv_all": _n(lists["all_perovskite_type"]["n"]), "nv_all_seen": _n(lists["all_perovskite_type"]["cluster_seen_any"]), "nv_all_unseen": _n(lists["all_perovskite_type"]["cluster_unseen_any"])}
 
 
 def config_value(pointer):
@@ -427,4 +456,5 @@ def new_analysis_values():
     v.update(v7)
     v.update(na10_values())
     v.update(na6_values())
+    v.update(na11_values())
     return v
