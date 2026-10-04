@@ -1,0 +1,33 @@
+{
+  "utc_stamp": "20261004T095633",
+  "mp_api_version": "0.46.5",
+  "mp_database_version": "2026.04.13",
+  "e_hull_max": 0.05,
+  "gap_window_main": [
+    0.1,
+    3.0
+  ],
+  "gap_window_B": [
+    0.1,
+    4.5
+  ],
+  "gap_sens_factor": 1.5,
+  "n_A": 75508,
+  "n_B": 14051,
+  "output": "data\\external\\mp\\mp_query_20261004T095633.json",
+  "output_sha256": "5f44fcedd3e7dcae0814a4a4fa4afb2590436a873a2a56917fb13a38686439e7",
+  "output_bytes": 100188212,
+  "api_key_recorded": false,
+  "git_head": "f9444249adbbefde3f08d7518ae997d284ffab48",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na11_mp_query.py",
+  "script_sha256": "71ad0944ce78f659010d4fa3a118009ff707325df0159be2984ec2b8826c13d9",
+  "python": "3.12.10",
+  "versions": {
+    "mp-api": "0.46.5",
+    "pymatgen": "2026.9.24",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6"
+  }
+}
