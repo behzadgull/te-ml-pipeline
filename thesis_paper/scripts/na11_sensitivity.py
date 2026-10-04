@@ -5,8 +5,7 @@ holds E_hull (<= 0.05 eV/atom, the query limit), the PBE gap (up to 4.5 eV), the
 
 Axes
   toxic list   main: Tl, Hg, Cd, As, Be excluded;  relaxed: only Hg and Cd excluded (the RoHS-restricted elements), so Tl, As and Be are allowed;
-  E_hull       main: <= 0.05 eV/atom;  tighter: <= 0.025 and <= 0 (stable only).  A looser limit (0.10) cannot be evaluated here: the stored query stops at
-               0.05, so it would need a new query (not run, by instruction);
+  E_hull       main: <= 0.05 eV/atom;  looser: <= 0.10 (the second query of 2026-10-04 reaches that far);  tighter: <= 0.025 and <= 0 (stable only);
   gap cap      main: <= 0.6 eV;  relaxed: <= 0.9 eV.
 Everything else is as in the main chain: perovskite-type by the connectivity test, anti-perovskites excluded, gap window 0.1 to 3.0 eV.
 
@@ -34,7 +33,7 @@ FILTER_RUN = "thesis_paper/results/na11/20261004T100423"
 TOXIC_MAIN = {"Tl", "Hg", "Cd", "As", "Be"}
 TOXIC_RELAXED = {"Hg", "Cd"}
 GAP_WINDOW = (0.1, 3.0)
-E_HULL = {"0.05 (main)": 0.05, "0.025": 0.025, "0.0 (stable only)": 0.0}
+E_HULL = {"0.10": 0.10, "0.05 (main)": 0.05, "0.025": 0.025, "0.0 (stable only)": 0.0}
 GAP_CAP = {"0.6 (main)": 0.6, "0.9": 0.9}
 TOXIC = {"Tl,Hg,Cd,As,Be excluded (main)": TOXIC_MAIN, "only Hg,Cd excluded": TOXIC_RELAXED}
 
@@ -63,7 +62,7 @@ def main():
     out = REPO / "thesis_paper" / "results" / "na11_sensitivity" / rr.utc_stamp()
     out.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(out / "membership.csv", index=False, lineterminator="\n")
-    tight = [v for k, v in variants.items() if k[0] == main_key[0] and k[2] == main_key[2]]  # E_hull tightenings at the main toxic list and cap
+    tight = [v for k, v in variants.items() if k[0] == main_key[0] and k[2] == main_key[2] and k[1] != "0.10"]  # E_hull tightenings at the main toxic list and cap
     survive = set.intersection(*tight)
     counts = {"variants": {f"{k[0]} | E_hull <= {k[1]} | gap <= {k[2]}": len(v) for k, v in variants.items()},
               "main_list_size": len(main),
@@ -75,7 +74,9 @@ def main():
               "added_by_both": sorted(info.loc[sorted(variants[("only Hg,Cd excluded", "0.05 (main)", "0.9")] - main), "formula"]),
               "lost_at_E_hull_0.025": sorted(info.loc[sorted(main - variants[(main_key[0], "0.025", "0.6 (main)")]), "formula"]),
               "lost_at_E_hull_0": sorted(info.loc[sorted(main - variants[(main_key[0], "0.0 (stable only)", "0.6 (main)")]), "formula"]),
-              "e_hull_0.10_not_evaluated": "the stored query stops at 0.05 eV/atom"}
+              "added_by_e_hull_0.10": sorted(info.loc[sorted(variants[(main_key[0], "0.10", main_key[2])] - main), "formula"]),
+              "n_added_by_e_hull_0.10": len(variants[(main_key[0], "0.10", main_key[2])] - main),
+              "main_list_members_at_e_hull_0.10": len(main & variants[(main_key[0], "0.10", main_key[2])])}
     rr.write_json(out / "counts.json", counts)
     rr.write_json(out / "run_config.json", prov)
     print("wrote", out)

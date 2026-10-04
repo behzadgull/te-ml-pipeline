@@ -6,7 +6,7 @@ The query output is plain JSON, read by na11_mp_filter_featurize.py in the proje
 The API key is read from the environment variable MP_API_KEY. It is never printed, logged, written to the output or committed; the script
 stops with exit code 2 if the variable is not set.
 
-Query A (light, every material): energy_above_hull <= 0.05 eV/atom (no band-gap restriction), fields: id, formula, elements, E_hull, gap.
+Query A (light, every material): energy_above_hull <= 0.10 eV/atom (the main criterion, 0.05, is applied locally; 0.10 serves the sensitivity row) (no band-gap restriction), fields: id, formula, elements, E_hull, gap.
   The filter chain is applied locally so that the count after every filter can be reported from one stored result.
 Query B (heavy): the same stability limit, three-element compounds only, with the structure and space group, for the ABX3 and structural
   tests. Its band-gap window is the thesis window 0.1 <= Eg <= 3.0 eV with the upper bound widened by GAP_SENS_FACTOR (1.5, to 4.5 eV), so that the
@@ -36,7 +36,8 @@ sys.path.insert(0, str(HERE))
 import run_record as rr  # noqa: E402  (standard library only)
 STORE = REPO / "data" / "external" / "mp"
 MP_API_VERSION = "0.46.5"
-E_HULL_MAX = 0.05
+E_HULL_MAX = 0.10  # query limit; the main screening criterion is 0.05 (applied locally), 0.10 is the sensitivity limit
+E_HULL_MAIN = 0.05
 GAP_WINDOW = (0.1, 3.0)  # the thesis window
 GAP_SENS_FACTOR = 1.5
 GAP_WINDOW_B = (GAP_WINDOW[0], GAP_WINDOW[1] * GAP_SENS_FACTOR)
@@ -69,7 +70,7 @@ def main():
               "is_stable": bool(d.is_stable), "spg_number": int(d.symmetry.number), "spg_symbol": d.symmetry.symbol,
               "structure": d.structure.as_dict()} for d in docs_b]
     out = STORE / f"mp_query_{stamp}.json"
-    payload = {"meta": {"utc_stamp": stamp, "mp_api_version": MP_API_VERSION, "mp_database_version": db_version, "e_hull_max": E_HULL_MAX,
+    payload = {"meta": {"utc_stamp": stamp, "mp_api_version": MP_API_VERSION, "mp_database_version": db_version, "e_hull_max": E_HULL_MAX, "e_hull_main": E_HULL_MAIN,
                         "gap_window_main": list(GAP_WINDOW), "gap_window_B": list(GAP_WINDOW_B), "gap_sens_factor": GAP_SENS_FACTOR, "n_A": len(a), "n_B": len(b)}, "A": a, "B": b}
     out.write_text(json.dumps(payload), encoding="utf-8")
     sha = hashlib.sha256(out.read_bytes()).hexdigest()

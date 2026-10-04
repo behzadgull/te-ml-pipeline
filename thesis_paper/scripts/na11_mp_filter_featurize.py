@@ -15,6 +15,7 @@ Sensitivity rows (the main criteria above are NOT changed; Materials Project ban
   S1  the f1 window widened to 0.1 to 3.0 x 1.5 = 4.5 eV (the thesis window's upper bound times 1.5): counts f1 to f6 are reported again; since the
       final criterion f5 (gap <= 0.6 eV) lies inside any such window, f5 and f6 cannot change, only f1 to f4 do
   S2  the final cap f5 widened to 0.6 x 1.5 = 0.9 eV: counts f5 and f6 are reported again
+  S3  the E_hull limit widened from 0.05 to 0.10 eV/atom (S4: together with the 0.9 eV cap): counts f0 to f6 are reported again
 The f4 compounds are featurised (MAGPIE and CBFV with the Oliynyk set, exactly as the training data and ESTM), so that the later filters
 can be changed without refeaturising; temperature is added at prediction time. Nothing is predicted.
 
@@ -54,6 +55,7 @@ GAP_SENS_FACTOR = 1.5
 GAP_WINDOW_SENS = (GAP_WINDOW[0], GAP_WINDOW[1] * GAP_SENS_FACTOR)
 GAP_MAX_FINAL_SENS = round(GAP_MAX_FINAL * GAP_SENS_FACTOR, 6)
 E_HULL_MAX = 0.05
+E_HULL_SENS = 0.10
 
 
 def standin_from_jarvis(path):
@@ -102,17 +104,19 @@ def main():
 
     if not standin:
         assert q["meta"]["gap_window_B"] == [GAP_WINDOW[0], GAP_WINDOW[1] * GAP_SENS_FACTOR], "the query's band-gap window is not the widened one"
+        assert q["meta"]["e_hull_max"] == E_HULL_SENS, "the query's E_hull limit is not the sensitivity limit"
     lo, hi = GAP_WINDOW
     bad_el = RADIOACTIVE | LEAD
-    counts = {"f0_ehull_le_0.05": len(A)}
-    f1 = [m for m in A if lo <= m["gap"] <= hi]
+    A05 = [m for m in A if m["ehull"] <= E_HULL_MAX]
+    counts = {"f0_ehull_le_0.05": len(A05)}
+    f1 = [m for m in A05 if lo <= m["gap"] <= hi]
     counts["f1_gap_0.1_to_3.0"] = len(f1)
     f2 = [m for m in f1 if not (set(m["elements"]) & bad_el)]
     counts["f2_lead_and_radioactive_free"] = len(f2)
     counts["f2_removed_lead"] = sum(1 for m in f1 if set(m["elements"]) & LEAD)
     counts["f2_removed_radioactive"] = sum(1 for m in f1 if set(m["elements"]) & RADIOACTIVE)
     ids_b = {m["material_id"] for m in B}
-    ids_main = {m["material_id"] for m in B if lo <= m["gap"] <= hi}
+    ids_main = {m["material_id"] for m in B if lo <= m["gap"] <= hi and m["ehull"] <= E_HULL_MAX}
     counts["B_main_window_matches_A_three_element_set"] = ids_main == {m["material_id"] for m in f1 if len(m["elements"]) == 3}
     counts["B_wide_window_matches_A_three_element_set"] = ids_b == {m["material_id"] for m in A if len(m["elements"]) == 3 and GAP_WINDOW_SENS[0] <= m["gap"] <= GAP_WINDOW_SENS[1]}
     elements_of = {m["material_id"]: set(m["elements"]) for m in A}
@@ -131,9 +135,10 @@ def main():
                      "x_site": v["x"], "anti_perovskite": v["anti_perovskite"], "perovskite_type": v["perovskite"], "b_site": v["b"], "dimensionality": v["dimensionality"],
                      "reason": v["reason"], "space_group_rule": m["spg_number"] in PEROVSKITE_SPACE_GROUPS,
                      "toxic_element": bool(els & TOXIC), "elements": " ".join(sorted(els))})
-    df_wide = pd.DataFrame(rows)  # every lead- and radioactive-free ABX3 compound in the widened window
+    df_wide = pd.DataFrame(rows)  # every lead- and radioactive-free ABX3 compound with E_hull <= 0.10 in the widened gap window
     df_wide["in_main_window"] = (df_wide["gap"] >= lo) & (df_wide["gap"] <= hi)
-    df = df_wide[df_wide["in_main_window"]]
+    df_wide["in_main_ehull"] = df_wide["ehull"] <= E_HULL_MAX
+    df = df_wide[df_wide["in_main_window"] & df_wide["in_main_ehull"]]
     counts["f3_abx3"] = len(df)
     counts["f3_anti_perovskite"] = int(df["anti_perovskite"].sum())
     counts["f3_space_group_rule"] = int(df["space_group_rule"].sum())
@@ -150,9 +155,9 @@ def main():
 
     # sensitivity rows (main criteria unchanged)
     hi_s = GAP_WINDOW_SENS[1]
-    f1s = [m for m in A if lo <= m["gap"] <= hi_s]
+    f1s = [m for m in A05 if lo <= m["gap"] <= hi_s]
     f2s = [m for m in f1s if not (set(m["elements"]) & bad_el)]
-    d_s = df_wide[(df_wide["gap"] >= lo) & (df_wide["gap"] <= hi_s)]
+    d_s = df_wide[df_wide["in_main_ehull"] & (df_wide["gap"] >= lo) & (df_wide["gap"] <= hi_s)]
     f4s = d_s[d_s["perovskite_type"]]
     f5s = f4s[f4s["gap"] <= GAP_MAX_FINAL]
     counts["sensitivity_S1_gap_window_upper_x1.5"] = {
@@ -163,17 +168,34 @@ def main():
     counts["sensitivity_S2_final_cap_x1.5"] = {
         "cap_eV": GAP_MAX_FINAL_SENS, "f5_gap_le_cap": len(f5c), "f6_toxic_free_ranked_list": int((~f5c["toxic_element"]).sum()),
         "extra_f6_vs_main": int((~f5c["toxic_element"]).sum()) - len(f6)}
-    counts["thresholds_used"] = {"e_hull_max_eV_per_atom": E_HULL_MAX, "gap_window_eV": list(GAP_WINDOW), "final_gap_cap_eV": GAP_MAX_FINAL,
-                                 "excluded_elements_f2": sorted(bad_el), "excluded_elements_f6": sorted(TOXIC), "sensitivity_factor": GAP_SENS_FACTOR,
-                                 "source": "thesis section 3.6 (claims C135 to C142 in reports/claim_inventory.csv)"}
+    # S3: E_hull limit widened to 0.10 eV/atom (main window and cap unchanged); S4: with the final cap 0.9 as well
+    f1e = [m for m in A if lo <= m["gap"] <= hi]
+    f2e = [m for m in f1e if not (set(m["elements"]) & bad_el)]
+    d_e = df_wide[df_wide["in_main_window"]]
+    f4e = d_e[d_e["perovskite_type"]]
+    f5e = f4e[f4e["gap"] <= GAP_MAX_FINAL]
+    f6e = f5e[~f5e["toxic_element"]]
+    f6e_cap = f4e[(f4e["gap"] <= GAP_MAX_FINAL_SENS) & ~f4e["toxic_element"]]
+    counts["sensitivity_S3_e_hull_0.10"] = {
+        "e_hull_max": E_HULL_SENS, "f0": len(A), "f1": len(f1e), "f2": len(f2e), "f3_abx3": len(d_e), "f3_anti_perovskite": int(d_e["anti_perovskite"].sum()),
+        "f4_connectivity_perovskite_type": len(f4e), "f5_gap_le_0.6": len(f5e), "f6_toxic_free_ranked_list": len(f6e),
+        "extra_f4_vs_main": len(f4e) - len(f4), "extra_f6_vs_main": len(f6e) - len(f6),
+        "S4_with_cap_0.9_f6": len(f6e_cap)}
+    counts["thresholds_used"] = {"e_hull_max_eV_per_atom": E_HULL_MAX, "e_hull_sensitivity_eV_per_atom": E_HULL_SENS, "gap_window_eV": list(GAP_WINDOW),
+                                 "final_gap_cap_eV": GAP_MAX_FINAL, "excluded_elements_f2": sorted(bad_el), "excluded_elements_f6": sorted(TOXIC),
+                                 "sensitivity_factor": GAP_SENS_FACTOR, "source": "thesis section 3.6 (claims C135 to C142 in reports/claim_inventory.csv)"}
 
-    # featurise the f4 compounds exactly like ESTM / JARVIS
-    feat_in = f4.assign(Formula=f4["formula"], temperature_bin=600).reset_index(drop=True)
+    # featurise every perovskite-type compound in the main gap window with E_hull <= 0.10 (a superset of the main f4, which is the rows with ehull <= 0.05),
+    # so that the sensitivity variants can be predicted without refeaturising
+    feat_src = f4e
+    feat_in = feat_src.assign(Formula=feat_src["formula"], temperature_bin=600).reset_index(drop=True)
     canonical, n_parse = ev.canonicalize_estm(feat_in)
     feat, n_fail = ev.featurize_estm(canonical)
     train_head = pd.read_csv(REPO / TRAIN, nrows=5)
     assert get_feature_columns(feat) == get_feature_columns(train_head), "feature columns differ from the training columns"
-    counts.update({"featurised": len(feat), "parse_failures": n_parse, "featurisation_failed_unique_formulas": n_fail, "n_feature_columns": len(get_feature_columns(feat))})
+    assert int((feat["ehull"] <= E_HULL_MAX).sum()) == len(f4), "the main f4 must be the rows of the matrix with ehull <= 0.05"
+    counts.update({"featurised": len(feat), "featurised_main_ehull": int((feat["ehull"] <= E_HULL_MAX).sum()), "parse_failures": n_parse,
+                   "featurisation_failed_unique_formulas": n_fail, "n_feature_columns": len(get_feature_columns(feat))})
 
     out_base = tmp / "out" if standin else REPO / "thesis_paper" / "results" / "na11"
     out_dir = out_base / rr.utc_stamp()
@@ -185,6 +207,8 @@ def main():
     df_wide.to_csv(out_dir / "abx3_candidates.csv", index=False, lineterminator="\n")
     f6.sort_values(["gap", "formula"]).to_csv(out_dir / "ranked_list_f6.csv", index=False, lineterminator="\n",
                                               columns=["material_id", "formula", "ehull", "gap", "is_stable", "spg_symbol", "spg_number", "x_site", "b_site", "dimensionality"])
+    f6e.sort_values(["gap", "formula"]).to_csv(out_dir / "ranked_list_f6_ehull0.10.csv", index=False, lineterminator="\n",
+                                               columns=["material_id", "formula", "ehull", "gap", "is_stable", "spg_symbol", "spg_number", "x_site", "b_site", "dimensionality"])
     qcfg = Path(str(qpath).replace(".json", ".config.json"))
     if not standin and qcfg.exists():
         (out_dir / "query_config.json").write_bytes(qcfg.read_bytes())
