@@ -203,6 +203,13 @@ NA_RUNS = {
 }
 
 
+# NA7 ran on Kaggle (T4 x2, two shards merged); its folder is the unpacked bundle: results.json, status.json, manifest.json (SHA256 of every
+# unit file), run_configs/session_*.json and the 50 unit files. It has no run_config.json, so it is not in NA_RUNS.
+NA7_RUN = "thesis_paper/results/na7/20261004T093502"
+NA7_FILES = [f"{NA7_RUN}/results.json", f"{NA7_RUN}/status.json", f"{NA7_RUN}/manifest.json"]
+GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
+
+
 def na_path(name):
     """Repository-relative path of an analysis' results.json."""
     return f"{NA_RUNS[name]}/results.json"
@@ -213,6 +220,27 @@ def na_json(name):
     cfg = pav._json(f"{NA_RUNS[name]}/run_config.json")
     assert {"inputs", "git_head", "tree_clean", "script_sha256"} <= set(cfg), name
     return pav._json(na_path(name))
+
+
+def na7_values():
+    """NA7: direct versus derived zT under shuffled row-level 5 x 5 KFold, against the committed grouped run. The gap ratio is computed here."""
+    st, r = pav._json(f"{NA7_RUN}/status.json"), pav._json(f"{NA7_RUN}/results.json")
+    cfg = [pav._json(f"{NA7_RUN}/run_configs/{n}") for n in ("session_01.json", "session_01_restored1.json", "session_03.json")]
+    assert st["complete"] and st["accepted_as_result"] and st["units_done"] == st["units_total"] == 25
+    assert all(c["tree_clean"] and not c["allow_dirty"] and not c["smoke"] for c in cfg) and len({c["git_head"] for c in cfg}) == 1
+    g = pav._json(GROUPED_DVD)
+    assert r["subset_n_rows"] == g["subset_n_rows"], "NA7 and the grouped run must use the same subset"
+    assert r["n_repeats"] == 5 and r["n_folds"] == 5
+    gap_random = r["zT_direct"]["pooled_r2"] - r["zT_derived"]["pooled_r2"]
+    gap_grouped = g["zT_direct"]["pooled_r2"] - g["zT_derived"]["pooled_r2"]
+    assert abs(gap_random - r["gap_direct_minus_derived"]) < 1e-12 and abs(gap_grouped - r["grouped_run_for_comparison"]["gap"]) < 1e-12
+    assert 0 < gap_random < gap_grouped
+    return {"na7_direct": _r3(r["zT_direct"]["pooled_r2"]), "na7_derived": _r3(r["zT_derived"]["pooled_r2"]),
+            "na7_mae_direct": f"{r['zT_direct']['mae']:.3f}", "na7_mae_derived": f"{r['zT_derived']['mae']:.3f}",
+            "na7_rmse_direct": f"{r['zT_direct']['rmse']:.3f}", "na7_rmse_derived": f"{r['zT_derived']['rmse']:.3f}",
+            "na7_gap": _r3(gap_random), "na7_grouped_gap": _r3(gap_grouped), "na7_ratio": f"{gap_grouped / gap_random:.1f}",
+            "na7_sigma": _r3(r["sigma_log10"]["pooled_r2"]), "na7_S": _r3(r["S"]["pooled_r2"]), "na7_kappa": _r3(r["kappa_log10"]["pooled_r2"]),
+            "na7_n": _n(r["zT_direct"]["n"])}
 
 
 def new_analysis_values():
@@ -265,4 +293,8 @@ def new_analysis_values():
     v["na9_formulas"], v["na9_seen"], v["na9_unseen"] = _n(n9["estm_unique_formulas"]), _n(n9["formulas_seen_in_training"]), _n(n9["formulas_unseen_in_training"])
     v["na9_clusters"], v["na9_clusters_seen"] = _n(n9["estm_unique_clusters"]), _n(n9["clusters_seen_in_training"])
     assert n9["clusters_seen_in_training"] == int(base["estm_b_clusters"].replace(",", ""))
+    v7 = na7_values()
+    g = pav._json(GROUPED_DVD)  # the grouped run behind Table 10: its R2 values must be the ones printed there (the gap is taken from unrounded values)
+    assert _r3(g["zT_direct"]["pooled_r2"]) == base["dvd_direct"] and _r3(g["zT_derived"]["pooled_r2"]) == base["dvd_derived"]
+    v.update(v7)
     return v

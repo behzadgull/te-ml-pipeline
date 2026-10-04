@@ -56,7 +56,7 @@ The main contributions are:
 
 - composition-only ceilings for S, *σ*, *κ* and zT, tested against the independent ESTM database and [[PENDING: NA2: architecture independence (XGBoost, LightGBM, random forest, stacking)]];
 
-- a demonstration that direct zT regression outperforms the component-wise route [[PENDING: NA7: whether the conclusion is visible only under grouped validation]];
+- a demonstration that direct zT regression outperforms the component-wise route under both random and chemistry-cluster validation, with a gap <!--v:na7_ratio-->5.1<!--/v--> times larger under chemistry-cluster validation (<!--v:na7_grouped_gap-->0.186<!--/v--> against <!--v:na7_gap-->0.036<!--/v--> in R^2^);
 
 - [[PENDING: NA11: structure-aware screening contribution]]
 
@@ -357,15 +357,15 @@ Direct zT prediction was compared with the component-wise derivation S^2^*σ*T/*
 
 $\frac{\delta zT}{zT} \approx \sqrt{\left( 2\frac{\delta S}{S} \right)^{2} + \left( \frac{\delta\sigma}{\sigma} \right)^{2} + \left( \frac{\delta\kappa}{\kappa} \right)^{2}}$ (9)
 
-so the quadratic dependence on S doubles its relative error, and the weakest component model (*σ*, R^2^ = <!--v:dvd_sigma-->0.692<!--/v-->, against <!--v:dvd_S-->0.820<!--/v--> for S and <!--v:dvd_kappa-->0.821<!--/v--> for *κ*) adds a large further term. Back-transforming the log-space predictions of *σ* and *κ* with a smearing correction changes the derived R^2^ by <!--v:dvd_duan-->−0.005<!--/v-->, too little to alter the comparison. The individual component models remain useful diagnostically: a material predicted to have high S but low *σ*, for example, may benefit from carrier-concentration optimization through doping. Whether the two pathways agree under random-split validation, so that the advantage of direct prediction is visible only under chemistry-grouped validation, is [[PENDING: NA7]].
+so the quadratic dependence on S doubles its relative error, and the weakest component model (*σ*, R^2^ = <!--v:dvd_sigma-->0.692<!--/v-->, against <!--v:dvd_S-->0.820<!--/v--> for S and <!--v:dvd_kappa-->0.821<!--/v--> for *κ*) adds a large further term. Back-transforming the log-space predictions of *σ* and *κ* with a smearing correction changes the derived R^2^ by <!--v:dvd_duan-->−0.005<!--/v-->, too little to alter the comparison. The individual component models remain useful diagnostically: a material predicted to have high S but low *σ*, for example, may benefit from carrier-concentration optimization through doping. The comparison was repeated under random row-level validation (shuffled 5-fold, five repeats, the same <!--v:dvd_rows-->56,088<!--/v--> rows and the same frozen hyperparameters; Table 10). Direct prediction is again more accurate (R^2^ = <!--v:na7_direct-->0.917<!--/v--> vs <!--v:na7_derived-->0.880<!--/v-->), so the ordering does not depend on grouped validation. The size of the advantage does: the gap between the two pathways is <!--v:na7_gap-->0.036<!--/v--> under random validation and <!--v:na7_grouped_gap-->0.186<!--/v--> under chemistry-cluster validation (differences of unrounded R^2^), a factor of <!--v:na7_ratio-->5.1<!--/v-->. Random validation therefore understates how much the derived route loses when it has to generalize to unseen chemistry.
 
 <!-- BEGIN TABLE 10 -->
-**Table 10:** Direct versus component-wise zT prediction (chemistry-cluster CV, 56,088 rows with all four properties present, 4,139 clusters; each model uses its own target's frozen hyperparameters).
+**Table 10:** Direct versus component-wise zT prediction on the 56,088 rows with all four properties present (4,139 chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is 5 repeats x 5 folds of grouped folds; random CV is 5 repeats x 5 folds of shuffled row-level folds; both pool the out-of-fold predictions (n = 280,440).
 
-| **Pathway** | **R^2^** | **MAE** |
-|------------------------|----------|---------|
-| Direct (features → zT) | 0.727 | 0.132 |
-| Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 |
+| **Pathway** | **R^2^ (chemistry-cluster)** | **MAE (chemistry-cluster)** | **R^2^ (random)** | **MAE (random)** |
+|------------------------|----------|---------|----------|---------|
+| Direct (features → zT) | 0.727 | 0.132 | 0.917 | 0.072 |
+| Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 | 0.880 | 0.083 |
 <!-- END TABLE 10 -->
 
 

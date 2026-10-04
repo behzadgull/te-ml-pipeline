@@ -38,7 +38,7 @@ def _pend(na):
 
 
 def extra_values(v):
-    """Results of the new analyses (NA4, NA5, NA8, NA9); the analyses still to run keep their PENDING markers in the text."""
+    """Results of the new analyses (NA4, NA5, NA7, NA8, NA9); the analyses still to run keep their PENDING markers in the text."""
     return tv.new_analysis_values()
 
 
@@ -130,12 +130,15 @@ def table8(v):
 
 
 def table10(v):
-    """Direct versus derived zT."""
-    lines = [f"**Table 10:** Direct versus component-wise zT prediction (chemistry-cluster CV, {v['dvd_rows']} rows with all four properties present, "
-             f"{v['dvd_clusters']} clusters; each model uses its own target's frozen hyperparameters).", "",
-             "| **Pathway** | **R^2^** | **MAE** |", "|------------------------|----------|---------|",
-             f"| Direct (features → zT) | {v['dvd_direct']} | {v.get('mae_dvd_direct', _pend('NA8'))} |",
-             f"| Derived (S^2^*σ*T/*κ*) | {v['dvd_derived']} | {v.get('mae_dvd_derived', _pend('NA8'))} |"]
+    """Direct versus derived zT, under chemistry-cluster CV (Paper A run) and random row-level CV (NA7)."""
+    lines = [f"**Table 10:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
+             f"({v['dvd_clusters']} chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is 5 repeats x 5 folds "
+             f"of grouped folds; random CV is 5 repeats x 5 folds of shuffled row-level folds; both pool the out-of-fold predictions "
+             f"(n = {v.get('na7_n', _pend('NA7'))}).", "",
+             "| **Pathway** | **R^2^ (chemistry-cluster)** | **MAE (chemistry-cluster)** | **R^2^ (random)** | **MAE (random)** |",
+             "|------------------------|----------|---------|----------|---------|",
+             f"| Direct (features → zT) | {v['dvd_direct']} | {v.get('mae_dvd_direct', _pend('NA8'))} | {v.get('na7_direct', _pend('NA7'))} | {v.get('na7_mae_direct', _pend('NA7'))} |",
+             f"| Derived (S^2^*σ*T/*κ*) | {v['dvd_derived']} | {v.get('mae_dvd_derived', _pend('NA8'))} | {v.get('na7_derived', _pend('NA7'))} | {v.get('na7_mae_derived', _pend('NA7'))} |"]
     return "\n".join(lines)
 
 

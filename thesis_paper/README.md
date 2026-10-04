@@ -16,7 +16,9 @@ Do not edit generated text by hand: change the script and rerun it.
 | NA10 JARVIS | data prepared and featurised, seen/unseen flagged (`results/na10`); no predictions |
 | NA11 Materials Project screening | code written and tested on a JARVIS stand-in; the perovskite connectivity test validated (`results/na11_validation`); the Materials Project query itself needs `MP_API_KEY` and has not run |
 | NA12 literature oxides | two values extracted, the rest need figure digitisation (`reports/na12_measured_values.csv`) |
-| NA1, NA2, NA3, NA6, NA7 | need the GPU (`scripts/gpu/`) |
+| NA7 direct versus derived under random validation | done on Kaggle T4 x2, in the paper (`results/na7`) |
+| NA2, NA3, NA6, NA13 | scripts ready and smoke-tested on Linux (`scripts/kaggle/`, cells in `KAGGLE_CELLS.md`); not yet run |
+| NA1 | needs the department V100S (`scripts/gpu/`) |
 
 Citations: all 62 references were checked against Crossref (and publisher pages for the four without a DOI): `reports/citation_verification.csv`;
 numbers claimed in the text were checked against abstracts: `reports/claim_citation_check.csv`; the judgements and the changes they caused are
