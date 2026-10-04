@@ -194,6 +194,76 @@ bundles). The four fitted models (`final_a/models/*.json`) are in `final_a.tar.g
 bundle large (hundreds of MB), which Kaggle's output limit allows. If either status says `"complete": false`, upload that tar.gz as a dataset and
 rerun the same Cell 2 with `--restore-from <that tar.gz>` added to that analysis' command only.
 
+## 2c. Session G3 (GPU T4 x2): final models with the classifier plus the Materials Project candidates (GPU 0, then NA3 for S and kappa), NA3 for sigma and zT (GPU 1)
+
+Code commit for this session: `33e9662838ba299a30bc8fccba0caee26d6bc435` (it contains the NA6 classifier at `thesis_paper/results/na6/20261004T102905/final_classifier.json`, a plain
+tracked file, so the clone has it; the scripts are unchanged since the commit of the earlier sessions). Both GPUs are busy: GPU 0 runs the final-models script (a few minutes) and then
+NA3 for S and kappa; GPU 1 runs NA3 for sigma and zT. Accelerator: GPU T4 x2. Internet on.
+
+**Attach** (three datasets, no previous output):
+1. the snapfix dataset `muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix`;
+2. `thesis-jarvis-featurized` (`jarvis_dft3d_seebeck_featurized.csv`, SHA256 `3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49`);
+3. a new private dataset `thesis-mp-candidates` holding exactly `mp_perovskite_candidates_featurized_20261004T135055.csv` (local path
+   `C:\Users\choha\te-ml-pipeline\data\external\mp\mp_perovskite_candidates_featurized_20261004T135055.csv`; 409 rows, 1,178,742 bytes, SHA256
+   `6386c09781667cc86a52d23dee1ee6f86ea899c39cea4d22f4ca10e143aec95c`).
+
+**Download afterwards**: `final_b.tar.gz`, `na3_a.tar.gz`, `na3_b.tar.gz`, plus the printed SHA256 lines. `final_b` holds `predictions_jarvis.csv` (with the classifier's sign and
+`sign_overridden`), `predictions_mp.csv` (409 candidates x 300 to 800 K in 100 K steps, with E_hull) and the four fitted models.
+
+Cell 1: the same clone-and-install cell as S0, with `COMMIT = "33e9662838ba299a30bc8fccba0caee26d6bc435"`.
+
+Cell 2 (bash):
+
+```bash
+%%bash
+cd /kaggle/working/te-ml-pipeline
+PYV=/kaggle/working/venv/bin/python
+nvidia-smi --query-gpu=index,name,memory.total --format=csv
+for g in 0 1; do
+  CUDA_VISIBLE_DEVICES=$g $PYV -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('GPU $g: xgboost', x.__version__, 'cuda fit ok')" || { echo "GPU $g: xgboost cuda fit FAILED"; exit 1; }
+done
+H=$(git rev-parse HEAD)
+K=thesis_paper/scripts/kaggle
+J=$(find /kaggle/input -name jarvis_dft3d_seebeck_featurized.csv | head -1)
+M=$(find /kaggle/input -name mp_perovskite_candidates_featurized_20261004T135055.csv | head -1)
+CLF=thesis_paper/results/na6/20261004T102905
+echo "jarvis: $J"; echo "mp: $M"
+sha256sum "$J" "$M" $CLF/final_classifier.json
+[ "$(sha256sum "$J" | cut -d' ' -f1)" = "3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49" ] || { echo "JARVIS CSV hash mismatch"; exit 1; }
+[ "$(sha256sum "$M" | cut -d' ' -f1)" = "6386c09781667cc86a52d23dee1ee6f86ea899c39cea4d22f4ca10e143aec95c" ] || { echo "MP CSV hash mismatch"; exit 1; }
+[ "$(sha256sum $CLF/final_classifier.json | cut -d' ' -f1)" = "11b20af8138e815ae6aeb04cecd3c92ed62b4ddf48aa15f84a931d0a9b0363c7" ] || { echo "classifier hash mismatch"; exit 1; }
+
+gpu0() {
+  CUDA_VISIBLE_DEVICES=0 $PYV $K/na_final_models.py --out-dir /kaggle/working/final_b --expect-commit $H --device cuda --time-budget-hours 10.5 \
+      --jarvis-csv "$J" --jarvis-sha256 3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49 \
+      --mp-csv "$M" --mp-sha256 6386c09781667cc86a52d23dee1ee6f86ea899c39cea4d22f4ca10e143aec95c \
+      --classifier-dir $CLF --classifier-sha256 11b20af8138e815ae6aeb04cecd3c92ed62b4ddf48aa15f84a931d0a9b0363c7 > /kaggle/working/logs/final_b.log 2>&1
+  echo $? > /kaggle/working/logs/rc_final_b
+  CUDA_VISIBLE_DEVICES=0 $PYV $K/na3_shap.py --targets S,kappa --out-dir /kaggle/working/na3_a --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na3_a.log 2>&1
+  echo $? > /kaggle/working/logs/rc_na3_a
+}
+gpu0 &
+PA=$!
+CUDA_VISIBLE_DEVICES=1 $PYV $K/na3_shap.py --targets sigma,zT --out-dir /kaggle/working/na3_b --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na3_b.log 2>&1 &
+PB=$!
+wait $PA; wait $PB
+echo "exit codes: final_b $(cat /kaggle/working/logs/rc_final_b), na3_a $(cat /kaggle/working/logs/rc_na3_a)"
+tail -3 /kaggle/working/logs/final_b.log /kaggle/working/logs/na3_a.log /kaggle/working/logs/na3_b.log
+cat /kaggle/working/final_b/status.json; echo; cat /kaggle/working/na3_a/status.json; echo; cat /kaggle/working/na3_b/status.json; echo
+```
+
+Cell 3 (bash): hashes of what to download.
+
+```bash
+%%bash
+ls -la /kaggle/working/final_b.tar.gz /kaggle/working/na3_a.tar.gz /kaggle/working/na3_b.tar.gz
+sha256sum /kaggle/working/final_b.tar.gz /kaggle/working/na3_a.tar.gz /kaggle/working/na3_b.tar.gz
+ls -la /kaggle/working/final_b/models /kaggle/working/final_b/predictions_mp.csv /kaggle/working/final_b/predictions_jarvis.csv
+```
+
+If a status says `"complete": false` (NA3 is the long part: 25 folds per target, each a fit plus TreeSHAP on 20,000 rows; per-unit time on T4 unmeasured), upload that tar.gz as a
+dataset and rerun Cell 2 with `--restore-from <that tar.gz>` added to that process only (`na3_a`, `na3_b` or `final_b`). `na3_a` and `na3_b` have disjoint targets, so they are not merged.
+
 ## 3. Session C1 (CPU, Accelerator None): NA2 random forest
 
 Accelerator: None. Internet on. Attach the snapfix dataset. No previous output.
