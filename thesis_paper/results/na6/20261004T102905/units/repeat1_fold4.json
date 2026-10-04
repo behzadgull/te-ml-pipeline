@@ -1,0 +1,12 @@
+{
+ "unit": "repeat1_fold4",
+ "meta": {
+  "repeat": 1,
+  "fold": 4,
+  "n_train": 148045,
+  "n_test": 37011,
+  "accuracy": 0.9448812515198184,
+  "seconds": 19.160668271999953
+ },
+ "has_arrays": true
+}
