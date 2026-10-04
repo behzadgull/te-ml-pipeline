@@ -72,3 +72,4 @@ thesis_paper/paper/build/
 # thesis paper: track CSV reports
 !thesis_paper/reports/**/*.csv
 !thesis_paper/results/**/*.csv
+!thesis_paper/docs/*.csv
