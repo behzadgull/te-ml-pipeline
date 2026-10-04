@@ -78,3 +78,13 @@ uses only the committed sensitivity and training-cluster tables (`results/na11_s
 5. **Values** are read from the PDFs only, with page and figure or table; values digitised from a figure are marked as digitised with the method (tool, axis calibration); values from a
    table or the text are marked as such. The values file is `docs/na12_literature_values.csv`; the comparison script (`scripts/na12_literature_comparison.py`) is run only after it is
    filled and committed.
+
+### 2026-10-05 addendum to B (before any prediction for the literature compounds was looked at)
+
+- **Papers (DOI, Crossref-checked)** are listed in `source/pdfs/README.md`: CsSnI3 10.1021/acsaem.2c01936; LaCoO3 10.1080/14786435.2016.1263404; LaRhO3 10.1007/s11664-009-0666-x; La-doped BaSnO3
+  10.1039/d0ce00702a; La- and Nb-doped SrTiO3 10.1063/1.1847723; doped CaMnO3 10.1006/jssc.1995.1384 and 10.1109/ict.2006.331291. BaSnO3 and LaRhO3 stay in only if the paper gives the
+  values (the check is the values file itself).
+- **Value selection rule** (README section): all tabulated or stated values at 300 K up to but not including 800 K; plotted-only properties digitised at 300, 400, 500, 600 and 700 K. A value at
+  800 K is recorded and not compared, because the pipeline's 25 K bins cover 300 K to 800 K exclusive.
+- **Script**: `scripts/na12_literature_comparison.py` (tested on synthetic rows for PbTe and Bi2Te3 only, never for a pre-registered compound). It compares the out-of-fold predictions at two
+  levels (exact composition; cluster-level) and refits nothing; with an empty values file it stops with exit code 3.

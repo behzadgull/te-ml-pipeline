@@ -34,3 +34,24 @@ the paper does not support.
 | `borlido2019large.pdf` | see refs.bib | PBE band gap underestimation (qualitative; check the claim) |
 
 Already read from open versions (no download needed): Ma & Poon (arXiv), Ward et al. (arXiv), Bartel et al. (Europe PMC), Androulakis et al. (arXiv preprint).
+
+## NA12 literature validation (pre-registration B, `docs/decisions.md`, 2026-10-05)
+
+Papers selected before any out-of-fold prediction for these compounds was looked at. Every DOI below was matched to the title, first author and journal by Crossref on 2026-10-05.
+Values are read from the PDFs only (page and figure or table) into `docs/na12_literature_values.csv`; the comparison (`scripts/na12_literature_comparison.py`) is run after that file is
+filled and committed. Name each file `<first author><year>.pdf`.
+
+| File name | DOI | Compound(s) to read | Notes |
+|---|---|---|---|
+| `sebastialuna2022.pdf` | 10.1021/acsaem.2c01936 | CsSnI3 (vacuum-deposited films) | S, sigma, kappa as given; open access (PMC9400028) |
+| `singh2016.pdf` | 10.1080/14786435.2016.1263404 | LaCoO3 | open version arXiv:1606.01539 |
+| `shibasaki2009.pdf` | 10.1007/s11664-009-0666-x | LaRhO3 (undoped member of the B-site series) | related open preprint arXiv:0712.1626 (LaRh1-xNixO3); read the undoped member only if the paper tabulates it |
+| `rajasekaran2020.pdf` | 10.1039/d0ce00702a | La-doped BaSnO3 (undoped BaSnO3 if reported) | the BaSnO3 literature found is for La-doped samples; compositions as written in the paper |
+| `ohta2005.pdf` | 10.1063/1.1847723 | La- and Nb-doped SrTiO3 single crystals | S, sigma (and kappa if given) against temperature |
+| `ohtaki1995.pdf` | 10.1006/jssc.1995.1384 | (Ca0.9M0.1)MnO3, M = Y, La, Ce, Sm, In, Sn, Sb, Pb, Bi | doped CaMnO3; all listed M are in the candidate set, see the rule below |
+| `flahaut2006.pdf` | 10.1109/ict.2006.331291 | Yb-substituted CaMnO3 | already listed above as `flahaut2006effect.pdf` |
+
+Selection rule for the values (set now, before any prediction was looked at): every value of S, sigma (or resistivity), kappa and zT that a paper tabulates or states in the text at a temperature
+from 300 K up to but not including 800 K, for every composition of the paper that matches one of the compounds above (dopants included); where a property is only plotted, it is digitised at
+300, 400, 500, 600 and 700 K (the 100 K grid of the screening) wherever the plotted curve covers that temperature, and each such value is marked `digitised` with the tool and the axis
+calibration. A value at exactly 800 K is recorded but not compared (the cleaning pipeline's 25 K bins end at 800 K, exclusive).
