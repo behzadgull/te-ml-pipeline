@@ -1,0 +1,202 @@
+{
+  "counts_per_step": {
+    "jarvis_entries_total": 93902,
+    "with_seebeck_n_and_p": 23218,
+    "featurised": 23218,
+    "predicted": 23218,
+    "same_sign_entries": 13123,
+    "opposite_sign_entries": 10089,
+    "neither": 6,
+    "same_sign_with_reference_ge_20_uV_per_K": 3885,
+    "composition_seen": 885,
+    "cluster_seen": 1150,
+    "abx3_stoichiometry": 1319,
+    "abx3_stoichiometry_cluster_unseen": 1255
+  },
+  "strata": {
+    "all": {
+      "n": 23218,
+      "n_clusters": 18168,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.22732114209022916,
+      "spearman_ci95_cluster_bootstrap": [
+        0.20758531438841654,
+        0.24468611584674677
+      ],
+      "median_abs_pred": 48.39885330200195,
+      "median_abs_jarvis_mean": 33.03,
+      "share_predicted_p_type": 0.6248600223964166,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 3885,
+        "sign_agreement": 0.503989703989704,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.4856830829040744,
+          0.522017819706499
+        ],
+        "share_jarvis_positive": 0.5292149292149292,
+        "share_predicted_positive": 0.6324324324324324,
+        "signed_spearman": 0.009011456283844402,
+        "r2_signed": -1.0498704355637165
+      }
+    },
+    "same_sign_entries": {
+      "n": 13123,
+      "n_clusters": 10868,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.08923361540663237,
+      "spearman_ci95_cluster_bootstrap": [
+        0.07015663928155981,
+        0.1097116345923334
+      ],
+      "median_abs_pred": 38.840145111083984,
+      "median_abs_jarvis_mean": 11.123333333333333,
+      "share_predicted_p_type": 0.6796464223119714,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 3885,
+        "sign_agreement": 0.503989703989704,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.48719196216055966,
+          0.5207678758916763
+        ],
+        "share_jarvis_positive": 0.5292149292149292,
+        "share_predicted_positive": 0.6324324324324324,
+        "signed_spearman": 0.009011456283844402,
+        "r2_signed": -1.0498704355637165
+      }
+    },
+    "opposite_sign_entries": {
+      "n": 10089,
+      "n_clusters": 7693,
+      "spearman_abs_pred_vs_mean_abs_jarvis": -0.07990711658436041,
+      "spearman_ci95_cluster_bootstrap": [
+        -0.10563413732395129,
+        -0.05252851998805987
+      ],
+      "median_abs_pred": 64.84117889404297,
+      "median_abs_jarvis_mean": 279.4316666666666,
+      "share_predicted_p_type": 0.5536723163841808
+    },
+    "abx3_stoichiometry": {
+      "n": 1319,
+      "n_clusters": 987,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.23941189416992636,
+      "spearman_ci95_cluster_bootstrap": [
+        0.16676687362792467,
+        0.3079365210880429
+      ],
+      "median_abs_pred": 50.94783020019531,
+      "median_abs_jarvis_mean": 104.92166666666665,
+      "share_predicted_p_type": 0.4495830174374526,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 211,
+        "sign_agreement": 0.4786729857819905,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.4077669902912621,
+          0.5458833072275676
+        ],
+        "share_jarvis_positive": 0.5355450236966824,
+        "share_predicted_positive": 0.6208530805687204,
+        "signed_spearman": -0.09053714533565826,
+        "r2_signed": -3.7720800978476188
+      }
+    },
+    "cluster_seen": {
+      "n": 1150,
+      "n_clusters": 469,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.3774572891901327,
+      "spearman_ci95_cluster_bootstrap": [
+        0.25448835620808286,
+        0.47624988339655105
+      ],
+      "median_abs_pred": 101.3345718383789,
+      "median_abs_jarvis_mean": 72.54666666666665,
+      "share_predicted_p_type": 0.5660869565217391,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 188,
+        "sign_agreement": 0.6117021276595744,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.5245901639344263,
+          0.6885394546844474
+        ],
+        "share_jarvis_positive": 0.675531914893617,
+        "share_predicted_positive": 0.6914893617021277,
+        "signed_spearman": 0.1726491047144361,
+        "r2_signed": -7.591078890050266
+      }
+    },
+    "cluster_unseen": {
+      "n": 22068,
+      "n_clusters": 17699,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.2184363980973346,
+      "spearman_ci95_cluster_bootstrap": [
+        0.1983321440838087,
+        0.2366133148552517
+      ],
+      "median_abs_pred": 47.18768310546875,
+      "median_abs_jarvis_mean": 32.0325,
+      "share_predicted_p_type": 0.6279227841218054,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 3697,
+        "sign_agreement": 0.49851230727616985,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.4803786460143006,
+          0.5154935644150177
+        ],
+        "share_jarvis_positive": 0.5217744116851502,
+        "share_predicted_positive": 0.6294292669732215,
+        "signed_spearman": -0.007091427280632535,
+        "r2_signed": -0.8763539101434008
+      }
+    },
+    "composition_seen": {
+      "n": 885,
+      "n_clusters": 399,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.457752522469222,
+      "spearman_ci95_cluster_bootstrap": [
+        0.34600324151704204,
+        0.5564646177229089
+      ],
+      "median_abs_pred": 109.0964813232422,
+      "median_abs_jarvis_mean": 46.396666666666675,
+      "share_predicted_p_type": 0.5694915254237288,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 163,
+        "sign_agreement": 0.6134969325153374,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.52,
+          0.6946305664533003
+        ],
+        "share_jarvis_positive": 0.6871165644171779,
+        "share_predicted_positive": 0.7055214723926381,
+        "signed_spearman": 0.19013252409728354,
+        "r2_signed": -9.273775632488158
+      }
+    },
+    "composition_unseen": {
+      "n": 22333,
+      "n_clusters": 17771,
+      "spearman_abs_pred_vs_mean_abs_jarvis": 0.21845786180552718,
+      "spearman_ci95_cluster_bootstrap": [
+        0.19727173793924282,
+        0.2367291117156448
+      ],
+      "median_abs_pred": 47.66613006591797,
+      "median_abs_jarvis_mean": 32.61,
+      "share_predicted_p_type": 0.6270541351363453,
+      "sign_analysis_same_sign_entries_with_reference_ge_20": {
+        "n": 3722,
+        "sign_agreement": 0.49919398173025253,
+        "sign_agreement_ci95_cluster_bootstrap": [
+          0.48100872095497627,
+          0.5170272971522637
+        ],
+        "share_jarvis_positive": 0.522299838796346,
+        "share_predicted_positive": 0.6292315959161741,
+        "signed_spearman": -0.006471244401165781,
+        "r2_signed": -0.8975199031358758
+      }
+    }
+  },
+  "min_reference_uV_per_K": 20.0,
+  "n_boot": 1000,
+  "predicted_sign_source": "regressor",
+  "definitions": "see the module docstring: sign is analysed only where JARVIS gives one (n and p values of the same sign); magnitude reference is mean(|n|,|p|)"
+}
