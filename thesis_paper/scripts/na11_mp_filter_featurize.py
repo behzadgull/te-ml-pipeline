@@ -97,6 +97,8 @@ def main():
         standin_from_jarvis(qpath)
     q = json.loads(qpath.read_text(encoding="utf-8"))
     A, B = q["A"], q["B"]
+    inputs = {"training_csv": TRAIN, "perovskite_test": "thesis_paper/scripts/perovskite_test.py"}
+    prov = rr.provenance(inputs, __file__)  # before anything is written, so that tree_clean describes the code, not this run's own output folder
 
     if not standin:
         assert q["meta"]["gap_window_B"] == [GAP_WINDOW[0], GAP_WINDOW[1] * GAP_SENS_FACTOR], "the query's band-gap window is not the widened one"
@@ -186,8 +188,6 @@ def main():
     qcfg = Path(str(qpath).replace(".json", ".config.json"))
     if not standin and qcfg.exists():
         (out_dir / "query_config.json").write_bytes(qcfg.read_bytes())
-    inputs = {"training_csv": TRAIN, "perovskite_test": "thesis_paper/scripts/perovskite_test.py"}
-    prov = rr.provenance(inputs, __file__)
     prov["query"] = {"path": str(qpath) if standin else args.query, "sha256": rr.sha256_file(qpath), "meta": q["meta"]}
     prov["featurised_matrix"] = {"path": str(feat_path), "sha256": rr.sha256_file(feat_path), "bytes": feat_path.stat().st_size}
     prov["standin_not_mp"] = standin
