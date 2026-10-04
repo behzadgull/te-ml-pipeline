@@ -139,8 +139,60 @@ sha256sum /kaggle/working/na7.tar.gz
 ```
 
 Download `na7.tar.gz` (and `na7_a.tar.gz`, `na7_b.tar.gz` if `status.json` of the merge says `"complete": false`). To continue an incomplete run,
-start G2 with the same Cell 2, adding `--restore-from <that shard's tar.gz>` to each shard's command (shard a restores `na7_a`, shard b restores
+start a further NA7 session with the same Cell 2, adding `--restore-from <that shard's tar.gz>` to each shard's command (shard a restores `na7_a`, shard b restores
 `na7_b`), then repeat Cell 3.
+
+## 2b. Session G2 (GPU T4 x2): NA6 classifier on GPU 0, final models (no classifier) on GPU 1
+
+Accelerator: GPU T4 x2. Internet on. Attach two datasets: the snapfix dataset and the private dataset `thesis-jarvis-featurized`. No previous output.
+`thesis-jarvis-featurized` must hold exactly one file, `jarvis_dft3d_seebeck_featurized.csv` (72,098,294 bytes, SHA256
+`3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49`; local path `C:\Users\choha\te-ml-pipeline\data\external\jarvis\jarvis_dft3d_seebeck_featurized.csv`).
+The cell finds it with `find`, and the script refuses it if the SHA256 differs.
+
+Cell 1: the same clone-and-install cell as S0 (copy it unchanged).
+
+Cell 2 (bash): both GPUs checked, then the two analyses run side by side and the cell waits for both.
+
+```bash
+%%bash
+cd /kaggle/working/te-ml-pipeline
+PYV=/kaggle/working/venv/bin/python
+nvidia-smi --query-gpu=index,name,memory.total --format=csv
+for g in 0 1; do
+  CUDA_VISIBLE_DEVICES=$g $PYV -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('GPU $g: xgboost', x.__version__, 'cuda fit ok')" || { echo "GPU $g: xgboost cuda fit FAILED"; exit 1; }
+done
+H=$(git rev-parse HEAD)
+J=$(find /kaggle/input -name jarvis_dft3d_seebeck_featurized.csv | head -1)
+echo "jarvis csv: $J"
+sha256sum "$J"
+K=thesis_paper/scripts/kaggle
+CUDA_VISIBLE_DEVICES=0 $PYV $K/na6_classifier.py --out-dir /kaggle/working/na6 --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na6.log 2>&1 &
+PA=$!
+CUDA_VISIBLE_DEVICES=1 $PYV $K/na_final_models.py --out-dir /kaggle/working/final_a --expect-commit $H --device cuda --time-budget-hours 10.5 \
+    --jarvis-csv "$J" --jarvis-sha256 3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49 > /kaggle/working/logs/final_a.log 2>&1 &
+PB=$!
+wait $PA; RA=$?
+wait $PB; RB=$?
+echo "exit codes: na6 $RA, final models $RB"
+tail -4 /kaggle/working/logs/na6.log; tail -4 /kaggle/working/logs/final_a.log
+cat /kaggle/working/na6/status.json; echo; cat /kaggle/working/final_a/status.json; echo
+```
+
+Cell 3 (bash): what to download, and the classifier's hash for the later final-models run.
+
+```bash
+%%bash
+ls -la /kaggle/working/na6.tar.gz /kaggle/working/final_a.tar.gz
+sha256sum /kaggle/working/na6.tar.gz /kaggle/working/final_a.tar.gz
+sha256sum /kaggle/working/na6/final_classifier.json
+ls -la /kaggle/working/final_a/models /kaggle/working/final_a/predictions_jarvis.csv
+```
+
+Download: `na6.tar.gz` and `final_a.tar.gz`; send me both SHA256 lines and the `final_classifier.json` SHA256 (the second final-models run needs it
+as `--classifier-sha256`). Not downloaded separately: the logs in `/kaggle/working/logs/` (the scripts' own run_config and results are in the
+bundles). The four fitted models (`final_a/models/*.json`) are in `final_a.tar.gz`; their size is unmeasured, and a forest of this depth may make the
+bundle large (hundreds of MB), which Kaggle's output limit allows. If either status says `"complete": false`, upload that tar.gz as a dataset and
+rerun the same Cell 2 with `--restore-from <that tar.gz>` added to that analysis' command only.
 
 ## 3. Session C1 (CPU, Accelerator None): NA2 random forest
 
