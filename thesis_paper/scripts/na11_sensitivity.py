@@ -29,7 +29,7 @@ sys.path.insert(0, str(HERE))
 import run_record as rr  # noqa: E402
 
 REPO = HERE.parents[1]
-FILTER_RUN = "thesis_paper/results/na11/20261004T100423"
+FILTER_RUN = "thesis_paper/results/na11/20261004T135055"
 TOXIC_MAIN = {"Tl", "Hg", "Cd", "As", "Be"}
 TOXIC_RELAXED = {"Hg", "Cd"}
 GAP_WINDOW = (0.1, 3.0)

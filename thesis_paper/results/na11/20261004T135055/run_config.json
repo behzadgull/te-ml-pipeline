@@ -1,0 +1,52 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "perovskite_test": {
+      "path": "thesis_paper/scripts/perovskite_test.py",
+      "sha256": "9e66c29d47d8402457c1001634909666f948ff12389a90a70b1eb44e45e1415f",
+      "bytes": 6543
+    }
+  },
+  "git_head": "a9045c73dfa2067deac7ff9350070dea7a8d6f31",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na11_mp_filter_featurize.py",
+  "script_sha256": "4bcaf96e992780c8238b9ac53bb096ba7d91b4e53da2de9897441f23c2007149",
+  "python": "3.12.10",
+  "query": {
+    "path": "data/external/mp/mp_query_20261004T134220.json",
+    "sha256": "2bd8bcf523a567bda7085cb93fc98694fe54336536af3393d63ababcc392a30a",
+    "meta": {
+      "utc_stamp": "20261004T134220",
+      "mp_api_version": "0.46.5",
+      "mp_database_version": "2026.04.13",
+      "e_hull_max": 0.1,
+      "e_hull_main": 0.05,
+      "gap_window_main": [
+        0.1,
+        3.0
+      ],
+      "gap_window_B": [
+        0.1,
+        4.5
+      ],
+      "gap_sens_factor": 1.5,
+      "n_A": 101161,
+      "n_B": 18092
+    }
+  },
+  "featurised_matrix": {
+    "path": "C:\\Users\\choha\\te-ml-pipeline\\data\\external\\mp\\mp_perovskite_candidates_featurized_20261004T135055.csv",
+    "sha256": "6386c09781667cc86a52d23dee1ee6f86ea899c39cea4d22f4ca10e143aec95c",
+    "bytes": 1178742
+  },
+  "standin_not_mp": false,
+  "perovskite_test_parameters": {
+    "BOND_FACTOR": 1.25,
+    "MIN_OPPOSITE_ANGLE": 145.0
+  }
+}
