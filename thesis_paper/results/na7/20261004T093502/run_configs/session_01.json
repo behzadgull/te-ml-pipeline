@@ -1,0 +1,75 @@
+{
+ "analysis": "na7_random_dvd",
+ "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+ "git_head": "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5",
+ "params": {
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0,
+  "smoke": false,
+  "hyperparams": {
+   "zT_direct": {
+    "n_estimators": 500,
+    "max_depth": 9,
+    "learning_rate": 0.021879194372117446,
+    "subsample": 0.6803687069914941,
+    "colsample_bytree": 0.6984141242996358,
+    "min_child_weight": 4,
+    "reg_lambda": 1.7133930619789375,
+    "reg_alpha": 0.050328646865956124
+   },
+   "S": {
+    "n_estimators": 500,
+    "max_depth": 10,
+    "learning_rate": 0.03183308682237681,
+    "subsample": 0.8969010059780653,
+    "colsample_bytree": 0.5061521655432422,
+    "min_child_weight": 4,
+    "reg_lambda": 0.6494186419907995,
+    "reg_alpha": 8.79300330033791
+   },
+   "sigma_log10": {
+    "n_estimators": 550,
+    "max_depth": 10,
+    "learning_rate": 0.02669280098570686,
+    "subsample": 0.8676496872090056,
+    "colsample_bytree": 0.5166510752439176,
+    "min_child_weight": 4,
+    "reg_lambda": 0.8073661687820751,
+    "reg_alpha": 6.547909796510876
+   },
+   "kappa_log10": {
+    "n_estimators": 350,
+    "max_depth": 9,
+    "learning_rate": 0.05741815501967946,
+    "subsample": 0.9052182073106718,
+    "colsample_bytree": 0.7081730343531392,
+    "min_child_weight": 6,
+    "reg_lambda": 0.05444122226792827,
+    "reg_alpha": 3.3513428043937066
+   }
+  },
+  "split": "kfold_shuffled_rows"
+ },
+ "dataset_path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+ "dataset_bytes": 974854507,
+ "tree_clean": true,
+ "dirty_files": [],
+ "allow_dirty": false,
+ "expect_commit": "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5",
+ "smoke": false,
+ "device": "cuda",
+ "script": "thesis_paper/scripts/kaggle/na7_random_dvd.py",
+ "script_sha256": "a6f3db63dc91c8a7c14cbc41f73074edb4959ba55dba00e4383818afbe6013f9",
+ "python": "3.12.3",
+ "started_utc": "2026-10-04T09:08:33Z",
+ "numpy": "1.26.4",
+ "pandas": "2.2.2",
+ "xgboost": "2.0.3",
+ "sklearn": "1.4.2",
+ "lightgbm": "4.3.0",
+ "optuna": "3.6.1",
+ "gpu": "Tesla T4, 580.178.04, 15360 MiB\nTesla T4, 580.178.04, 15360 MiB",
+ "finished_utc": "2026-10-04T09:20:07Z",
+ "elapsed_hours": 0.19713991371777778
+}

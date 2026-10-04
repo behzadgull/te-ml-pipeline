@@ -1,0 +1,17 @@
+{
+ "unit": "repeat3_fold1",
+ "meta": {
+  "repeat": 3,
+  "fold": 1,
+  "n_train": 44870,
+  "n_test": 11218,
+  "fold_r2": {
+   "zT_direct": 0.9220046394154989,
+   "S": 0.9789508169058139,
+   "sigma_log10": 0.9156969292535188,
+   "kappa_log10": 0.9486402759710698,
+   "zT_derived": 0.8879371684512763
+  }
+ },
+ "has_arrays": true
+}
