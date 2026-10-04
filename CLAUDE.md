@@ -291,6 +291,19 @@ output.**
 
 **Standing rule (2026-09-26): Commit only when the user says "commit".**
 
+**Standing rule (2026-10-04), thesis paper: no number from the thesis is
+trusted, including thresholds and quoted literature values.** Every number
+in `thesis_paper/paper/paper.md` is GENERATED (a marker filled from a
+committed artifact), CITED (verified against the source: the specific value,
+with page, table or equation; recorded in `thesis_paper/docs/number_registry.csv`)
+or DESIGN (a constant from a committed config, with its justification in the
+text). `thesis_paper/scripts/audit_numbers.py` classifies every number and the
+build fails on any unclassified number; `thesis_carryover_check.py` lists the
+values that also occur in the original thesis for review; a DESIGN constant
+taken from the thesis needs a literature justification or is flagged
+unjustified in `thesis_paper/docs/design_constants.csv`. Details:
+`thesis_paper/docs/decisions.md`.
+
 **CAVEATS (2026-09-11) -- state each plainly, do not overclaim precision
 beyond what these numbers support:**
 

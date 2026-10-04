@@ -243,6 +243,63 @@ def na7_values():
             "na7_n": _n(r["zT_direct"]["n"])}
 
 
+def config_value(pointer):
+    """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
+    followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
+    import ast
+
+    m = re.fullmatch(r"([^:]+):(\w+)(?:\[([^\]]+)\])?(?:([*/])([\d.]+))?", pointer)
+    assert m, f"bad config pointer {pointer!r}"
+    path, name, sub, op, k = m.groups()
+    tree = ast.parse((Path(__file__).resolve().parents[2] / path).read_text(encoding="utf-8"))
+    val = None
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and node.targets[0].id == name:
+            val = ast.literal_eval(node.value)
+    assert val is not None, f"{name} not found in {path}"
+    if sub is not None:
+        val = val[ast.literal_eval(sub)]
+    if op:
+        val = val * float(k) if op == "*" else val / float(k)
+    return f"{val:g}"
+
+
+def table_values(base):
+    """Cell values of Tables 2, 4 and 6 that the block functions used to read straight from the artifacts. They are keys of the value dictionary so
+    that every number in a generated block is traceable (audit_numbers.py); the formatting is unchanged."""
+    minus = "−"
+    v = {}
+
+    def f(x, dp):
+        return f"{x:,.{dp}f}".replace("-", minus)
+
+    n4 = na_json("na4")["per_target"]
+    dps = {"S": 1, "sigma": 0, "kappa": 2, "zT": 3}
+    for t in T4:
+        d, dp = n4[t], dps[t]
+        v[f"t2_{t}_n"], v[f"t2_{t}_cov"] = f"{d['n']:,}", f"{100 * d['coverage']:.1f}%"
+        v[f"t2_{t}_mean"], v[f"t2_{t}_median"], v[f"t2_{t}_sd"] = f(d["mean"], dp), f(d["median"], dp), f(d["std"], dp)
+        if t == "sigma":
+            e = int(math.floor(math.log10(d["max"])))
+            assert e == 6, "the table caption units assume a maximum of order 10^6"
+            v[f"t2_{t}_min"], v[f"t2_{t}_max"] = f"{d['min']:,.0f}", f"{d['max'] / 10 ** e:.2f} × 10^{e}^"
+        elif t == "S":
+            v[f"t2_{t}_min"], v[f"t2_{t}_max"] = f(d["min"], 0), f(d["max"], 1)
+        else:
+            v[f"t2_{t}_min"], v[f"t2_{t}_max"] = f(d["min"], dp), f(d["max"], dp)
+    hp_files = {t: pav._json(pav.HYPER.format(t))["best_params"] for t in T4}
+    rng = dict(re.findall(r"(\w+) ([^;]+)", base["search_text"].replace("; ", ";").replace(";", "; ")))
+    for k in ("n_estimators", "max_depth", "learning_rate", "subsample", "colsample_bytree", "min_child_weight", "reg_lambda", "reg_alpha"):
+        v[f"t4_range_{k}"] = rng[k].replace("..", "–").strip().rstrip(";")
+        for t in T4:
+            x = hp_files[t][k]
+            v[f"t4_{t}_{k}"] = f"{x:.4g}" if isinstance(x, float) else str(x)
+    lad = pav._json(pav.LADDER)["runs"]
+    for t in T4:
+        v[f"comp_sd_{t}"] = f"{lad[f'{t}_composition_full']['per_repeat_r2_std']:.3f}"
+    return v
+
+
 def new_analysis_values():
     """Formatted values from the NA4, NA5, NA8 and NA9 results."""
     v = {}
@@ -293,6 +350,7 @@ def new_analysis_values():
     v["na9_formulas"], v["na9_seen"], v["na9_unseen"] = _n(n9["estm_unique_formulas"]), _n(n9["formulas_seen_in_training"]), _n(n9["formulas_unseen_in_training"])
     v["na9_clusters"], v["na9_clusters_seen"] = _n(n9["estm_unique_clusters"]), _n(n9["clusters_seen_in_training"])
     assert n9["clusters_seen_in_training"] == int(base["estm_b_clusters"].replace(",", ""))
+    v.update(table_values(base))
     v7 = na7_values()
     g = pav._json(GROUPED_DVD)  # the grouped run behind Table 10: its R2 values must be the ones printed there (the gap is taken from unrounded values)
     assert _r3(g["zT_direct"]["pooled_r2"]) == base["dvd_direct"] and _r3(g["zT_derived"]["pooled_r2"]) == base["dvd_derived"]

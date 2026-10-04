@@ -1,0 +1,39 @@
+{
+  "numbers_total": 885,
+  "by_class": {
+    "CITED": 6,
+    "DESIGN": 18,
+    "EXCLUDED:ENUM": 9,
+    "EXCLUDED:EQNUM": 9,
+    "EXCLUDED:FRONT": 1,
+    "EXCLUDED:LINK": 5,
+    "EXCLUDED:MATH": 17,
+    "EXCLUDED:NOTATION": 171,
+    "EXCLUDED:SECTION": 34,
+    "EXCLUDED:XREF": 97,
+    "GENERATED": 400,
+    "UNCLASSIFIED": 118
+  },
+  "unclassified_or_invalid": 118,
+  "unclassified_by_section": {
+    "1": 9,
+    "2.1": 3,
+    "2.2": 12,
+    "2.3": 5,
+    "2.4": 30,
+    "3.2.1": 1,
+    "3.2.2": 14,
+    "3.3": 1,
+    "3.5": 8,
+    "3.6": 5,
+    "3.7": 1,
+    "4.1.1": 1,
+    "4.1.2": 14,
+    "4.2": 2,
+    "4.3": 1,
+    "4.4": 5,
+    "4.5": 3,
+    "4.5.1": 1,
+    "5": 2
+  }
+}

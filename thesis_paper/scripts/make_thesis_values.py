@@ -24,11 +24,13 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import paper_a_values as pav  # noqa: E402
 import thesis_values as tv  # noqa: E402
+import audit_numbers as an  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 PAPER = REPO / "thesis_paper" / "paper" / "paper.md"
 T4 = pav.TARGETS
 INLINE = re.compile(r"<!--v:(\w+)-->(.*?)<!--/v-->")
+DESIGN_MARK = re.compile(r"<!--d:([\w.\-]+)-->(.*?)<!--/d-->")
 PENDING = re.compile(r"\[\[PENDING: [^\]]+\]\]")
 MINUS = "−"
 
@@ -43,45 +45,26 @@ def extra_values(v):
 
 
 def table2(v):
-    """Final dataset statistics (NA4), per property."""
-    n4 = tv.na_json("na4")["per_target"]
-
-    def f(x, dp):
-        return f"{x:,.{dp}f}".replace("-", MINUS)
-
-    spec = {"S": ("S (*µ*V K^−1^)", 1, 1), "sigma": ("*σ* (S m^−1^)", 0, 0), "kappa": ("*κ* (W m^−1^ K^−1^)", 2, 2), "zT": ("zT", 3, 3)}
+    """Final dataset statistics (NA4), per property. Every cell is a key of the value dictionary (thesis_values.table_values)."""
+    labels = {"S": "S (*µ*V K^−1^)", "sigma": "*σ* (S m^−1^)", "kappa": "*κ* (W m^−1^ K^−1^)", "zT": "zT"}
     lines = [f"**Table 2:** Final dataset statistics: the {v['n_featurized']} featurised rows, per property (coverage is the share of those rows with a value; "
              "SD is the sample standard deviation).", "",
              "| **Property** | **Rows** | **Coverage** | **Mean** | **Median** | **SD** | **Range** |",
              "|---------------|---------|-----------|-----------|-----------|-----------|----------------|"]
     for t in T4:
-        d = n4[t]
-        lab, dp, _ = spec[t]
-        if t == "sigma":
-            rng = f"{d['min']:,.0f} to {d['max'] / 1e6:.2f} × 10^6^"
-        elif t == "S":
-            rng = f"{f(d['min'], 0)} to {f(d['max'], 1)}"
-        else:
-            rng = f"{f(d['min'], dp)} to {f(d['max'], dp)}"
-        lines.append(f"| {lab} | {d['n']:,} | {100 * d['coverage']:.1f}% | {f(d['mean'], dp)} | {f(d['median'], dp)} | {f(d['std'], dp)} | {rng} |")
+        lines.append(f"| {labels[t]} | {v[f't2_{t}_n']} | {v[f't2_{t}_cov']} | {v[f't2_{t}_mean']} | {v[f't2_{t}_median']} | {v[f't2_{t}_sd']} | "
+                     f"{v[f't2_{t}_min']} to {v[f't2_{t}_max']} |")
     return "\n".join(lines)
 
 
 def table4(v):
-    """XGBoost hyperparameters: the four frozen sets and the search space."""
-    hp = {t: pav._json(pav.HYPER.format(t))["best_params"] for t in T4}
-    rng = dict(re.findall(r"(\w+) ([^;]+)", v["search_text"].replace("; ", ";").replace(";", "; ")))
-    rng = {k: x.replace("..", "–").strip().rstrip(";") for k, x in rng.items()}
-
-    def fmt(x):
-        return f"{x:.4g}" if isinstance(x, float) else str(x)
-
+    """XGBoost hyperparameters: the four frozen sets and the search space. Every cell is a key of the value dictionary."""
     head = ("**Table 4:** XGBoost hyperparameters: the four frozen sets (each tuned once on all rows of its target, by a "
             f"{v['optuna_trials']}-trial Optuna search scored with {v['inner_folds']}-fold chemistry-cluster cross-validation) and the search space.")
     lines = [head, "", "| **Parameter** | **S** | ***σ*** | ***κ*** | **zT** | **Search range** |",
              "|---------------------|-----------|-----------|-----------|-----------|------------------|"]
     for k in ("n_estimators", "max_depth", "learning_rate", "subsample", "colsample_bytree", "min_child_weight", "reg_lambda", "reg_alpha"):
-        lines.append(f"| {k} | " + " | ".join(fmt(hp[t][k]) for t in T4) + f" | {rng[k]} |")
+        lines.append(f"| {k} | {v[f't4_S_{k}']} | {v[f't4_sigma_{k}']} | {v[f't4_kappa_{k}']} | {v[f't4_zT_{k}']} | {v[f't4_range_{k}']} |")
     return "\n".join(lines)
 
 
@@ -108,9 +91,7 @@ def table6(v):
              "|---------|----------|----------|----------|-------------|-------------|----------|"]
     names = {"S": "S", "sigma": "*σ*", "kappa": "*κ*", "zT": "zT"}
     for t in T4:
-        j = pav._json(pav.LADDER)["runs"][f"{t}_composition_full"]
-        csd = f"{j['per_repeat_r2_std']:.3f}"
-        lines.append(f"| {names[t]} | {v[f'rand_{t}']} | {v[f'k5_{t}']} | {v[f'k10_{t}']} | {v[f'comp_{t}']} ± {csd} | "
+        lines.append(f"| {names[t]} | {v[f'rand_{t}']} | {v[f'k5_{t}']} | {v[f'k10_{t}']} | {v[f'comp_{t}']} ± {v[f'comp_sd_{t}']} | "
                      f"{v[f'chem_{t}']} ± {v[f'chem_sd_{t}']} | {v[f'gap_{t}']} |")
     return "\n".join(lines)
 
@@ -142,27 +123,30 @@ def table10(v):
     return "\n".join(lines)
 
 
-LIT_ROWS = [
-    "| Sun et al. \\[14\\] | DNN | N/R | 0.90 (test) | N/R | Train/test split |",
-    "| Jia et al. \\[13\\] | GBDT | N/R | 0.90 | 92K | Comp. CV |",
-    "| Parse et al. \\[12\\] | XGBoost | N/R | 0.815 | 18.1K | 5-fold CV |",
-    "| Barua et al. \\[36\\] | XGBoost | N/R | 0.67--0.80 | ∼160K | Three external test sets |",
-    "| Ma & Poon \\[35\\] | LightGBM | 0.80 | 0.86 | 14.1K | Not stated |",
+LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation protocol); values as the studies report them, N/R = not reported
+    ("Parse et al. [@parse2024predicting]", "XGBoost", "Starrydata2", "18.1K", "R^2^ (zT) 0.815", "5-fold CV"),
+    ("Jia et al. [@jia2024dealing]", "GBDT", "Starrydata2", "92K", "R^2^ (zT) 0.89--0.90", "Composition-level CV"),
+    ("Ma & Poon [@ma2025reexamining]", "LightGBM", "Compiled TE", "<!--c:ma2025_rows-->14.1<!--/c-->K",
+     "R^2^ (zT) <!--c:ma2025_zT_r2-->0.86<!--/c-->; R^2^ (\\|S\\|) <!--c:ma2025_S_r2-->0.8<!--/c-->", "Not stated"),
+    ("Sun et al. [@sun2025rationally]", "DNN", "Starrydata2", "N/R", "R^2^ (zT) 0.90 (test)", "Train/test split"),
+    ("Barua et al. [@barua2025thermoelectric]", "XGBoost", "Starrydata2", "∼160K", "R^2^ (zT) 0.67--0.80", "Three external test sets"),
+    ("Wang et al. [@wang2025highperformance]", "Stacking", "Mixed", "5.2K", "R^2^ (zT) 0.97", "10-fold CV"),
+    ("Elavunkel & Padhan [@elavunkel2025unlocking]", "Stacking", "Half-Heusler", "small", "R^2^ (S) 0.99; R^2^ (zT) 0.92", "Random split"),
 ]
 
 
-def table13(v):
-    """Comparison with published results."""
-    rows = f"{v['n_S']} (S) / {v['n_zT']} (zT)"
-    lines = ["**Table 13:** Comparison with published results.", "",
-             "| **Study** | **Model** | **S R^2^** | **zT R^2^** | **Rows** | **Validation** |",
-             "|--------------|-----------|--------|-------------|---------------|-------------|",
-             f"| This work | XGBoost | {v['rand_S']} | {v['rand_zT']} | {rows} | Random 80/20 |",
-             f"| This work | XGBoost | {v['chem_S']} | {v['chem_zT']} | {rows} | Chemistry-cluster CV |", *LIT_ROWS]
+def table1(v):
+    """Recent ML studies: the metric and the validation protocol each reports (no value of this work, no ranking)."""
+    lines = ["**Table 1:** Recent ML studies of thermoelectric property prediction: the metric and the validation protocol each reports, as the authors report them. "
+             "The studies differ in dataset, target, preprocessing and protocol, so the values are not comparable with one another or with the R^2^ of this work. "
+             "N/R = not reported.", "",
+             "| **Study** | **Model** | **Source** | **Rows** | **Reported metric** | **Validation protocol** |",
+             "|--------------|----------|-----------|-----------|-------------------|------------|"]
+    lines += [f"| {a} | {b} | {c} | {d} | {e} | {f} |" for (a, b, c, d, e, f) in LIT_ROWS]
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 10": table10, "TABLE 13": table13}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 10": table10}
 
 
 def render(text):
@@ -176,6 +160,15 @@ def render(text):
         return f"<!--v:{m.group(1)}-->{v[m.group(1)]}<!--/v-->"
 
     text = INLINE.sub(sub, text)
+    reg = an.load_registry()
+
+    def sub_design(m):
+        row = reg.get(m.group(1))
+        if row is None or row["class"] != "DESIGN":
+            raise KeyError(f"design marker {m.group(1)!r} has no DESIGN row in docs/number_registry.csv")
+        return f"<!--d:{m.group(1)}-->{tv.config_value(row['source_or_config'])}<!--/d-->"
+
+    text = DESIGN_MARK.sub(sub_design, text)
     for name, fn in BLOCKS.items():
         pat = re.compile(rf"(<!-- BEGIN {re.escape(name)} -->\n)(?:.*?\n)?(<!-- END {re.escape(name)} -->)", re.S)
         if not pat.search(text):

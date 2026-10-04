@@ -1,0 +1,30 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "c41f2b2349d4a2fa8f1dbdf95f667a854576eb792a2e9c887125b54ae85eaea9",
+      "bytes": 74893
+    }
+  },
+  "git_head": "0fb705c69facdbb3ede9c5e048e1b114ecb6d128",
+  "tree_clean": false,
+  "dirty_files": [
+    "CLAUDE.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/docs/",
+    "thesis_paper/reports/literature_value_verification.csv",
+    "thesis_paper/results/na11_sensitivity/",
+    "thesis_paper/scripts/audit_numbers.py",
+    "thesis_paper/scripts/na11_sensitivity.py",
+    "thesis_paper/scripts/thesis_carryover_check.py",
+    "thesis_paper/source/pdfs/"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "508fb3556f43962709333f257ed244b749774e961411fbaf6681f4f9d6c9e6f0",
+  "python": "3.12.10",
+  "registry_rows": 14
+}

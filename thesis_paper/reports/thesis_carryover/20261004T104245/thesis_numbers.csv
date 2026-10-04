@@ -1,0 +1,433 @@
+value,occurrences_in_thesis,first_context
+800,28,"rSe~3~ emerged as the most credible candidate (predicted zT ≈ 0.33 at [800] K). Composition-based models are therefore useful for triage, but che"
+5,21,(Materials Project constraints) differs from RQ2 answered in Chapter [5] (validation inflation). The Chapter 5 version is used here; screening
+1,20,"al and regulatory concerns. Bismuth telluride (Bi~2~Te~3~), with zT ≈ [1.0]--1.4, dominates near-room-temperature applications \[5\], while silic"
+0.8,18,"e the ionic radii of the A-, B- and X-site ions. Values of t between ≈[0.80] and 1.05 generally correspond to perovskite formation. Bartel et al."
+10,18,"but negligible electrical conductivity and high thermal conductivity ([10]--12 W m^−1^ K^−1^), giving zT below 0.01. La or Nb doping introduces"
+335,18,"n 184,167 curated experimental records from Starrydata2, described by [335] composition-based features (MAGPIE, CBFV and temperature), to predict"
+0.697,16,"m splits, giving composition-only ceilings of 0.718, 0.603, 0.778 and [0.697] for S, *σ*, *κ* and zT, respectively. External validation on the inde"
+0.67,11,vely. External validation on the independent ESTM database (zT R^2^ = [0.670]; 0.613 for unseen formulas) supports a realistic ceiling of ≈0.65--0.
+0.778,11,"e to random splits, giving composition-only ceilings of 0.718, 0.603, [0.778] and 0.697 for S, *σ*, *κ* and zT, respectively. External validation o"
+3,11,"ches its maximum at an optimum carrier concentration of ≈1019--1020 cm[−3].](media/image2.png ""Figure 2""){width=""4.385416666666667in"" height=""4."
+184167,10,"nd test sets. Here, gradient-boosted (XGBoost) models were trained on [184,167] curated experimental records from Starrydata2, described by 335 compo"
+300,10,ndoped SrTiO~3~ has a large Seebeck coefficient (≈ −700 *µ*V K^−1^ at [300] K) but negligible electrical conductivity and high thermal conductivi
+0,9,"*V K^−1^, 10 ≤ *σ* ≤ 10^7^ S m^−1^, 0.05 ≤ *κ* ≤ 25 W m^−1^ K^−1^ and [0] ≤ zT ≤ 4. The Seebeck bound is an empirical cap that excludes gross d"
+0.2,9,"igh-temperature applications, with doped compositions reaching zT of ≈[0.2]--0.4 \[10\]. \[Issue: Section 2.2 of the thesis quotes zT = 0.18 at 7"
+0.603,9,"relative to random splits, giving composition-only ceilings of 0.718, [0.603], 0.778 and 0.697 for S, *σ*, *κ* and zT, respectively. External valid"
+0.718,9,"--0.29 relative to random splits, giving composition-only ceilings of [0.718], 0.603, 0.778 and 0.697 for S, *σ*, *κ* and zT, respectively. Externa"
+20,9,"sumption because a material such as Bi~0.5~Sb~1.5~Te~3~ may appear at [20] temperatures (300, 325, . . . , 800 K); under random splitting the te"
+2018,9,"alidation have been studied in general materials informatics (Meredig [2018]; Xiong 2020; Li 2023). Keep ""first"" claims restricted to thermoelectr"
+2020,9,"ve been studied in general materials informatics (Meredig 2018; Xiong [2020]; Li 2023). Keep ""first"" claims restricted to thermoelectrics and soft"
+2025,9,"ing; (ii) the BiSbSe~3~ result is cited in the thesis to Wang et al. ([2025], J. Mater. Inform.), which is an ML review: cite the primary experime"
+0.05,8,"y for S. Screening of the Materials Project with stability (E~hull~ ≤ [0.05] eV), band-gap and space-group filters identified 204 lead-free perovs"
+4,8,"10 ≤ *σ* ≤ 10^7^ S m^−1^, 0.05 ≤ *κ* ≤ 25 W m^−1^ K^−1^ and 0 ≤ zT ≤ [4]. The Seebeck bound is an empirical cap that excludes gross digitizati"
+0.5,7,"ated all-inorganic halides exhibit lattice thermal conductivity below [0.5] W m^−1^ K^−1^ arising from soft, anharmonic vibrations and cation rat"
+2,7,"d. Lead telluride (PbTe) and its alloys exhibit zT values as high as ≈[2] at optimized compositions \[4\], but their use is increasingly constr"
+2024,7,"Bi~2~Br~9~ with ultralow thermal conductivity, Adv. Funct. Mater. 34 ([2024]) 2411152. \[9\] C.C. Stoumpos, C.D. Malliakas, M.G. Kanatzidis, Semi"
+204,7,"lity (E~hull~ ≤ 0.05 eV), band-gap and space-group filters identified [204] lead-free perovskite-type compounds among 550 nominal ABX~3~ formulas"
+8,7,the pymatgen Composition class \[49\]. *Quality filtering (steps 6--[8]).* Step 6 compared the reported zT with the value recomputed from Eq.
+0.163,6,"validation strategies showing that row-level splits inflate R^2^ by +[0.163] to +0.288; - composition-only ceilings for S, *σ*, *κ* and zT confir"
+0.9,6,"2\] predicted zT with R^2^ = 0.815, Jia et al. \[13\] achieved R^2^ ≈ [0.90], and Sun et al. \[14\] reported R^2^ \> 0.95 using deep neural networ"
+1000,6,"verted resistivity to conductivity and applied physical-range bounds: [−1000] ≤ S ≤ 1000 *µ*V K^−1^, 10 ≤ *σ* ≤ 10^7^ S m^−1^, 0.05 ≤ *κ* ≤ 25 W m^"
+11,6,"adicts the use of all 335 features, step labels that do not match the [11]-step pipeline, and R^2^ = 0.679 instead of 0.697. Elsevier policy doe"
+2013,6,": the thesis attributes the *κ* \< 0.5 W/mK value to Stoumpos et al. ([2013]), which does not report thermal conductivity, and attributes ""theoret"
+2017,6,"all-inorganic halide perovskites, Proc. Natl. Acad. Sci. U.S.A. 114 ([2017]) 8693--8697. \[8\] Y. Li, X. Li, B. Wei, J. Liu, F. Pan, H. Wang, et"
+0.01,5,"and high thermal conductivity (10--12 W m^−1^ K^−1^), giving zT below [0.01]. La or Nb doping introduces carriers and reduces both *κ* and S, rais"
+0.02,5,"forest \[54\] and a stacking ensemble, all of which converged within ±[0.02] R^2^ under GroupKFold validation (Section 4.1). XGBoost was preferred"
+0.33,5,"las; BaZrSe~3~ emerged as the most credible candidate (predicted zT ≈ [0.33] at 800 K). Composition-based models are therefore useful for triage,"
+0.95,5,". \[13\] achieved R^2^ ≈ 0.90, and Sun et al. \[14\] reported R^2^ \> [0.95] using deep neural networks. \[Sun et al. details unverified; check th"
+2016,5,"ting the global waste heat potential, Renew. Sustain. Energy Rev. 57 ([2016]) 1568--1579. https://doi.org/10.1016/j.rser.2015.12.192 \[2\] G.A. S"
+2022,5,"than 5,000 samples"" and gives no citation. Corrected per Na & Chang ([2022]).\] ESTM was curated independently of Starrydata2, making it a valuab"
+25,5,": −1000 ≤ S ≤ 1000 *µ*V K^−1^, 10 ≤ *σ* ≤ 10^7^ S m^−1^, 0.05 ≤ *κ* ≤ [25] W m^−1^ K^−1^ and 0 ≤ zT ≤ 4. The Seebeck bound is an empirical cap t"
+6,5,by the pymatgen Composition class \[49\]. *Quality filtering (steps [6]--8).* Step 6 compared the reported zT with the value recomputed from
+7,5,Cmcm 0.494 stable 800 0.255 [7] TiGeS~3~ Pnma 0.324 stable
+9,5,"aries more with synthesis conditions). *Statistical filtering (steps [9]--11).* Step 9 applied a median absolute deviation (MAD) filter, remov"
+0.002,4,0.012 zT 0.695 (32 features) 0.697 +[0.002] -------------------------------------------------------------------
+0.027,4,"y well: the drops from GroupKFold to ESTM are only −0.040 for *κ* and [−0.027] for zT, and zT still achieves R^2^ = 0.613 for unseen formulas, confi"
+0.111,4,"tures per target. Temperature dominates the zT model (mean \|SHAP\| = [0.111]), consistent with the explicit T dependence in Eq. (1). The second fe"
+0.288,4,"n strategies showing that row-level splits inflate R^2^ by +0.163 to +[0.288]; - composition-only ceilings for S, *σ*, *κ* and zT confirmed by ext"
+0.299,4,"ew chemistry. The largest decrease is for *σ* (−0.200 overall; R^2^ = [0.299] for unseen formulas), reinforcing the limitation of composition-only"
+0.3,4,"ave better results (Table 3). Because XGBoost with colsample_bytree = [0.3] performs implicit feature subsampling at every tree, explicit pre-sel"
+0.46,4,"n outperformed the component-wise route S^2^*σ*T/*κ* (R^2^ = 0.697 vs [0.460]) because component errors compound, and SHAP analysis showed physical"
+0.613,4,xternal validation on the independent ESTM database (zT R^2^ = 0.670; [0.613] for unseen formulas) supports a realistic ceiling of ≈0.65--0.70 for
+0.7,4,70; 0.613 for unseen formulas) supports a realistic ceiling of ≈0.65--[0.70] for zT. Direct zT regression outperformed the component-wise route S^
+0.815,4,"f candidates in seconds. Parse et al. \[12\] predicted zT with R^2^ = [0.815], Jia et al. \[13\] achieved R^2^ ≈ 0.90, and Sun et al. \[14\] report"
+0.942,4,0.894 0.755 0.603 +0.288 *κ* [0.942] 0.941 0.942 0.866 0.778 +0.
+0.959,4,---------- -------------- ---------------- ----------- S [0.959] 0.958 0.959 0.854 0.718 +0.
+125283,4,"ter judged against the physical bounds of Step 1. A few records (8 of [125,283], \<0.01%) have zT \> 3.0, above the maximum reliably reported for bul"
+168,4,his work XGBoost 0.959 0.904 [168]K (S) / 125K (zT) Random split This work XGBoost
+17,4,"e (zT) predictions with machine learning, ACS Appl. Mater. Interfaces [17] (2025) 1662--1673. \[Thesis cites 2024; volume 17 is the 2025 issue ("
+2005,4,"hesis quotes zT = 0.18 at 760 K from the same reference (Ohta et al., [2005]) while the Introduction quotes 0.2--0.4. Check the paper and use a si"
+2006,4,"roperties of CaMnO~3~, in: Proc. 25th Int. Conf. Thermoelectrics (ICT [2006]), IEEE, 2006. \[Add page numbers and DOI.\] \[24\] J. Androulakis, P"
+2008,4,"nyder, E.S. Toberer, Complex thermoelectric materials, Nat. Mater. 7 ([2008]) 105--114. \[4\] K. Biswas, J. He, I.D. Blum, C.-I. Wu, T.P. Hogan,"
+2019,4,"predict the stability of perovskite oxides and halides, Sci. Adv. 5 ([2019]) eaav0693. \[23\] D. Flahaut, R. Funahashi, K. Lee, H. Ohta, K. Koum"
+2023,4,"tudied in general materials informatics (Meredig 2018; Xiong 2020; Li [2023]). Keep ""first"" claims restricted to thermoelectrics and soften to ""to"
+30,4,"rs were selected per target by randomized search (RandomizedSearchCV, [30] sampled configurations), scored by R^2^ under the same GroupKFold sch"
+35,4,"AI-generated and contains errors: garbled text (""MAGPIE (1?) . . . = [35] descriptor](media/image4.png ""Figure 4""){width=""6.260416666666667in"""
+0.04,3,"eneralize remarkably well: the drops from GroupKFold to ESTM are only [−0.040] for *κ* and −0.027 for zT, and zT still achieves R^2^ = 0.613 for uns"
+0.144,3,"log~10~ W m^−1^ K^−1^) 117,575 335 zT 0.697 [0.144] 125,283 335 -----------------------"
+0.18,3,"T of ≈0.2--0.4 \[10\]. \[Issue: Section 2.2 of the thesis quotes zT = [0.18] at 760 K from the same reference (Ohta et al., 2005) while the Introd"
+0.4,3,"emperature applications, with doped compositions reaching zT of ≈0.2--[0.4] \[10\]. \[Issue: Section 2.2 of the thesis quotes zT = 0.18 at 760 K"
+0.454,3,--- ----------- ---------- 1 RbEuCl~3~ Pm-3m [0.454] metastable 800 0.344 2 BaZrSe~3~
+0.738,3,0.637 0.299 −0.200 *κ* 0.778 [0.738] 0.860 0.656 −0.040 zT 0.697
+0.814,3,"akage. Composition-level CV gives intermediate values (e.g. zT R^2^ = [0.814]), and system-level GroupKFold gives the lowest and most realistic val"
+0.839,3,-------- ----------- S 0.718 0.631 [0.839] 0.536 −0.087 *σ* 0.603 0.403
+0.86,3,LightGBM Compiled TE 14.1K 0.80 [0.86] Not stated Sun et al. \[14\] DNN
+0.89,3,GBDT Starrydata2 92K N/R [0.89]--0.90 Composition CV Ma & Poon \[35\] Ligh
+0.891,3,0.959 0.854 0.718 +0.241 *σ* [0.891] 0.892 0.894 0.755 0.603 +0.
+0.894,3,0.718 +0.241 *σ* 0.891 0.892 [0.894] 0.755 0.603 +0.288 *κ* 0.942
+0.904,3,0.942 0.866 0.778 +0.163 zT [0.904] 0.902 0.904 0.814 0.697 +0.
+1100,3,"composition-only ceiling. \[Issue: (i) both comparisons are at 1000--[1100] K, outside the 300--800 K training range: this is temperature extrapo"
+12,3,"negligible electrical conductivity and high thermal conductivity (10--[12] W m^−1^ K^−1^), giving zT below 0.01. La or Nb doping introduces carr"
+132,3,", mean, average deviation, mode) of 22 elemental properties, yielding [132] features per composition. CBFV extends this with the Oliynyk elementa"
+160000,3,"l. 165K rows with external R^2^ 0.67--0.80 (secondary sources report ≈[160,000] points and R^2^ ≈ 0.80; the external-validation range could not be co"
+175,3,"at 1000 K) and predicts its Seebeck coefficient within ≈6% (+164 vs +[175] *µ*V K^−1^), including the correct p-type sign. For CaMnO~3~ it captu"
+1780,3,"rom experiment owing to the constant relaxation-time assumption; only [1,780] rows (0.8%) were flagged, confirming that Starrydata2 is predominantl"
+18,3,"R = not reported. \[Hallucination check: the thesis gave Parse et al. [18]K rows (paper: ≈23,662 points), Barua et al. 165K rows with external R"
+19144,3,"Po, At, Rn, Fr, Ra, Ac, Th, Pa, U, Np, Pu and heavier actinides) left [19,144] candidates. Perovskites were then identified structurally: of the 19,"
+2.3,3,"d starrydata_samples.csv (sample metadata), together containing about [2.3] million data points. Each data point is a single property reading of"
+22,3,"tatistics (minimum, maximum, range, mean, average deviation, mode) of [22] elemental properties, yielding 132 features per composition. CBFV ext"
+2834,3,"on of Starrydata2 into 184,167 experimental records (13,605 formulas, [2,834] chemical systems); - a five-way comparison of validation strategies"
+29,3,"but Fig. 12 shows CBFV 52% vs MAGPIE 33% for *κ*, and T 51% / MAGPIE [29%] / CBFV 20% for zT. The sentence was corrected to match the figure; pl"
+32,3,39 features) 0.778 +0.012 zT 0.695 ([32] features) 0.697 +0.002 -----------------------
+33,3,"""dominated by MAGPIE features"", but Fig. 12 shows CBFV 52% vs MAGPIE [33%] for *κ*, and T 51% / MAGPIE 29% / CBFV 20% for zT. The sentence was c"
+50,3,Not stated Sun et al. \[14\] DNN Starrydata2 ∼[50]K \[unverified\] N/R \>0.95 \[unverified\] Random split \
+51,3,"lable only in CBFV, whereas the zT model is dominated by temperature ([51%]). This complementarity explains the advantage of combining both schem"
+52,3,"*κ* and zT are ""dominated by MAGPIE features"", but Fig. 12 shows CBFV [52%] vs MAGPIE 33% for *κ*, and T 51% / MAGPIE 29% / CBFV 20% for zT. The"
+550,3,roup filters identified 204 lead-free perovskite-type compounds among [550] nominal ABX~3~ formulas; BaZrSe~3~ emerged as the most credible candi
+700,3,tituent elements. Undoped SrTiO~3~ has a large Seebeck coefficient (≈ [−700] *µ*V K^−1^ at 300 K) but negligible electrical conductivity and high
+72,3,", resource in this equation. It has been estimated that approximately [72%] of global primary energy consumption is lost after conversion, largel"
+0.014,2,zability (0.015) dev Gilmor valence (6.98) mean NdUnfilled ([0.014]) dev Gilmor valence (0.022) 5 avg-dev covalent radius
+0.024,2,0.069 *σ* 0.579 (44 features) 0.603 +[0.024] *κ* 0.766 (39 features) 0.778 +0.012
+0.045,2,"0.839), *κ* all R^2^ = 0.7335 (table 0.738, which changes the drop to [−0.045]), zT all R^2^ = 0.6715 (table 0.670), and n(unseen) = 2,986 for S but"
+0.072,2,ptures the n-type character and the correct order of magnitude of zT ([0.072] vs 0.11 for a CaMnO~3~/CaMn~2~O~4~ composite) but overestimates the h
+0.093,2,ides. The model reproduces the zT of Ca~3~Co~4~O~9~ closely (0.111 vs [0.093] at 1000 K) and predicts its Seebeck coefficient within ≈6% (+164 vs +
+0.1,2,substantially \[10\]. CaMnO~3~ exhibits S ≈ −350 *µ*V K^−1^ but zT \< [0.1] because of low *σ* \[23\]; rare-earth substitution on the Ca site (Dy
+0.11,2,e n-type character and the correct order of magnitude of zT (0.072 vs [0.11] for a CaMnO~3~/CaMn~2~O~4~ composite) but overestimates the high-temp
+0.16,2,"oss-validation (GroupKFold by parent chemical system) lowered R^2^ by [0.16]--0.29 relative to random splits, giving composition-only ceilings of"
+0.164,2,"this table gives 0.891 (∆R^2^ would be +0.291). Also 0.942 − 0.778 = [0.164], not 0.163 (rounding). Reconcile table, figure and text.\] ![Compari"
+0.255,2,e~3~ Cmcm 0.496 stable 800 [0.255] 6 PrLuSe~3~ Cmcm 0.494 stable
+0.29,2,"lidation (GroupKFold by parent chemical system) lowered R^2^ by 0.16--[0.29] relative to random splits, giving composition-only ceilings of 0.718,"
+0.291,2,"t R^2^ = 0.894 for *σ*, while this table gives 0.891 (∆R^2^ would be +[0.291]). Also 0.942 − 0.778 = 0.164, not 0.163 (rounding). Reconcile table,"
+0.35,2,"lead-free perovskite in the screened set is predicted to exceed zT ≈ [0.35], indicating that none rivals established chalcogenide thermoelectrics"
+0.393,2,"ved 6,167 rows (2.5%) and shifted the mean zT only slightly (0.387 to [0.393]), indicating that noise rather than signal was removed. This is conse"
+0.44,2,"emical systems (Table 2, Fig. 6). The mean zT of the retained data is [0.44], higher than the value of 0.393 after Step 6, because the subsequent"
+0.6,2,"o further filters were applied before ranking: compounds with E~g~ \> [0.6] eV were removed, because efficient thermoelectric transport requires"
+0.65,2,= 0.670; 0.613 for unseen formulas) supports a realistic ceiling of ≈[0.65]--0.70 for zT. Direct zT regression outperformed the component-wise ro
+0.6715,2,"0.7335 (table 0.738, which changes the drop to −0.045), zT all R^2^ = [0.6715] (table 0.670), and n(unseen) = 2,986 for S but 2,966 for the others."
+0.679,2,"tures, step labels that do not match the 11-step pipeline, and R^2^ = [0.679] instead of 0.697. Elsevier policy does not permit generative-AI-creat"
+0.7335,2,"sue: Fig. 9 reports S seen R^2^ = 0.829 (table 0.839), *κ* all R^2^ = [0.7335] (table 0.738, which changes the drop to −0.045), zT all R^2^ = 0.6715"
+0.829,2,"------------------------------ \[Issue: Fig. 9 reports S seen R^2^ = [0.829] (table 0.839), *κ* all R^2^ = 0.7335 (table 0.738, which changes the"
+0.92,2,[38\] Stacking Half-Heusler small 0.99 [0.92] Random split -----------------------------------
+0.99,2,el & Padhan \[38\] Stacking Half-Heusler small [0.99] 0.92 Random split ----------------------
+1.4826,2,lied on a logarithmic scale. \[Issue: state whether MAD was scaled by [1.4826] (consistency with the normal distribution); the 3.5 threshold is usua
+114,2,"Toberer, Complex thermoelectric materials, Nat. Mater. 7 (2008) 105--[114]. \[4\] K. Biswas, J. He, I.D. Blum, C.-I. Wu, T.P. Hogan, D.N. Seidm"
+125,2,XGBoost 0.959 0.904 168K (S) / [125]K (zT) Random split This work XGBoost 0.718
+13605,2,"leven-step curation of Starrydata2 into 184,167 experimental records ([13,605] formulas, 2,834 chemical systems); - a five-way comparison of valida"
+14,2,".M. Goldschmidt, Die Gesetze der Krystallochemie, Naturwissenschaften [14] (1926) 477--485. \[22\] C.J. Bartel, C. Sutton, B.R. Goldsmith, R. O"
+14.1,2,position CV Ma & Poon \[35\] LightGBM Compiled TE [14.1]K 0.80 0.86 Not stated S
+15,2,"ermination of electronic band gaps of solids, J. Chem. Theory Comput. [15] (2019) 5069--5079. \[59\] N. Kanas, B.A.D. Williamson, F. Steinbach,"
+16,2,"ropositive metal, rather than the anion, occupies the threefold site; [16] compounds such as Sr~3~BiN, Rb~3~AuO and Ba~3~GeO) were excluded. Two"
+160,2,verified\] Barua et al. \[36\] XGBoost Starrydata2 ∼[160]K N/R ∼0.80 \[verify\] W
+164,2,"vs 0.093 at 1000 K) and predicts its Seebeck coefficient within ≈6% (+[164] vs +175 *µ*V K^−1^), including the correct p-type sign. For CaMnO~3~"
+165,2,"esis gave Parse et al. 18K rows (paper: ≈23,662 points), Barua et al. [165]K rows with external R^2^ 0.67--0.80 (secondary sources report ≈160,00"
+17.3,2,"ed mixture of p-type and n-type samples, which explains why the mean ([17.3] *µ*V K^−1^) differs strongly from the median (61.5 *µ*V K^−1^). **Ta"
+1800,2,"rydata2 is predominantly experimental. \[Issue: the thesis text says ""[1,800] rows""; Fig. 5 says 1,780. Use the exact number.\] Step 8, the largest"
+1995,2,", Boca Raton, 2018, pp. 407--440. \[The chapter first appeared in the [1995] edition; cite the edition actually consulted.\] \[3\] G.J. Snyder, E"
+2000,2,ide perovskites.* Oxide perovskites have been studied since the early [2000]s owing to their chemical stability at high temperature and the abunda
+2009,2,"t for quantum simulations of materials, J. Phys.: Condens. Matter 21 ([2009]) 395502. \[29\] G.K.H. Madsen, D.J. Singh, BoltzTraP. A code for cal"
+2010,2,"ty, Springer Series in Materials Science, vol. 121, Springer, Berlin, [2010]. \[19\] Y. Pei, X. Shi, A. LaLonde, H. Wang, L. Chen, G.J. Snyder, C"
+2011,2,"ectronic bands for high performance bulk thermoelectrics, Nature 473 ([2011]) 66--69. \[20\] L.-D. Zhao, S.-H. Lo, Y. Zhang, H. Sun, G. Tan, C. U"
+2014,2,"Boltzmann transport equation for phonons, Comput. Phys. Commun. 185 ([2014]) 1747--1758. \[12\] N. Parse, J. Recatala-Gomez, R. Zhu, A.K. Low, K"
+202,2,"removing intra-CBFV features with Pearson correlation \|r\| \> 0.95, [202] CBFV features remained. Temperature (T, K) was added as a direct inpu"
+20586,2,"thermodynamic stability) and band gap 0.1 ≤ E~g~ ≤ 3.0 eV, returning [20,586] lead-free candidates. \[Issue: specify the unit of E_hull (eV/atom in"
+21,2,"oject for quantum simulations of materials, J. Phys.: Condens. Matter [21] (2009) 395502. \[29\] G.K.H. Madsen, D.J. Singh, BoltzTraP. A code f"
+23.7,2,------------ Parse et al. \[12\] XGBoost Starrydata2 [23.7]K N/R 0.815 5-fold CV Ji
+23662,2,"\[Hallucination check: the thesis gave Parse et al. 18K rows (paper: ≈[23,662] points), Barua et al. 165K rows with external R^2^ 0.67--0.80 (second"
+27,2,"Tamura, Isotope scattering of dispersive phonons in Ge, Phys. Rev. B [27] (1983) 858--866. \[42\] T. Hastie, R. Tibshirani, J. Friedman, The E"
+28,2,"ine-learning-driven synthesis of full-Heusler compounds, Chem. Mater. [28] (2016) 7324--7331. \[41\] S. Tamura, Isotope scattering of dispersiv"
+2966,2,", zT all R^2^ = 0.6715 (table 0.670), and n(unseen) = 2,986 for S but [2,966] for the others. Regenerate the figure or correct the table.\] ![ESTM"
+2986,2,"drop to −0.045), zT all R^2^ = 0.6715 (table 0.670), and n(unseen) = [2,986] for S but 2,966 for the others. Regenerate the figure or correct the"
+3.5,2,was scaled by 1.4826 (consistency with the normal distribution); the [3.5] threshold is usually defined on the scaled MAD.\] The MAD filter was
+31,2,"l machine learning framework for molecules and crystals, Chem. Mater. [31] (2019) 3564--3572. # Summary of flagged issues (for the authors; del"
+34,2,"s~3~Bi~2~Br~9~ with ultralow thermal conductivity, Adv. Funct. Mater. [34] (2024) 2411152. \[9\] C.C. Stoumpos, C.D. Malliakas, M.G. Kanatzidis"
+37,2,"f the 19,144 candidates, 550 have ABX~3~ stoichiometry, but only 204 ([37%]) adopt perovskite-type space groups (cubic *Pm*3̄*m* and the common d"
+39,2,44 features) 0.603 +0.024 *κ* 0.766 ([39] features) 0.778 +0.012 zT 0.695 (32
+4.5,2,"es (formation energy, band gap, density) were tested but covered only [4.5%] of formulas and degraded performance. MAGPIE and CBFV cannot encode t"
+40,2,"temporal, spatial, hierarchical, or phylogenetic structure, Ecography [40] (2017) 913--929. \[44\] Z. Xiong, Y. Cui, Z. Liu, Y. Zhao, M. Hu, J."
+44,2,", LassoCV and mutual-information ranking) reduced the features to 25--[44] per target. Under GroupKFold validation, using all 335 features alway"
+4584,2,"e models were tested on ESTM \[32\]: after restricting to 300--800 K, [4,584] measurements on 862 formulas, of which 284 (32.9%) were seen during t"
+500,2,"and subsample = 0.8; for the Seebeck model, learning_rate = 0.05 with [500] trees gave the best validation score (Table 4). Hyperparameters were"
+5000,2,"ESTM as ""Experimental Thermoelectric Materials"", describes ""more than [5,000] samples"" and gives no citation. Corrected per Na & Chang (2022).\] ES"
+520,2,"dow = 3) to each temperature curve; 17,372 spikes were set to NaN and [520] rows in which all properties became NaN were removed. Additional filt"
+60,2,"~3~), which could raise structural coverage from 4.5% to an estimated [60]--70%, or by using crystal graph networks such as CGCNN \[34\] and MEG"
+600,2,"0.2. LaCoO~3~ and its Sr-doped derivatives are p-type, with S of 200--[600] *µ*V K^−1^ but modest zT \[24\]. *Halide perovskites.* Following the"
+61.5,2,ains why the mean (17.3 *µ*V K^−1^) differs strongly from the median ([61.5] *µ*V K^−1^). **Table 2:** Final dataset statistics. -------------
+63,2,"to the targets (Fig. 12). CBFV features dominate the S (74%) and *σ* ([63%]) models, consistent with the polarizability and electronegativity var"
+63.8,2,"52,384 106,287 1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) [63.8%] 2.51 2.02 1.88 0.32 to 12.9 zT"
+65,2,"furnaces and power plants \[1\]. \[Corrected: the thesis states ""some [65%]""; Forman et al. report 72% (verified against the abstract).\] Thermoe"
+67,2,"data challenges in AI for thermoelectric materials, Sci. China Mater. [67] (2024) 1173--1182. https://doi.org/10.1007/s40843-023-2777-2 \[14\]"
+68,2,51 2.02 1.88 0.32 to 12.9 zT [68.0%] 0.44 0.33 0.39 0 to 3.55 --------------
+69,2,"ands for high performance bulk thermoelectrics, Nature 473 (2011) 66--[69]. \[20\] L.-D. Zhao, S.-H. Lo, Y. Zhang, H. Sun, G. Tan, C. Uher, C."
+760,2,"2--0.4 \[10\]. \[Issue: Section 2.2 of the thesis quotes zT = 0.18 at [760] K from the same reference (Ohta et al., 2005) while the Introduction"
+862,2,"n ESTM \[32\]: after restricting to 300--800 K, 4,584 measurements on [862] formulas, of which 284 (32.9%) were seen during training and 578 (67."
+89.45,2,ier-type classification The XGBoost carrier-type classifier achieved [89.45%] accuracy under GroupKFold on balanced classes. \[Report precision/rec
+92,2,5-fold CV Jia et al. \[13\] GBDT Starrydata2 [92]K N/R 0.89--0.90 Composition C
+92000,2,"ns rather than random rows, and obtained R^2^ of 0.89--0.90 for zT on [92,000] entries; this is stricter than standard K-fold but less strict than s"
+0.001,1,+0.002 *σ* 0.603 0.602 [−0.001] *κ* 0.778 0.778 0.000 zT
+0.003,1,"ld and 10-fold CV give practically identical R^2^ (maximum difference [0.003]), showing that all three leak the same temperature-series information"
+0.012,1,0.024 *κ* 0.766 (39 features) 0.778 +[0.012] zT 0.695 (32 features) 0.697 +0.002
+0.013,1,dev Gilmor valence (0.022) 5 avg-dev covalent radius ([0.013]) T (6.06) sum atomic number (0.014) avg Pauli
+0.015,1,(0.018) mode melting T (0.026) 4 dev polarizability ([0.015]) dev Gilmor valence (6.98) mean NdUnfilled (0.014) dev
+0.016,1,dev MB electroneg. (0.039) 3 mean GS volume ([0.016]) dev density (7.27) mean melting T (0.018)
+0.018,1,olume (0.016) dev density (7.27) mean melting T ([0.018]) mode melting T (0.026) 4 dev polarizability (0.015)
+0.021,1,sum atomic number (0.014) avg Pauling electroneg. ([0.021]) ------------------------------------------------------------------
+0.022,1,mor valence (6.98) mean NdUnfilled (0.014) dev Gilmor valence ([0.022]) 5 avg-dev covalent radius (0.013) T (6.06)
+0.026,1,density (7.27) mean melting T (0.018) mode melting T ([0.026]) 4 dev polarizability (0.015) dev Gilmor valence (
+0.03,1,e means across five folds; fold-level standard deviations were ±0.01--[0.03] for all targets. \[Report the individual fold standard deviation for
+0.035,1,) avg polarizability (7.87) avg melting T ([0.035]) T (0.040) 2 mean NdValence (0.027) mode
+0.038,1,"RbEuCl~3~ ranks marginally higher (0.34) but is metastable (E~hull~ = [0.038] eV atom^−1^) and Eu-based, so its prediction is less reliable. \[Issu"
+0.039,1,larizability (7.31) T (0.024) dev MB electroneg. ([0.039]) 3 mean GS volume (0.016) dev density (7.27)
+0.069,1,------ S 0.649 (25 features) 0.718 +[0.069] *σ* 0.579 (44 features) 0.603 +0.024
+0.087,1,0.718 0.631 0.839 0.536 [−0.087] *σ* 0.603 0.403 0.637 0.299
+0.105,1,"log~10~ S m^−1^) 164,201 335 log~10~*κ* 0.778 [0.105] (log~10~ W m^−1^ K^−1^) 117,575 335 zT 0.697"
+0.114,1,800 0.253 8 TbCrSe~3~ Pnma [0.114] metastable 800 0.247 9 EuHfS~3~
+0.117,1,le 800 0.312 4 DyCrSe~3~ Pnma [0.117] metastable 800 0.275 5 NdLuSe~3~
+0.129,1,le 800 0.247 9 EuHfS~3~ Pnma [0.129] stable 800 0.218 10 TaCuS~3~
+0.167,1,800 0.326 3 SrZrSe~3~ Pnma [0.167] metastable 800 0.312 4 DyCrSe~3~
+0.184,1,~3~ Pnma 0.418 stable 800 [0.184] -------------------------------------------------------------------
+0.187,1,0.144 Derived (S^2^*σ*T/*κ*) 0.460 [0.187] -------------------------------------------------------------------
+0.207,1,04 0.902 0.904 0.814 0.697 +[0.207] -------------------------------------------------------------------
+0.218,1,~3~ Pnma 0.129 stable 800 [0.218] 10 TaCuS~3~ Pnma 0.418 stable
+0.241,1,59 0.958 0.959 0.854 0.718 +[0.241] *σ* 0.891 0.892 0.894 0.755
+0.246,1,"*V K^−1^ 168,318 335 log~10~*σ* 0.603 [0.246] (log~10~ S m^−1^) 164,201 335 log~10~*κ* 0.778"
+0.247,1,e~3~ Pnma 0.114 metastable 800 [0.247] 9 EuHfS~3~ Pnma 0.129 stable
+0.253,1,~3~ Pnma 0.324 stable 800 [0.253] 8 TbCrSe~3~ Pnma 0.114 metastable
+0.275,1,e~3~ Pnma 0.117 metastable 800 [0.275] 5 NdLuSe~3~ Cmcm 0.496 stable
+0.31,1,"e-earth transition-metal compounds with predicted zT between 0.18 and [0.31]. All candidates peak at 800 K, consistent with zT rising with tempera"
+0.312,1,e~3~ Pnma 0.167 metastable 800 [0.312] 4 DyCrSe~3~ Pnma 0.117 metastable
+0.32,1,κ* (W m^−1^ K^−1^) 63.8% 2.51 2.02 1.88 [0.32] to 12.9 zT 68.0% 0.44 0.33
+0.324,1,800 0.255 7 TiGeS~3~ Pnma [0.324] stable 800 0.253 8 TbCrSe~3~
+0.326,1,e~3~ Pnma 0.373 stable 800 [0.326] 3 SrZrSe~3~ Pnma 0.167 metastable
+0.34,1,"ng it the most credible candidate. RbEuCl~3~ ranks marginally higher ([0.34]) but is metastable (E~hull~ = 0.038 eV atom^−1^) and Eu-based, so its"
+0.344,1,l~3~ Pm-3m 0.454 metastable 800 [0.344] 2 BaZrSe~3~ Pnma 0.373 stable
+0.373,1,le 800 0.344 2 BaZrSe~3~ Pnma [0.373] stable 800 0.326 3 SrZrSe~3~
+0.387,1,"This removed 6,167 rows (2.5%) and shifted the mean zT only slightly ([0.387] to 0.393), indicating that noise rather than signal was removed. This"
+0.39,1,12.9 zT 68.0% 0.44 0.33 [0.39] 0 to 3.55 ----------------------------------------------------
+0.403,1,0.839 0.536 −0.087 *σ* 0.603 [0.403] 0.637 0.299 −0.200 *κ* 0.778
+0.418,1,800 0.218 10 TaCuS~3~ Pnma [0.418] stable 800 0.184 ------------------------
+0.494,1,800 0.255 6 PrLuSe~3~ Cmcm [0.494] stable 800 0.255 7 TiGeS~3~
+0.496,1,le 800 0.275 5 NdLuSe~3~ Cmcm [0.496] stable 800 0.255 6 PrLuSe~3~
+0.536,1,-------- S 0.718 0.631 0.839 [0.536] −0.087 *σ* 0.603 0.403 0.637
+0.579,1,0.649 (25 features) 0.718 +0.069 *σ* [0.579] (44 features) 0.603 +0.024 *κ* 0.766
+0.602,1,0.720 +0.002 *σ* 0.603 [0.602] −0.001 *κ* 0.778 0.778
+0.631,1,----------- ------------ ----------- S 0.718 [0.631] 0.839 0.536 −0.087 *σ* 0.603
+0.637,1,0.536 −0.087 *σ* 0.603 0.403 [0.637] 0.299 −0.200 *κ* 0.778 0.738
+0.649,1,-------------- ---------------------- ---------------- S [0.649] (25 features) 0.718 +0.069 *σ* 0.579
+0.656,1,−0.200 *κ* 0.778 0.738 0.860 [0.656] −0.040 zT 0.697 0.670 0.762
+0.695,1,0.766 (39 features) 0.778 +0.012 zT [0.695] (32 features) 0.697 +0.002 -------------------
+0.699,1,0.778 0.000 zT 0.697 [0.699] +0.002 -----------------------------------------------
+0.72,1,-------------- ------------------ S 0.718 [0.720] +0.002 *σ* 0.603 0.602
+0.755,1,+0.241 *σ* 0.891 0.892 0.894 [0.755] 0.603 +0.288 *κ* 0.942 0.941
+0.762,1,0.656 −0.040 zT 0.697 0.670 [0.762] 0.613 −0.027 -----------------------------------------
+0.766,1,0.579 (44 features) 0.603 +0.024 *κ* [0.766] (39 features) 0.778 +0.012 zT 0.695
+0.78,1,- Composition-only ceilings under GroupKFold: R^2^ ≈ 0.70 for zT and [0.78] for *κ* - Independent ESTM test confirms generalisation (zT R^2^ = 0
+0.81,1,ds a clear hierarchy for zT: random/K-fold (≈0.90) \> composition CV ([0.81]) \> GroupKFold (0.70). The inflation ∆R^2^ (Eq. (8)) ranges from +0.1
+0.854,1,-- ----------- S 0.959 0.958 0.959 [0.854] 0.718 +0.241 *σ* 0.891 0.892
+0.866,1,+0.288 *κ* 0.942 0.941 0.942 [0.866] 0.778 +0.163 zT 0.904 0.902
+0.892,1,0.854 0.718 +0.241 *σ* 0.891 [0.892] 0.894 0.755 0.603 +0.288 *κ*
+0.902,1,0.866 0.778 +0.163 zT 0.904 [0.902] 0.904 0.814 0.697 +0.207 -------
+0.91,1,"under random-split validation both pathways appeared to agree (R^2^ ≈ [0.91]), so the advantage of direct prediction is visible only under chemist"
+0.941,1,0.755 0.603 +0.288 *κ* 0.942 [0.941] 0.942 0.866 0.778 +0.163 zT
+0.958,1,------------ ---------------- ----------- S 0.959 [0.958] 0.959 0.854 0.718 +0.241 *σ*
+0.97,1,Stacking Mixed 5.2K N/R [0.97] 10-fold CV Elavunkel & Padhan \[38\] Stacking
+1.05,1,"ic radii of the A-, B- and X-site ions. Values of t between ≈0.80 and [1.05] generally correspond to perovskite formation. Bartel et al. \[22\] pr"
+1.2,1,"1^) 89.2% 84,813 52,384 106,287 1,884 to [1.2] × 10^6^ *κ* (W m^−1^ K^−1^) 63.8% 2.51 2.02"
+1.4,1,"d regulatory concerns. Bismuth telluride (Bi~2~Te~3~), with zT ≈ 1.0--[1.4], dominates near-room-temperature applications \[5\], while silicon--g"
+1.88,1,10^6^ *κ* (W m^−1^ K^−1^) 63.8% 2.51 2.02 [1.88] 0.32 to 12.9 zT 68.0% 0.44
+100,1,"and the four models predicted S, *σ*, *κ* and zT from 300 to 800 K in [100] K steps; the carrier-type classifier assigned the sign of S. Direct z"
+100804,1,"ucibility crisis in machine-learning-based science, Patterns 4 (2023) [100804]. \[16\] B. Meredig, E. Antono, C. Church, M. Hutchinson, J. Ling, S."
+1019,1,"erit (zT) reaches its maximum at an optimum carrier concentration of ≈[1019]--1020 cm−3.](media/image2.png ""Figure 2""){width=""4.385416666666667in"""
+1020,1,"zT) reaches its maximum at an optimum carrier concentration of ≈1019--[1020] cm−3.](media/image2.png ""Figure 2""){width=""4.385416666666667in"" heigh"
+105,1,"E.S. Toberer, Complex thermoelectric materials, Nat. Mater. 7 (2008) [105]--114. \[4\] K. Biswas, J. He, I.D. Blum, C.-I. Wu, T.P. Hogan, D.N."
+106287,1,"o 577 *σ* (S m^−1^) 89.2% 84,813 52,384 [106,287] 1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) 63.8% 2.51"
+109203,1,"using k-fold forward cross-validation, Comput. Mater. Sci. 171 (2020) [109203]. \[45\] K. Li, B. DeCost, K. Choudhary, M. Greenwood, J. Hattrick-Si"
+1099,1,"nt room-temperature thermoelectric oxide, Appl. Phys. Lett. 84 (2004) [1099]--1101. \[25\] H. Xie, S. Hao, J. Bao, T.J. Slade, G.J. Snyder, C. Wo"
+10^19,1,erit (zT) reaches its maximum at an optimum carrier concentration of ≈[10^19^]--10^20^ cm^−3^. Several strategies approach the PGEC ideal \[2\]. Ba
+10^20,1,) reaches its maximum at an optimum carrier concentration of ≈10^19^--[10^20^] cm^−3^. Several strategies approach the PGEC ideal \[2\]. Band conve
+10^6,1,"89.2% 84,813 52,384 106,287 1,884 to 1.2 × [10^6^] *κ* (W m^−1^ K^−1^) 63.8% 2.51 2.02 1.88"
+10^7,1,"pplied physical-range bounds: −1000 ≤ S ≤ 1000 *µ*V K^−1^, 10 ≤ *σ* ≤ [10^7^] S m^−1^, 0.05 ≤ *κ* ≤ 25 W m^−1^ K^−1^ and 0 ≤ zT ≤ 4. The Seebeck bo"
+11002,1,"me approach to accelerating materials innovation, APL Mater. 1 (2013) [011002]. \[32\] G.S. Na, H. Chang, A public database of thermoelectric mater"
+1101,1,"m-temperature thermoelectric oxide, Appl. Phys. Lett. 84 (2004) 1099--[1101]. \[25\] H. Xie, S. Hao, J. Bao, T.J. Slade, G.J. Snyder, C. Wolverto"
+11169,1,"rgy calculations using a plane-wave basis set, Phys. Rev. B 54 (1996) [11169]--11186. \[28\] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. C"
+11186,1,"culations using a plane-wave basis set, Phys. Rev. B 54 (1996) 11169--[11186]. \[28\] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C."
+1135,1,"SIGKDD Int. Conf. Knowledge Discovery and Data Mining, ACM, 2016, pp. [1135]--1144. \[48\] D.G. Cahill, S.K. Watson, R.O. Pohl, Lower limit to th"
+113552,1,"for thermoelectric figure-of-merit prediction, Mater. Des. 249 (2025) [113552]. \[38\] V.K. Elavunkel, P. Padhan, Unlocking thermoelectric potentia"
+1144,1,"Int. Conf. Knowledge Discovery and Data Mining, ACM, 2016, pp. 1135--[1144]. \[48\] D.G. Cahill, S.K. Watson, R.O. Pohl, Lower limit to the ther"
+1173,1,"enges in AI for thermoelectric materials, Sci. China Mater. 67 (2024) [1173]--1182. https://doi.org/10.1007/s40843-023-2777-2 \[14\] Y. Sun, X. C"
+117575,1,"335 log~10~*κ* 0.778 0.105 (log~10~ W m^−1^ K^−1^) [117,575] 335 zT 0.697 0.144"
+1182,1,"in AI for thermoelectric materials, Sci. China Mater. 67 (2024) 1173--[1182]. https://doi.org/10.1007/s40843-023-2777-2 \[14\] Y. Sun, X. Chen, J"
+12.9,1,−1^ K^−1^) 63.8% 2.51 2.02 1.88 0.32 to [12.9] zT 68.0% 0.44 0.33 0.39
+120,1,"and interpretable prediction of material properties, Phys. Rev. Lett. [120] (2018) 145301. \[35\] C.T. Ma, S.J. Poon, Reexamining machine learni"
+121,1,"tion to Thermoelectricity, Springer Series in Materials Science, vol. [121], Springer, Berlin, 2010. \[19\] Y. Pei, X. Shi, A. LaLonde, H. Wang,"
+12211,1,"roperties of Na- and W-doped Ca~3~Co~4~O~9~ system, RSC Adv. 8 (2018) [12211]--12221. \[61\] G. Shafer, V. Vovk, A tutorial on conformal predictio"
+12221,1,"es of Na- and W-doped Ca~3~Co~4~O~9~ system, RSC Adv. 8 (2018) 12211--[12221]. \[61\] G. Shafer, V. Vovk, A tutorial on conformal prediction, J. M"
+12396,1,"led exsolution and microstructuring, ACS Appl. Energy Mater. 5 (2022) [12396]--12407. \[60\] U. Hira, L. Han, K. Norrman, D.V. Christensen, N. Pry"
+12407,1,"olution and microstructuring, ACS Appl. Energy Mater. 5 (2022) 12396--[12407]. \[60\] U. Hira, L. Han, K. Norrman, D.V. Christensen, N. Pryds, F."
+13,1,"""Final dataset statistics""); all captions have been re-matched here. [13]. The thesis states external validation with R^2^ 0.67--0.80 for this"
+14.8,1,"exact number.\] Step 8, the largest single step, removed 35,110 rows ([14.8%]): for each (formula, temperature) group with multiple measurements, t"
+142,1,"ff-centering induces ultralow thermal conductivity, J. Am. Chem. Soc. [142] (2020) 9553--9563. \[26\] K.V. Sopiha, C. Comparotto, J.A. Márquez,"
+1442,1,"ng Of the 20,586 stable, semiconducting Materials Project compounds, [1,442] containing Pb or radioactive/unstable elements (including several ura"
+145301,1,"etable prediction of material properties, Phys. Rev. Lett. 120 (2018) [145301]. \[35\] C.T. Ma, S.J. Poon, Reexamining machine learning models on p"
+1457,1,"recovering waste heat with thermoelectric systems, Science 321 (2008) [1457]--1461. \[7\] W. Lee, H. Li, A.B. Wong, D. Zhang, M. Lai, Y. Yu, Q. K"
+1461,1,"ring waste heat with thermoelectric systems, Science 321 (2008) 1457--[1461]. \[7\] W. Lee, H. Li, A.B. Wong, D. Zhang, M. Lai, Y. Yu, Q. Kong, E"
+150,1,omposite 1100 0.072 0.11 −286 ≈[−150]\* n \[59\] Ca~3~Co~4~O~9~ (x = 0) single-phase
+150000,1,"ation energies, energies above the convex hull and band gaps for over [150,000] inorganic compounds via a REST API \[31\], but transport coefficients"
+152,1,"An open source toolkit for materials data mining, Comput. Mater. Sci. [152] (2018) 60--69. \[52\] T. Chen, C. Guestrin, XGBoost: A scalable tree"
+15241,1,"ng approach for half-Heusler alloys, ACS Appl. Energy Mater. 8 (2025) [15241]--15257. \[39\] L. Ward, A. Agrawal, A. Choudhary, C. Wolverton, A ge"
+15257,1,"oach for half-Heusler alloys, ACS Appl. Energy Mater. 8 (2025) 15241--[15257]. \[39\] L. Ward, A. Agrawal, A. Choudhary, C. Wolverton, A general-p"
+1568,1,"he global waste heat potential, Renew. Sustain. Energy Rev. 57 (2016) [1568]--1579. https://doi.org/10.1016/j.rser.2015.12.192 \[2\] G.A. Slack,"
+1579,1,"bal waste heat potential, Renew. Sustain. Energy Rev. 57 (2016) 1568--[1579]. https://doi.org/10.1016/j.rser.2015.12.192 \[2\] G.A. Slack, New ma"
+16028,1,"icting properties of inorganic materials, npj Comput. Mater. 2 (2016) [16028]. \[40\] A.O. Oliynyk, E. Antono, T.D. Sparks, L. Ghadbeigi, M.W. Gau"
+164201,1,"335 log~10~*σ* 0.603 0.246 (log~10~ S m^−1^) [164,201] 335 log~10~*κ* 0.778 0.105 (log~10~ W m^−1^ K^−1^)"
+1662,1,"dictions with machine learning, ACS Appl. Mater. Interfaces 17 (2025) [1662]--1673. \[Thesis cites 2024; volume 17 is the 2025 issue (online Dec 2"
+1673,1,"ns with machine learning, ACS Appl. Mater. Interfaces 17 (2025) 1662--[1673]. \[Thesis cites 2024; volume 17 is the 2025 issue (online Dec 2024)."
+168318,1,"----------- S 0.718 57.9 *µ*V K^−1^ [168,318] 335 log~10~*σ* 0.603 0.246 (log~10~ S m^−1^)"
+171,1,"discovery using k-fold forward cross-validation, Comput. Mater. Sci. [171] (2020) 109203. \[45\] K. Li, B. DeCost, K. Choudhary, M. Greenwood,"
+173,1,"JARVIS) for data-driven materials design, npj Comput. Mater. 6 (2020) [173]. \[34\] T. Xie, J.C. Grossman, Crystal graph convolutional neural ne"
+173.9,1,"------ S (*µ*V K^−1^) 91.4% 17.3 61.5 [173.9] −452 to 577 *σ* (S m^−1^) 89.2% 84,813 52"
+17372,1,"ling-median smoothness filter (window = 3) to each temperature curve; [17,372] spikes were set to NaN and 520 rows in which all properties became Na"
+1747,1,"mann transport equation for phonons, Comput. Phys. Commun. 185 (2014) [1747]--1758. \[12\] N. Parse, J. Recatala-Gomez, R. Zhu, A.K. Low, K. Hipp"
+1758,1,"ransport equation for phonons, Comput. Phys. Commun. 185 (2014) 1747--[1758]. \[12\] N. Parse, J. Recatala-Gomez, R. Zhu, A.K. Low, K. Hippalgaon"
+1821,1,2 Background and related work ## 2.1 Thermoelectric fundamentals In [1821] Thomas Johann Seebeck discovered that a temperature difference across
+185,1,"f the Boltzmann transport equation for phonons, Comput. Phys. Commun. [185] (2014) 1747--1758. \[12\] N. Parse, J. Recatala-Gomez, R. Zhu, A.K."
+1884,1,"σ* (S m^−1^) 89.2% 84,813 52,384 106,287 [1,884] to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) 63.8% 2.51 2.0"
+19,1,"added here. Keep Dunn et al. only if Matbench/Automatminer was used. [19]. Issue: (i) the thesis refers to search ""ranges listed above"" but lis"
+1926,1,"Goldschmidt, Die Gesetze der Krystallochemie, Naturwissenschaften 14 ([1926]) 477--485. \[22\] C.J. Bartel, C. Sutton, B.R. Goldsmith, R. Ouyang,"
+1983,1,"ura, Isotope scattering of dispersive phonons in Ge, Phys. Rev. B 27 ([1983]) 858--866. \[42\] T. Hastie, R. Tibshirani, J. Friedman, The Element"
+1992,1,"to the thermal conductivity of disordered crystals, Phys. Rev. B 46 ([1992]) 6131--6140. \[49\] S.P. Ong, W.D. Richards, A. Jain, G. Hautier, M."
+1996,1,"al-energy calculations using a plane-wave basis set, Phys. Rev. B 54 ([1996]) 11169--11186. \[28\] P. Giannozzi, S. Baroni, N. Bonini, M. Calandr"
+2.02,1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) 63.8% 2.51 [2.02] 1.88 0.32 to 12.9 zT 68.0%
+2.5,1,"{2}\sigma T/\kappa|}{{zT}_{rep}} > 0.5$ (5) This removed 6,167 rows ([2.5%]) and shifted the mean zT only slightly (0.387 to 0.393), indicating t"
+2.51,1,"06,287 1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) 63.8% [2.51] 2.02 1.88 0.32 to 12.9 zT 68"
+2.6,1,"> 3.0, above the maximum reliably reported for bulk thermoelectrics (≈[2.6] \[20\]); these are ascribed to residual digitization errors and retai"
+200,1,"to ≈0.2. LaCoO~3~ and its Sr-doped derivatives are p-type, with S of [200]--600 *µ*V K^−1^ but modest zT \[24\]. *Halide perovskites.* Followin"
+2001,1,"pp. 3146--3154. \[54\] L. Breiman, Random forests, Mach. Learn. 45 ([2001]) 5--32. \[55\] F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B"
+2004,1,"fficient room-temperature thermoelectric oxide, Appl. Phys. Lett. 84 ([2004]) 1099--1101. \[25\] H. Xie, S. Hao, J. Bao, T.J. Slade, G.J. Snyder,"
+2012,1,"hermoelectrics with all-scale hierarchical architectures, Nature 489 ([2012]) 414--418. \[5\] B. Poudel, Q. Hao, Y. Ma, Y. Lan, A. Minnich, B. Yu"
+2079,1,"ection bias in performance evaluation, J. Mach. Learn. Res. 11 (2010) [2079]--2107. \[57\] S. Varma, R. Simon, Bias in error estimation when usin"
+2101704,1,"talizing prospects, challenging materials, Adv. Opt. Mater. 10 (2022) [2101704]. \[27\] G. Kresse, J. Furthmüller, Efficient iterative schemes for a"
+2107,1,"bias in performance evaluation, J. Mach. Learn. Res. 11 (2010) 2079--[2107]. \[57\] S. Varma, R. Simon, Bias in error estimation when using cros"
+214,1,"representation for data-driven discovery, npj Comput. Mater. 8 (2022) [214]. https://doi.org/10.1038/s41524-022-00897-2 \[33\] K. Choudhary, K.F"
+23,1,ssue: specify the unit of E_hull (eV/atom in the Materials Project). [23]. Issue: report the number of candidates remaining after the anti-pero
+23700,1,"have been re-matched here.\] Parse et al. \[12\] trained XGBoost on ≈[23,700] Starrydata2 data points (R^2^ = 0.815, 5-fold CV). Jia et al. \[13\]"
+24,1,ers (i.e. the size of the ranked list from which Table 11 is taken). [24]. Critical technical issue: space group alone does not prove a perovsk
+2400308,1,"hermoelectric materials with StarryData2, Adv. Theory Simul. 7 (2024) [2400308]. \[13\] X. Jia, A. Aziz, Y. Hashimoto, H. Li, Dealing with the big d"
+2411152,1,"r~9~ with ultralow thermal conductivity, Adv. Funct. Mater. 34 (2024) [2411152]. \[9\] C.C. Stoumpos, C.D. Malliakas, M.G. Kanatzidis, Semiconductin"
+249,1,"e learning for thermoelectric figure-of-merit prediction, Mater. Des. [249] (2025) 113552. \[38\] V.K. Elavunkel, P. Padhan, Unlocking thermoele"
+2500210,1,"n ingenious machine learning methods, Adv. Electron. Mater. 11 (2025) [2500210]. https://doi.org/10.1002/aelm.202500210 \[15\] S. Kapoor, A. Narayan"
+2502,1,"800 K, the upper edge of the training range where data are sparsest ([2,502] rows), so these predictions are more uncertain; re-ranking at 600 K,"
+2509.00299,1,"models on predicting thermoelectric properties, arXiv preprint arXiv:[2509.00299], 2025. \[Preprint (not peer reviewed); the thesis gave no venue. The"
+254,1,"iSbSe~3~ has been reported to reach zT close to 1.0 at 800 K with S ≈ [−254] *µ*V K^−1^, and Cu~3~SbS~3~ and Ag~3~SbS~3~ show intrinsically low *κ"
+26,1,"n for each target, and RMSE (available in Fig. 7), for completeness. [26]. Issue: Fig. 8 shows random-split R^2^ = 0.894 for *σ*, while this ta"
+2825,1,"kit-learn: Machine learning in Python, J. Mach. Learn. Res. 12 (2011) [2825]--2830. \[56\] G.C. Cawley, N.L.C. Talbot, On over-fitting in model s"
+2830,1,"arn: Machine learning in Python, J. Mach. Learn. Res. 12 (2011) 2825--[2830]. \[56\] G.C. Cawley, N.L.C. Talbot, On over-fitting in model selecti"
+284,1,"stricting to 300--800 K, 4,584 measurements on 862 formulas, of which [284] (32.9%) were seen during training and 578 (67.1%) were unseen, allowi"
+286,1,composite 1100 0.072 0.11 [−286] ≈−150\* n \[59\] Ca~3~Co~4~O~9~ (x = 0)
+298,1,"25 K intervals so that slightly different reported temperatures (e.g. [298], 300 and 303 K) fall in the same bin. Step 4 pivoted the data from lo"
+3.55,1,68.0% 0.44 0.33 0.39 0 to [3.55] -------------------------------------------------------------------
+303,1,"s so that slightly different reported temperatures (e.g. 298, 300 and [303] K) fall in the same bin. Step 4 pivoted the data from long format (on"
+314,1,"python library for materials analysis, Comput. Mater. Sci. 68 (2013) [314]--319. \[50\] C. Leys, C. Ley, O. Klein, P. Bernard, L. Licata, Detec"
+3146,1,"es in Neural Information Processing Systems 30 (NIPS 2017), 2017, pp. [3146]--3154. \[54\] L. Breiman, Random forests, Mach. Learn. 45 (2001) 5--"
+3154,1,"Neural Information Processing Systems 30 (NIPS 2017), 2017, pp. 3146--[3154]. \[54\] L. Breiman, Random forests, Mach. Learn. 45 (2001) 5--32. \"
+319,1,"on library for materials analysis, Comput. Mater. Sci. 68 (2013) 314--[319]. \[50\] C. Leys, C. Ley, O. Klein, P. Bernard, L. Licata, Detecting"
+32.9,1,"ting to 300--800 K, 4,584 measurements on 862 formulas, of which 284 ([32.9%]) were seen during training and 578 (67.1%) were unseen, allowing a di"
+320,1,"nce of nanostructured bismuth antimony telluride bulk alloys, Science [320] (2008) 634--638. \[6\] L.E. Bell, Cooling, heating, generating power"
+321,1,"power, and recovering waste heat with thermoelectric systems, Science [321] (2008) 1457--1461. \[7\] W. Lee, H. Li, A.B. Wong, D. Zhang, M. Lai,"
+325,1,"erial such as Bi~0.5~Sb~1.5~Te~3~ may appear at 20 temperatures (300, [325], . . . , 800 K); under random splitting the test prediction becomes i"
+34106,1,"ly La- or Nb-doped SrTiO~3~ single crystals, J. Appl. Phys. 97 (2005) [034106]. \[11\] W. Li, J. Carrete, N.A. Katcho, N. Mingo, ShengBTE: A solver"
+346,1,", *R*3̄*c*, *I*4/*mcm*, *Imma*, *P*4/*mbm* and *Cmcm*). The remaining [346] ABX~3~ formulas (including silver oxysalts (AgBrO~3~, AgClO~3~, AgNO~"
+350,1,"oth *κ* and S, raising zT substantially \[10\]. CaMnO~3~ exhibits S ≈ [−350] *µ*V K^−1^ but zT \< 0.1 because of low *σ* \[23\]; rare-earth substi"
+35110,1,"780. Use the exact number.\] Step 8, the largest single step, removed [35,110] rows (14.8%): for each (formula, temperature) group with multiple mea"
+3564,1,"learning framework for molecules and crystals, Chem. Mater. 31 (2019) [3564]--3572. # Summary of flagged issues (for the authors; delete before s"
+3572,1,"ng framework for molecules and crystals, Chem. Mater. 31 (2019) 3564--[3572]. # Summary of flagged issues (for the authors; delete before submiss"
+36,1,"hermoelectric applications"" without a citation: add one or rephrase. [36]. Issue: (i) both comparisons are at 1000--1100 K, outside the 300--80"
+371,1,"vk, A tutorial on conformal prediction, J. Mach. Learn. Res. 9 (2008) [371]--421. \[62\] C. Chen, W. Ye, Y. Zuo, C. Zheng, S.P. Ong, Graph netwo"
+373,1,"gh thermoelectric figure of merit in SnSe crystals, Nature 508 (2014) [373]--377. \[21\] V.M. Goldschmidt, Die Gesetze der Krystallochemie, Natu"
+377,1,"ermoelectric figure of merit in SnSe crystals, Nature 508 (2014) 373--[377]. \[21\] V.M. Goldschmidt, Die Gesetze der Krystallochemie, Naturwiss"
+38,1,"K rows for both S and zT; the zT model uses 125,283 rows. Corrected. [38]. Adjust to reflect all AI tools actually used, including any used to"
+395502,1,"quantum simulations of materials, J. Phys.: Condens. Matter 21 (2009) [395502]. \[29\] G.K.H. Madsen, D.J. Singh, BoltzTraP. A code for calculating"
+407,1,".), CRC Handbook of Thermoelectrics, CRC Press, Boca Raton, 2018, pp. [407]--440. \[The chapter first appeared in the 1995 edition; cite the edit"
+41,1,ion actually consulted. 40. Ref. flahaut: Add page numbers and DOI. [41]. Ref. mapoon: Preprint (not peer reviewed); the thesis gave no venue.
+414,1,"lectrics with all-scale hierarchical architectures, Nature 489 (2012) [414]--418. \[5\] B. Poudel, Q. Hao, Y. Ma, Y. Lan, A. Minnich, B. Yu, X."
+418,1,"ics with all-scale hierarchical architectures, Nature 489 (2012) 414--[418]. \[5\] B. Poudel, Q. Hao, Y. Ma, Y. Lan, A. Minnich, B. Yu, X. Yan,"
+42,1,s work in Tables 1 and 13 should be re-checked against the preprint. [42]. Ref. barua: Thesis cites 2024; volume 17 is the 2025 issue (online D
+421,1,"tutorial on conformal prediction, J. Mach. Learn. Res. 9 (2008) 371--[421]. \[62\] C. Chen, W. Ye, Y. Zuo, C. Zheng, S.P. Ong, Graph networks a"
+440,1,"RC Handbook of Thermoelectrics, CRC Press, Boca Raton, 2018, pp. 407--[440]. \[The chapter first appeared in the 1995 edition; cite the edition a"
+45,1,"017, pp. 3146--3154. \[54\] L. Breiman, Random forests, Mach. Learn. [45] (2001) 5--32. \[55\] F. Pedregosa, G. Varoquaux, A. Gramfort, V. Mic"
+452,1,"(*µ*V K^−1^) 91.4% 17.3 61.5 173.9 [−452] to 577 *σ* (S m^−1^) 89.2% 84,813 52,384"
+46,1,"imit to the thermal conductivity of disordered crystals, Phys. Rev. B [46] (1992) 6131--6140. \[49\] S.P. Ong, W.D. Richards, A. Jain, G. Hauti"
+473,1,"of electronic bands for high performance bulk thermoelectrics, Nature [473] (2011) 66--69. \[20\] L.-D. Zhao, S.-H. Lo, Y. Zhang, H. Sun, G. Tan"
+4765,1,"es in Neural Information Processing Systems 30 (NIPS 2017), 2017, pp. [4765]--4774. \[47\] M.T. Ribeiro, S. Singh, C. Guestrin, ""Why should I tru"
+477,1,"hmidt, Die Gesetze der Krystallochemie, Naturwissenschaften 14 (1926) [477]--485. \[22\] C.J. Bartel, C. Sutton, B.R. Goldsmith, R. Ouyang, C.B."
+4774,1,"Neural Information Processing Systems 30 (NIPS 2017), 2017, pp. 4765--[4774]. \[47\] M.T. Ribeiro, S. Singh, C. Guestrin, ""Why should I trust you"
+48.9,1,"s to predict carrier type (p vs n) on balanced classes (51.1% p-type, [48.9%] n-type); during screening, when the classifier and regressor disagree"
+485,1,", Die Gesetze der Krystallochemie, Naturwissenschaften 14 (1926) 477--[485]. \[22\] C.J. Bartel, C. Sutton, B.R. Goldsmith, R. Ouyang, C.B. Musg"
+489,1,"ulk thermoelectrics with all-scale hierarchical architectures, Nature [489] (2012) 414--418. \[5\] B. Poudel, Q. Hao, Y. Ma, Y. Lan, A. Minnich,"
+49,1,"mean, use absolute deviation around the median, J. Exp. Soc. Psychol. [49] (2013) 764--766. \[51\] L. Ward, A. Dunn, A. Faghaninia, N.E.R. Zimm"
+5.2,1,\[verify\] Wang et al. \[37\] Stacking Mixed [5.2]K N/R 0.97 10-fold CV
+50000,1,"l. \[14\] combined MAGPIE and CBFV features in deep neural networks (∼[50,000] entries, R^2^ \> 0.95 under random split), showing that the combinati"
+5069,1,"of electronic band gaps of solids, J. Chem. Theory Comput. 15 (2019) [5069]--5079. \[59\] N. Kanas, B.A.D. Williamson, F. Steinbach, R. Hinterdi"
+5079,1,"ectronic band gaps of solids, J. Chem. Theory Comput. 15 (2019) 5069--[5079]. \[59\] N. Kanas, B.A.D. Williamson, F. Steinbach, R. Hinterding, M."
+508,1,"vity and high thermoelectric figure of merit in SnSe crystals, Nature [508] (2014) 373--377. \[21\] V.M. Goldschmidt, Die Gesetze der Krystalloc"
+51.1,1,"me 335 features to predict carrier type (p vs n) on balanced classes ([51.1%] p-type, 48.9% n-type); during screening, when the classifier and regr"
+511,1,"Te-type thermoelectric materials, Sci. Technol. Adv. Mater. 20 (2019) [511]--520. \[31\] A. Jain, S.P. Ong, G. Hautier, W. Chen, W.D. Richards,"
+5205,1,"rated at the Korea Research Institute of Chemical Technology contains [5,205] experimental observations for 880 unique materials \[32\]. \[Issue: t"
+52384,1,".9 −452 to 577 *σ* (S m^−1^) 89.2% 84,813 [52,384] 106,287 1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^) 63.8%"
+54,1,"total-energy calculations using a plane-wave basis set, Phys. Rev. B [54] (1996) 11169--11186. \[28\] P. Giannozzi, S. Baroni, N. Bonini, M. C"
+55,1,"rning prediction of materials properties, npj Comput. Mater. 9 (2023) [55]. \[46\] S.M. Lundberg, S.-I. Lee, A unified approach to interpreting"
+57,1,"timating the global waste heat potential, Renew. Sustain. Energy Rev. [57] (2016) 1568--1579. https://doi.org/10.1016/j.rser.2015.12.192 \[2\]"
+57.9,1,"-------------- ------------- -------------- S 0.718 [57.9] *µ*V K^−1^ 168,318 335 log~10~*σ* 0.603"
+577,1,"^−1^) 91.4% 17.3 61.5 173.9 −452 to [577] *σ* (S m^−1^) 89.2% 84,813 52,384 106,2"
+578,1,"s on 862 formulas, of which 284 (32.9%) were seen during training and [578] (67.1%) were unseen, allowing a direct comparison of interpolation an"
+6.06,1,or valence (0.022) 5 avg-dev covalent radius (0.013) T ([6.06]) sum atomic number (0.014) avg Pauling electron
+6.98,1,) 4 dev polarizability (0.015) dev Gilmor valence ([6.98]) mean NdUnfilled (0.014) dev Gilmor valence (0.022) 5
+6131,1,"e thermal conductivity of disordered crystals, Phys. Rev. B 46 (1992) [6131]--6140. \[49\] S.P. Ong, W.D. Richards, A. Jain, G. Hautier, M. Koche"
+6140,1,"mal conductivity of disordered crystals, Phys. Rev. B 46 (1992) 6131--[6140]. \[49\] S.P. Ong, W.D. Richards, A. Jain, G. Hautier, M. Kocher, S."
+6167,1,"}_{rep} - S^{2}\sigma T/\kappa|}{{zT}_{rep}} > 0.5$ (5) This removed [6,167] rows (2.5%) and shifted the mean zT only slightly (0.387 to 0.393), i"
+634,1,"structured bismuth antimony telluride bulk alloys, Science 320 (2008) [634]--638. \[6\] L.E. Bell, Cooling, heating, generating power, and recov"
+638,1,"tured bismuth antimony telluride bulk alloys, Science 320 (2008) 634--[638]. \[6\] L.E. Bell, Cooling, heating, generating power, and recovering"
+66,1,"ic bands for high performance bulk thermoelectrics, Nature 473 (2011) [66]--69. \[20\] L.-D. Zhao, S.-H. Lo, Y. Zhang, H. Sun, G. Tan, C. Uher,"
+67.1,1,"862 formulas, of which 284 (32.9%) were seen during training and 578 ([67.1%]) were unseen, allowing a direct comparison of interpolation and extra"
+7.27,1,(0.039) 3 mean GS volume (0.016) dev density ([7.27]) mean melting T (0.018) mode melting T (0.026) 4
+7.31,1,2 mean NdValence (0.027) mode polarizability ([7.31]) T (0.024) dev MB electroneg. (0.039) 3
+7.87,1,-- 1 T (0.111) avg polarizability ([7.87]) avg melting T (0.035) T (0.040) 2 mean NdValenc
+70,1,", which could raise structural coverage from 4.5% to an estimated 60--[70%], or by using crystal graph networks such as CGCNN \[34\] and MEGNet \"
+71,1,"-structure dependent quantities, Comput. Phys. Commun. 175 (2006) 67--[71]. \[30\] Y. Katsura, M. Kumagai, T. Kodani, M. Kaneshige, Y. Ando, S."
+7324,1,"ng-driven synthesis of full-Heusler compounds, Chem. Mater. 28 (2016) [7324]--7331. \[41\] S. Tamura, Isotope scattering of dispersive phonons in"
+7331,1,"ven synthesis of full-Heusler compounds, Chem. Mater. 28 (2016) 7324--[7331]. \[41\] S. Tamura, Isotope scattering of dispersive phonons in Ge, P"
+74,1,"e differently to the targets (Fig. 12). CBFV features dominate the S ([74%]) and *σ* (63%) models, consistent with the polarizability and electro"
+764,1,"absolute deviation around the median, J. Exp. Soc. Psychol. 49 (2013) [764]--766. \[51\] L. Ward, A. Dunn, A. Faghaninia, N.E.R. Zimmermann, S."
+766,1,"ute deviation around the median, J. Exp. Soc. Psychol. 49 (2013) 764--[766]. \[51\] L. Ward, A. Dunn, A. Faghaninia, N.E.R. Zimmermann, S. Bajaj"
+785,1,"SIGKDD Int. Conf. Knowledge Discovery and Data Mining, ACM, 2016, pp. [785]--794. \[53\] G. Ke, Q. Meng, T. Finley, T. Wang, W. Chen, W. Ma, Q."
+794,1,"D Int. Conf. Knowledge Discovery and Data Mining, ACM, 2016, pp. 785--[794]. \[53\] G. Ke, Q. Meng, T. Finley, T. Wang, W. Chen, W. Ma, Q. Ye, T"
+80,1,"trategies were applied with the same model and features: (i) a random [80]/20 split; (ii) 5-fold and (iii) 10-fold CV, all partitioning data at"
+819,1,"on performance for materials discovery, Mol. Syst. Des. Eng. 3 (2018) [819]--825. \[17\] D.M. Rowe (Ed.), Thermoelectrics Handbook: Macro to Nan"
+825,1,"rformance for materials discovery, Mol. Syst. Des. Eng. 3 (2018) 819--[825]. \[17\] D.M. Rowe (Ed.), Thermoelectrics Handbook: Macro to Nano, CR"
+84,1,"An efficient room-temperature thermoelectric oxide, Appl. Phys. Lett. [84] (2004) 1099--1101. \[25\] H. Xie, S. Hao, J. Bao, T.J. Slade, G.J. S"
+84813,1,"173.9 −452 to 577 *σ* (S m^−1^) 89.2% [84,813] 52,384 106,287 1,884 to 1.2 × 10^6^ *κ* (W m^−1^ K^−1^"
+858,1,"sotope scattering of dispersive phonons in Ge, Phys. Rev. B 27 (1983) [858]--866. \[42\] T. Hastie, R. Tibshirani, J. Friedman, The Elements of"
+866,1,"e scattering of dispersive phonons in Ge, Phys. Rev. B 27 (1983) 858--[866]. \[42\] T. Hastie, R. Tibshirani, J. Friedman, The Elements of Stati"
+8693,1,"norganic halide perovskites, Proc. Natl. Acad. Sci. U.S.A. 114 (2017) [8693]--8697. \[8\] Y. Li, X. Li, B. Wei, J. Liu, F. Pan, H. Wang, et al.,"
+8697,1,"ic halide perovskites, Proc. Natl. Acad. Sci. U.S.A. 114 (2017) 8693--[8697]. \[8\] Y. Li, X. Li, B. Wei, J. Liu, F. Pan, H. Wang, et al., Phonon"
+880,1,"e of Chemical Technology contains 5,205 experimental observations for [880] unique materials \[32\]. \[Issue: the thesis expands ESTM as ""Experim"
+89.2,1,"7.3 61.5 173.9 −452 to 577 *σ* (S m^−1^) [89.2%] 84,813 52,384 106,287 1,884 to 1.2 × 10^6^ *κ"
+9019,1,"and near-infrared photoluminescent properties, Inorg. Chem. 52 (2013) [9019]--9038. \[10\] S. Ohta, T. Nomura, H. Ohta, K. Koumoto, High-temperat"
+9038,1,"ar-infrared photoluminescent properties, Inorg. Chem. 52 (2013) 9019--[9038]. \[10\] S. Ohta, T. Nomura, H. Ohta, K. Koumoto, High-temperature ca"
+91,1,"ing cross-validation for model selection, BMC Bioinformatics 7 (2006) [91]. \[58\] P. Borlido, T. Aull, A.W. Huran, F. Tran, M.A.L. Marques, S."
+91.4,1,------------ --------- ---------------------- S (*µ*V K^−1^) [91.4%] 17.3 61.5 173.9 −452 to 577 *σ* (S m^−1
+913,1,"spatial, hierarchical, or phylogenetic structure, Ecography 40 (2017) [913]--929. \[44\] Z. Xiong, Y. Cui, Z. Liu, Y. Zhao, M. Hu, J. Hu, Evalua"
+929,1,"al, hierarchical, or phylogenetic structure, Ecography 40 (2017) 913--[929]. \[44\] Z. Xiong, Y. Cui, Z. Liu, Y. Zhao, M. Hu, J. Hu, Evaluating"
+9553,1,"g induces ultralow thermal conductivity, J. Am. Chem. Soc. 142 (2020) [9553]--9563. \[26\] K.V. Sopiha, C. Comparotto, J.A. Márquez, J.J.S. Scrag"
+9563,1,"ces ultralow thermal conductivity, J. Am. Chem. Soc. 142 (2020) 9553--[9563]. \[26\] K.V. Sopiha, C. Comparotto, J.A. Márquez, J.J.S. Scragg, Cha"
+97,1,"s of heavily La- or Nb-doped SrTiO~3~ single crystals, J. Appl. Phys. [97] (2005) 034106. \[11\] W. Li, J. Carrete, N.A. Katcho, N. Mingo, Shen"

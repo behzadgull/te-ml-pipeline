@@ -1,0 +1,15 @@
+{
+  "thesis_numbers_total": 999,
+  "thesis_distinct_values": 432,
+  "paper_numbers_matching_a_thesis_value": 234,
+  "of_which_small_integers": 110,
+  "nontrivial_matches": 124,
+  "nontrivial_by_paper_class": {
+    "UNCLASSIFIED": 58,
+    "CITED": 4,
+    "GENERATED": 53,
+    "DESIGN": 9
+  },
+  "nontrivial_distinct_values": 59,
+  "nontrivial_unclassified_distinct_values": 38
+}

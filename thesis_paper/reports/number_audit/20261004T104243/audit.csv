@@ -1,0 +1,886 @@
+line,token,value,class,id,problem,section,context
+5,22620,22620,EXCLUDED:FRONT,,,,"Sciences and Technology, Haripur, Khyber Pakhtunkhwa, [22620], Pakistan* **Abstract** Machine learning (ML) is inc"
+9,"280,664",280664,GENERATED,n_clean,,,"d on a pinned snapshot of Starrydata2 ( [280,664] cleaned rows; 185,064 ,"
+9,"185,064",185064,GENERATED,n_S,,,"280,664 cleaned rows; [185,064] , 182,755 ,"
+9,"182,755",182755,GENERATED,n_sigma,,,"ed rows; 185,064 , [182,755] , 121,110 and"
+9,"121,110",121110,GENERATED,n_kappa,,,", 182,755 , [121,110] and 129,419 rows with a"
+9,"129,419",129419,GENERATED,n_zT,,,", 121,110 and [129,419] rows with a Seebeck coefficient, electrical c"
+9,397,397,GENERATED,n_feat,,,"vity and figure of merit), described by [397] composition-based features (MAGPIE, CBFV and"
+9,2,2,EXCLUDED:NOTATION,,,,. Chemistry-cluster grouped cross-validation lowered R^[2]^ by 0.134 -- 0.21
+9,0.134,0.134,GENERATED,gap_lo,,,rouped cross-validation lowered R^2^ by [0.134] -- 0.213 relative to ra
+9,0.213,0.213,GENERATED,gap_hi,,,"R^2^ by 0.134 -- [0.213] relative to random splits, giving composition"
+9,0.753,0.753,GENERATED,chem_S,,,"ts, giving composition-only ceilings of [0.753] , 0.702 ,"
+9,0.702,0.702,GENERATED,chem_sigma,,,"s of 0.753 , [0.702] , 0.809 and"
+9,0.809,0.809,GENERATED,chem_kappa,,,"0.702 , [0.809] and 0.746 for S, *σ*"
+9,0.746,0.746,GENERATED,chem_zT,,,"0.809 and [0.746] for S, *σ*, *κ* and zT, respectively. Externa"
+9,2,2,EXCLUDED:NOTATION,,,,validation on the independent ESTM database lowered R^[2]^ further: for zT it was 0.498
+9,0.498,0.498,GENERATED,estm_b_zT,,,lowered R^2^ further: for zT it was [0.498] on rows whose chemistry cluster is absent fro
+9,0.662,0.662,GENERATED,estm_a_zT,,,cluster is absent from training and [0.662] on rows sharing no source publication with tr
+9,2,2,EXCLUDED:NOTATION,,,,zT regression outperformed the component-wise route S^[2]^*σ*T/*κ* (R^2^ = 0.727 vs
+9,2,2,EXCLUDED:NOTATION,,,,outperformed the component-wise route S^2^*σ*T/*κ* (R^[2]^ = 0.727 vs
+9,0.727,0.727,GENERATED,dvd_direct,,,ent-wise route S^2^*σ*T/*κ* (R^2^ = [0.727] vs 0.540 ) becaus
+9,0.540,0.54,GENERATED,dvd_derived,,,"0.727 vs [0.540] ) because component errors compound, and SHAP"
+13,2,2,EXCLUDED:NOTATION,,,,Highlights** - Chemistry-cluster validation reveals R^[2]^ inflation of 0.134 --
+13,0.134,0.134,GENERATED,gap_lo,,,er validation reveals R^2^ inflation of [0.134] -- 0.213 from random sp
+13,0.213,0.213,GENERATED,gap_hi,,,ation of 0.134 -- [0.213] from random splits - XGBoost trained on
+15,"280,664",280664,GENERATED,n_clean,,,"om random splits - XGBoost trained on [280,664] cleaned Starrydata2 rows with"
+15,397,397,GENERATED,n_feat,,,cleaned Starrydata2 rows with [397] descriptors - Composition-only ceilings unde
+17,2,2,EXCLUDED:NOTATION,,,,omposition-only ceilings under chemistry-cluster CV: R^[2]^ ≈ 0.746 for zT and
+17,0.746,0.746,GENERATED,chem_zT,,,ngs under chemistry-cluster CV: R^2^ ≈ [0.746] for zT and 0.809
+17,0.809,0.809,GENERATED,chem_kappa,,,0.746 for zT and [0.809] for *κ* - Independent ESTM test: zT R^2^ fal
+19,2,2,EXCLUDED:NOTATION,,,,0.809 for *κ* - Independent ESTM test: zT R^[2]^ falls to 0.498 for chemist
+19,0.498,0.498,GENERATED,estm_b_zT,,,ependent ESTM test: zT R^2^ falls to [0.498] for chemistries absent from training - [[PEN
+27,1,1,EXCLUDED:SECTION,,,,-iast.edu.pk](mailto:muhammad.ejaz@paf-iast.edu.pk) # [1] Introduction The world's energy situation is challeng
+29,72%,72,UNCLASSIFIED,,,1 Introduction,his equation. It has been estimated that approximately [72%] of global primary energy consumption is lost after con
+31,1,1,EXCLUDED:XREF,,,,"determined by the dimensionless figure of merit (Eq. ([1])), where S is the Seebeck coefficient (*µ*V K^−1^), *σ"
+31,−1,1,EXCLUDED:NOTATION,,,,"(Eq. (1)), where S is the Seebeck coefficient (*µ*V K^[−1]^), *σ* is the electrical conductivity (S m^−1^), T is"
+31,−1,1,EXCLUDED:NOTATION,,,,"(*µ*V K^−1^), *σ* is the electrical conductivity (S m^[−1]^), T is the absolute temperature (K), and *κ* is the t"
+31,−1,1,EXCLUDED:NOTATION,,,,"perature (K), and *κ* is the thermal conductivity (W m^[−1]^ K^−1^), the sum of electronic (*κ*~e~) and lattice (*"
+31,−1,1,EXCLUDED:NOTATION,,,,"re (K), and *κ* is the thermal conductivity (W m^−1^ K^[−1]^), the sum of electronic (*κ*~e~) and lattice (*κ*~l~)"
+31,2,2,EXCLUDED:XREF,,,,onic (*κ*~e~) and lattice (*κ*~l~) contributions (Eq. ([2])): $zT = \frac{S^{2}\sigma T}{\kappa}$ (1) $\kappa =
+33,2,2,EXCLUDED:MATH,,,,tice (*κ*~l~) contributions (Eq. (2)): $zT = \frac{S^{[2]}\sigma T}{\kappa}$ (1) $\kappa = \kappa_{e} + \kappa_
+33,1,1,EXCLUDED:EQNUM,,,,tions (Eq. (2)): $zT = \frac{S^{2}\sigma T}{\kappa}$ ([1]) $\kappa = \kappa_{e} + \kappa_{l}$ (2) The fundamen
+35,2,2,EXCLUDED:EQNUM,,,,a T}{\kappa}$ (1) $\kappa = \kappa_{e} + \kappa_{l}$ ([2]) The fundamental physical challenge is to maximize zT
+39,2,2,UNCLASSIFIED,,,1 Introduction,"de (PbTe) and its alloys exhibit zT values as high as ≈[2] at optimized compositions [@biswas2012performance], bu"
+39,2,2,EXCLUDED:NOTATION,,,,"nmental and regulatory concerns. Bismuth telluride (Bi~[2]~Te~3~), with zT ≈ 1.0--1.4, dominates near-room-temper"
+39,3,3,EXCLUDED:NOTATION,,,,"al and regulatory concerns. Bismuth telluride (Bi~2~Te~[3]~), with zT ≈ 1.0--1.4, dominates near-room-temperature"
+39,1.0,1,UNCLASSIFIED,,,1 Introduction,"ry concerns. Bismuth telluride (Bi~2~Te~3~), with zT ≈ [1.0]--1.4, dominates near-room-temperature applications [@p"
+39,1.4,1.4,UNCLASSIFIED,,,1 Introduction,"ncerns. Bismuth telluride (Bi~2~Te~3~), with zT ≈ 1.0--[1.4], dominates near-room-temperature applications [@poudel"
+41,3,3,EXCLUDED:NOTATION,,,,ell2008cooling]. Perovskites with general formula ABX~[3]~ consist of corner-sharing BX~6~ octahedra with A cati
+41,6,6,EXCLUDED:NOTATION,,,,"th general formula ABX~3~ consist of corner-sharing BX~[6]~ octahedra with A cations in the interstitial voids, a"
+43,3,3,EXCLUDED:NOTATION,,,,ications. Lead-based halide perovskites such as CsPbI~[3]~ show ultralow thermal conductivity owing to their sof
+43,2,2,EXCLUDED:NOTATION,,,,"vskites are unstable due to the facile oxidation of Sn^[2]+^ to Sn^4+^ [@stoumpos2013semiconducting], and other a"
+43,4,4,EXCLUDED:NOTATION,,,,"e unstable due to the facile oxidation of Sn^2+^ to Sn^[4]+^ [@stoumpos2013semiconducting], and other alternative"
+43,3,3,EXCLUDED:NOTATION,,,,"rinsic efficiencies. Oxide perovskites including SrTiO~[3]~, CaMnO~3~ and LaCoO~3~ have been investigated for hig"
+43,3,3,EXCLUDED:NOTATION,,,,"iciencies. Oxide perovskites including SrTiO~3~, CaMnO~[3]~ and LaCoO~3~ have been investigated for high-temperat"
+43,3,3,EXCLUDED:NOTATION,,,,"ide perovskites including SrTiO~3~, CaMnO~3~ and LaCoO~[3]~ have been investigated for high-temperature applicati"
+43,0.2,0.2,UNCLASSIFIED,,,1 Introduction,"applications, with doped compositions reaching zT of ≈[0.2] (Yb-doped CaMnO~3~ at 1000 K [@flahaut2006effect]) and"
+43,3,3,EXCLUDED:NOTATION,,,,doped compositions reaching zT of ≈0.2 (Yb-doped CaMnO~[3]~ at 1000 K [@flahaut2006effect]) and
+43,1000,1000,UNCLASSIFIED,,,1 Introduction,compositions reaching zT of ≈0.2 (Yb-doped CaMnO~3~ at [1000] K [@flahaut2006effect]) and
+43,0.18,0.18,CITED,androulakis2004_zT,,1 Introduction,K [@flahaut2006effect]) and [0.18] at room temperature (La~0.95~Sr~0.05~CoO~3~ [
+43,0.95,0.95,EXCLUDED:NOTATION,,,,0.18 at room temperature (La~[0.95]~Sr~0.05~CoO~3~ [@androulakis2004coo]). The chemical sp
+43,0.05,0.05,EXCLUDED:NOTATION,,,,0.18 at room temperature (La~0.95~Sr~[0.05]~CoO~3~ [@androulakis2004coo]). The chemical space of p
+43,3,3,EXCLUDED:NOTATION,,,,0.18 at room temperature (La~0.95~Sr~0.05~CoO~[3]~ [@androulakis2004coo]). The chemical space of possibl
+45,2,2,EXCLUDED:NOTATION,,,,"arse et al. [@parse2024predicting] predicted zT with R^[2]^ = 0.815, Jia et al. [@jia2024dealing] achieved R^2^ ≈"
+45,0.815,0.815,UNCLASSIFIED,,,1 Introduction,"et al. [@parse2024predicting] predicted zT with R^2^ = [0.815], Jia et al. [@jia2024dealing] achieved R^2^ ≈ 0.90, an"
+45,2,2,EXCLUDED:NOTATION,,,,"R^2^ = 0.815, Jia et al. [@jia2024dealing] achieved R^[2]^ ≈ 0.90, and Sun et al. [@sun2025rationally] reported"
+45,0.90,0.9,UNCLASSIFIED,,,1 Introduction,"= 0.815, Jia et al. [@jia2024dealing] achieved R^2^ ≈ [0.90], and Sun et al. [@sun2025rationally] reported R^2^ = 0"
+45,2,2,EXCLUDED:NOTATION,,,,"≈ 0.90, and Sun et al. [@sun2025rationally] reported R^[2]^ = 0.90 on a test set using deep neural networks. How"
+45,0.90,0.9,UNCLASSIFIED,,,1 Introduction,"0, and Sun et al. [@sun2025rationally] reported R^2^ = [0.90] on a test set using deep neural networks. However, ex"
+53,"280,664",280664,GENERATED,n_clean,,1 Introduction,"even-step curation of Starrydata2 into [280,664] rows ( 17,977 uniq"
+53,"17,977",17977,GENERATED,n_formulas,,1 Introduction,"280,664 rows ( [17,977] unique formulas, 8,908"
+53,"8,908",8908,GENERATED,n_clusters,,1 Introduction,"17,977 unique formulas, [8,908] chemistry clusters, 3,909"
+53,"3,909",3909,GENERATED,n_parent,,1 Introduction,"8,908 chemistry clusters, [3,909] parent chemical systems); - a five-way compa"
+55,2,2,EXCLUDED:NOTATION,,,,ion strategies showing that row-level splits inflate R^[2]^ by + 0.134 to +
+55,0.134,0.134,GENERATED,gap_lo,,1 Introduction,that row-level splits inflate R^2^ by + [0.134] to + 0.213 ; - composi
+55,0.213,0.213,GENERATED,gap_hi,,1 Introduction,"^ by + 0.134 to + [0.213] ; - composition-only ceilings for S, *σ*, *κ*"
+59,5.1,5.1,GENERATED,na7_ratio,,1 Introduction,"istry-cluster validation, with a gap [5.1] times larger under chemistry-cluster validati"
+59,0.186,0.186,GENERATED,na7_grouped_gap,,1 Introduction,chemistry-cluster validation ( [0.186] against 0.036 in R^2
+59,0.036,0.036,GENERATED,na7_gap,,1 Introduction,0.186 against [0.036] in R^2^); - [[PENDING: NA11: structure-aware
+59,2,2,EXCLUDED:NOTATION,,,,6 against 0.036 in R^[2]^); - [[PENDING: NA11: structure-aware screening contr
+63,2,2,EXCLUDED:XREF,,,,"emainder of the paper is organised as follows. Section [2] reviews the background and related work, Section 3 des"
+63,3,3,EXCLUDED:XREF,,,,"ion 2 reviews the background and related work, Section [3] describes the data, features, models and validation pr"
+63,4,4,EXCLUDED:XREF,,,,"ata, features, models and validation protocol, Section [4] presents and discusses the results, and Section 5 conc"
+63,5,5,EXCLUDED:XREF,,,,"tion 4 presents and discusses the results, and Section [5] concludes. # 2 Background and related work ## 2.1 Th"
+65,2,2,EXCLUDED:SECTION,,,,"and discusses the results, and Section 5 concludes. # [2] Background and related work ## 2.1 Thermoelectric fun"
+67,2.1,2.1,EXCLUDED:SECTION,,,,tion 5 concludes. # 2 Background and related work ## [2.1] Thermoelectric fundamentals In 1821 Thomas Johann See
+69,1821,1821,UNCLASSIFIED,,,2.1 Thermoelectric fundamentals,d related work ## 2.1 Thermoelectric fundamentals In [1821] Thomas Johann Seebeck discovered that a temperature di
+69,−1,1,EXCLUDED:NOTATION,,,,"ature difference is the Seebeck coefficient (S, *µ*V K^[−1]^). A thermoelectric generator directly converts a temp"
+69,1,1,EXCLUDED:XREF,,,,"electrically in series and thermally in parallel (Fig. [1]) [@rowe2018thermoelectrics]. The reverse phenomenon, t"
+71,1,1,EXCLUDED:XREF,,,,"ergy conversion [@goldsmid2010introduction]. ![Figure [1]](../figures/source_media/image1.png){width=""4.57291666"
+73,1,1,EXCLUDED:XREF,,,,"width=""4.572916666666667in"" height=""4.25in""} **Figure [1]:** Schematic of a thermoelectric p--n couple exhibitin"
+75,1,1,EXCLUDED:XREF,,,,"ving rise to an open-circuit Seebeck voltage. In Eq. ([1]), the numerator S^2^*σ* is the power factor (PF), a me"
+75,2,2,EXCLUDED:NOTATION,,,,"-circuit Seebeck voltage. In Eq. (1), the numerator S^[2]^*σ* is the power factor (PF), a measure of electrical"
+75,2,2,EXCLUDED:NOTATION,,,,"art (*κ*~l~) controlled by phonons. High zT requires S^[2]^*σ* to be maximized and *κ* minimized simultaneously,"
+75,2,2,EXCLUDED:XREF,,,,e interrelated through the carrier concentration (Fig. [2]) [@snyder2008complex]. As carrier concentration increa
+77,3,3,EXCLUDED:EQNUM,,,,nz law links *κ*~e~ to *σ*: $\kappa_{e} = L\sigma T$ ([3]) where L is the Lorenz number. The only transport par
+81,2,2,EXCLUDED:XREF,,,,"unit cells that scatter phonons efficiently. ![Figure [2]](../figures/source_media/image2.png){width=""4.38541666"
+83,2,2,EXCLUDED:XREF,,,,"16666666667in"" height=""4.052083333333333in""} **Figure [2]:** Carrier-concentration dependence of the thermoelect"
+83,10^19^,10^19,UNCLASSIFIED,,,2.1 Thermoelectric fundamentals,es its maximum at an optimum carrier concentration of ≈[10^19^]--10^20^ cm^−3^. Several strategies approach the PGEC
+83,10^20^,10^20,UNCLASSIFIED,,,2.1 Thermoelectric fundamentals,aximum at an optimum carrier concentration of ≈10^19^--[10^20^] cm^−3^. Several strategies approach the PGEC ideal [@
+83,−3,3,EXCLUDED:NOTATION,,,,an optimum carrier concentration of ≈10^19^--10^20^ cm^[−3]^. Several strategies approach the PGEC ideal [@slack1
+87,2.2,2.2,EXCLUDED:SECTION,,,,l~ without complex processing [@zhao2014ultralow]. ## [2.2] Perovskite thermoelectric materials In ABX~3~ perovsk
+89,3,3,EXCLUDED:NOTATION,,,,"]. ## 2.2 Perovskite thermoelectric materials In ABX~[3]~ perovskites, A is a larger cation (e.g. Sr, Ca, Ba, C"
+89,3,3,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"S, Se, Te). The ideal cubic structure (space group *Pm*[3]̄*m*) consists of corner-sharing BX~6~ octahedra with t"
+89,6,6,EXCLUDED:NOTATION,,,,(space group *Pm*3̄*m*) consists of corner-sharing BX~[6]~ octahedra with the A cation in the cuboctahedral void
+89,3,3,EXCLUDED:XREF,,,,edra with the A cation in the cuboctahedral void (Fig. [3]). Structural stability is conventionally assessed by t
+91,2,2,EXCLUDED:MATH,,,,"@goldschmidt1926die]: $t = \frac{r_{A} + r_{X}}{\sqrt{[2]}\left( r_{B} + r_{X} \right)},\quad\quad µ = \frac{r_{"
+91,4,4,EXCLUDED:EQNUM,,,,"+ r_{X} \right)},\quad\quad µ = \frac{r_{B}}{r_{X}}$ ([4]) where r~A~, r~B~ and r~X~ are the ionic radii of the"
+95,3,3,EXCLUDED:XREF,,,,"ata directly rather than geometric criteria. ![Figure [3]](../figures/source_media/image3.png){width=""3.57291666"
+97,3,3,EXCLUDED:XREF,,,,"6666666665in"" height=""3.5729166666666665in""} **Figure [3]:** Ideal cubic perovskite structure (ABX~3~) showing A"
+97,3,3,EXCLUDED:NOTATION,,,,"} **Figure 3:** Ideal cubic perovskite structure (ABX~[3]~) showing A-site cations (green) at the corners, the B"
+97,6,6,EXCLUDED:NOTATION,,,,"-site anions (red) at the face centres, forming the BX~[6]~ octahedron. *Oxide perovskites.* Oxide perovskites h"
+99,3,3,EXCLUDED:NOTATION,,,,abundance of their constituent elements. Undoped SrTiO~[3]~ has a large Seebeck coefficient (≈ −700 *µ*V K^−1^ at
+99,−700,700,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,s. Undoped SrTiO~3~ has a large Seebeck coefficient (≈ [−700] *µ*V K^−1^ at 300 K) but negligible electrical conduct
+99,−1,1,EXCLUDED:NOTATION,,,,rTiO~3~ has a large Seebeck coefficient (≈ −700 *µ*V K^[−1]^ at 300 K) but negligible electrical conductivity and
+99,300,300,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,has a large Seebeck coefficient (≈ −700 *µ*V K^−1^ at [300] K) but negligible electrical conductivity and high the
+99,10,10,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"electrical conductivity and high thermal conductivity ([10]--12 W m^−1^ K^−1^), giving zT below 0.01. La or Nb dop"
+99,12,12,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"trical conductivity and high thermal conductivity (10--[12] W m^−1^ K^−1^), giving zT below 0.01. La or Nb doping"
+99,−1,1,EXCLUDED:NOTATION,,,,"conductivity and high thermal conductivity (10--12 W m^[−1]^ K^−1^), giving zT below 0.01. La or Nb doping introdu"
+99,−1,1,EXCLUDED:NOTATION,,,,"tivity and high thermal conductivity (10--12 W m^−1^ K^[−1]^), giving zT below 0.01. La or Nb doping introduces ca"
+99,0.01,0.01,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"l conductivity (10--12 W m^−1^ K^−1^), giving zT below [0.01]. La or Nb doping introduces carriers and reduces both"
+99,3,3,EXCLUDED:NOTATION,,,,raising zT substantially [@ohta2005temperature]. CaMnO~[3]~ exhibits S ≈ −350 *µ*V K^−1^ but zT \< 0.1 because of
+99,−350,350,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,antially [@ohta2005temperature]. CaMnO~3~ exhibits S ≈ [−350] *µ*V K^−1^ but zT \< 0.1 because of low *σ* [@flahaut2
+99,−1,1,EXCLUDED:NOTATION,,,,hta2005temperature]. CaMnO~3~ exhibits S ≈ −350 *µ*V K^[−1]^ but zT \< 0.1 because of low *σ* [@flahaut2006effect]
+99,0.1,0.1,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,ture]. CaMnO~3~ exhibits S ≈ −350 *µ*V K^−1^ but zT \< [0.1] because of low *σ* [@flahaut2006effect]; rare-earth su
+99,0.2,0.2,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"Nd, Yb) raises the carrier concentration and zT up to ≈[0.2]. LaCoO~3~ and its Sr-doped derivatives are p-type, wit"
+99,3,3,EXCLUDED:NOTATION,,,,"ses the carrier concentration and zT up to ≈0.2. LaCoO~[3]~ and its Sr-doped derivatives are p-type, with S of 20"
+99,200,200,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"~3~ and its Sr-doped derivatives are p-type, with S of [200]--600 *µ*V K^−1^ but modest zT [@androulakis2004coo]."
+99,600,600,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"nd its Sr-doped derivatives are p-type, with S of 200--[600] *µ*V K^−1^ but modest zT [@androulakis2004coo]. *Hali"
+99,−1,1,EXCLUDED:NOTATION,,,,"oped derivatives are p-type, with S of 200--600 *µ*V K^[−1]^ but modest zT [@androulakis2004coo]. *Halide perovsk"
+101,3,3,EXCLUDED:NOTATION,,,,rovskites have entered the thermoelectric field. CsSnI~[3]~ and related all-inorganic halides exhibit lattice the
+101,0.5,0.5,UNCLASSIFIED,,,2.2 Perovskite thermoelectric materials,"nic halides exhibit lattice thermal conductivity below [0.5] W m^−1^ K^−1^ arising from soft, anharmonic vibrations"
+101,−1,1,EXCLUDED:NOTATION,,,,"des exhibit lattice thermal conductivity below 0.5 W m^[−1]^ K^−1^ arising from soft, anharmonic vibrations and ca"
+101,−1,1,EXCLUDED:NOTATION,,,,"hibit lattice thermal conductivity below 0.5 W m^−1^ K^[−1]^ arising from soft, anharmonic vibrations and cation r"
+101,3,3,EXCLUDED:NOTATION,,,,"In hybrid organic--inorganic perovskites such as MASnI~[3]~, the rotational freedom of the organic cation further"
+103,3,3,EXCLUDED:NOTATION,,,,"*Chalcogenides.* Chalcogenide perovskites (e.g. BaZrS~[3]~, BaZrSe~3~) and related ternary chalcogenides are att"
+103,3,3,EXCLUDED:NOTATION,,,,"ides.* Chalcogenide perovskites (e.g. BaZrS~3~, BaZrSe~[3]~) and related ternary chalcogenides are attractive lea"
+105,2.3,2.3,EXCLUDED:SECTION,,,,ow thermal conductivity [@sopiha2021chalcogenide]. ## [2.3] Computational methods and materials databases The con
+109,2,2,UNCLASSIFIED,,,2.3 Computational methods and materials databases,"imitations include digitization uncertainty (typically [2]--5%), inter-laboratory variability for the same nomina"
+109,5%,5,UNCLASSIFIED,,,2.3 Computational methods and materials databases,"tations include digitization uncertainty (typically 2--[5%]), inter-laboratory variability for the same nominal co"
+109,"150,000",150000,UNCLASSIFIED,,,2.3 Computational methods and materials databases,"energies above the convex hull and band gaps for over [150,000] inorganic compounds via a REST API [@jain2013commentar"
+109,"5,205",5205,UNCLASSIFIED,,,2.3 Computational methods and materials databases,"rea Research Institute of Chemical Technology contains [5,205] experimental observations for 880 unique materials [@n"
+109,880,880,UNCLASSIFIED,,,2.3 Computational methods and materials databases,"echnology contains 5,205 experimental observations for [880] unique materials [@na2022public]. ESTM was curated ind"
+111,2.4,2.4,EXCLUDED:SECTION,,,,-time approximation and ideal-crystal assumptions. ## [2.4] Machine learning for thermoelectric property predictio
+113,1,1,EXCLUDED:XREF,,,,dels (TabPFN) have been used with mixed results. Table [1] summarizes recent studies. **T
+116,1,1,EXCLUDED:XREF,,,,arizes recent studies. **Table [1]:** Recent ML studies of thermoelectric property predic
+116,2,2,EXCLUDED:NOTATION,,,,lues are not comparable with one another or with the R^[2]^ of this work. N/R = not reported. | **Study** | **Mo
+120,18.1,18.1,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,t al. [@parse2024predicting] | XGBoost | Starrydata2 | [18.1]K | R^2^ (zT) 0.815 | 5-fold CV | | Jia et al. [@jia202
+120,2,2,EXCLUDED:NOTATION,,,,rse2024predicting] | XGBoost | Starrydata2 | 18.1K | R^[2]^ (zT) 0.815 | 5-fold CV | | Jia et al. [@jia2024dealin
+120,0.815,0.815,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,redicting] | XGBoost | Starrydata2 | 18.1K | R^2^ (zT) [0.815] | 5-fold CV | | Jia et al. [@jia2024dealing] | GBDT |
+120,5,5,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,g] | XGBoost | Starrydata2 | 18.1K | R^2^ (zT) 0.815 | [5]-fold CV | | Jia et al. [@jia2024dealing] | GBDT | Star
+121,92,92,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,| Jia et al. [@jia2024dealing] | GBDT | Starrydata2 | [92]K | R^2^ (zT) 0.89--0.90 | Composition-level CV | | Ma
+121,2,2,EXCLUDED:NOTATION,,,,t al. [@jia2024dealing] | GBDT | Starrydata2 | 92K | R^[2]^ (zT) 0.89--0.90 | Composition-level CV | | Ma & Poon
+121,0.89,0.89,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,jia2024dealing] | GBDT | Starrydata2 | 92K | R^2^ (zT) [0.89]--0.90 | Composition-level CV | | Ma & Poon [@ma2025ree
+121,0.90,0.9,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,4dealing] | GBDT | Starrydata2 | 92K | R^2^ (zT) 0.89--[0.90] | Composition-level CV | | Ma & Poon [@ma2025reexamini
+122,14.1,14.1,CITED,ma2025_rows,,2.4 Machine learning for thermoelectric property prediction,mining] | LightGBM | Compiled TE | [14.1] K | R^2^ (zT) 0.86
+122,2,2,EXCLUDED:NOTATION,,,,| Compiled TE | 14.1 K | R^[2]^ (zT) 0.86 ; R^2^ (\|S\|)
+122,0.86,0.86,CITED,ma2025_zT_r2,,2.4 Machine learning for thermoelectric property prediction,14.1 K | R^2^ (zT) [0.86] ; R^2^ (\|S\|) 0.8
+122,2,2,EXCLUDED:NOTATION,,,,K | R^2^ (zT) 0.86 ; R^[2]^ (\|S\|) 0.8 | Not stated
+122,0.8,0.8,CITED,ma2025_S_r2,,2.4 Machine learning for thermoelectric property prediction,0.86 ; R^2^ (\|S\|) [0.8] | Not stated | | Sun et al. [@sun2025rational
+123,2,2,EXCLUDED:NOTATION,,,,al. [@sun2025rationally] | DNN | Starrydata2 | N/R | R^[2]^ (zT) 0.90 (test) | Train/test split | | Barua et al.
+123,0.90,0.9,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,n2025rationally] | DNN | Starrydata2 | N/R | R^2^ (zT) [0.90] (test) | Train/test split | | Barua et al. [@barua2025
+124,160,160,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,[@barua2025thermoelectric] | XGBoost | Starrydata2 | ∼[160]K | R^2^ (zT) 0.67--0.80 | Three external test sets | |
+124,2,2,EXCLUDED:NOTATION,,,,025thermoelectric] | XGBoost | Starrydata2 | ∼160K | R^[2]^ (zT) 0.67--0.80 | Three external test sets | | Wang e
+124,0.67,0.67,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,oelectric] | XGBoost | Starrydata2 | ∼160K | R^2^ (zT) [0.67]--0.80 | Three external test sets | | Wang et al. [@wan
+124,0.80,0.8,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,ric] | XGBoost | Starrydata2 | ∼160K | R^2^ (zT) 0.67--[0.80] | Three external test sets | | Wang et al. [@wang2025h
+125,5.2,5.2,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,et al. [@wang2025highperformance] | Stacking | Mixed | [5.2]K | R^2^ (zT) 0.97 | 10-fold CV | | Elavunkel & Padhan
+125,2,2,EXCLUDED:NOTATION,,,,wang2025highperformance] | Stacking | Mixed | 5.2K | R^[2]^ (zT) 0.97 | 10-fold CV | | Elavunkel & Padhan [@elavu
+125,0.97,0.97,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,highperformance] | Stacking | Mixed | 5.2K | R^2^ (zT) [0.97] | 10-fold CV | | Elavunkel & Padhan [@elavunkel2025unl
+125,10,10,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,formance] | Stacking | Mixed | 5.2K | R^2^ (zT) 0.97 | [10]-fold CV | | Elavunkel & Padhan [@elavunkel2025unlockin
+126,2,2,EXCLUDED:NOTATION,,,,el2025unlocking] | Stacking | Half-Heusler | small | R^[2]^ (S) 0.99; R^2^ (zT) 0.92 | Random split |
+126,0.99,0.99,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,nlocking] | Stacking | Half-Heusler | small | R^2^ (S) [0.99]; R^2^ (zT) 0.92 | Random split |
+126,2,2,EXCLUDED:NOTATION,,,,] | Stacking | Half-Heusler | small | R^2^ (S) 0.99; R^[2]^ (zT) 0.92 | Random split | Pars
+126,0.92,0.92,UNCLASSIFIED,,"table 1: cell not traced to a value of the generator's dictionary (typed, or read from an artifact outside it)",2.4 Machine learning for thermoelectric property prediction,king | Half-Heusler | small | R^2^ (S) 0.99; R^2^ (zT) [0.92] | Random split | Parse et al. [@
+129,"18,126",18126,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"Parse et al. [@parse2024predicting] trained XGBoost on [18,126] cleaned Starrydata2 instances covering 2,761 compounds"
+129,"2,761",2761,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"Boost on 18,126 cleaned Starrydata2 instances covering [2,761] compounds (R^2^ = 0.815, 5-fold CV). Jia et al. [@jia2"
+129,2,2,EXCLUDED:NOTATION,,,,"aned Starrydata2 instances covering 2,761 compounds (R^[2]^ = 0.815, 5-fold CV). Jia et al. [@jia2024dealing] int"
+129,0.815,0.815,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"Starrydata2 instances covering 2,761 compounds (R^2^ = [0.815], 5-fold CV). Jia et al. [@jia2024dealing] introduced c"
+129,5,5,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"ata2 instances covering 2,761 compounds (R^2^ = 0.815, [5]-fold CV). Jia et al. [@jia2024dealing] introduced comp"
+129,2,2,EXCLUDED:NOTATION,,,,"l compositions rather than random rows, and obtained R^[2]^ of 0.89--0.90 for zT on 92,000 entries; this is stric"
+129,0.89,0.89,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"ositions rather than random rows, and obtained R^2^ of [0.89]--0.90 for zT on 92,000 entries; this is stricter than"
+129,0.90,0.9,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"ns rather than random rows, and obtained R^2^ of 0.89--[0.90] for zT on 92,000 entries; this is stricter than standa"
+129,"92,000",92000,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"random rows, and obtained R^2^ of 0.89--0.90 for zT on [92,000] entries; this is stricter than standard K-fold but les"
+129,2,2,EXCLUDED:NOTATION,,,,me chemical family (e.g. different doping levels of Bi~[2]~Te~3~) can still appear in both sets. Sun et al. [@sun
+129,3,3,EXCLUDED:NOTATION,,,,emical family (e.g. different doping levels of Bi~2~Te~[3]~) can still appear in both sets. Sun et al. [@sun2025r
+129,2,2,EXCLUDED:NOTATION,,,,"on correlation and LassoCV, in deep neural networks (R^[2]^ = 0.95 on the training set and 0.90 on the test set),"
+129,0.95,0.95,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"rrelation and LassoCV, in deep neural networks (R^2^ = [0.95] on the training set and 0.90 on the test set), the dua"
+129,0.90,0.9,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"p neural networks (R^2^ = 0.95 on the training set and [0.90] on the test set), the dual-featurizer approach used he"
+129,"160,000",160000,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"et al. [@barua2025thermoelectric] trained XGBoost on ≈[160,000] data points and reported R^2^ between 0.67 and 0.80 on"
+129,2,2,EXCLUDED:NOTATION,,,,"trained XGBoost on ≈160,000 data points and reported R^[2]^ between 0.67 and 0.80 on three test sets. Stacking en"
+129,0.67,0.67,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"oost on ≈160,000 data points and reported R^2^ between [0.67] and 0.80 on three test sets. Stacking ensembles on sma"
+129,0.80,0.8,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"160,000 data points and reported R^2^ between 0.67 and [0.80] on three test sets. Stacking ensembles on small, domai"
+129,2,2,EXCLUDED:NOTATION,,,,"25highperformance; @elavunkel2025unlocking] reported R^[2]^ of 0.92--0.99, under row-level validation (10-fold CV"
+129,0.92,0.92,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"performance; @elavunkel2025unlocking] reported R^2^ of [0.92]--0.99, under row-level validation (10-fold CV in [@wan"
+129,0.99,0.99,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"mance; @elavunkel2025unlocking] reported R^2^ of 0.92--[0.99], under row-level validation (10-fold CV in [@wang2025h"
+129,10,10,UNCLASSIFIED,,,2.4 Machine learning for thermoelectric property prediction,"ported R^2^ of 0.92--0.99, under row-level validation ([10]-fold CV in [@wang2025highperformance]), which inflates"
+129,2,2,EXCLUDED:NOTATION,,,,"ld CV in [@wang2025highperformance]), which inflates R^[2]^ relative to chemistry-aware splitting of larger and m"
+131,22,22,CITED,ward2016_props,,2.4 Machine learning for thermoelectric property prediction,"an, average deviation, mode) of [22] elemental properties, yielding"
+131,132,132,GENERATED,n_magpie,,2.4 Machine learning for thermoelectric property prediction,"elemental properties, yielding [132] features per composition. CBFV extends this w"
+133,2.5,2.5,EXCLUDED:SECTION,,,,alpy [@ma2025reexamining] have also been explored. ## [2.5] Validation strategies and data leakage Random train--
+135,0.5,0.5,EXCLUDED:NOTATION,,,,te the i.i.d. assumption because a material such as Bi~[0.5]~Sb~1.5~Te~3~ may appear at 21 te
+135,1.5,1.5,EXCLUDED:NOTATION,,,,i.i.d. assumption because a material such as Bi~0.5~Sb~[1.5]~Te~3~ may appear at 21 temperatu
+135,3,3,EXCLUDED:NOTATION,,,,assumption because a material such as Bi~0.5~Sb~1.5~Te~[3]~ may appear at 21 temperatures (
+135,21,21,GENERATED,bins,,2.5 Validation strategies and data leakage,"such as Bi~0.5~Sb~1.5~Te~3~ may appear at [21] temperatures ( 300 ,"
+135,300,300,GENERATED,t_min,,2.5 Validation strategies and data leakage,"t 21 temperatures ( [300] , 325 , . . . ,"
+135,325,325,GENERATED,t_second,,2.5 Validation strategies and data leakage,"eratures ( 300 , [325] , . . . , 800 K); under"
+135,800,800,GENERATED,t_max,,2.5 Validation strategies and data leakage,", 325 , . . . , [800] K); under random splitting the test predictio"
+135,3.5,3.5,EXCLUDED:XREF,,,,"nt sets (e.g. Bi--Sb--Te), chemistry clusters (Section [3.5]) or broader families; stricter grouping gives more con"
+137,2.6,2.6,EXCLUDED:SECTION,,,,e realistic estimates for genuinely new chemistry. ## [2.6] Model interpretability SHAP (SHapley Additive exPlana
+141,2.7,2.7,EXCLUDED:SECTION,,,,ant feature would indicate a spurious correlation. ## [2.7] Research gaps Five gaps motivate this study. (1) *Val
+143,1,1,EXCLUDED:ENUM,,,,## 2.7 Research gaps Five gaps motivate this study. ([1]) *Validation bias is unquantified at scale*: the only
+143,2,2,EXCLUDED:ENUM,,,,l across five strategies on a full database snapshot. ([2]) *Component properties are rarely reported*: *σ* and *
+143,3,3,EXCLUDED:ENUM,,,,from composition is essential for reliable screening. ([3]) *Feature-selection effects are not examined*: correla
+143,4,4,EXCLUDED:ENUM,,,,helps tree models with built-in feature subsampling. ([4]) *Lead-free perovskite screening with experimentally t
+143,5,5,EXCLUDED:ENUM,,,,ely on DFT-trained models or random-split validation. ([5]) *Model architecture is overemphasized*: gains from co
+145,3,3,EXCLUDED:SECTION,,,,splits. The present study addresses all five gaps. # [3] Methodology ## 3.1 Research framework The research f
+147,3.1,3.1,EXCLUDED:SECTION,,,,nt study addresses all five gaps. # 3 Methodology ## [3.1] Research framework The research follows a four-phase
+149,4,4,EXCLUDED:XREF,,,,work The research follows a four-phase pipeline (Fig. [4]): (1) data acquisition and curation from Starrydata2;
+149,1,1,EXCLUDED:ENUM,,,,The research follows a four-phase pipeline (Fig. 4): ([1]) data acquisition and curation from Starrydata2; (2) f
+149,2,2,EXCLUDED:ENUM,,,,: (1) data acquisition and curation from Starrydata2; ([2]) feature engineering with two complementary compositio
+149,3,3,EXCLUDED:ENUM,,,,wo complementary compositional featurization schemes; ([3]) model development with chemistry-aware validation; an
+149,4,4,EXCLUDED:ENUM,,,,odel development with chemistry-aware validation; and ([4]) virtual screening of lead-free perovskite candidates
+151,4,4,EXCLUDED:XREF,,,,omising lead-free candidates. [[PENDING: NA11: Figure [4] is redrawn from the final numbers once the screening h
+153,4,4,EXCLUDED:XREF,,,,al was machine-generated and is not reused]] **Figure [4]:** Research workflow showing the four phases from data
+155,3.2,3.2,EXCLUDED:SECTION,,,,phases from data acquisition to virtual screening. ## [3.2] Data acquisition and curation ### 3.2.1 Source data
+157,3.2,3.2,EXCLUDED:SECTION,,,,screening. ## 3.2 Data acquisition and curation ### [3.2].1 Source data The main data source is Starrydata2 [@k
+159,22,22,GENERATED,snapshot_date,,3.2.1 Source data,"the Starrydata2 export taken on [22] August 2026 (the export is regenerated daily,"
+159,2026,2026,GENERATED,snapshot_date,,3.2.1 Source data,"ydata2 export taken on 22 August [2026] (the export is regenerated daily, so an unpin"
+159,"9,494",9494,GENERATED,raw_papers,,3.2.1 Source data,"unpinned pull is not reproducible): [9,494] publications, 55,261"
+159,"55,261",55261,GENERATED,raw_samples,,3.2.1 Source data,"9,494 publications, [55,261] samples and 156,101"
+159,"156,101",156101,GENERATED,raw_curves,,3.2.1 Source data,"55,261 samples and [156,101] digitised property curves, held in three file"
+159,"2,679,279",2679279,GENERATED,na5_points_all,,3.2.1 Source data,"nd curves). The raw curves hold [2,679,279] digitised points in total, of which"
+159,"2,068,554",2068554,GENERATED,na5_points_target,,3.2.1 Source data,"ed points in total, of which [2,068,554] are points of the four target properties agai"
+159,"1,996,047",1996047,GENERATED,n_step1,,3.2.1 Source data,"target properties against temperature ( [1,996,047] remain after range filtering). Each data poin"
+159,1,1,UNCLASSIFIED,,,3.2.1 Source data,"instead of conductivity, it was converted using *σ* = [1]/*ρ*. Each formula is also assigned a parent chemical s"
+159,3.5,3.5,EXCLUDED:XREF,,,,validation is the chemistry cluster defined in Section [3.5]. ### 3.2.2 Data cleaning pipeline An eleven-step cle
+161,3.2,3.2,EXCLUDED:SECTION,,,,is the chemistry cluster defined in Section 3.5. ### [3.2].2 Data cleaning pipeline An eleven-step cleaning pipe
+163,5,5,EXCLUDED:XREF,,,,verted the raw data into a reliable training set (Fig. [5]). ![Figure 5](../figures/paper_a/cleaning_funnel.png)
+165,5,5,EXCLUDED:XREF,,,,data into a reliable training set (Fig. 5). ![Figure [5]](../figures/paper_a/cleaning_funnel.png){width=100%}
+165,100%,100,EXCLUDED:LINK,,,,igure 5](../figures/paper_a/cleaning_funnel.png){width=[100%]} **Figure 5:** Row count through the eleven-step clea
+167,5,5,EXCLUDED:XREF,,,,res/paper_a/cleaning_funnel.png){width=100%} **Figure [5]:** Row count through the eleven-step cleaning pipeline
+167,"1,996,047",1996047,GENERATED,n_step1,,3.2.2 Data cleaning pipeline,"he eleven-step cleaning pipeline, from [1,996,047] property observations after range filtering t"
+167,"280,664",280664,GENERATED,n_clean,,3.2.2 Data cleaning pipeline,"observations after range filtering to [280,664] rows in the final cleaned dataset. *Data pre"
+169,1,1,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"n the final cleaned dataset. *Data preparation (steps [1]--5).* Step 1 extracted the four target properties, con"
+169,5,5,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"he final cleaned dataset. *Data preparation (steps 1--[5]).* Step 1 extracted the four target properties, conver"
+169,1,1,EXCLUDED:XREF,,,,"leaned dataset. *Data preparation (steps 1--5).* Step [1] extracted the four target properties, converted resist"
+169,−1000,1000,GENERATED,b_S,,3.2.2 Data cleaning pipeline,ctivity and applied physical-range bounds: [−1000] ≤ S ≤ 1000 *µ*V K^−1^
+169,1000,1000,GENERATED,b_S_hi,,3.2.2 Data cleaning pipeline,"ounds: −1000 ≤ S ≤ [1000] *µ*V K^−1^, 10 ≤"
+169,−1,1,EXCLUDED:NOTATION,,,,"000 ≤ S ≤ 1000 *µ*V K^[−1]^, 10 ≤ *σ* ≤ 10^7^ S m^−1^"
+169,10,10,GENERATED,b_sigma_lo,,3.2.2 Data cleaning pipeline,"1000 *µ*V K^−1^, [10] ≤ *σ* ≤ 10^7^ S m^−1^, 0.0"
+169,10^7^,10^7,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"*µ*V K^−1^, 10 ≤ *σ* ≤ [10^7^] S m^−1^, 0.05 ≤ *κ* ≤"
+169,−1,1,EXCLUDED:NOTATION,,,,"^−1^, 10 ≤ *σ* ≤ 10^7^ S m^[−1]^, 0.05 ≤ *κ* ≤"
+169,0.05,0.05,GENERATED,b_kappa_lo,,3.2.2 Data cleaning pipeline,"10 ≤ *σ* ≤ 10^7^ S m^−1^, [0.05] ≤ *κ* ≤ 25 W m^−1"
+169,25,25,GENERATED,b_kappa_hi,,3.2.2 Data cleaning pipeline,0.05 ≤ *κ* ≤ [25] W m^−1^ K^−1^ and 0 ≤ zT ≤ 4
+169,−1,1,EXCLUDED:NOTATION,,,,"05 ≤ *κ* ≤ 25 W m^[−1]^ K^−1^ and 0 ≤ zT ≤ 4 , giving"
+169,−1,1,EXCLUDED:NOTATION,,,,"≤ *κ* ≤ 25 W m^−1^ K^[−1]^ and 0 ≤ zT ≤ 4 , giving"
+169,0,0,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"*κ* ≤ 25 W m^−1^ K^−1^ and [0] ≤ zT ≤ 4 , giving"
+169,4,4,GENERATED,b_zT_hi,,3.2.2 Data cleaning pipeline,"25 W m^−1^ K^−1^ and 0 ≤ zT ≤ [4] , giving 1,996,047 ob"
+169,"1,996,047",1996047,GENERATED,n_step1,,3.2.2 Data cleaning pipeline,"T ≤ 4 , giving [1,996,047] observations. The Seebeck bound is an empiric"
+169,4,4,GENERATED,b_zT_hi,,3.2.2 Data cleaning pipeline,is not itself that minimum); and zT ≤ [4] admits all physically plausible values [@snyd
+169,2,2,EXCLUDED:XREF,,,,physically plausible values [@snyder2008complex]. Step [2] merged curve data with sample metadata. Step 3 restric
+169,3,3,EXCLUDED:XREF,,,,]. Step 2 merged curve data with sample metadata. Step [3] restricted temperatures to 300
+169,300,300,DESIGN,clean_t_min,,3.2.2 Data cleaning pipeline,Step 3 restricted temperatures to [300] -- 800 K and binne
+169,800,800,DESIGN,clean_t_max,,3.2.2 Data cleaning pipeline,300 -- [800] K and binned them into
+169,25,25,DESIGN,clean_bin_width,,3.2.2 Data cleaning pipeline,K and binned them into [25] K intervals so that slightly different report
+169,298,298,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"so that slightly different reported temperatures (e.g. [298], 300 and 303 K) fall in the same bin, leaving"
+169,300,300,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"at slightly different reported temperatures (e.g. 298, [300] and 303 K) fall in the same bin, leaving"
+169,303,303,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"tly different reported temperatures (e.g. 298, 300 and [303] K) fall in the same bin, leaving 1,096"
+169,"1,096,324",1096324,GENERATED,n_step3,,3.2.2 Data cleaning pipeline,"d 303 K) fall in the same bin, leaving [1,096,324] observations. Step 4 pivoted the data from lo"
+169,4,4,EXCLUDED:XREF,,,,"1,096,324 observations. Step [4] pivoted the data from long format (one row per measure"
+169,"398,763",398763,GENERATED,n_step4,,3.2.2 Data cleaning pipeline,"er sample per temperature bin), giving [398,763] rows, and Step 5 removed formulas that could"
+169,5,5,EXCLUDED:XREF,,,,"giving 398,763 rows, and Step [5] removed formulas that could not be parsed by the pymat"
+169,"5,382",5382,GENERATED,rem_step5,,3.2.2 Data cleaning pipeline,"Composition class [@ong2013python] ( [5,382] rows, 1.3 %). *Qu"
+169,1.3,1.3,GENERATED,remp_step5,,3.2.2 Data cleaning pipeline,"5,382 rows, [1.3] %). *Quality filtering (steps 6--8).* Step 6"
+171,6,6,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,1.3 %). *Quality filtering (steps [6]--8).* Step 6 compared the reported zT with the value r
+171,8,8,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,1.3 %). *Quality filtering (steps 6--[8]).* Step 6 compared the reported zT with the value reco
+171,6,6,EXCLUDED:XREF,,,,.3 %). *Quality filtering (steps 6--8).* Step [6] compared the reported zT with the value recomputed fro
+171,1,1,EXCLUDED:XREF,,,,ed the reported zT with the value recomputed from Eq. ([1]) for all rows containing the four properties and remov
+171,50,50,DESIGN,clean_zt_tol_pct,,3.2.2 Data cleaning pipeline,relative discrepancy exceeded [50] %: $\frac{|{zT}_{rep} - S^{2}\sigma T/\kappa|
+173,2,2,EXCLUDED:MATH,,,,50 %: $\frac{|{zT}_{rep} - S^{[2]}\sigma T/\kappa|}{{zT}_{rep}} > 0.5$ (5) This removed
+173,0.5,0.5,EXCLUDED:MATH,,,,"rac{|{zT}_{rep} - S^{2}\sigma T/\kappa|}{{zT}_{rep}} > [0.5]$ (5) This removed 4,712 ro"
+173,5,5,EXCLUDED:EQNUM,,,,"zT}_{rep} - S^{2}\sigma T/\kappa|}{{zT}_{rep}} > 0.5$ ([5]) This removed 4,712 rows ("
+175,"4,712",4712,GENERATED,rem_step6,,3.2.2 Data cleaning pipeline,"{zT}_{rep}} > 0.5$ (5) This removed [4,712] rows ( 1.2 %); it c"
+175,1.2,1.2,GENERATED,remp_step6,,3.2.2 Data cleaning pipeline,"4,712 rows ( [1.2] %); it changed the mean zT from"
+175,0.383,0.383,GENERATED,na5_zt6_before,,3.2.2 Data cleaning pipeline,%); it changed the mean zT from [0.383] to 0.387 . This
+175,0.387,0.387,GENERATED,na5_zt6_after,,3.2.2 Data cleaning pipeline,0.383 to [0.387] . This is conservative (some valid individual
+175,7,7,EXCLUDED:XREF,,,,antees internal consistency of the retained rows. Step [7] removed DFT-computed entries identified by searching p
+175,986,986,GENERATED,rem_step7,,3.2.2 Data cleaning pipeline,ant relaxation-time assumption; only [986] rows ( 0.3 %) were
+175,0.3,0.3,GENERATED,remp_step7,,3.2.2 Data cleaning pipeline,"986 rows ( [0.3] %) were flagged, confirming that Starrydata2 i"
+175,8,8,EXCLUDED:XREF,,,,"g that Starrydata2 is predominantly experimental. Step [8], the largest single step, removed 78"
+175,"78,685",78685,GENERATED,rem_step8,,3.2.2 Data cleaning pipeline,"8, the largest single step, removed [78,685] rows ( 20.3 %): for"
+175,20.3,20.3,GENERATED,remp_step8,,3.2.2 Data cleaning pipeline,"78,685 rows ( [20.3] %): for each (formula, temperature) group with"
+175,0.5,0.5,DESIGN,clean_cv_S,,3.2.2 Data cleaning pipeline,"y-specific thresholds were removed ( [0.5] for S, *κ* and zT; 0.8"
+175,0.8,0.8,DESIGN,clean_cv_sigma,,3.2.2 Data cleaning pipeline,"0.5 for S, *κ* and zT; [0.8] for *σ*, set higher a priori because conducti"
+177,9,9,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,d on model performance. *Statistical filtering (steps [9]--11).* Step 9 applied a median absolute deviation (MAD
+177,11,11,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,n model performance. *Statistical filtering (steps 9--[11]).* Step 9 applied a median absolute deviation (MAD) fi
+177,9,9,EXCLUDED:XREF,,,,"formance. *Statistical filtering (steps 9--11).* Step [9] applied a median absolute deviation (MAD) filter, remo"
+179,3.5,3.5,EXCLUDED:MATH,,,,"(MAD) filter, removing values with $|x - median(x)| > [3.5]\, MAD(x)$ (6) a robust alternative to a rule based on"
+179,6,6,EXCLUDED:EQNUM,,,,"emoving values with $|x - median(x)| > 3.5\, MAD(x)$ ([6]) a robust alternative to a rule based on the mean and"
+181,10,10,EXCLUDED:NOTATION,,,,"dard deviation [@leys2013detecting], where x is S, log~[10]~ *σ* or log~10~ *κ*, and the median and the MAD, MAD(x"
+181,10,10,EXCLUDED:NOTATION,,,,"[@leys2013detecting], where x is S, log~10~ *σ* or log~[10]~ *κ*, and the median and the MAD, MAD(x) = median(|x −"
+181,1.4826,1.4826,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,"have a value of that property. The MAD is unscaled (no [1.4826] consistency factor), so the multiplier of"
+181,3.5,3.5,DESIGN,clean_mad_mult,,3.2.2 Data cleaning pipeline,"y factor), so the multiplier of [3.5] MADs corresponds to about 2"
+181,2.4,2.4,GENERATED,mad_sigma,,3.2.2 Data cleaning pipeline,5 MADs corresponds to about [2.4] standard deviations for normally distributed
+181,1,1,EXCLUDED:XREF,,,,"y is better judged against the physical bounds of Step [1]; it removed 19,361 rows ("
+181,"19,361",19361,GENERATED,rem_step9,,3.2.2 Data cleaning pipeline,"hysical bounds of Step 1; it removed [19,361] rows ( 6.3 %). Rows"
+181,6.3,6.3,GENERATED,remp_step9,,3.2.2 Data cleaning pipeline,"19,361 rows ( [6.3] %). Rows with zT \> 3.0 lie above the maximum"
+181,3.0,3,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,ws ( 6.3 %). Rows with zT \> [3.0] lie above the maximum reliably reported for bulk therm
+181,2.6,2.6,UNCLASSIFIED,,,3.2.2 Data cleaning pipeline,e maximum reliably reported for bulk thermoelectrics (≈[2.6] [@zhao2014ultralow]); 15 of t
+181,15,15,GENERATED,na4_zt3,,3.2.2 Data cleaning pipeline,"oelectrics (≈2.6 [@zhao2014ultralow]); [15] of the 129,419 zT rows"
+181,"129,419",129419,GENERATED,n_zT,,3.2.2 Data cleaning pipeline,"low]); 15 of the [129,419] zT rows ( 0.012 %)"
+181,0.012,0.012,GENERATED,na4_zt3_pct,,3.2.2 Data cleaning pipeline,"129,419 zT rows ( [0.012] %) are affected; they are retained as statisti"
+181,10,10,EXCLUDED:XREF,,,,d; they are retained as statistically immaterial. Step [10] removed formulas with fewer than
+181,3,3,DESIGN,clean_min_temps,,3.2.2 Data cleaning pipeline,"moved formulas with fewer than [3] distinct temperatures, for which consistency"
+181,"4,650",4650,GENERATED,rem_step10,,3.2.2 Data cleaning pipeline,"ich consistency cannot be verified ( [4,650] rows). Step 11 applied a rolling-median smoot"
+181,11,11,EXCLUDED:XREF,,,,"erified ( 4,650 rows). Step [11] applied a rolling-median smoothness filter (window ="
+181,3,3,DESIGN,clean_smooth_window,,3.2.2 Data cleaning pipeline,moothness filter (window = [3] ) to each temperature curve of each sample and
+181,3.5,3.5,DESIGN,clean_mad_mult,,3.2.2 Data cleaning pipeline,red rolling median by more than [3.5] times the median of those absolute deviations
+181,9,9,EXCLUDED:XREF,,,,"along that curve (the same unscaled multiplier as Step [9], applied to the local deviations), setting"
+181,"25,166",25166,GENERATED,na5_spikes,,3.2.2 Data cleaning pipeline,"d to the local deviations), setting [25,166] spike values to NaN and removing rows in whic"
+181,"4,323",4323,GENERATED,rem_step11,,3.2.2 Data cleaning pipeline,"in which all properties became NaN ( [4,323] rows, 1.5 %). *A"
+181,1.5,1.5,GENERATED,remp_step11,,3.2.2 Data cleaning pipeline,"4,323 rows, [1.5] %). *Analysis choices.* The following setting"
+183,300,300,DESIGN,clean_t_min,,3.2.2 Data cleaning pipeline,hem. (i) The temperature window of [300] -- 800 K restricts
+183,800,800,DESIGN,clean_t_max,,3.2.2 Data cleaning pipeline,300 -- [800] K restricts the study to near-room-temperatur
+183,25,25,DESIGN,clean_bin_width,,3.2.2 Data cleaning pipeline,ion and are not used. (ii) The [25] K bin width groups readings of one sample tha
+183,50,50,DESIGN,clean_zt_tol_pct,,3.2.2 Data cleaning pipeline,it was not varied. (iii) The [50] % tolerance of the zT consistency check is del
+183,3,3,DESIGN,clean_min_temps,,3.2.2 Data cleaning pipeline,(iv) Formulas with fewer than [3] distinct temperatures are removed because the
+183,3,3,DESIGN,clean_smooth_window,,3.2.2 Data cleaning pipeline,"ss filter, whose window is [3] , cannot judge a curve with fewer points. (v)"
+183,3,3,DESIGN,clean_smooth_window,,3.2.2 Data cleaning pipeline,er points. (v) A window of [3] is the smallest odd window that defines a loc
+183,3.5,3.5,DESIGN,clean_mad_mult,,3.2.2 Data cleaning pipeline,xtrema of zT(T). The multiplier [3.5] of the two MAD filters (Steps 9 and 11) is li
+183,9,9,EXCLUDED:XREF,,,,3.5 of the two MAD filters (Steps [9] and 11) is likewise a choice. ### 3.2.3 Final dataset
+183,11,11,EXCLUDED:XREF,,,,3.5 of the two MAD filters (Steps 9 and [11]) is likewise a choice. ### 3.2.3 Final dataset The f
+185,3.2,3.2,EXCLUDED:SECTION,,,,AD filters (Steps 9 and 11) is likewise a choice. ### [3.2].3 Final dataset The final cleaned dataset contains
+187,"280,664",280664,GENERATED,n_clean,,3.2.3 Final dataset,"et The final cleaned dataset contains [280,664] rows; featurisation (formulas that fail eithe"
+187,"280,173",280173,GENERATED,n_featurized,,3.2.3 Final dataset,"r are excluded and logged) leaves [280,173] rows covering 17,977"
+187,"17,977",17977,GENERATED,n_formulas,,3.2.3 Final dataset,"280,173 rows covering [17,977] unique chemical formulas in"
+187,"8,908",8908,GENERATED,n_clusters,,3.2.3 Final dataset,"unique chemical formulas in [8,908] chemistry clusters and 3,909"
+187,"3,909",3909,GENERATED,n_parent,,3.2.3 Final dataset,"8,908 chemistry clusters and [3,909] parent chemical systems. The four per-target"
+187,"185,064",185064,GENERATED,n_S,,3.2.3 Final dataset,"tems. The four per-target datasets contain [185,064] rows with S, 182,755"
+187,"182,755",182755,GENERATED,n_sigma,,3.2.3 Final dataset,"185,064 rows with S, [182,755] with *σ*, 121,110 wi"
+187,"121,110",121110,GENERATED,n_kappa,,3.2.3 Final dataset,"182,755 with *σ*, [121,110] with *κ* and 129,419 wi"
+187,"129,419",129419,GENERATED,n_zT,,3.2.3 Final dataset,"121,110 with *κ* and [129,419] with zT ( 66.1 %,"
+187,66.1,66.1,GENERATED,cov_S,,3.2.3 Final dataset,"d 129,419 with zT ( [66.1] %, 65.2 %,"
+187,65.2,65.2,GENERATED,cov_sigma,,3.2.3 Final dataset,"th zT ( 66.1 %, [65.2] %, 43.2 % and"
+187,43.2,43.2,GENERATED,cov_kappa,,3.2.3 Final dataset,"%, 65.2 %, [43.2] % and 46.2 % of the fea"
+187,46.2,46.2,GENERATED,cov_zT,,3.2.3 Final dataset,"%, 43.2 % and [46.2] % of the featurised rows); they overlap and ar"
+187,0.427,0.427,GENERATED,na4_zt_mean,,3.2.3 Final dataset,he mean zT of the retained rows is [0.427] ( 0.426 over the
+187,0.426,0.426,GENERATED,na5_zt_final,,3.2.3 Final dataset,"0.427 ( [0.426] over the 280,664 cle"
+187,"280,664",280664,GENERATED,n_clean,,3.2.3 Final dataset,"0.426 over the [280,664] cleaned rows, against 0"
+187,0.387,0.387,GENERATED,na5_zt6_after,,3.2.3 Final dataset,"4 cleaned rows, against [0.387] after Step 6). The S distribution (Fig. 6a) m"
+187,6,6,EXCLUDED:XREF,,,,gainst 0.387 after Step [6]). The S distribution (Fig. 6a) mixes p-type samples (
+187,55.6,55.6,GENERATED,na4_S_p_share,,3.2.3 Final dataset,"(Fig. 6a) mixes p-type samples ( [55.6] % of the S rows) and n-type samples, and the n"
+187,19.1,19.1,GENERATED,na4_S_mean,,3.2.3 Final dataset,values of the latter pull the mean ( [19.1] *µ*V K^−1^) below the median (
+187,−1,1,EXCLUDED:NOTATION,,,,pull the mean ( 19.1 *µ*V K^[−1]^) below the median ( 50.0
+187,50.0,50,GENERATED,na4_S_median,,3.2.3 Final dataset,*µ*V K^−1^) below the median ( [50.0] *µ*V K^−1^) (Table 2).
+187,−1,1,EXCLUDED:NOTATION,,,,the median ( 50.0 *µ*V K^[−1]^) (Table 2). **Table 2:** Fina
+187,2,2,EXCLUDED:XREF,,,,( 50.0 *µ*V K^−1^) (Table [2]). **Table 2:** Final dataset s
+190,2,2,EXCLUDED:XREF,,,,"*µ*V K^−1^) (Table 2). **Table [2]:** Final dataset statistics: the 280,173 featurised ro"
+190,"280,173",280173,GENERATED,table 2: n_featurized,,3.2.3 Final dataset,"**Table 2:** Final dataset statistics: the [280,173] featurised rows, per property (coverage is the share o"
+194,−1,1,EXCLUDED:NOTATION,,,,"|-----------|-----------|----------------| | S (*µ*V K^[−1]^) | 185,064 | 66.1% | 19.1 | 50.0 | 176.9 | −461 to 56"
+194,"185,064",185064,GENERATED,table 2: t2_S_n,,3.2.3 Final dataset,"-----|-----------|----------------| | S (*µ*V K^−1^) | [185,064] | 66.1% | 19.1 | 50.0 | 176.9 | −461 to 562.5 | | *σ*"
+194,66.1%,66.1,GENERATED,table 2: t2_S_cov,,3.2.3 Final dataset,"-------|----------------| | S (*µ*V K^−1^) | 185,064 | [66.1%] | 19.1 | 50.0 | 176.9 | −461 to 562.5 | | *σ* (S m^−1^"
+194,19.1,19.1,GENERATED,table 2: t2_S_mean,,3.2.3 Final dataset,"----------------| | S (*µ*V K^−1^) | 185,064 | 66.1% | [19.1] | 50.0 | 176.9 | −461 to 562.5 | | *σ* (S m^−1^) | 182"
+194,50.0,50,GENERATED,table 2: t2_S_median,,3.2.3 Final dataset,"---------| | S (*µ*V K^−1^) | 185,064 | 66.1% | 19.1 | [50.0] | 176.9 | −461 to 562.5 | | *σ* (S m^−1^) | 182,755 |"
+194,176.9,176.9,GENERATED,table 2: t2_S_sd,,3.2.3 Final dataset,"--| | S (*µ*V K^−1^) | 185,064 | 66.1% | 19.1 | 50.0 | [176.9] | −461 to 562.5 | | *σ* (S m^−1^) | 182,755 | 65.2% |"
+194,−461,461,GENERATED,table 2: t2_S_min,,3.2.3 Final dataset,"(*µ*V K^−1^) | 185,064 | 66.1% | 19.1 | 50.0 | 176.9 | [−461] to 562.5 | | *σ* (S m^−1^) | 182,755 | 65.2% | 83,498"
+194,562.5,562.5,GENERATED,table 2: t2_S_max,,3.2.3 Final dataset,"−1^) | 185,064 | 66.1% | 19.1 | 50.0 | 176.9 | −461 to [562.5] | | *σ* (S m^−1^) | 182,755 | 65.2% | 83,498 | 45,262"
+195,−1,1,EXCLUDED:NOTATION,,,,".1% | 19.1 | 50.0 | 176.9 | −461 to 562.5 | | *σ* (S m^[−1]^) | 182,755 | 65.2% | 83,498 | 45,262 | 129,514 | 959"
+195,"182,755",182755,GENERATED,table 2: t2_sigma_n,,3.2.3 Final dataset,"9.1 | 50.0 | 176.9 | −461 to 562.5 | | *σ* (S m^−1^) | [182,755] | 65.2% | 83,498 | 45,262 | 129,514 | 959 to 1.66 × 10"
+195,65.2%,65.2,GENERATED,table 2: t2_sigma_cov,,3.2.3 Final dataset,"| 176.9 | −461 to 562.5 | | *σ* (S m^−1^) | 182,755 | [65.2%] | 83,498 | 45,262 | 129,514 | 959 to 1.66 × 10^6^ | |"
+195,"83,498",83498,GENERATED,table 2: t2_sigma_mean,,3.2.3 Final dataset,"| −461 to 562.5 | | *σ* (S m^−1^) | 182,755 | 65.2% | [83,498] | 45,262 | 129,514 | 959 to 1.66 × 10^6^ | | *κ* (W m^"
+195,"45,262",45262,GENERATED,table 2: t2_sigma_median,,3.2.3 Final dataset,"o 562.5 | | *σ* (S m^−1^) | 182,755 | 65.2% | 83,498 | [45,262] | 129,514 | 959 to 1.66 × 10^6^ | | *κ* (W m^−1^ K^−1^"
+195,"129,514",129514,GENERATED,table 2: t2_sigma_sd,,3.2.3 Final dataset,"| *σ* (S m^−1^) | 182,755 | 65.2% | 83,498 | 45,262 | [129,514] | 959 to 1.66 × 10^6^ | | *κ* (W m^−1^ K^−1^) | 121,11"
+195,959,959,GENERATED,table 2: t2_sigma_min,,3.2.3 Final dataset,"m^−1^) | 182,755 | 65.2% | 83,498 | 45,262 | 129,514 | [959] to 1.66 × 10^6^ | | *κ* (W m^−1^ K^−1^) | 121,110 | 43"
+195,1.66,1.66,GENERATED,table 2: t2_sigma_max,,3.2.3 Final dataset,"| 182,755 | 65.2% | 83,498 | 45,262 | 129,514 | 959 to [1.66] × 10^6^ | | *κ* (W m^−1^ K^−1^) | 121,110 | 43.2% | 2."
+195,10^6^,10^6,GENERATED,table 2: t2_sigma_max,,3.2.3 Final dataset,"55 | 65.2% | 83,498 | 45,262 | 129,514 | 959 to 1.66 × [10^6^] | | *κ* (W m^−1^ K^−1^) | 121,110 | 43.2% | 2.54 | 2.0"
+196,−1,1,EXCLUDED:NOTATION,,,,"| 45,262 | 129,514 | 959 to 1.66 × 10^6^ | | *κ* (W m^[−1]^ K^−1^) | 121,110 | 43.2% | 2.54 | 2.00 | 1.98 | 0.28"
+196,−1,1,EXCLUDED:NOTATION,,,,"262 | 129,514 | 959 to 1.66 × 10^6^ | | *κ* (W m^−1^ K^[−1]^) | 121,110 | 43.2% | 2.54 | 2.00 | 1.98 | 0.28 to 13."
+196,"121,110",121110,GENERATED,table 2: t2_kappa_n,,3.2.3 Final dataset,"29,514 | 959 to 1.66 × 10^6^ | | *κ* (W m^−1^ K^−1^) | [121,110] | 43.2% | 2.54 | 2.00 | 1.98 | 0.28 to 13.78 | | zT |"
+196,43.2%,43.2,GENERATED,table 2: t2_kappa_cov,,3.2.3 Final dataset,"59 to 1.66 × 10^6^ | | *κ* (W m^−1^ K^−1^) | 121,110 | [43.2%] | 2.54 | 2.00 | 1.98 | 0.28 to 13.78 | | zT | 129,419"
+196,2.54,2.54,GENERATED,table 2: t2_kappa_mean,,3.2.3 Final dataset,"66 × 10^6^ | | *κ* (W m^−1^ K^−1^) | 121,110 | 43.2% | [2.54] | 2.00 | 1.98 | 0.28 to 13.78 | | zT | 129,419 | 46.2%"
+196,2.00,2,GENERATED,table 2: t2_kappa_median,,3.2.3 Final dataset,"^6^ | | *κ* (W m^−1^ K^−1^) | 121,110 | 43.2% | 2.54 | [2.00] | 1.98 | 0.28 to 13.78 | | zT | 129,419 | 46.2% | 0.42"
+196,1.98,1.98,GENERATED,table 2: t2_kappa_sd,,3.2.3 Final dataset,"*κ* (W m^−1^ K^−1^) | 121,110 | 43.2% | 2.54 | 2.00 | [1.98] | 0.28 to 13.78 | | zT | 129,419 | 46.2% | 0.427 | 0.3"
+196,0.28,0.28,GENERATED,table 2: t2_kappa_min,,3.2.3 Final dataset,"m^−1^ K^−1^) | 121,110 | 43.2% | 2.54 | 2.00 | 1.98 | [0.28] to 13.78 | | zT | 129,419 | 46.2% | 0.427 | 0.316 | 0."
+196,13.78,13.78,GENERATED,table 2: t2_kappa_max,,3.2.3 Final dataset,"^−1^) | 121,110 | 43.2% | 2.54 | 2.00 | 1.98 | 0.28 to [13.78] | | zT | 129,419 | 46.2% | 0.427 | 0.316 | 0.388 | 0.0"
+197,"129,419",129419,GENERATED,table 2: t2_zT_n,,3.2.3 Final dataset,"| 43.2% | 2.54 | 2.00 | 1.98 | 0.28 to 13.78 | | zT | [129,419] | 46.2% | 0.427 | 0.316 | 0.388 | 0.000 to 3.899 |"
+197,46.2%,46.2,GENERATED,table 2: t2_zT_cov,,3.2.3 Final dataset,"2.54 | 2.00 | 1.98 | 0.28 to 13.78 | | zT | 129,419 | [46.2%] | 0.427 | 0.316 | 0.388 | 0.000 to 3.899 |"
+197,0.427,0.427,GENERATED,table 2: t2_zT_mean,,3.2.3 Final dataset,"2.00 | 1.98 | 0.28 to 13.78 | | zT | 129,419 | 46.2% | [0.427] | 0.316 | 0.388 | 0.000 to 3.899 |"
+197,0.316,0.316,GENERATED,table 2: t2_zT_median,,3.2.3 Final dataset,".98 | 0.28 to 13.78 | | zT | 129,419 | 46.2% | 0.427 | [0.316] | 0.388 | 0.000 to 3.899 | ![Fig"
+197,0.388,0.388,GENERATED,table 2: t2_zT_sd,,3.2.3 Final dataset,"28 to 13.78 | | zT | 129,419 | 46.2% | 0.427 | 0.316 | [0.388] | 0.000 to 3.899 | ![Figure 6](."
+197,0.000,0,GENERATED,table 2: t2_zT_min,,3.2.3 Final dataset,".78 | | zT | 129,419 | 46.2% | 0.427 | 0.316 | 0.388 | [0.000] to 3.899 | ![Figure 6](../figure"
+197,3.899,3.899,GENERATED,table 2: t2_zT_max,,3.2.3 Final dataset,"T | 129,419 | 46.2% | 0.427 | 0.316 | 0.388 | 0.000 to [3.899] | ![Figure 6](../figures/fig6_pr"
+200,6,6,EXCLUDED:XREF,,,,.388 | 0.000 to 3.899 | ![Figure [6]](../figures/fig6_property_distributions.png){width=100
+200,100%,100,EXCLUDED:LINK,,,,e 6](../figures/fig6_property_distributions.png){width=[100%]} **Figure 6:** Distribution of thermoelectric propert
+202,6,6,EXCLUDED:XREF,,,,fig6_property_distributions.png){width=100%} **Figure [6]:** Distribution of thermoelectric properties in the fi
+202,"280,173",280173,GENERATED,n_featurized,,3.2.3 Final dataset,"properties in the final dataset ( [280,173] featurised rows): (a) Seebeck coefficient, (b"
+204,3.3,3.3,EXCLUDED:SECTION,,,,(c) thermal conductivity and (d) figure of merit. ## [3.3] Feature engineering The first feature set was generat
+206,22,22,CITED,ward2016_props,,3.3 Feature engineering,"er]: six statistics for each of [22] elemental properties, i.e. 1"
+206,132,132,GENERATED,n_magpie,,3.3 Feature engineering,"2 elemental properties, i.e. [132] features computed from the chemical formula a"
+206,264,264,GENERATED,n_cbfv,,3.3 Feature engineering,"ronegativity, heat of atomization); all [264] CBFV features were retained, without a correl"
+206,132,132,GENERATED,n_magpie,,3.3 Feature engineering,"ded as a direct input feature, giving [132] + 264 + 1 ="
+206,264,264,GENERATED,n_cbfv,,3.3 Feature engineering,giving 132 + [264] + 1 = 397 descriptors
+206,1,1,UNCLASSIFIED,,,3.3 Feature engineering,132 + 264 + [1] = 397 descriptors in total. A
+206,397,397,GENERATED,n_feat,,3.3 Feature engineering,+ 264 + 1 = [397] descriptors in total. All results use the fu
+208,397,397,GENERATED,n_feat,,3.3 Feature engineering,ors in total. All results use the full [397] -feature set; no explicit feature selection is
+208,133,133,GENERATED,n_magpie_t,,3.3 Feature engineering,criptors to MAGPIE and temperature ( [133] features) lowers the chemistry-cluster R^2^ b
+208,2,2,EXCLUDED:NOTATION,,,,"133 features) lowers the chemistry-cluster R^[2]^ by only 0.006 for S,"
+208,0.006,0.006,GENERATED,abl_delta_S,,3.3 Feature engineering,"the chemistry-cluster R^2^ by only [0.006] for S, 0.010"
+208,0.010,0.01,GENERATED,abl_delta_sigma,,3.3 Feature engineering,"0.006 for S, [0.010] for *σ*, 0.006"
+208,0.006,0.006,GENERATED,abl_delta_kappa,,3.3 Feature engineering,"0.010 for *σ*, [0.006] for *κ* and 0.005"
+208,0.005,0.005,GENERATED,abl_delta_zT,,3.3 Feature engineering,"0.006 for *κ* and [0.005] for zT, and the CBFV block alone reaches"
+208,0.744,0.744,GENERATED,abl_zT_cbfv,,3.3 Feature engineering,", and the CBFV block alone reaches [0.744] for zT against 0.746"
+208,0.746,0.746,GENERATED,chem_zT,,3.3 Feature engineering,0.744 for zT against [0.746] for the full set.
+212,3.4,3.4,EXCLUDED:SECTION,,,,## [3.4] Model development XGBoost [@chen2016xgboost] was sele
+214,4.1,4.1,EXCLUDED:XREF,,,,[@breiman2001random] and a stacking ensemble (Section [4.1].3) [[PENDING: NA2]]. XGBoost was preferred for its rob
+214,43.2,43.2,GENERATED,cov_kappa,,3.4 Model development,"missing features (*κ* is present in [43.2] % of the featurised rows), feature subsampling"
+214,−1,1,EXCLUDED:NOTATION,,,,"eature scaling. Four models were trained for S (*µ*V K^[−1]^), log~10~*σ*, log~10~*κ* and zT; the logarithmic tran"
+214,10,10,EXCLUDED:NOTATION,,,,"ling. Four models were trained for S (*µ*V K^−1^), log~[10]~*σ*, log~10~*κ* and zT; the logarithmic transformation"
+214,10,10,EXCLUDED:NOTATION,,,,"odels were trained for S (*µ*V K^−1^), log~10~*σ*, log~[10]~*κ* and zT; the logarithmic transformation was applied"
+214,2,2,EXCLUDED:NOTATION,,,,"use they span several orders of magnitude, and every R^[2]^ is computed in the space the target was trained in."
+216,20,20,GENERATED,optuna_trials,,3.4 Model development,"t target, by an Optuna search of [20] trials scored by R^2^ under"
+216,2,2,EXCLUDED:NOTATION,,,,f 20 trials scored by R^[2]^ under 3 -fold chemistry-c
+216,3,3,GENERATED,inner_folds,,3.4 Model development,"trials scored by R^2^ under [3] -fold chemistry-cluster cross-validation, then"
+216,4,4,EXCLUDED:XREF,,,,itions reflect the condition and not the tuning (Table [4]); the frozen values differ between targets. Because th
+216,2,2,EXCLUDED:NOTATION,,,,"on rows that were also used for tuning, the grouped R^[2]^ values may be optimistic [@cawley2010overfitting; @va"
+219,4,4,EXCLUDED:XREF,,,,: nested grouped CV]]. **Table [4]:** XGBoost hyperparameters: the four frozen sets (each
+219,20,20,GENERATED,table 4: optuna_trials,,3.4 Model development,"sets (each tuned once on all rows of its target, by a [20]-trial Optuna search scored with 3-fold chemistry-clust"
+219,3,3,GENERATED,table 4: inner_folds,,3.4 Model development,"of its target, by a 20-trial Optuna search scored with [3]-fold chemistry-cluster cross-validation) and the searc"
+223,500,500,GENERATED,table 4: t4_S_n_estimators,,3.4 Model development,-----|-----------|------------------| | n_estimators | [500] | 550 | 350 | 500 | 100–600 | | max_depth | 10 | 10 |
+223,550,550,GENERATED,table 4: t4_sigma_n_estimators,,3.4 Model development,-----------|------------------| | n_estimators | 500 | [550] | 350 | 500 | 100–600 | | max_depth | 10 | 10 | 9 | 9
+223,350,350,GENERATED,table 4: t4_kappa_n_estimators,,3.4 Model development,-----|------------------| | n_estimators | 500 | 550 | [350] | 500 | 100–600 | | max_depth | 10 | 10 | 9 | 9 | 3–10
+223,500,500,GENERATED,table 4: t4_zT_n_estimators,,3.4 Model development,------------------| | n_estimators | 500 | 550 | 350 | [500] | 100–600 | | max_depth | 10 | 10 | 9 | 9 | 3–10 | | l
+223,100,100,GENERATED,table 4: t4_range_n_estimators,,3.4 Model development,------------| | n_estimators | 500 | 550 | 350 | 500 | [100]–600 | | max_depth | 10 | 10 | 9 | 9 | 3–10 | | learnin
+223,600,600,GENERATED,table 4: t4_range_n_estimators,,3.4 Model development,--------| | n_estimators | 500 | 550 | 350 | 500 | 100–[600] | | max_depth | 10 | 10 | 9 | 9 | 3–10 | | learning_ra
+224,10,10,GENERATED,table 4: t4_S_max_depth,,3.4 Model development,tors | 500 | 550 | 350 | 500 | 100–600 | | max_depth | [10] | 10 | 9 | 9 | 3–10 | | learning_rate | 0.03183 | 0.02
+224,10,10,GENERATED,table 4: t4_sigma_max_depth,,3.4 Model development,| 500 | 550 | 350 | 500 | 100–600 | | max_depth | 10 | [10] | 9 | 9 | 3–10 | | learning_rate | 0.03183 | 0.02669 |
+224,9,9,GENERATED,table 4: t4_kappa_max_depth,,3.4 Model development,| 550 | 350 | 500 | 100–600 | | max_depth | 10 | 10 | [9] | 9 | 3–10 | | learning_rate | 0.03183 | 0.02669 | 0.0
+224,9,9,GENERATED,table 4: t4_zT_max_depth,,3.4 Model development,50 | 350 | 500 | 100–600 | | max_depth | 10 | 10 | 9 | [9] | 3–10 | | learning_rate | 0.03183 | 0.02669 | 0.05742
+224,3,3,GENERATED,table 4: t4_range_max_depth,,3.4 Model development,350 | 500 | 100–600 | | max_depth | 10 | 10 | 9 | 9 | [3]–10 | | learning_rate | 0.03183 | 0.02669 | 0.05742 | 0
+224,10,10,GENERATED,table 4: t4_range_max_depth,,3.4 Model development,50 | 500 | 100–600 | | max_depth | 10 | 10 | 9 | 9 | 3–[10] | | learning_rate | 0.03183 | 0.02669 | 0.05742 | 0.02
+225,0.03183,0.03183,GENERATED,table 4: t4_S_learning_rate,,3.4 Model development,max_depth | 10 | 10 | 9 | 9 | 3–10 | | learning_rate | [0.03183] | 0.02669 | 0.05742 | 0.02188 | 0.01–0.3 | | subsample
+225,0.02669,0.02669,GENERATED,table 4: t4_sigma_learning_rate,,3.4 Model development,| 10 | 10 | 9 | 9 | 3–10 | | learning_rate | 0.03183 | [0.02669] | 0.05742 | 0.02188 | 0.01–0.3 | | subsample | 0.8969
+225,0.05742,0.05742,GENERATED,table 4: t4_kappa_learning_rate,,3.4 Model development,| 9 | 9 | 3–10 | | learning_rate | 0.03183 | 0.02669 | [0.05742] | 0.02188 | 0.01–0.3 | | subsample | 0.8969 | 0.8676 |
+225,0.02188,0.02188,GENERATED,table 4: t4_zT_learning_rate,,3.4 Model development,3–10 | | learning_rate | 0.03183 | 0.02669 | 0.05742 | [0.02188] | 0.01–0.3 | | subsample | 0.8969 | 0.8676 | 0.9052 |
+225,0.01,0.01,GENERATED,table 4: t4_range_learning_rate,,3.4 Model development,earning_rate | 0.03183 | 0.02669 | 0.05742 | 0.02188 | [0.01]–0.3 | | subsample | 0.8969 | 0.8676 | 0.9052 | 0.6804
+225,0.3,0.3,GENERATED,table 4: t4_range_learning_rate,,3.4 Model development,ng_rate | 0.03183 | 0.02669 | 0.05742 | 0.02188 | 0.01–[0.3] | | subsample | 0.8969 | 0.8676 | 0.9052 | 0.6804 | 0.
+226,0.8969,0.8969,GENERATED,table 4: t4_S_subsample,,3.4 Model development,0.02669 | 0.05742 | 0.02188 | 0.01–0.3 | | subsample | [0.8969] | 0.8676 | 0.9052 | 0.6804 | 0.5–1.0 | | colsample_byt
+226,0.8676,0.8676,GENERATED,table 4: t4_sigma_subsample,,3.4 Model development,0.05742 | 0.02188 | 0.01–0.3 | | subsample | 0.8969 | [0.8676] | 0.9052 | 0.6804 | 0.5–1.0 | | colsample_bytree | 0.5
+226,0.9052,0.9052,GENERATED,table 4: t4_kappa_subsample,,3.4 Model development,| 0.02188 | 0.01–0.3 | | subsample | 0.8969 | 0.8676 | [0.9052] | 0.6804 | 0.5–1.0 | | colsample_bytree | 0.5062 | 0.5
+226,0.6804,0.6804,GENERATED,table 4: t4_zT_subsample,,3.4 Model development,| 0.01–0.3 | | subsample | 0.8969 | 0.8676 | 0.9052 | [0.6804] | 0.5–1.0 | | colsample_bytree | 0.5062 | 0.5167 | 0.7
+226,0.5,0.5,GENERATED,table 4: t4_range_subsample,,3.4 Model development,.3 | | subsample | 0.8969 | 0.8676 | 0.9052 | 0.6804 | [0.5]–1.0 | | colsample_bytree | 0.5062 | 0.5167 | 0.7082 |
+226,1.0,1,GENERATED,table 4: t4_range_subsample,,3.4 Model development,| subsample | 0.8969 | 0.8676 | 0.9052 | 0.6804 | 0.5–[1.0] | | colsample_bytree | 0.5062 | 0.5167 | 0.7082 | 0.69
+227,0.5062,0.5062,GENERATED,table 4: t4_S_colsample_bytree,,3.4 Model development,676 | 0.9052 | 0.6804 | 0.5–1.0 | | colsample_bytree | [0.5062] | 0.5167 | 0.7082 | 0.6984 | 0.5–1.0 | | min_child_wei
+227,0.5167,0.5167,GENERATED,table 4: t4_sigma_colsample_bytree,,3.4 Model development,052 | 0.6804 | 0.5–1.0 | | colsample_bytree | 0.5062 | [0.5167] | 0.7082 | 0.6984 | 0.5–1.0 | | min_child_weight | 4 |
+227,0.7082,0.7082,GENERATED,table 4: t4_kappa_colsample_bytree,,3.4 Model development,804 | 0.5–1.0 | | colsample_bytree | 0.5062 | 0.5167 | [0.7082] | 0.6984 | 0.5–1.0 | | min_child_weight | 4 | 4 | 6 |
+227,0.6984,0.6984,GENERATED,table 4: t4_zT_colsample_bytree,,3.4 Model development,–1.0 | | colsample_bytree | 0.5062 | 0.5167 | 0.7082 | [0.6984] | 0.5–1.0 | | min_child_weight | 4 | 4 | 6 | 4 | 1–10
+227,0.5,0.5,GENERATED,table 4: t4_range_colsample_bytree,,3.4 Model development,colsample_bytree | 0.5062 | 0.5167 | 0.7082 | 0.6984 | [0.5]–1.0 | | min_child_weight | 4 | 4 | 6 | 4 | 1–10 | | re
+227,1.0,1,GENERATED,table 4: t4_range_colsample_bytree,,3.4 Model development,ample_bytree | 0.5062 | 0.5167 | 0.7082 | 0.6984 | 0.5–[1.0] | | min_child_weight | 4 | 4 | 6 | 4 | 1–10 | | reg_la
+228,4,4,GENERATED,table 4: t4_S_min_child_weight,,3.4 Model development,167 | 0.7082 | 0.6984 | 0.5–1.0 | | min_child_weight | [4] | 4 | 6 | 4 | 1–10 | | reg_lambda | 0.6494 | 0.8074 |
+228,4,4,GENERATED,table 4: t4_sigma_min_child_weight,,3.4 Model development,| 0.7082 | 0.6984 | 0.5–1.0 | | min_child_weight | 4 | [4] | 6 | 4 | 1–10 | | reg_lambda | 0.6494 | 0.8074 | 0.05
+228,6,6,GENERATED,table 4: t4_kappa_min_child_weight,,3.4 Model development,7082 | 0.6984 | 0.5–1.0 | | min_child_weight | 4 | 4 | [6] | 4 | 1–10 | | reg_lambda | 0.6494 | 0.8074 | 0.05444
+228,4,4,GENERATED,table 4: t4_zT_min_child_weight,,3.4 Model development,| 0.6984 | 0.5–1.0 | | min_child_weight | 4 | 4 | 6 | [4] | 1–10 | | reg_lambda | 0.6494 | 0.8074 | 0.05444 | 1.
+228,1,1,GENERATED,table 4: t4_range_min_child_weight,,3.4 Model development,.6984 | 0.5–1.0 | | min_child_weight | 4 | 4 | 6 | 4 | [1]–10 | | reg_lambda | 0.6494 | 0.8074 | 0.05444 | 1.713
+228,10,10,GENERATED,table 4: t4_range_min_child_weight,,3.4 Model development,984 | 0.5–1.0 | | min_child_weight | 4 | 4 | 6 | 4 | 1–[10] | | reg_lambda | 0.6494 | 0.8074 | 0.05444 | 1.713 | 1
+229,0.6494,0.6494,GENERATED,table 4: t4_S_reg_lambda,,3.4 Model development,n_child_weight | 4 | 4 | 6 | 4 | 1–10 | | reg_lambda | [0.6494] | 0.8074 | 0.05444 | 1.713 | 1e-3–10.0 | | reg_alpha |
+229,0.8074,0.8074,GENERATED,table 4: t4_sigma_reg_lambda,,3.4 Model development,eight | 4 | 4 | 6 | 4 | 1–10 | | reg_lambda | 0.6494 | [0.8074] | 0.05444 | 1.713 | 1e-3–10.0 | | reg_alpha | 8.793 |
+229,0.05444,0.05444,GENERATED,table 4: t4_kappa_reg_lambda,,3.4 Model development,| 4 | 6 | 4 | 1–10 | | reg_lambda | 0.6494 | 0.8074 | [0.05444] | 1.713 | 1e-3–10.0 | | reg_alpha | 8.793 | 6.548 | 3.
+229,1.713,1.713,GENERATED,table 4: t4_zT_reg_lambda,,3.4 Model development,4 | 1–10 | | reg_lambda | 0.6494 | 0.8074 | 0.05444 | [1.713] | 1e-3–10.0 | | reg_alpha | 8.793 | 6.548 | 3.351 | 0.
+229,10.0,10,GENERATED,table 4: t4_range_reg_lambda,,3.4 Model development,reg_lambda | 0.6494 | 0.8074 | 0.05444 | 1.713 | 1e-3–[10.0] | | reg_alpha | 8.793 | 6.548 | 3.351 | 0.05033 | 1e-3
+230,8.793,8.793,GENERATED,table 4: t4_S_reg_alpha,,3.4 Model development,| 0.8074 | 0.05444 | 1.713 | 1e-3–10.0 | | reg_alpha | [8.793] | 6.548 | 3.351 | 0.05033 | 1e-3–10.0 |
+230,6.548,6.548,GENERATED,table 4: t4_sigma_reg_alpha,,3.4 Model development,| 0.05444 | 1.713 | 1e-3–10.0 | | reg_alpha | 8.793 | [6.548] | 3.351 | 0.05033 | 1e-3–10.0 |
+230,3.351,3.351,GENERATED,table 4: t4_kappa_reg_alpha,,3.4 Model development,44 | 1.713 | 1e-3–10.0 | | reg_alpha | 8.793 | 6.548 | [3.351] | 0.05033 | 1e-3–10.0 | The Seeb
+230,0.05033,0.05033,GENERATED,table 4: t4_zT_reg_alpha,,3.4 Model development,13 | 1e-3–10.0 | | reg_alpha | 8.793 | 6.548 | 3.351 | [0.05033] | 1e-3–10.0 | The Seebeck regres
+230,10.0,10,GENERATED,table 4: t4_range_reg_alpha,,3.4 Model development,| | reg_alpha | 8.793 | 6.548 | 3.351 | 0.05033 | 1e-3–[10.0] | The Seebeck regressor is train
+233,397,397,GENERATED,n_feat,,3.4 Model development,ifier was therefore trained on the same [397] features to predict carrier type (p vs n) [[P
+235,3.5,3.5,EXCLUDED:SECTION,,,,"on the sign, the classifier's prediction is used. ## [3.5] Validation strategy Chemistry-cluster grouped cross-v"
+237,5,5,UNCLASSIFIED,,,3.5 Validation strategy,"ssigned to a chemistry cluster: elements present below [5] atomic percent are treated as dopants and removed, rem"
+237,5%,5,UNCLASSIFIED,,,3.5 Validation strategy,"eated as dopants and removed, remaining amounts within [5%] of an integer are snapped to that integer, and the for"
+237,0.97,0.97,EXCLUDED:NOTATION,,,,oped material therefore groups with its parent ((PbTe)~[0.97]~(SrTe)~0.02~(Na~2~Te)~0.01~ and Pb~0.97~Te both group
+237,0.02,0.02,EXCLUDED:NOTATION,,,,"l therefore groups with its parent ((PbTe)~0.97~(SrTe)~[0.02]~(Na~2~Te)~0.01~ and Pb~0.97~Te both group with PbTe, w"
+237,2,2,EXCLUDED:NOTATION,,,,"re groups with its parent ((PbTe)~0.97~(SrTe)~0.02~(Na~[2]~Te)~0.01~ and Pb~0.97~Te both group with PbTe, while B"
+237,0.01,0.01,EXCLUDED:NOTATION,,,,"ups with its parent ((PbTe)~0.97~(SrTe)~0.02~(Na~2~Te)~[0.01]~ and Pb~0.97~Te both group with PbTe, while Bi~2~Te~2."
+237,0.97,0.97,EXCLUDED:NOTATION,,,,"parent ((PbTe)~0.97~(SrTe)~0.02~(Na~2~Te)~0.01~ and Pb~[0.97]~Te both group with PbTe, while Bi~2~Te~2.7~Se~0.3~, wh"
+237,2,2,EXCLUDED:NOTATION,,,,"e)~0.01~ and Pb~0.97~Te both group with PbTe, while Bi~[2]~Te~2.7~Se~0.3~, where selenium occupies 6.0 atomic per"
+237,2.7,2.7,EXCLUDED:NOTATION,,,,"01~ and Pb~0.97~Te both group with PbTe, while Bi~2~Te~[2.7]~Se~0.3~, where selenium occupies 6.0 atomic percent an"
+237,0.3,0.3,EXCLUDED:NOTATION,,,,"Pb~0.97~Te both group with PbTe, while Bi~2~Te~2.7~Se~[0.3]~, where selenium occupies 6.0 atomic percent and is an"
+237,6.0,6,UNCLASSIFIED,,,3.5 Validation strategy,"Te, while Bi~2~Te~2.7~Se~0.3~, where selenium occupies [6.0] atomic percent and is an alloy component, does not gro"
+237,2,2,EXCLUDED:NOTATION,,,,"cent and is an alloy component, does not group with Bi~[2]~Te~3~). The snapshot contains 8,908"
+237,3,3,EXCLUDED:NOTATION,,,,"and is an alloy component, does not group with Bi~2~Te~[3]~). The snapshot contains 8,908"
+237,"8,908",8908,GENERATED,n_clusters,,3.5 Validation strategy,"Bi~2~Te~3~). The snapshot contains [8,908] chemistry clusters, against"
+237,"3,909",3909,GENERATED,n_parent,,3.5 Validation strategy,"chemistry clusters, against [3,909] parent chemical systems; the two groupings cr"
+237,5,5,GENERATED,repeats,,3.5 Validation strategy,t clusters randomised between repeats: [5] repeats of 5 -fol
+237,5,5,GENERATED,outer_folds,,3.5 Validation strategy,5 repeats of [5] -fold CV [@roberts2017cross]. To quantify infl
+237,20,20,GENERATED,rand_draws,,3.5 Validation strategy,", hyperparameters and features: (i) [20] independent random 80/20 draws, pooled; (ii)"
+237,80,80,UNCLASSIFIED,,,3.5 Validation strategy,"(i) 20 independent random [80]/20 draws, pooled; (ii) 5-fold and (iii) 10-fold CV, al"
+237,20,20,UNCLASSIFIED,,,3.5 Validation strategy,") 20 independent random 80/[20] draws, pooled; (ii) 5-fold and (iii) 10-fold CV, all p"
+237,5,5,UNCLASSIFIED,,,3.5 Validation strategy,"independent random 80/20 draws, pooled; (ii) [5]-fold and (iii) 10-fold CV, all partitioning data at ro"
+237,10,10,UNCLASSIFIED,,,3.5 Validation strategy,"dent random 80/20 draws, pooled; (ii) 5-fold and (iii) [10]-fold CV, all partitioning data at row level; (iv) comp"
+237,2,2,EXCLUDED:NOTATION,,,,allowing related compounds of the same family (e.g. Bi~[2]~Te~3~ and Bi~0.5~Sb~1.5~Te~3~) on opposite sides of th
+237,3,3,EXCLUDED:NOTATION,,,,ing related compounds of the same family (e.g. Bi~2~Te~[3]~ and Bi~0.5~Sb~1.5~Te~3~) on opposite sides of the spl
+237,0.5,0.5,EXCLUDED:NOTATION,,,,d compounds of the same family (e.g. Bi~2~Te~3~ and Bi~[0.5]~Sb~1.5~Te~3~) on opposite sides of the split; and (v)
+237,1.5,1.5,EXCLUDED:NOTATION,,,,unds of the same family (e.g. Bi~2~Te~3~ and Bi~0.5~Sb~[1.5]~Te~3~) on opposite sides of the split; and (v) chemist
+237,3,3,EXCLUDED:NOTATION,,,,the same family (e.g. Bi~2~Te~3~ and Bi~0.5~Sb~1.5~Te~[3]~) on opposite sides of the split; and (v) chemistry-cl
+239,2,2,EXCLUDED:MATH,,,,"ent of determination and the mean absolute error, $R^{[2]} = 1 - \frac{\sum_{i}^{}\left( y_{i} - {y\hat{}}_{i} \"
+239,1,1,EXCLUDED:MATH,,,,"f determination and the mean absolute error, $R^{2} = [1] - \frac{\sum_{i}^{}\left( y_{i} - {y\hat{}}_{i} \right"
+239,2,2,EXCLUDED:MATH,,,,"\frac{\sum_{i}^{}\left( y_{i} - {y\hat{}}_{i} \right)^{[2]}}{\sum_{i}^{}\left( y_{i} - y\bar{} \right)^{2}},\quad"
+239,2,2,EXCLUDED:MATH,,,,"right)^{2}}{\sum_{i}^{}\left( y_{i} - y\bar{} \right)^{[2]}},\quad\quad MAE = \frac{1}{n}\sum_{i}^{}{|y_{i} - {y\"
+239,1,1,EXCLUDED:MATH,,,,"t( y_{i} - y\bar{} \right)^{2}},\quad\quad MAE = \frac{[1]}{n}\sum_{i}^{}{|y_{i} - {y\hat{}}_{i}|}$ (7) and the"
+239,7,7,EXCLUDED:EQNUM,,,,AE = \frac{1}{n}\sum_{i}^{}{|y_{i} - {y\hat{}}_{i}|}$ ([7]) and the validation inflation was defined as $\Delta
+243,2,2,EXCLUDED:MATH,,,,nd the validation inflation was defined as $\Delta R^{[2]} = R_{random}^{2} - R_{cluster}^{2}$ (8) For external
+243,2,2,EXCLUDED:MATH,,,,"inflation was defined as $\Delta R^{2} = R_{random}^{[2]} - R_{cluster}^{2}$ (8) For external validation, the"
+243,2,2,EXCLUDED:MATH,,,,"ined as $\Delta R^{2} = R_{random}^{2} - R_{cluster}^{[2]}$ (8) For external validation, the models were refit"
+243,8,8,EXCLUDED:EQNUM,,,,"as $\Delta R^{2} = R_{random}^{2} - R_{cluster}^{2}$ ([8]) For external validation, the models were refit on 10"
+245,100%,100,UNCLASSIFIED,,,3.5 Validation strategy,"(8) For external validation, the models were refit on [100%] of the training data with their frozen hyperparameters"
+245,300,300,GENERATED,t_min,,3.5 Validation strategy,"TM [@na2022public]. After restricting to [300] -- 800 K, ESTM has"
+245,800,800,GENERATED,t_max,,3.5 Validation strategy,"stricting to 300 -- [800] K, ESTM has 4,539"
+245,"4,539",4539,GENERATED,estm_scope,,3.5 Validation strategy,"800 K, ESTM has [4,539] rows. ESTM and Starrydata2 are both digitised"
+245,69,69,GENERATED,estm_dois,,3.5 Validation strategy,literature and share source papers: [69] ESTM source publications also appear in the t
+245,"1,416",1416,GENERATED,estm_a_drop,,3.5 Validation strategy,"ays that are never pooled: (a) the [1,416] rows sharing a source DOI with the training d"
+245,"3,123",3123,GENERATED,estm_a_n,,3.5 Validation strategy,"he training data are removed, leaving [3,123] , which tests measurement transfer; (b) the"
+245,"3,091",3091,GENERATED,estm_b_drop,,3.5 Validation strategy,"ests measurement transfer; (b) the [3,091] rows whose chemistry cluster appears in the t"
+245,"1,448",1448,GENERATED,estm_b_n,,3.5 Validation strategy,"he training data are removed, leaving [1,448] , which tests chemistry transfer. Because ESTM"
+245,"2,709",2709,GENERATED,estm_a_insup_n,,3.5 Validation strategy,"of S, *σ*, *κ* and temperature ( [2,709] of 3,123 rows in (a"
+245,"3,123",3123,GENERATED,estm_a_n,,3.5 Validation strategy,"2,709 of [3,123] rows in (a), 1,196"
+245,"1,196",1196,GENERATED,estm_b_insup_n,,3.5 Validation strategy,"3,123 rows in (a), [1,196] of 1,448 in (b)). B"
+245,"1,448",1448,GENERATED,estm_b_n,,3.5 Validation strategy,"1,196 of [1,448] in (b)). Back-transformation of the log-space"
+245,"4,539",4539,GENERATED,estm_scope,,3.5 Validation strategy,"label is used for calibration. The [4,539] rows cover 853"
+245,853,853,GENERATED,na9_formulas,,3.5 Validation strategy,"4,539 rows cover [853] distinct formulas, of which"
+245,343,343,GENERATED,na9_seen,,3.5 Validation strategy,"distinct formulas, of which [343] also occur in the training data ("
+245,300,300,GENERATED,na9_clusters_seen,,3.5 Validation strategy,occur in the training data ( [300] of the 528 chem
+245,528,528,GENERATED,na9_clusters,,3.5 Validation strategy,300 of the [528] chemistry clusters occur in it). As a cross-d
+247,3.6,3.6,EXCLUDED:SECTION,,,,om JARVIS [@choudhary2020joint] [[PENDING: NA10]]. ## [3.6] Virtual screening The Materials Project API [@jain201
+249,0.05,0.05,UNCLASSIFIED,,,3.6 Virtual screening,compounds with energy above the convex hull E~hull~ ≤ [0.05] eV atom^−1^ (lower values indicate greater thermodynam
+249,−1,1,EXCLUDED:NOTATION,,,,th energy above the convex hull E~hull~ ≤ 0.05 eV atom^[−1]^ (lower values indicate greater thermodynamic stabilit
+249,3,3,EXCLUDED:NOTATION,,,,"active, unstable and toxic elements and reduced to ABX~[3]~ candidates. Perovskite-type structure is decided by a"
+249,6,6,EXCLUDED:NOTATION,,,,"est (six-fold B--X coordination with corner-sharing BX~[6]~ octahedra), not by space group alone, because the sam"
+249,3,3,EXCLUDED:NOTATION,,,,group is shared by perovskites and non-perovskite ABX~[3]~ structures (for example the needle-like chain structu
+249,3,3,EXCLUDED:NOTATION,,,,r example the needle-like chain structure of *α*-SrZrS~[3]~ and the GdFeO~3~-type perovskite *β*-SrZrS~3~ are bot
+249,3,3,EXCLUDED:NOTATION,,,,dle-like chain structure of *α*-SrZrS~3~ and the GdFeO~[3]~-type perovskite *β*-SrZrS~3~ are both *Pnma* [@sopiha
+249,3,3,EXCLUDED:NOTATION,,,,α*-SrZrS~3~ and the GdFeO~3~-type perovskite *β*-SrZrS~[3]~ are both *Pnma* [@sopiha2021chalcogenide]). Materials
+249,1.5,1.5,UNCLASSIFIED,,,3.6 Virtual screening,"he upper bound of the window is widened by a factor of [1.5] is reported alongside the counts. The query, the filte"
+251,300,300,UNCLASSIFIED,,,3.6 Virtual screening,"ed and the four models predict S, *σ*, *κ* and zT from [300] to 800 K in 100 K steps [[PENDING: NA11]]; the carrier"
+251,800,800,UNCLASSIFIED,,,3.6 Virtual screening,"the four models predict S, *σ*, *κ* and zT from 300 to [800] K in 100 K steps [[PENDING: NA11]]; the carrier-type c"
+251,100,100,UNCLASSIFIED,,,3.6 Virtual screening,"models predict S, *σ*, *κ* and zT from 300 to 800 K in [100] K steps [[PENDING: NA11]]; the carrier-type classifier"
+251,2,2,EXCLUDED:NOTATION,,,,accurate under chemistry-cluster CV than the derived S^[2]^*σ*T/*κ* route (Section 4.4). ## 3.7 Model explainabi
+251,4.4,4.4,EXCLUDED:XREF,,,,luster CV than the derived S^2^*σ*T/*κ* route (Section [4.4]). ## 3.7 Model explainability SHAP TreeExplainer [@l
+253,3.7,3.7,EXCLUDED:SECTION,,,,than the derived S^2^*σ*T/*κ* route (Section 4.4). ## [3.7] Model explainability SHAP TreeExplainer [@lundberg201
+255,20,20,UNCLASSIFIED,,,3.7 Model explainability,er feature) and beeswarm plots are created for the top [20] features per target [[PENDING: NA3]]. Agreement betwee
+257,4,4,EXCLUDED:SECTION,,,,ul relationships rather than spurious correlations. # [4] Results and discussion ## 4.1 Model performance ###
+259,4.1,4.1,EXCLUDED:SECTION,,,,spurious correlations. # 4 Results and discussion ## [4.1] Model performance ### 4.1.1 Chemistry-cluster cross-v
+261,4.1,4.1,EXCLUDED:SECTION,,,,Results and discussion ## 4.1 Model performance ### [4.1].1 Chemistry-cluster cross-validation Table 5 presents
+263,5,5,EXCLUDED:XREF,,,,e ### 4.1.1 Chemistry-cluster cross-validation Table [5] presents the chemistry-cluster results. R^2^ was highe
+263,2,2,EXCLUDED:NOTATION,,,,ion Table 5 presents the chemistry-cluster results. R^[2]^ was highest for *κ* ( 0.809
+263,0.809,0.809,GENERATED,chem_kappa,,4.1.1 Chemistry-cluster cross-validation,"results. R^2^ was highest for *κ* ( [0.809] ), followed by S ( 0.753"
+263,0.753,0.753,GENERATED,chem_S,,4.1.1 Chemistry-cluster cross-validation,"0.809 ), followed by S ( [0.753] ), zT ( 0.746 ) and *σ*"
+263,0.746,0.746,GENERATED,chem_zT,,4.1.1 Chemistry-cluster cross-validation,"S ( 0.753 ), zT ( [0.746] ) and *σ* ( 0.702 )."
+263,0.702,0.702,GENERATED,chem_sigma,,4.1.1 Chemistry-cluster cross-validation,0.746 ) and *σ* ( [0.702] ). This ordering is consistent with the intrin
+263,7,7,EXCLUDED:XREF,,,,is conditions rather than by the nominal formula. Fig. [7] shows predicted versus measured values (first repeat):
+263,0.74,0.74,GENERATED,na8_slope_S,,4.1.1 Chemistry-cluster cross-validation,"e mean, with calibration slopes of [0.74] (S), 0.68 (*"
+263,0.68,0.68,GENERATED,na8_slope_sigma,,4.1.1 Chemistry-cluster cross-validation,"0.74 (S), [0.68] (*σ*), 0.80"
+263,0.80,0.8,GENERATED,na8_slope_kappa,,4.1.1 Chemistry-cluster cross-validation,"0.68 (*σ*), [0.80] (*κ*) and 0.73"
+263,0.73,0.73,GENERATED,na8_slope_zT,,4.1.1 Chemistry-cluster cross-validation,"0.80 (*κ*) and [0.73] (zT), and the top 5% of zT rows (mean measure"
+263,5%,5,UNCLASSIFIED,,,4.1.1 Chemistry-cluster cross-validation,"d 0.73 (zT), and the top [5%] of zT rows (mean measured zT 1"
+263,1.48,1.48,GENERATED,na8_zt_top_true,,4.1.1 Chemistry-cluster cross-validation,% of zT rows (mean measured zT [1.48] ) are predicted at 1.1
+263,1.15,1.15,GENERATED,na8_zt_top_pred,,4.1.1 Chemistry-cluster cross-validation,".48 ) are predicted at [1.15] on average, consistent with high-performance"
+266,5,5,EXCLUDED:XREF,,,,in the training data. **Table [5]:** Chemistry-cluster grouped cross-validation results
+266,5,5,GENERATED,table 5: repeats,,4.1.1 Chemistry-cluster cross-validation,** Chemistry-cluster grouped cross-validation results ([5] repeats of 5-fold CV; R^2^ is the mean ± standard devi
+266,5,5,GENERATED,table 5: outer_folds,,4.1.1 Chemistry-cluster cross-validation,cluster grouped cross-validation results (5 repeats of [5]-fold CV; R^2^ is the mean ± standard deviation across
+266,2,2,EXCLUDED:NOTATION,,,,ed cross-validation results (5 repeats of 5-fold CV; R^[2]^ is the mean ± standard deviation across repeats of th
+266,−1,1,EXCLUDED:NOTATION,,,,evel SD is over all folds). MAE and RMSE are in *µ*V K^[−1]^ for S and in log~10~ units for *σ* and *κ*. | **Targ
+266,10,10,EXCLUDED:NOTATION,,,,olds). MAE and RMSE are in *µ*V K^−1^ for S and in log~[10]~ units for *σ* and *κ*. | **Target** | **R^2^** | **F
+268,2,2,EXCLUDED:NOTATION,,,,in log~10~ units for *σ* and *κ*. | **Target** | **R^[2]^** | **Fold-level SD** | **MAE** | **RMSE** | **Rows**
+270,0.753,0.753,GENERATED,table 5: chem_S,,4.1.1 Chemistry-cluster cross-validation,"---------|-------|-------|----------|----------| | S | [0.753] ± 0.005 | 0.032 | 51.5 | 87.9 | 185,064 | 397 | | log~"
+270,0.005,0.005,GENERATED,table 5: chem_sd_S,,4.1.1 Chemistry-cluster cross-validation,"-|-------|-------|----------|----------| | S | 0.753 ± [0.005] | 0.032 | 51.5 | 87.9 | 185,064 | 397 | | log~10~*σ* |"
+270,0.032,0.032,GENERATED,table 5: foldsd_S,,4.1.1 Chemistry-cluster cross-validation,"-|-------|----------|----------| | S | 0.753 ± 0.005 | [0.032] | 51.5 | 87.9 | 185,064 | 397 | | log~10~*σ* | 0.702 ±"
+270,51.5,51.5,GENERATED,table 5: mae_S,,4.1.1 Chemistry-cluster cross-validation,"-|----------|----------| | S | 0.753 ± 0.005 | 0.032 | [51.5] | 87.9 | 185,064 | 397 | | log~10~*σ* | 0.702 ± 0.002"
+270,87.9,87.9,GENERATED,table 5: rmse_S,,4.1.1 Chemistry-cluster cross-validation,"-----|----------| | S | 0.753 ± 0.005 | 0.032 | 51.5 | [87.9] | 185,064 | 397 | | log~10~*σ* | 0.702 ± 0.002 | 0.029"
+270,"185,064",185064,GENERATED,table 5: n_S,,4.1.1 Chemistry-cluster cross-validation,"---------| | S | 0.753 ± 0.005 | 0.032 | 51.5 | 87.9 | [185,064] | 397 | | log~10~*σ* | 0.702 ± 0.002 | 0.029 | 0.230 |"
+270,397,397,GENERATED,table 5: n_feat,,4.1.1 Chemistry-cluster cross-validation,"| S | 0.753 ± 0.005 | 0.032 | 51.5 | 87.9 | 185,064 | [397] | | log~10~*σ* | 0.702 ± 0.002 | 0.029 | 0.230 | 0.334"
+271,10,10,EXCLUDED:NOTATION,,,,"± 0.005 | 0.032 | 51.5 | 87.9 | 185,064 | 397 | | log~[10]~*σ* | 0.702 ± 0.002 | 0.029 | 0.230 | 0.334 | 182,755"
+271,0.702,0.702,GENERATED,table 5: chem_sigma,,4.1.1 Chemistry-cluster cross-validation,"| 0.032 | 51.5 | 87.9 | 185,064 | 397 | | log~10~*σ* | [0.702] ± 0.002 | 0.029 | 0.230 | 0.334 | 182,755 | 397 | | lo"
+271,0.002,0.002,GENERATED,table 5: chem_sd_sigma,,4.1.1 Chemistry-cluster cross-validation,"| 51.5 | 87.9 | 185,064 | 397 | | log~10~*σ* | 0.702 ± [0.002] | 0.029 | 0.230 | 0.334 | 182,755 | 397 | | log~10~*κ*"
+271,0.029,0.029,GENERATED,table 5: foldsd_sigma,,4.1.1 Chemistry-cluster cross-validation,"87.9 | 185,064 | 397 | | log~10~*σ* | 0.702 ± 0.002 | [0.029] | 0.230 | 0.334 | 182,755 | 397 | | log~10~*κ* | 0.809"
+271,0.230,0.23,GENERATED,table 5: mae_sigma,,4.1.1 Chemistry-cluster cross-validation,"185,064 | 397 | | log~10~*σ* | 0.702 ± 0.002 | 0.029 | [0.230] | 0.334 | 182,755 | 397 | | log~10~*κ* | 0.809 ± 0.002"
+271,0.334,0.334,GENERATED,table 5: rmse_sigma,,4.1.1 Chemistry-cluster cross-validation,"| 397 | | log~10~*σ* | 0.702 ± 0.002 | 0.029 | 0.230 | [0.334] | 182,755 | 397 | | log~10~*κ* | 0.809 ± 0.002 | 0.017"
+271,"182,755",182755,GENERATED,table 5: n_sigma,,4.1.1 Chemistry-cluster cross-validation,"| log~10~*σ* | 0.702 ± 0.002 | 0.029 | 0.230 | 0.334 | [182,755] | 397 | | log~10~*κ* | 0.809 ± 0.002 | 0.017 | 0.097 |"
+271,397,397,GENERATED,table 5: n_feat,,4.1.1 Chemistry-cluster cross-validation,"σ* | 0.702 ± 0.002 | 0.029 | 0.230 | 0.334 | 182,755 | [397] | | log~10~*κ* | 0.809 ± 0.002 | 0.017 | 0.097 | 0.140"
+272,10,10,EXCLUDED:NOTATION,,,,"0.002 | 0.029 | 0.230 | 0.334 | 182,755 | 397 | | log~[10]~*κ* | 0.809 ± 0.002 | 0.017 | 0.097 | 0.140 | 121,110"
+272,0.809,0.809,GENERATED,table 5: chem_kappa,,4.1.1 Chemistry-cluster cross-validation,"0.029 | 0.230 | 0.334 | 182,755 | 397 | | log~10~*κ* | [0.809] ± 0.002 | 0.017 | 0.097 | 0.140 | 121,110 | 397 | | zT"
+272,0.002,0.002,GENERATED,table 5: chem_sd_kappa,,4.1.1 Chemistry-cluster cross-validation,"0.230 | 0.334 | 182,755 | 397 | | log~10~*κ* | 0.809 ± [0.002] | 0.017 | 0.097 | 0.140 | 121,110 | 397 | | zT | 0.746"
+272,0.017,0.017,GENERATED,table 5: foldsd_kappa,,4.1.1 Chemistry-cluster cross-validation,"0.334 | 182,755 | 397 | | log~10~*κ* | 0.809 ± 0.002 | [0.017] | 0.097 | 0.140 | 121,110 | 397 | | zT | 0.746 ± 0.005"
+272,0.097,0.097,GENERATED,table 5: mae_kappa,,4.1.1 Chemistry-cluster cross-validation,"182,755 | 397 | | log~10~*κ* | 0.809 ± 0.002 | 0.017 | [0.097] | 0.140 | 121,110 | 397 | | zT | 0.746 ± 0.005 | 0.042"
+272,0.140,0.14,GENERATED,table 5: rmse_kappa,,4.1.1 Chemistry-cluster cross-validation,"| 397 | | log~10~*κ* | 0.809 ± 0.002 | 0.017 | 0.097 | [0.140] | 121,110 | 397 | | zT | 0.746 ± 0.005 | 0.042 | 0.126"
+272,"121,110",121110,GENERATED,table 5: n_kappa,,4.1.1 Chemistry-cluster cross-validation,"| log~10~*κ* | 0.809 ± 0.002 | 0.017 | 0.097 | 0.140 | [121,110] | 397 | | zT | 0.746 ± 0.005 | 0.042 | 0.126 | 0.196 |"
+272,397,397,GENERATED,table 5: n_feat,,4.1.1 Chemistry-cluster cross-validation,"κ* | 0.809 ± 0.002 | 0.017 | 0.097 | 0.140 | 121,110 | [397] | | zT | 0.746 ± 0.005 | 0.042 | 0.126 | 0.196 | 129,4"
+273,0.746,0.746,GENERATED,table 5: chem_zT,,4.1.1 Chemistry-cluster cross-validation,"0.002 | 0.017 | 0.097 | 0.140 | 121,110 | 397 | | zT | [0.746] ± 0.005 | 0.042 | 0.126 | 0.196 | 129,419 | 397 |"
+273,0.005,0.005,GENERATED,table 5: chem_sd_zT,,4.1.1 Chemistry-cluster cross-validation,"0.017 | 0.097 | 0.140 | 121,110 | 397 | | zT | 0.746 ± [0.005] | 0.042 | 0.126 | 0.196 | 129,419 | 397 |"
+273,0.042,0.042,GENERATED,table 5: foldsd_zT,,4.1.1 Chemistry-cluster cross-validation,"0.097 | 0.140 | 121,110 | 397 | | zT | 0.746 ± 0.005 | [0.042] | 0.126 | 0.196 | 129,419 | 397 |"
+273,0.126,0.126,GENERATED,table 5: mae_zT,,4.1.1 Chemistry-cluster cross-validation,"0.140 | 121,110 | 397 | | zT | 0.746 ± 0.005 | 0.042 | [0.126] | 0.196 | 129,419 | 397 | ![Figu"
+273,0.196,0.196,GENERATED,table 5: rmse_zT,,4.1.1 Chemistry-cluster cross-validation,"121,110 | 397 | | zT | 0.746 ± 0.005 | 0.042 | 0.126 | [0.196] | 129,419 | 397 | ![Figure 7](.."
+273,"129,419",129419,GENERATED,table 5: n_zT,,4.1.1 Chemistry-cluster cross-validation,"| 397 | | zT | 0.746 ± 0.005 | 0.042 | 0.126 | 0.196 | [129,419] | 397 | ![Figure 7](../figures/f"
+273,397,397,GENERATED,table 5: n_feat,,4.1.1 Chemistry-cluster cross-validation,"zT | 0.746 ± 0.005 | 0.042 | 0.126 | 0.196 | 129,419 | [397] | ![Figure 7](../figures/fig7_pr"
+276,7,7,EXCLUDED:XREF,,,,"0.196 | 129,419 | 397 | ![Figure [7]](../figures/fig7_predicted_vs_measured.png){width=100%"
+276,100%,100,EXCLUDED:LINK,,,,re 7](../figures/fig7_predicted_vs_measured.png){width=[100%]} **Figure 7:** Predicted versus measured values under
+278,7,7,EXCLUDED:XREF,,,,/fig7_predicted_vs_measured.png){width=100%} **Figure [7]:** Predicted versus measured values under chemistry-cl
+280,4.1,4.1,EXCLUDED:SECTION,,,,ll. The dashed line indicates perfect prediction. ### [4.1].2 Validation method comparison Table 6 and Fig. 8 com
+282,6,6,EXCLUDED:XREF,,,,iction. ### 4.1.2 Validation method comparison Table [6] and Fig. 8 compare the five validation methods. Random
+282,8,8,EXCLUDED:XREF,,,,"# 4.1.2 Validation method comparison Table 6 and Fig. [8] compare the five validation methods. Random split, 5-f"
+282,5,5,UNCLASSIFIED,,,4.1.2 Validation method comparison,". 8 compare the five validation methods. Random split, [5]-fold and 10-fold CV give practically identical R^2^ (m"
+282,10,10,UNCLASSIFIED,,,4.1.2 Validation method comparison,"the five validation methods. Random split, 5-fold and [10]-fold CV give practically identical R^2^ (maximum diffe"
+282,2,2,EXCLUDED:NOTATION,,,,"it, 5-fold and 10-fold CV give practically identical R^[2]^ (maximum difference 0.002"
+282,0.002,0.002,GENERATED,spread_max,,4.1.2 Validation method comparison,"identical R^2^ (maximum difference [0.002] per target), showing that all three leak the"
+282,2,2,EXCLUDED:NOTATION,,,,"position-level CV gives intermediate values (e.g. zT R^[2]^ = 0.818 ), and chemistry-clus"
+282,0.818,0.818,GENERATED,comp_zT,,4.1.2 Validation method comparison,"es intermediate values (e.g. zT R^2^ = [0.818] ), and chemistry-cluster CV gives the lowest a"
+282,0.918,0.918,GENERATED,rand_zT,,4.1.2 Validation method comparison,clear hierarchy for zT: random/K-fold ( [0.918] ) \> composition CV ( 0.818
+282,0.818,0.818,GENERATED,comp_zT,,4.1.2 Validation method comparison,0.918 ) \> composition CV ( [0.818] ) \> chemistry-cluster CV ( 0.7
+282,0.746,0.746,GENERATED,chem_zT,,4.1.2 Validation method comparison,818 ) \> chemistry-cluster CV ( [0.746] ). The inflation ∆R^2^ (Eq. (8)) ranges from +
+282,2,2,EXCLUDED:NOTATION,,,,CV ( 0.746 ). The inflation ∆R^[2]^ (Eq. (8)) ranges from + 0.134
+282,8,8,EXCLUDED:XREF,,,,0.746 ). The inflation ∆R^2^ (Eq. ([8])) ranges from + 0.134 for *κ* t
+282,0.134,0.134,GENERATED,gap_lo,,4.1.2 Validation method comparison,inflation ∆R^2^ (Eq. (8)) ranges from + [0.134] for *κ* to + 0.213 for
+282,0.213,0.213,GENERATED,gap_hi,,4.1.2 Validation method comparison,0.134 for *κ* to + [0.213] for *σ*; we attribute the differences between
+285,6,6,EXCLUDED:XREF,,,,within a known family. **Table [6]:** R^2^ obtained with five validation methods (same mo
+285,2,2,EXCLUDED:NOTATION,,,,"a known family. **Table 6:** R^[2]^ obtained with five validation methods (same model, fr"
+285,397,397,GENERATED,table 6: n_feat,,4.1.2 Validation method comparison,"dation methods (same model, frozen hyperparameters and [397] features). Random 80/20 pools 20 independent draws; 5-"
+285,80,80,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,"odel, frozen hyperparameters and 397 features). Random [80]/20 pools 20 independent draws; 5-fold and 10-fold are"
+285,20,20,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,"l, frozen hyperparameters and 397 features). Random 80/[20] pools 20 independent draws; 5-fold and 10-fold are sin"
+285,20,20,GENERATED,table 6: rand_draws,,4.1.2 Validation method comparison,hyperparameters and 397 features). Random 80/20 pools [20] independent draws; 5-fold and 10-fold are single parti
+285,5,5,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,97 features). Random 80/20 pools 20 independent draws; [5]-fold and 10-fold are single partitions; composition an
+285,10,10,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,). Random 80/20 pools 20 independent draws; 5-fold and [10]-fold are single partitions; composition and chemistry
+285,5,5,GENERATED,table 6: repeats,,4.1.2 Validation method comparison,osition and chemistry cluster are the mean ± SD across [5] repeats. ∆R^2^ is random 80/20 minus chemistry cluster
+285,2,2,EXCLUDED:NOTATION,,,,emistry cluster are the mean ± SD across 5 repeats. ∆R^[2]^ is random 80/20 minus chemistry cluster. | **Target*
+285,80,80,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,er are the mean ± SD across 5 repeats. ∆R^2^ is random [80]/20 minus chemistry cluster. | **Target** | **Random 8
+285,20,20,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,are the mean ± SD across 5 repeats. ∆R^2^ is random 80/[20] minus chemistry cluster. | **Target** | **Random 80/2
+287,80,80,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,0/20 minus chemistry cluster. | **Target** | **Random [80]/20** | **5-fold** | **10-fold** | **Composition** | **
+287,20,20,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,0 minus chemistry cluster. | **Target** | **Random 80/[20]** | **5-fold** | **10-fold** | **Composition** | **Che
+287,5,5,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,hemistry cluster. | **Target** | **Random 80/20** | **[5]-fold** | **10-fold** | **Composition** | **Chemistry c
+287,10,10,UNCLASSIFIED,,table 6: caption or label typed in the generator,4.1.2 Validation method comparison,ter. | **Target** | **Random 80/20** | **5-fold** | **[10]-fold** | **Composition** | **Chemistry cluster** | **∆
+287,2,2,EXCLUDED:NOTATION,,,,old** | **Composition** | **Chemistry cluster** | **∆R^[2]^** | |---------|----------|----------|----------|-----
+289,0.958,0.958,GENERATED,table 6: rand_S,,4.1.2 Validation method comparison,--------|-------------|-------------|----------| | S | [0.958] | 0.958 | 0.960 | 0.832 ± 0.004 | 0.753 ± 0.005 | +0.2
+289,0.958,0.958,GENERATED,table 6: k5_S,,4.1.2 Validation method comparison,|-------------|-------------|----------| | S | 0.958 | [0.958] | 0.960 | 0.832 ± 0.004 | 0.753 ± 0.005 | +0.205 | | *
+289,0.960,0.96,GENERATED,table 6: k10_S,,4.1.2 Validation method comparison,------|-------------|----------| | S | 0.958 | 0.958 | [0.960] | 0.832 ± 0.004 | 0.753 ± 0.005 | +0.205 | | *σ* | 0.9
+289,0.832,0.832,GENERATED,table 6: comp_S,,4.1.2 Validation method comparison,------------|----------| | S | 0.958 | 0.958 | 0.960 | [0.832] ± 0.004 | 0.753 ± 0.005 | +0.205 | | *σ* | 0.915 | 0.9
+289,0.004,0.004,GENERATED,table 6: comp_sd_S,,4.1.2 Validation method comparison,----|----------| | S | 0.958 | 0.958 | 0.960 | 0.832 ± [0.004] | 0.753 ± 0.005 | +0.205 | | *σ* | 0.915 | 0.915 | 0.9
+289,0.753,0.753,GENERATED,table 6: chem_S,,4.1.2 Validation method comparison,-------| | S | 0.958 | 0.958 | 0.960 | 0.832 ± 0.004 | [0.753] ± 0.005 | +0.205 | | *σ* | 0.915 | 0.915 | 0.917 | 0.7
+289,0.005,0.005,GENERATED,table 6: chem_sd_S,,4.1.2 Validation method comparison,| S | 0.958 | 0.958 | 0.960 | 0.832 ± 0.004 | 0.753 ± [0.005] | +0.205 | | *σ* | 0.915 | 0.915 | 0.917 | 0.776 ± 0.0
+289,0.205,0.205,GENERATED,table 6: gap_S,,4.1.2 Validation method comparison,958 | 0.958 | 0.960 | 0.832 ± 0.004 | 0.753 ± 0.005 | +[0.205] | | *σ* | 0.915 | 0.915 | 0.917 | 0.776 ± 0.002 | 0.70
+290,0.915,0.915,GENERATED,table 6: rand_sigma,,4.1.2 Validation method comparison,960 | 0.832 ± 0.004 | 0.753 ± 0.005 | +0.205 | | *σ* | [0.915] | 0.915 | 0.917 | 0.776 ± 0.002 | 0.702 ± 0.002 | +0.2
+290,0.915,0.915,GENERATED,table 6: k5_sigma,,4.1.2 Validation method comparison,832 ± 0.004 | 0.753 ± 0.005 | +0.205 | | *σ* | 0.915 | [0.915] | 0.917 | 0.776 ± 0.002 | 0.702 ± 0.002 | +0.213 | | *
+290,0.917,0.917,GENERATED,table 6: k10_sigma,,4.1.2 Validation method comparison,004 | 0.753 ± 0.005 | +0.205 | | *σ* | 0.915 | 0.915 | [0.917] | 0.776 ± 0.002 | 0.702 ± 0.002 | +0.213 | | *κ* | 0.9
+290,0.776,0.776,GENERATED,table 6: comp_sigma,,4.1.2 Validation method comparison,753 ± 0.005 | +0.205 | | *σ* | 0.915 | 0.915 | 0.917 | [0.776] ± 0.002 | 0.702 ± 0.002 | +0.213 | | *κ* | 0.943 | 0.9
+290,0.002,0.002,GENERATED,table 6: comp_sd_sigma,,4.1.2 Validation method comparison,005 | +0.205 | | *σ* | 0.915 | 0.915 | 0.917 | 0.776 ± [0.002] | 0.702 ± 0.002 | +0.213 | | *κ* | 0.943 | 0.944 | 0.9
+290,0.702,0.702,GENERATED,table 6: chem_sigma,,4.1.2 Validation method comparison,.205 | | *σ* | 0.915 | 0.915 | 0.917 | 0.776 ± 0.002 | [0.702] ± 0.002 | +0.213 | | *κ* | 0.943 | 0.944 | 0.946 | 0.8
+290,0.002,0.002,GENERATED,table 6: chem_sd_sigma,,4.1.2 Validation method comparison,*σ* | 0.915 | 0.915 | 0.917 | 0.776 ± 0.002 | 0.702 ± [0.002] | +0.213 | | *κ* | 0.943 | 0.944 | 0.946 | 0.857 ± 0.0
+290,0.213,0.213,GENERATED,table 6: gap_sigma,,4.1.2 Validation method comparison,915 | 0.915 | 0.917 | 0.776 ± 0.002 | 0.702 ± 0.002 | +[0.213] | | *κ* | 0.943 | 0.944 | 0.946 | 0.857 ± 0.001 | 0.80
+291,0.943,0.943,GENERATED,table 6: rand_kappa,,4.1.2 Validation method comparison,917 | 0.776 ± 0.002 | 0.702 ± 0.002 | +0.213 | | *κ* | [0.943] | 0.944 | 0.946 | 0.857 ± 0.001 | 0.809 ± 0.002 | +0.1
+291,0.944,0.944,GENERATED,table 6: k5_kappa,,4.1.2 Validation method comparison,776 ± 0.002 | 0.702 ± 0.002 | +0.213 | | *κ* | 0.943 | [0.944] | 0.946 | 0.857 ± 0.001 | 0.809 ± 0.002 | +0.134 | | z
+291,0.946,0.946,GENERATED,table 6: k10_kappa,,4.1.2 Validation method comparison,002 | 0.702 ± 0.002 | +0.213 | | *κ* | 0.943 | 0.944 | [0.946] | 0.857 ± 0.001 | 0.809 ± 0.002 | +0.134 | | zT | 0.91
+291,0.857,0.857,GENERATED,table 6: comp_kappa,,4.1.2 Validation method comparison,702 ± 0.002 | +0.213 | | *κ* | 0.943 | 0.944 | 0.946 | [0.857] ± 0.001 | 0.809 ± 0.002 | +0.134 | | zT | 0.918 | 0.91
+291,0.001,0.001,GENERATED,table 6: comp_sd_kappa,,4.1.2 Validation method comparison,002 | +0.213 | | *κ* | 0.943 | 0.944 | 0.946 | 0.857 ± [0.001] | 0.809 ± 0.002 | +0.134 | | zT | 0.918 | 0.918 | 0.91
+291,0.809,0.809,GENERATED,table 6: chem_kappa,,4.1.2 Validation method comparison,.213 | | *κ* | 0.943 | 0.944 | 0.946 | 0.857 ± 0.001 | [0.809] ± 0.002 | +0.134 | | zT | 0.918 | 0.918 | 0.919 | 0.81
+291,0.002,0.002,GENERATED,table 6: chem_sd_kappa,,4.1.2 Validation method comparison,*κ* | 0.943 | 0.944 | 0.946 | 0.857 ± 0.001 | 0.809 ± [0.002] | +0.134 | | zT | 0.918 | 0.918 | 0.919 | 0.818 ± 0.00
+291,0.134,0.134,GENERATED,table 6: gap_kappa,,4.1.2 Validation method comparison,943 | 0.944 | 0.946 | 0.857 ± 0.001 | 0.809 ± 0.002 | +[0.134] | | zT | 0.918 | 0.918 | 0.919 | 0.818 ± 0.001 | 0.746
+292,0.918,0.918,GENERATED,table 6: rand_zT,,4.1.2 Validation method comparison,.946 | 0.857 ± 0.001 | 0.809 ± 0.002 | +0.134 | | zT | [0.918] | 0.918 | 0.919 | 0.818 ± 0.001 | 0.746 ± 0.005 | +0.1
+292,0.918,0.918,GENERATED,table 6: k5_zT,,4.1.2 Validation method comparison,.857 ± 0.001 | 0.809 ± 0.002 | +0.134 | | zT | 0.918 | [0.918] | 0.919 | 0.818 ± 0.001 | 0.746 ± 0.005 | +0.172 |
+292,0.919,0.919,GENERATED,table 6: k10_zT,,4.1.2 Validation method comparison,.001 | 0.809 ± 0.002 | +0.134 | | zT | 0.918 | 0.918 | [0.919] | 0.818 ± 0.001 | 0.746 ± 0.005 | +0.172 |
+292,0.818,0.818,GENERATED,table 6: comp_zT,,4.1.2 Validation method comparison,.809 ± 0.002 | +0.134 | | zT | 0.918 | 0.918 | 0.919 | [0.818] ± 0.001 | 0.746 ± 0.005 | +0.172 |
+292,0.001,0.001,GENERATED,table 6: comp_sd_zT,,4.1.2 Validation method comparison,.002 | +0.134 | | zT | 0.918 | 0.918 | 0.919 | 0.818 ± [0.001] | 0.746 ± 0.005 | +0.172 | ![Fig
+292,0.746,0.746,GENERATED,table 6: chem_zT,,4.1.2 Validation method comparison,0.134 | | zT | 0.918 | 0.918 | 0.919 | 0.818 ± 0.001 | [0.746] ± 0.005 | +0.172 | ![Figure 8](.
+292,0.005,0.005,GENERATED,table 6: chem_sd_zT,,4.1.2 Validation method comparison,| zT | 0.918 | 0.918 | 0.919 | 0.818 ± 0.001 | 0.746 ± [0.005] | +0.172 | ![Figure 8](../figure
+292,0.172,0.172,GENERATED,table 6: gap_zT,,4.1.2 Validation method comparison,918 | 0.918 | 0.919 | 0.818 ± 0.001 | 0.746 ± 0.005 | +[0.172] | ![Figure 8](../figures/paper_a
+295,8,8,EXCLUDED:XREF,,,,.746 ± 0.005 | +0.172 | ![Figure [8]](../figures/paper_a/fig2_validation_ladder.png){width=
+295,100%,100,EXCLUDED:LINK,,,,](../figures/paper_a/fig2_validation_ladder.png){width=[100%]} **Figure 8:** Pooled R^2^ across the five validation
+297,8,8,EXCLUDED:XREF,,,,er_a/fig2_validation_ladder.png){width=100%} **Figure [8]:** Pooled R^2^ across the five validation methods. Che
+297,2,2,EXCLUDED:NOTATION,,,,dation_ladder.png){width=100%} **Figure 8:** Pooled R^[2]^ across the five validation methods. Chemistry-cluster
+297,80,80,UNCLASSIFIED,,,4.1.2 Validation method comparison,cluster CV is the lowest for every target; ∆ is random [80]/20 minus chemistry cluster. Error bars are the standar
+297,20,20,UNCLASSIFIED,,,4.1.2 Validation method comparison,ster CV is the lowest for every target; ∆ is random 80/[20] minus chemistry cluster. Error bars are the standard d
+297,6,6,EXCLUDED:XREF,,,,"rror bars are the standard deviations defined in Table [6]. ### 4.1.3 Algorithm comparison LightGBM, random for"
+299,4.1,4.1,EXCLUDED:SECTION,,,,"s are the standard deviations defined in Table 6. ### [4.1].3 Algorithm comparison LightGBM, random forest and a"
+301,7,7,EXCLUDED:XREF,,,,Boost under chemistry-cluster CV [[PENDING: NA2: Table [7] and the statement on convergence]]. A complementary ch
+301,3.3,3.3,EXCLUDED:XREF,,,,"of the learner, is the descriptor ablation of Section [3.3]: moving from MAGPIE alone to the full set raises R^2^"
+301,2,2,EXCLUDED:NOTATION,,,,"3.3: moving from MAGPIE alone to the full set raises R^[2]^ by only 0.006 (S),"
+301,0.006,0.006,GENERATED,abl_delta_S,,4.1.3 Algorithm comparison,"o the full set raises R^2^ by only [0.006] (S), 0.010 ("
+301,0.010,0.01,GENERATED,abl_delta_sigma,,4.1.3 Algorithm comparison,"0.006 (S), [0.010] (*σ*), 0.006"
+301,0.006,0.006,GENERATED,abl_delta_kappa,,4.1.3 Algorithm comparison,"0.010 (*σ*), [0.006] (*κ*) and 0.005"
+301,0.005,0.005,GENERATED,abl_delta_zT,,4.1.3 Algorithm comparison,"0.006 (*κ*) and [0.005] (zT). **Table 7:** Stacking ensemble, LightG"
+303,7,7,EXCLUDED:XREF,,,,"and 0.005 (zT). **Table [7]:** Stacking ensemble, LightGBM and random forest versu"
+303,2,2,EXCLUDED:NOTATION,,,,d random forest versus XGBoost (chemistry-cluster CV R^[2]^). [[PENDING: NA2: Table 7]] ### 4.1.4 Carrier-type
+305,7,7,EXCLUDED:XREF,,,,st (chemistry-cluster CV R^2^). [[PENDING: NA2: Table [7]]] ### 4.1.4 Carrier-type classification [[PENDING: N
+307,4.1,4.1,EXCLUDED:SECTION,,,,stry-cluster CV R^2^). [[PENDING: NA2: Table 7]] ### [4.1].4 Carrier-type classification [[PENDING: NA6: accurac
+311,4.2,4.2,EXCLUDED:SECTION,,,,of screening candidates whose sign is overridden]] ## [4.2] External validation The most stringent test is evalua
+313,"4,539",4539,GENERATED,estm_scope,,4.2 External validation,"ely independent dataset. ESTM data ( [4,539] rows within 300 --"
+313,300,300,GENERATED,t_min,,4.2 External validation,"4,539 rows within [300] -- 800 K) were not used"
+313,800,800,GENERATED,t_max,,4.2 External validation,rows within 300 -- [800] K) were not used in model development. Result
+313,8,8,EXCLUDED:XREF,,,,in model development. Results are summarized in Table [8] and Fig. 9. External scores are lower than the interna
+313,9,9,EXCLUDED:XREF,,,,evelopment. Results are summarized in Table 8 and Fig. [9]. External scores are lower than the internal chemistry
+313,2,2,EXCLUDED:NOTATION,,,,stratum a). Thermal conductivity transfers best: its R^[2]^ is 0.618 in stratum (b)
+313,0.618,0.618,GENERATED,estm_b_kappa,,4.2 External validation,ivity transfers best: its R^2^ is [0.618] in stratum (b) ( −0.
+313,−0.191,0.191,GENERATED,estm_b_drop_kappa,,4.2 External validation,618 in stratum (b) ( [−0.191] from the internal value) and
+313,0.689,0.689,GENERATED,estm_a_kappa,,4.2 External validation,from the internal value) and [0.689] in stratum (a) ( −0.
+313,−0.120,0.12,GENERATED,estm_a_drop_kappa,,4.2 External validation,689 in stratum (a) ( [−0.120] ). For zT the R^2^ is 0.498
+313,2,2,EXCLUDED:NOTATION,,,,−0.120 ). For zT the R^[2]^ is 0.498 in stratum (b) (
+313,0.498,0.498,GENERATED,estm_b_zT,,4.2 External validation,−0.120 ). For zT the R^2^ is [0.498] in stratum (b) ( −0.247
+313,−0.247,0.247,GENERATED,estm_b_drop_zT,,4.2 External validation,0.498 in stratum (b) ( [−0.247] ) and 0.662 in stra
+313,0.662,0.662,GENERATED,estm_a_zT,,4.2 External validation,−0.247 ) and [0.662] in stratum (a) ( −0.084
+313,−0.084,0.084,GENERATED,estm_a_drop_zT,,4.2 External validation,"0.662 in stratum (a) ( [−0.084] ), so zT retains genuine predictive power for"
+313,−0.427,0.427,GENERATED,estm_b_drop_sigma,,4.2 External validation,largest decrease is for *σ* ( [−0.427] in stratum b; R^2^ = 0.2
+313,2,2,EXCLUDED:NOTATION,,,,−0.427 in stratum b; R^[2]^ = 0.275 ): ESTM extends
+313,0.275,0.275,GENERATED,estm_b_sigma,,4.2 External validation,427 in stratum b; R^2^ = [0.275] ): ESTM extends beyond the conductivity range
+313,"1,196",1196,GENERATED,estm_b_insup_n,,4.2 External validation,"of S, *σ*, *κ* and temperature ( [1,196] of 1,448 rows;"
+313,"1,448",1448,GENERATED,estm_b_n,,4.2 External validation,"1,196 of [1,448] rows; 17 % lie out"
+313,17,17,GENERATED,estm_b_ood,,4.2 External validation,"1,448 rows; [17] % lie outside it) raises it to"
+313,0.408,0.408,GENERATED,estm_b_insup_sigma,,4.2 External validation,"ie outside it) raises it to [0.408] , reinforcing the limitation of composition-on"
+316,8,8,EXCLUDED:XREF,,,,"-dependent properties. **Table [8]:** ESTM external validation (R^2^). The 4,539 ESTM row"
+316,2,2,EXCLUDED:NOTATION,,,,"**Table 8:** ESTM external validation (R^[2]^). The 4,539 ESTM rows within 300--800 K are scored in"
+316,"4,539",4539,GENERATED,table 8: estm_scope,,4.2 External validation,"**Table 8:** ESTM external validation (R^2^). The [4,539] ESTM rows within 300--800 K are scored in two strata t"
+316,300,300,UNCLASSIFIED,,table 8: caption or label typed in the generator,4.2 External validation,"external validation (R^2^). The 4,539 ESTM rows within [300]--800 K are scored in two strata that are never pooled:"
+316,800,800,UNCLASSIFIED,,table 8: caption or label typed in the generator,4.2 External validation,"nal validation (R^2^). The 4,539 ESTM rows within 300--[800] K are scored in two strata that are never pooled: rows"
+316,"3,123",3123,GENERATED,table 8: estm_a_n,,4.2 External validation,"s sharing no source DOI with the training data (a, n = [3,123]) and rows whose chemistry cluster is absent from train"
+316,"1,448",1448,GENERATED,table 8: estm_b_n,,4.2 External validation,"hose chemistry cluster is absent from training (b, n = [1,448]). The in-support column restricts (b) to rows inside t"
+316,"1,196",1196,GENERATED,table 8: estm_b_insup_n,,4.2 External validation,"the training range of S, *σ*, *κ* and temperature (n = [1,196]). The drop is stratum (b) minus the internal chemistry"
+320,0.753,0.753,GENERATED,table 8: chem_S,,4.2 External validation,-----------|-------------|-----------|---------| | S | [0.753] | 0.566 | 0.354 | 0.512 | −0.399 | | *σ* | 0.702 | 0.3
+320,0.566,0.566,GENERATED,table 8: estm_a_S,,4.2 External validation,---|-------------|-----------|---------| | S | 0.753 | [0.566] | 0.354 | 0.512 | −0.399 | | *σ* | 0.702 | 0.399 | 0.2
+320,0.354,0.354,GENERATED,table 8: estm_b_S,,4.2 External validation,---------|-----------|---------| | S | 0.753 | 0.566 | [0.354] | 0.512 | −0.399 | | *σ* | 0.702 | 0.399 | 0.275 | 0.4
+320,0.512,0.512,GENERATED,table 8: estm_b_insup_S,,4.2 External validation,-|-----------|---------| | S | 0.753 | 0.566 | 0.354 | [0.512] | −0.399 | | *σ* | 0.702 | 0.399 | 0.275 | 0.408 | −0.
+320,−0.399,0.399,GENERATED,table 8: estm_b_drop_S,,4.2 External validation,-----|---------| | S | 0.753 | 0.566 | 0.354 | 0.512 | [−0.399] | | *σ* | 0.702 | 0.399 | 0.275 | 0.408 | −0.427 | | *
+321,0.702,0.702,GENERATED,table 8: chem_sigma,,4.2 External validation,| S | 0.753 | 0.566 | 0.354 | 0.512 | −0.399 | | *σ* | [0.702] | 0.399 | 0.275 | 0.408 | −0.427 | | *κ* | 0.809 | 0.6
+321,0.399,0.399,GENERATED,table 8: estm_a_sigma,,4.2 External validation,753 | 0.566 | 0.354 | 0.512 | −0.399 | | *σ* | 0.702 | [0.399] | 0.275 | 0.408 | −0.427 | | *κ* | 0.809 | 0.689 | 0.6
+321,0.275,0.275,GENERATED,table 8: estm_b_sigma,,4.2 External validation,566 | 0.354 | 0.512 | −0.399 | | *σ* | 0.702 | 0.399 | [0.275] | 0.408 | −0.427 | | *κ* | 0.809 | 0.689 | 0.618 | 0.6
+321,0.408,0.408,GENERATED,table 8: estm_b_insup_sigma,,4.2 External validation,354 | 0.512 | −0.399 | | *σ* | 0.702 | 0.399 | 0.275 | [0.408] | −0.427 | | *κ* | 0.809 | 0.689 | 0.618 | 0.657 | −0.
+321,−0.427,0.427,GENERATED,table 8: estm_b_drop_sigma,,4.2 External validation,512 | −0.399 | | *σ* | 0.702 | 0.399 | 0.275 | 0.408 | [−0.427] | | *κ* | 0.809 | 0.689 | 0.618 | 0.657 | −0.191 | | z
+322,0.809,0.809,GENERATED,table 8: chem_kappa,,4.2 External validation,*σ* | 0.702 | 0.399 | 0.275 | 0.408 | −0.427 | | *κ* | [0.809] | 0.689 | 0.618 | 0.657 | −0.191 | | zT (direct) | 0.7
+322,0.689,0.689,GENERATED,table 8: estm_a_kappa,,4.2 External validation,702 | 0.399 | 0.275 | 0.408 | −0.427 | | *κ* | 0.809 | [0.689] | 0.618 | 0.657 | −0.191 | | zT (direct) | 0.746 | 0.6
+322,0.618,0.618,GENERATED,table 8: estm_b_kappa,,4.2 External validation,399 | 0.275 | 0.408 | −0.427 | | *κ* | 0.809 | 0.689 | [0.618] | 0.657 | −0.191 | | zT (direct) | 0.746 | 0.662 | 0.4
+322,0.657,0.657,GENERATED,table 8: estm_b_insup_kappa,,4.2 External validation,275 | 0.408 | −0.427 | | *κ* | 0.809 | 0.689 | 0.618 | [0.657] | −0.191 | | zT (direct) | 0.746 | 0.662 | 0.498 | 0.5
+322,−0.191,0.191,GENERATED,table 8: estm_b_drop_kappa,,4.2 External validation,408 | −0.427 | | *κ* | 0.809 | 0.689 | 0.618 | 0.657 | [−0.191] | | zT (direct) | 0.746 | 0.662 | 0.498 | 0.534 | −0.2
+323,0.746,0.746,GENERATED,table 8: chem_zT,,4.2 External validation,809 | 0.689 | 0.618 | 0.657 | −0.191 | | zT (direct) | [0.746] | 0.662 | 0.498 | 0.534 | −0.247 |
+323,0.662,0.662,GENERATED,table 8: estm_a_zT,,4.2 External validation,689 | 0.618 | 0.657 | −0.191 | | zT (direct) | 0.746 | [0.662] | 0.498 | 0.534 | −0.247 | ![Fig
+323,0.498,0.498,GENERATED,table 8: estm_b_zT,,4.2 External validation,618 | 0.657 | −0.191 | | zT (direct) | 0.746 | 0.662 | [0.498] | 0.534 | −0.247 | ![Figure 9](.
+323,0.534,0.534,GENERATED,table 8: estm_b_insup_zT,,4.2 External validation,657 | −0.191 | | zT (direct) | 0.746 | 0.662 | 0.498 | [0.534] | −0.247 | ![Figure 9](../figure
+323,−0.247,0.247,GENERATED,table 8: estm_b_drop_zT,,4.2 External validation,.191 | | zT (direct) | 0.746 | 0.662 | 0.498 | 0.534 | [−0.247] | ![Figure 9](../figures/fig9_es
+326,9,9,EXCLUDED:XREF,,,,.498 | 0.534 | −0.247 | ![Figure [9]](../figures/fig9_estm_external.png){width=100%} **Fig
+326,100%,100,EXCLUDED:LINK,,,,![Figure 9](../figures/fig9_estm_external.png){width=[100%]} **Figure 9:** ESTM external validation: R^2^ for the
+328,9,9,EXCLUDED:XREF,,,,/figures/fig9_estm_external.png){width=100%} **Figure [9]:** ESTM external validation: R^2^ for the internal che
+328,2,2,EXCLUDED:NOTATION,,,,"width=100%} **Figure 9:** ESTM external validation: R^[2]^ for the internal chemistry-cluster CV (blue), the ext"
+330,2,2,EXCLUDED:NOTATION,,,,"y2020joint] is [[PENDING: NA10: number of compounds, R^[2]^ per target and the domain-gap discussion]]. ## 4.3 F"
+332,4.3,4.3,EXCLUDED:SECTION,,,,", R^2^ per target and the domain-gap discussion]]. ## [4.3] Feature importance and explainability Table 9 lists t"
+334,9,9,EXCLUDED:XREF,,,,. ## 4.3 Feature importance and explainability Table [9] lists the five most important features per target. Tem
+334,0.128,0.128,GENERATED,shap_zT_1_val,,4.3 Feature importance and explainability,"es the zT model (mean \|SHAP\| = [0.128] ), consistent with the explicit T dependence i"
+334,1,1,EXCLUDED:XREF,,,,"), consistent with the explicit T dependence in Eq. ([1]); the third feature, mean NdValence (d-electron count;"
+334,0.030,0.03,GENERATED,shap_zT_3_val,,4.3 Feature importance and explainability,"ean NdValence (d-electron count; [0.030] ), governs carrier transport in transition-met"
+334,10,10,EXCLUDED:XREF,,,,"ompounds. [[PENDING: NA3: drivers of κ, σ and S]] Fig. [10] shows the SHAP bar plots and Fig. 11 the beeswarm plot"
+334,11,11,EXCLUDED:XREF,,,,"κ, σ and S]] Fig. 10 shows the SHAP bar plots and Fig. [11] the beeswarm plots, in which red points denote high fe"
+336,9,9,EXCLUDED:XREF,,,,eases (left) the prediction [[PENDING: NA3]]. **Table [9]:** Top five features per target by mean \|SHAP\| value
+338,9,9,EXCLUDED:XREF,,,,target by mean \|SHAP\| value. [[PENDING: NA3: Table [9]]] SHAP values are in the units of each target (*µ*V K
+340,−1,1,EXCLUDED:NOTATION,,,,] SHAP values are in the units of each target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Prefixes avg/s
+340,10,10,EXCLUDED:NOTATION,,,,are in the units of each target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Prefixes avg/sum/dev/mode den
+342,10,10,EXCLUDED:XREF,,,,"_dev denote MAGPIE statistics. [[PENDING: NA3: Figure [10], SHAP global feature importance]] **Figure 10:** SHAP"
+344,10,10,EXCLUDED:XREF,,,,"Figure 10, SHAP global feature importance]] **Figure [10]:** SHAP global feature importance (top 20 features) fo"
+344,20,20,UNCLASSIFIED,,,4.3 Feature importance and explainability,"]] **Figure 10:** SHAP global feature importance (top [20] features) for (a) zT, (b) S, (c) *κ* and (d) *σ*. [[P"
+346,11,11,EXCLUDED:XREF,,,,"T, (b) S, (c) *κ* and (d) *σ*. [[PENDING: NA3: Figure [11], SHAP beeswarm plots]] **Figure 11:** SHAP beeswarm p"
+348,11,11,EXCLUDED:XREF,,,,"NDING: NA3: Figure 11, SHAP beeswarm plots]] **Figure [11]:** SHAP beeswarm plots for (a) zT, (b) S, (c) *κ* and"
+350,12,12,EXCLUDED:XREF,,,,"on schemes contribute differently to the targets (Fig. [12]). In the zT model, temperature accounts for"
+350,20,20,GENERATED,shap_share_temperature,,4.3 Feature importance and explainability,"emperature accounts for [20] % of the mean \|SHAP\|, CBFV features for"
+350,53,53,GENERATED,shap_share_cbfv,,4.3 Feature importance and explainability,"an \|SHAP\|, CBFV features for [53] % and MAGPIE features for"
+350,28,28,GENERATED,shap_share_magpie,,4.3 Feature importance and explainability,% and MAGPIE features for [28] % (shares over all 397
+350,397,397,GENERATED,n_feat,,4.3 Feature importance and explainability,"28 % (shares over all [397] features, chemistry-cluster folds). [[PENDING"
+352,12,12,EXCLUDED:XREF,,,,"iscussion of complementarity]] [[PENDING: NA3: Figure [12], relative contribution of MAGPIE, CBFV and temperature"
+354,12,12,EXCLUDED:XREF,,,,"ntribution of MAGPIE, CBFV and temperature]] **Figure [12]:** Relative contribution of MAGPIE, CBFV and temperatu"
+356,4.4,4.4,EXCLUDED:SECTION,,,,of mean \|SHAP\| over all features) to each model. ## [4.4] Direct versus component-wise zT prediction Direct zT
+358,2,2,EXCLUDED:NOTATION,,,,tion was compared with the component-wise derivation S^[2]^*σ*T/*κ* under chemistry-cluster CV (Table 10). Direct
+358,10,10,EXCLUDED:XREF,,,,ivation S^2^*σ*T/*κ* under chemistry-cluster CV (Table [10]). Direct prediction is more accurate (R^2^ =
+358,2,2,EXCLUDED:NOTATION,,,,r CV (Table 10). Direct prediction is more accurate (R^[2]^ = 0.727 vs
+358,0.727,0.727,GENERATED,dvd_direct,,4.4 Direct versus component-wise zT prediction,"prediction is more accurate (R^2^ = [0.727] vs 0.540 ), with"
+358,0.540,0.54,GENERATED,dvd_derived,,4.4 Direct versus component-wise zT prediction,"0.727 vs [0.540] ), with each model using its own target's froz"
+360,2,2,EXCLUDED:MATH,,,,ived zT is $\frac{\delta zT}{zT} \approx \sqrt{\left( [2]\frac{\delta S}{S} \right)^{2} + \left( \frac{\delta\si
+360,2,2,EXCLUDED:MATH,,,,{zT} \approx \sqrt{\left( 2\frac{\delta S}{S} \right)^{[2]} + \left( \frac{\delta\sigma}{\sigma} \right)^{2} + \l
+360,2,2,EXCLUDED:MATH,,,,ght)^{2} + \left( \frac{\delta\sigma}{\sigma} \right)^{[2]} + \left( \frac{\delta\kappa}{\kappa} \right)^{2}}$ (9
+360,2,2,EXCLUDED:MATH,,,,ght)^{2} + \left( \frac{\delta\kappa}{\kappa} \right)^{[2]}}$ (9) so the quadratic dependence on S doubles its r
+360,9,9,EXCLUDED:EQNUM,,,,2} + \left( \frac{\delta\kappa}{\kappa} \right)^{2}}$ ([9]) so the quadratic dependence on S doubles its relativ
+362,2,2,EXCLUDED:NOTATION,,,,"elative error, and the weakest component model (*σ*, R^[2]^ = 0.692 , against"
+362,0.692,0.692,GENERATED,dvd_sigma,,4.4 Direct versus component-wise zT prediction,"weakest component model (*σ*, R^2^ = [0.692] , against 0.820 for S a"
+362,0.820,0.82,GENERATED,dvd_S,,4.4 Direct versus component-wise zT prediction,"0.692 , against [0.820] for S and 0.821 fo"
+362,0.821,0.821,GENERATED,dvd_kappa,,4.4 Direct versus component-wise zT prediction,0.820 for S and [0.821] for *κ*) adds a large further term. Back-tran
+362,2,2,EXCLUDED:NOTATION,,,,"d *κ* with a smearing correction changes the derived R^[2]^ by −0.005 , too little to al"
+362,−0.005,0.005,GENERATED,dvd_duan,,4.4 Direct versus component-wise zT prediction,"orrection changes the derived R^2^ by [−0.005] , too little to alter the comparison. The indi"
+362,5,5,UNCLASSIFIED,,,4.4 Direct versus component-wise zT prediction,"s repeated under random row-level validation (shuffled [5]-fold, five repeats, the same 56,088"
+362,"56,088",56088,GENERATED,dvd_rows,,4.4 Direct versus component-wise zT prediction,"uffled 5-fold, five repeats, the same [56,088] rows and the same frozen hyperparameters; Tab"
+362,10,10,EXCLUDED:XREF,,,,rows and the same frozen hyperparameters; Table [10]). Direct prediction is again more accurate (R^2^ =
+362,2,2,EXCLUDED:NOTATION,,,,Table 10). Direct prediction is again more accurate (R^[2]^ = 0.917 vs
+362,0.917,0.917,GENERATED,na7_direct,,4.4 Direct versus component-wise zT prediction,"tion is again more accurate (R^2^ = [0.917] vs 0.880 ), so th"
+362,0.880,0.88,GENERATED,na7_derived,,4.4 Direct versus component-wise zT prediction,"0.917 vs [0.880] ), so the ordering does not depend on grouped"
+362,0.036,0.036,GENERATED,na7_gap,,4.4 Direct versus component-wise zT prediction,s: the gap between the two pathways is [0.036] under random validation and
+362,0.186,0.186,GENERATED,na7_grouped_gap,,4.4 Direct versus component-wise zT prediction,under random validation and [0.186] under chemistry-cluster validation (differenc
+362,2,2,EXCLUDED:NOTATION,,,,"emistry-cluster validation (differences of unrounded R^[2]^), a factor of 5.1 . Random"
+362,5.1,5.1,GENERATED,na7_ratio,,4.4 Direct versus component-wise zT prediction,"nces of unrounded R^2^), a factor of [5.1] . Random validation therefore understates how"
+365,10,10,EXCLUDED:XREF,,,,to unseen chemistry. **Table [10]:** Direct versus component-wise zT prediction on the 5
+365,"56,088",56088,GENERATED,table 10: dvd_rows,,4.4 Direct versus component-wise zT prediction,"0:** Direct versus component-wise zT prediction on the [56,088] rows with all four properties present (4,139 chemistry"
+365,"4,139",4139,GENERATED,table 10: dvd_clusters,,4.4 Direct versus component-wise zT prediction,"n on the 56,088 rows with all four properties present ([4,139] chemistry clusters); each model uses its own target's"
+365,5,5,UNCLASSIFIED,,table 10: caption or label typed in the generator,4.4 Direct versus component-wise zT prediction,rget's frozen hyperparameters. Chemistry-cluster CV is [5] repeats x 5 folds of grouped folds; random CV is 5 rep
+365,5,5,UNCLASSIFIED,,table 10: caption or label typed in the generator,4.4 Direct versus component-wise zT prediction,n hyperparameters. Chemistry-cluster CV is 5 repeats x [5] folds of grouped folds; random CV is 5 repeats x 5 fol
+365,5,5,UNCLASSIFIED,,table 10: caption or label typed in the generator,4.4 Direct versus component-wise zT prediction,is 5 repeats x 5 folds of grouped folds; random CV is [5] repeats x 5 folds of shuffled row-level folds; both po
+365,5,5,UNCLASSIFIED,,table 10: caption or label typed in the generator,4.4 Direct versus component-wise zT prediction,s x 5 folds of grouped folds; random CV is 5 repeats x [5] folds of shuffled row-level folds; both pool the out-o
+365,"280,440",280440,GENERATED,table 10: na7_n,,4.4 Direct versus component-wise zT prediction,"evel folds; both pool the out-of-fold predictions (n = [280,440]). | **Pathway** | **R^2^ (chemistry-cluster)** | **MA"
+367,2,2,EXCLUDED:NOTATION,,,,"f-fold predictions (n = 280,440). | **Pathway** | **R^[2]^ (chemistry-cluster)** | **MAE (chemistry-cluster)** |"
+367,2,2,EXCLUDED:NOTATION,,,,emistry-cluster)** | **MAE (chemistry-cluster)** | **R^[2]^ (random)** | **MAE (random)** | |--------------------
+369,0.727,0.727,GENERATED,table 10: dvd_direct,,4.4 Direct versus component-wise zT prediction,-----|----------|---------| | Direct (features → zT) | [0.727] | 0.132 | 0.917 | 0.072 | | Derived (S^2^*σ*T/*κ*) | 0
+369,0.132,0.132,GENERATED,table 10: mae_dvd_direct,,4.4 Direct versus component-wise zT prediction,--------|---------| | Direct (features → zT) | 0.727 | [0.132] | 0.917 | 0.072 | | Derived (S^2^*σ*T/*κ*) | 0.540 | 0
+369,0.917,0.917,GENERATED,table 10: na7_direct,,4.4 Direct versus component-wise zT prediction,|---------| | Direct (features → zT) | 0.727 | 0.132 | [0.917] | 0.072 | | Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 | 0
+369,0.072,0.072,GENERATED,table 10: na7_mae_direct,,4.4 Direct versus component-wise zT prediction,--| | Direct (features → zT) | 0.727 | 0.132 | 0.917 | [0.072] | | Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 | 0.880 | 0
+370,2,2,EXCLUDED:NOTATION,,,,s → zT) | 0.727 | 0.132 | 0.917 | 0.072 | | Derived (S^[2]^*σ*T/*κ*) | 0.540 | 0.166 | 0.880 | 0.083 |
+370,0.540,0.54,GENERATED,table 10: dvd_derived,,4.4 Direct versus component-wise zT prediction,7 | 0.132 | 0.917 | 0.072 | | Derived (S^2^*σ*T/*κ*) | [0.540] | 0.166 | 0.880 | 0.083 | ## 4
+370,0.166,0.166,GENERATED,table 10: mae_dvd_derived,,4.4 Direct versus component-wise zT prediction,2 | 0.917 | 0.072 | | Derived (S^2^*σ*T/*κ*) | 0.540 | [0.166] | 0.880 | 0.083 | ## 4.5 Virtu
+370,0.880,0.88,GENERATED,table 10: na7_derived,,4.4 Direct versus component-wise zT prediction,7 | 0.072 | | Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 | [0.880] | 0.083 | ## 4.5 Virtual scree
+370,0.083,0.083,GENERATED,table 10: na7_mae_derived,,4.4 Direct versus component-wise zT prediction,2 | | Derived (S^2^*σ*T/*κ*) | 0.540 | 0.166 | 0.880 | [0.083] | ## 4.5 Virtual screening [[
+374,4.5,4.5,EXCLUDED:SECTION,,,,0 | 0.166 | 0.880 | 0.083 | ## [4.5] Virtual screening [[PENDING: NA11: counts after each
+378,11,11,EXCLUDED:XREF,,,,nd the number of perovskite-type candidates]] **Table [11]:** Top lead-free perovskite-type candidates ranked by
+380,11,11,EXCLUDED:XREF,,,,"erovskite compounds excluded). [[PENDING: NA11: Table [11], top lead-free perovskite-type candidates with E~hull~"
+382,0,0,UNCLASSIFIED,,,4.5 Virtual screening,band gap from the Materials Project. Stable: E~hull~ = [0]; metastable: 0 \< E~hull~ ≤ 0.05 eV atom^−1^. [[PENDI
+382,0,0,UNCLASSIFIED,,,4.5 Virtual screening,he Materials Project. Stable: E~hull~ = 0; metastable: [0] \< E~hull~ ≤ 0.05 eV atom^−1^. [[PENDING: NA11: discu
+382,0.05,0.05,UNCLASSIFIED,,,4.5 Virtual screening,oject. Stable: E~hull~ = 0; metastable: 0 \< E~hull~ ≤ [0.05] eV atom^−1^. [[PENDING: NA11: discussion of the leadi
+382,−1,1,EXCLUDED:NOTATION,,,,: E~hull~ = 0; metastable: 0 \< E~hull~ ≤ 0.05 eV atom^[−1]^. [[PENDING: NA11: discussion of the leading candidat
+386,2.3,2.3,GENERATED,na4_pt_share,,4.5 Virtual screening,"composition-only family rules are [2.3] % of the S rows, manganites"
+386,2.1,2.1,GENERATED,na4_mn_share,,4.5 Virtual screening,"% of the S rows, manganites [2.1] % and cobaltites 4.6"
+386,4.6,4.6,GENERATED,na4_co_share,,4.5 Virtual screening,2.1 % and cobaltites [4.6] %. The chemistry-cluster MAE of zT is
+386,0.126,0.126,GENERATED,mae_zT,,4.5 Virtual screening,"%. The chemistry-cluster MAE of zT is [0.126] , so predicted zT should be read with an uncer"
+388,4.5,4.5,EXCLUDED:SECTION,,,,should be read with an uncertainty of that order. ### [4.5].1 Literature validation [[PENDING: NA12: comparison o
+390,800,800,UNCLASSIFIED,,,4.5.1 Literature validation,blished measurements for perovskite oxides at or below [800] K]] **Table 12:** Literature validation of predicted
+392,12,12,EXCLUDED:XREF,,,,nts for perovskite oxides at or below 800 K]] **Table [12]:** Literature validation of predicted zT and S against
+394,12,12,EXCLUDED:XREF,,,,and S against measured values. [[PENDING: NA12: Table [12]]] ## 4.6 Metrics and validation protocols reported in
+396,4.6,4.6,EXCLUDED:SECTION,,,,inst measured values. [[PENDING: NA12: Table 12]] ## [4.6] Metrics and validation protocols reported in the liter
+398,1,1,EXCLUDED:XREF,,,,validation protocols reported in the literature Table [1] lists the metric and the validation protocol that each
+398,2,2,EXCLUDED:NOTATION,,,,"lues are not comparable with one another or with the R^[2]^ values of this work, and no ranking is made. What Tab"
+398,1,1,EXCLUDED:XREF,,,,"alues of this work, and no ranking is made. What Table [1] shows is the protocol: row-level splits and k-fold CV"
+398,2,2,EXCLUDED:NOTATION,,,,"same model, features and frozen hyperparameters give R^[2]^ values that differ by 0.134 t"
+398,0.134,0.134,GENERATED,gap_lo,,4.6 Metrics and validation protocols reported in the literature,ameters give R^2^ values that differ by [0.134] to 0.213 between rand
+398,0.213,0.213,GENERATED,gap_hi,,4.6 Metrics and validation protocols reported in the literature,fer by 0.134 to [0.213] between random and chemistry-cluster validati
+398,6,6,EXCLUDED:XREF,,,,"between random and chemistry-cluster validation (Table [6]), and chemistry-cluster values are higher than the ext"
+398,8,8,EXCLUDED:XREF,,,,ster values are higher than the external values (Table [8]); a metric reported without its protocol therefore can
+399,4.7,4.7,EXCLUDED:SECTION,,,,efore cannot be read as a measure of model quality. ## [4.7] Limitations Prediction of electrical conductivity is
+401,2,2,EXCLUDED:NOTATION,,,,uctivity is intrinsically limited (chemistry-cluster R^[2]^ = 0.702 ; ESTM stratum (b)
+401,0.702,0.702,GENERATED,chem_sigma,,4.7 Limitations,y limited (chemistry-cluster R^2^ = [0.702] ; ESTM stratum (b) R^2^ =
+401,2,2,EXCLUDED:NOTATION,,,,0.702 ; ESTM stratum (b) R^[2]^ = 0.275 ) because carrie
+401,0.275,0.275,GENERATED,estm_b_sigma,,4.7 Limitations,; ESTM stratum (b) R^2^ = [0.275] ) because carrier concentration depends on dop
+401,775,775,GENERATED,na4_sparse_bin,,4.7 Limitations,"t temperature bin is the one at [775] K ( 3,173 zT row"
+401,"3,173",3173,GENERATED,na4_sparse_n,,4.7 Limitations,"775 K ( [3,173] zT rows) and the densest the one at"
+401,450,450,GENERATED,na4_dense_bin,,4.7 Limitations,"rows) and the densest the one at [450] K ( 9,115 zT rows"
+401,"9,115",9115,GENERATED,na4_dense_n,,4.7 Limitations,"450 K ( [9,115] zT rows), so predictions near the top of the"
+403,5,5,EXCLUDED:SECTION,,,,rial] would make the screening more decision-ready. # [5] Conclusions A composition-only machine learning frame
+405,"280,664",280664,GENERATED,n_clean,,5 Conclusions,"to screen lead-free perovskites, using [280,664] cleaned rows from Starrydata2 and"
+405,397,397,GENERATED,n_feat,,5 Conclusions,"cleaned rows from Starrydata2 and [397] MAGPIE, CBFV and temperature descriptors. The"
+407,5,5,UNCLASSIFIED,,,5 Conclusions,"ation methodology dominates reported accuracy. Random, [5]-fold and 10-fold CV give nearly identical, inflated R^"
+407,10,10,UNCLASSIFIED,,,5 Conclusions,"dology dominates reported accuracy. Random, 5-fold and [10]-fold CV give nearly identical, inflated R^2^ values; c"
+407,2,2,EXCLUDED:NOTATION,,,,"-fold and 10-fold CV give nearly identical, inflated R^[2]^ values; chemistry-cluster CV reduces R^2^ by"
+407,2,2,EXCLUDED:NOTATION,,,,", inflated R^2^ values; chemistry-cluster CV reduces R^[2]^ by 0.134 (*κ*) to"
+407,0.134,0.134,GENERATED,gap_lo,,5 Conclusions,s; chemistry-cluster CV reduces R^2^ by [0.134] (*κ*) to 0.213 (*σ*).
+407,0.213,0.213,GENERATED,gap_hi,,5 Conclusions,"0.134 (*κ*) to [0.213] (*σ*). (RQ2) - Under chemistry-cluster CV, t"
+409,2,2,EXCLUDED:NOTATION,,,,"mistry-cluster CV, the composition-only ceilings are R^[2]^ = 0.753 (S),"
+409,0.753,0.753,GENERATED,chem_S,,5 Conclusions,"he composition-only ceilings are R^2^ = [0.753] (S), 0.702 (*σ*),"
+409,0.702,0.702,GENERATED,chem_sigma,,5 Conclusions,"0.753 (S), [0.702] (*σ*), 0.809 (*κ*"
+409,0.809,0.809,GENERATED,chem_kappa,,5 Conclusions,"0.702 (*σ*), [0.809] (*κ*) and 0.746 (zT)"
+409,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,0.809 (*κ*) and [0.746] (zT). Tripling the descriptor set adds at mos
+409,0.010,0.01,GENERATED,abl_delta_max,,5 Conclusions,"the descriptor set adds at most [0.010] to R^2^. [[PENDING: NA2: whether XGBoost, Lig"
+409,2,2,EXCLUDED:NOTATION,,,,"adds at most 0.010 to R^[2]^. [[PENDING: NA2: whether XGBoost, LightGBM, random fo"
+411,2,2,EXCLUDED:NOTATION,,,,"lexity]] (RQ1) - External validation on ESTM lowers R^[2]^ further, most for chemistries absent from training (z"
+411,2,2,EXCLUDED:NOTATION,,,,"rther, most for chemistries absent from training (zT R^[2]^ = 0.498 , against"
+411,0.498,0.498,GENERATED,estm_b_zT,,5 Conclusions,"ries absent from training (zT R^2^ = [0.498] , against 0.746 inter"
+411,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,"0.498 , against [0.746] internally and 0.662"
+411,0.662,0.662,GENERATED,estm_a_zT,,5 Conclusions,0.746 internally and [0.662] for rows sharing no source publication with t
+411,2,2,EXCLUDED:NOTATION,,,,"ith training), while *σ* remains poorly predictable (R^[2]^ = 0.275 in stratum b)."
+411,0.275,0.275,GENERATED,estm_b_sigma,,5 Conclusions,emains poorly predictable (R^2^ = [0.275] in stratum b). [[PENDING: NA10: experimental-
+413,2,2,EXCLUDED:NOTATION,,,,-to-DFT transfer (JARVIS)]] - Direct zT regression (R^[2]^ = 0.727 ) outperforms the
+413,0.727,0.727,GENERATED,dvd_direct,,5 Conclusions,)]] - Direct zT regression (R^2^ = [0.727] ) outperforms the component-wise route S^2^*σ*
+413,2,2,EXCLUDED:NOTATION,,,,0.727 ) outperforms the component-wise route S^[2]^*σ*T/*κ* (R^2^ = 0.540 ) b
+413,2,2,EXCLUDED:NOTATION,,,,) outperforms the component-wise route S^2^*σ*T/*κ* (R^[2]^ = 0.540 ) because compone
+413,0.540,0.54,GENERATED,dvd_derived,,5 Conclusions,nt-wise route S^2^*σ*T/*κ* (R^2^ = [0.540] ) because component errors compound; component
+419,0.5,0.5,EXCLUDED:NOTATION,,,,"g doped compositions to parent-compound structures (Bi~[0.5]~Sb~1.5~Te~3~ → Bi~2~Te~3~), or by using crystal graph"
+419,1.5,1.5,EXCLUDED:NOTATION,,,,"compositions to parent-compound structures (Bi~0.5~Sb~[1.5]~Te~3~ → Bi~2~Te~3~), or by using crystal graph network"
+419,3,3,EXCLUDED:NOTATION,,,,"itions to parent-compound structures (Bi~0.5~Sb~1.5~Te~[3]~ → Bi~2~Te~3~), or by using crystal graph networks suc"
+419,2,2,EXCLUDED:NOTATION,,,,"o parent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~[2]~Te~3~), or by using crystal graph networks such as CGC"
+419,3,3,EXCLUDED:NOTATION,,,,"ent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~2~Te~[3]~), or by using crystal graph networks such as CGCNN [@"
+431,22,22,GENERATED,snapshot_date,,Data availability,uses one pinned snapshot (pulled [22] August 2026 ) archived with its SHA-256 hash;
+431,2026,2026,GENERATED,snapshot_date,,Data availability,inned snapshot (pulled 22 August [2026] ) archived with its SHA-256 hash; the Material
+463,8,8,EXCLUDED:XREF,,,,ross-validation (also coefficient of variation in Step [8]) | | MAGPIE | Materials-Agnostic Platform for Informat
+481,2,2,EXCLUDED:NOTATION,,,,lattice thermal conductivity | | PF | Power factor (S^[2]^*σ*) | | L | Lorenz number | | R^2^ | Coefficient of d
+483,2,2,EXCLUDED:NOTATION,,,,F | Power factor (S^2^*σ*) | | L | Lorenz number | | R^[2]^ | Coefficient of determination | | T | Absolute tempe
+487,3,3,EXCLUDED:NOTATION,,,,ergy above the convex hull | | E~g~ | Band gap | | ABX~[3]~ | General perovskite stoichiometry | # References
