@@ -38,3 +38,43 @@ First audit, 2026-10-04 (before any number was changed): `reports/number_audit/`
    computed values, not a validation (`results/na10_analysis/20261004T190444`). The temperature of the JARVIS Seebeck values (600 K) is still UNVERIFIED (D26).
 4. **BaZrSe3:** MP mp-998350 has E_hull 0.0775 eV/atom (not stable, PBE gap 0.20 eV): it is in the E_hull <= 0.10 lists only and in no list at E_hull <= 0.05. The paper must not call it a
    main-list candidate; the thesis's earlier claim of BaZrSe3 as the leading, stable candidate is not reproduced.
+
+## 2026-10-05: two pre-registrations, made before any G3 output is unpacked and before any prediction for the MP candidates or the literature compounds has been looked at
+
+No prediction of the final models (`final_b`), no screening prediction and no out-of-fold prediction for a literature compound was inspected when these rules were written. The shortlist below
+uses only the committed sensitivity and training-cluster tables (`results/na11_sensitivity/20261004T135205`, `results/na11_candidate_novelty/20261004T185101`).
+
+### A. Candidate-highlighting rule (screening, Section 4.5 and the abstract and conclusion)
+
+1. **Shortlist** = the compounds (Materials Project ids) of the main list (E_hull <= 0.05 eV/atom, PBE gap <= 0.6 eV, main toxic-element list) that
+   (i) are in the candidate set of every E_hull tightening of the sensitivity run (<= 0.025 and <= 0, i.e. they are on the convex hull), and
+   (ii) have a chemistry cluster that occurs in the training data (any target; the `cluster_seen_any` flag of the candidate-novelty run).
+   Currently four ids: BaSnO3 (mp-3163), CsSnI3 (mp-614013), LaCoO3 (mp-1288145) and LaRhO3 (mp-5163). The set is fixed by the committed tables; a different set after any rerun
+   of the screening is a change of this pre-registration and must be recorded here before it is used.
+2. **Ordering of the shortlist**: by the maximum over the screening grid (300 to 800 K in 100 K steps) of the predicted zT (direct model, final models of `final_b`), highest first; the
+   temperature of the maximum is reported with it (ties: the lower temperature). The ordering applies to the shortlist only.
+3. **Literature label**: every candidate of the full list is labelled "previously studied as a thermoelectric" or not, from a literature check that is done independently of the predictions.
+   Criterion: at least one published report of measured thermoelectric transport (S, sigma, kappa or zT) of the compound itself, undoped or doped; each "yes" carries a citation (DOI).
+   The labels and their evidence are recorded in `docs/candidate_literature_labels.csv` before the predictions are inspected. A shortlist member that was previously studied is
+   reported as a recovery, not as a discovery.
+4. **Highlighting**: all other candidates appear only in the full ranked list with their seen / unseen and stability labels. No candidate outside the shortlist is highlighted in the
+   abstract or the conclusion; the abstract and conclusion may name the shortlist, with the label and the limits (JARVIS semiconductor result, Section 4.2).
+
+### B. NA12 literature validation: design (done before the values are read and before any prediction is looked at)
+
+1. **Compounds, fixed now**: shortlist members that have experimental thermoelectric literature (CsSnI3 and LaCoO3 are expected to; BaSnO3 and LaRhO3 are checked, and are included only if
+   such literature exists, the check being recorded in the literature ledger), plus La-doped and Nb-doped SrTiO3 and doped CaMnO3. The exact compositions, including the dopants and their
+   amounts, are those of the papers selected for them; the papers (DOI) are listed in `source/pdfs/README.md` and committed before the comparison is run; temperatures are 800 K or below.
+2. **Predictions compared**: the out-of-fold predictions of the committed chemistry-cluster CV (`results/ladder_regen_snapfix/20260917T150000/{S,sigma,kappa,zT}_chemistry_full`; the
+   cluster of the row is held out in that prediction), five repeats; NOT the final models. Two levels, reported separately and labelled: (a) exact: the row of the same composition_id at
+   the same temperature bin as the literature value (the cleaning pipeline's 25 K binning), if the training data contain it; (b) cluster-level: the mean over the rows of the same
+   chemistry cluster at that bin (so a dopant level absent from the training data is still compared with held-out predictions of its cluster). If neither exists, "no out-of-fold
+   prediction" is reported and no refit is made.
+3. **For each literature value two facts are reported**: whether its DOI is among the DOIs of the Starrydata2 data (the DOI is a training source) and whether its composition (and its cluster)
+   is in the training data.
+4. **Error**: the error of the prediction relative to the literature value is reported next to the measurement uncertainty band of the Alleno round-robin (relative standard uncertainties S, sigma, kappa, zT as
+   in `src/noise_floor.py`, cited in the paper); sigma and kappa are compared in log10 and linear space (the model predicts log10; back-transformed without smearing). No pass/fail threshold is set beyond
+   "inside the band" or not.
+5. **Values** are read from the PDFs only, with page and figure or table; values digitised from a figure are marked as digitised with the method (tool, axis calibration); values from a
+   table or the text are marked as such. The values file is `docs/na12_literature_values.csv`; the comparison script (`scripts/na12_literature_comparison.py`) is run only after it is
+   filled and committed.
