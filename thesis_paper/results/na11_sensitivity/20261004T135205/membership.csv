@@ -1,0 +1,617 @@
+toxic,e_hull_max,gap_cap,material_id,formula,gap,ehull,in_main_list
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1105819,InRhO3,0.3223000000000002,0.0739175047499953,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1178354,EuZrO3,0.4662999999999995,0.0843929492500112,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1188346,CoBiO3,0.3878000000000003,0.0822287949999989,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1213810,CeLuO3,0.1122000000000005,0.0570241827499984,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-20772,CaCrO3,0.3943000000000003,0.0651140580000015,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-21125,LuMnO3,0.4485081876543422,0.0503064981666696,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-573119,BiRhO3,0.3772999999999999,0.0619841773750007,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-756821,LiAgF3,0.1235999999999999,0.0935238429999998,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-760151,LiAgF3,0.1695999999999999,0.0769721754999999,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-770581,MgMnO3,0.536,0.0767369350000004,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-771055,EuZrO3,0.3877000000000006,0.0933191865000111,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-772528,MnZnO3,0.1149,0.098382452,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-776165,AgAuO3,0.2423000000000001,0.0594244018333327,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.6 (main),mp-998350,BaZrSe3,0.2023999999999999,0.0775039104999999,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1105819,InRhO3,0.3223000000000002,0.0739175047499953,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1110931,KInBr3,0.8797156481034303,0.0977900804999989,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1112169,KInI3,0.6694999999999998,0.0766823449999996,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1114161,RbInI3,0.7159,0.0563835451666636,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1178354,EuZrO3,0.4662999999999995,0.0843929492500112,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1188346,CoBiO3,0.3878000000000003,0.0822287949999989,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1213810,CeLuO3,0.1122000000000005,0.0570241827499984,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1272753,LaCoO3,0.6738999999999997,0.0304298195000001,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1370061,MgVO3,0.6976000000000004,0.0928165374999991,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1378105,ZnBiO3,0.8814050363816994,0.0806278960000002,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1383356,BaHfS3,0.7077999999999998,0.0282627044999985,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-1643785,ScCoO3,0.8961999999999994,0.0691988195892872,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-20031,NdCoO3,0.791412993383716,0.0781587439998885,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-20572,NaVF3,0.6978,0.0913499079999997,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-20772,CaCrO3,0.3943000000000003,0.0651140580000015,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-21125,LuMnO3,0.4485081876543422,0.0503064981666696,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-573119,BiRhO3,0.3772999999999999,0.0619841773750007,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-573180,LaCoO3,0.6210999999999993,0.0765487460000002,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-756062,CeFeO3,0.6735999999999995,0.0797908600000028,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-756821,LiAgF3,0.1235999999999999,0.0935238429999998,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-760151,LiAgF3,0.1695999999999999,0.0769721754999999,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-770581,MgMnO3,0.536,0.0767369350000004,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-771055,EuZrO3,0.3877000000000006,0.0933191865000111,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-772528,MnZnO3,0.1149,0.098382452,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-776165,AgAuO3,0.2423000000000001,0.0594244018333327,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-998157,RbSnBr3,0.6010000000000002,0.0446438260000023,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-998350,BaZrSe3,0.2023999999999999,0.0775039104999999,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.10,0.9,mp-998352,BaHfS3,0.8438999999999997,0.0283550604999991,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1272753,LaCoO3,0.6738999999999997,0.0304298195000001,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1383356,BaHfS3,0.7077999999999998,0.0282627044999985,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-998157,RbSnBr3,0.6010000000000002,0.0446438260000023,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.05 (main),0.9,mp-998352,BaHfS3,0.8438999999999997,0.0283550604999991,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.025,0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-29799,KBiO3,0.4914,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"Tl,Hg,Cd,As,Be excluded (main)",0.0 (stable only),0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1105306,TlCrO3,0.4300999999999995,0.039864296500002,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1105819,InRhO3,0.3223000000000002,0.0739175047499953,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1112542,CsTlI3,0.4982999999999999,0.0602546797499998,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1114149,RbTlI3,0.4939,0.0912211314999997,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1178354,EuZrO3,0.4662999999999995,0.0843929492500112,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1178989,TlNiO3,0.1478000000000001,0.0754351371666661,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1188346,CoBiO3,0.3878000000000003,0.0822287949999989,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1213810,CeLuO3,0.1122000000000005,0.0570241827499984,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-20772,CaCrO3,0.3943000000000003,0.0651140580000015,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-21125,LuMnO3,0.4485081876543422,0.0503064981666696,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-573119,BiRhO3,0.3772999999999999,0.0619841773750007,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.10,0.6 (main),mp-756821,LiAgF3,0.1235999999999999,0.0935238429999998,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-756909,TlGaO3,0.2334000000000005,0.0695921199999984,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-760151,LiAgF3,0.1695999999999999,0.0769721754999999,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-770581,MgMnO3,0.536,0.0767369350000004,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-771055,EuZrO3,0.3877000000000006,0.0933191865000111,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-772528,MnZnO3,0.1149,0.098382452,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-776165,AgAuO3,0.2423000000000001,0.0594244018333327,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-977408,NbTlO3,0.1116000000000001,0.0906740972499937,False
+"only Hg,Cd excluded",0.10,0.6 (main),mp-998350,BaZrSe3,0.2023999999999999,0.0775039104999999,False
+"only Hg,Cd excluded",0.10,0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"only Hg,Cd excluded",0.10,0.9,mp-1101279,TmTlO3,0.7359999999999998,0.0884914422499987,False
+"only Hg,Cd excluded",0.10,0.9,mp-1105306,TlCrO3,0.4300999999999995,0.039864296500002,False
+"only Hg,Cd excluded",0.10,0.9,mp-1105819,InRhO3,0.3223000000000002,0.0739175047499953,False
+"only Hg,Cd excluded",0.10,0.9,mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"only Hg,Cd excluded",0.10,0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-1110931,KInBr3,0.8797156481034303,0.0977900804999989,False
+"only Hg,Cd excluded",0.10,0.9,mp-1112169,KInI3,0.6694999999999998,0.0766823449999996,False
+"only Hg,Cd excluded",0.10,0.9,mp-1112542,CsTlI3,0.4982999999999999,0.0602546797499998,False
+"only Hg,Cd excluded",0.10,0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"only Hg,Cd excluded",0.10,0.9,mp-1114149,RbTlI3,0.4939,0.0912211314999997,False
+"only Hg,Cd excluded",0.10,0.9,mp-1114161,RbInI3,0.7159,0.0563835451666636,False
+"only Hg,Cd excluded",0.10,0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-1178354,EuZrO3,0.4662999999999995,0.0843929492500112,False
+"only Hg,Cd excluded",0.10,0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"only Hg,Cd excluded",0.10,0.9,mp-1178989,TlNiO3,0.1478000000000001,0.0754351371666661,False
+"only Hg,Cd excluded",0.10,0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.10,0.9,mp-1188346,CoBiO3,0.3878000000000003,0.0822287949999989,False
+"only Hg,Cd excluded",0.10,0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.10,0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"only Hg,Cd excluded",0.10,0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-1213810,CeLuO3,0.1122000000000005,0.0570241827499984,False
+"only Hg,Cd excluded",0.10,0.9,mp-1272753,LaCoO3,0.6738999999999997,0.0304298195000001,False
+"only Hg,Cd excluded",0.10,0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.10,0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"only Hg,Cd excluded",0.10,0.9,mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"only Hg,Cd excluded",0.10,0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.10,0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.10,0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.10,0.9,mp-1370061,MgVO3,0.6976000000000004,0.0928165374999991,False
+"only Hg,Cd excluded",0.10,0.9,mp-1378105,ZnBiO3,0.8814050363816994,0.0806278960000002,False
+"only Hg,Cd excluded",0.10,0.9,mp-1383356,BaHfS3,0.7077999999999998,0.0282627044999985,False
+"only Hg,Cd excluded",0.10,0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.10,0.9,mp-1643785,ScCoO3,0.8961999999999994,0.0691988195892872,False
+"only Hg,Cd excluded",0.10,0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"only Hg,Cd excluded",0.10,0.9,mp-20031,NdCoO3,0.791412993383716,0.0781587439998885,False
+"only Hg,Cd excluded",0.10,0.9,mp-20572,NaVF3,0.6978,0.0913499079999997,False
+"only Hg,Cd excluded",0.10,0.9,mp-20772,CaCrO3,0.3943000000000003,0.0651140580000015,False
+"only Hg,Cd excluded",0.10,0.9,mp-21125,LuMnO3,0.4485081876543422,0.0503064981666696,False
+"only Hg,Cd excluded",0.10,0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.10,0.9,mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"only Hg,Cd excluded",0.10,0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.10,0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"only Hg,Cd excluded",0.10,0.9,mp-505819,TlFeO3,0.7036999999999995,0.0472809699999992,False
+"only Hg,Cd excluded",0.10,0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.10,0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"only Hg,Cd excluded",0.10,0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"only Hg,Cd excluded",0.10,0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.10,0.9,mp-573119,BiRhO3,0.3772999999999999,0.0619841773750007,False
+"only Hg,Cd excluded",0.10,0.9,mp-573180,LaCoO3,0.6210999999999993,0.0765487460000002,False
+"only Hg,Cd excluded",0.10,0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.10,0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.10,0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.10,0.9,mp-754597,LuTlO3,0.6919000000000004,0.0837613916249973,False
+"only Hg,Cd excluded",0.10,0.9,mp-754787,SmTlO3,0.8895,0.0731567521249978,False
+"only Hg,Cd excluded",0.10,0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-756062,CeFeO3,0.6735999999999995,0.0797908600000028,False
+"only Hg,Cd excluded",0.10,0.9,mp-756821,LiAgF3,0.1235999999999999,0.0935238429999998,False
+"only Hg,Cd excluded",0.10,0.9,mp-756909,TlGaO3,0.2334000000000005,0.0695921199999984,False
+"only Hg,Cd excluded",0.10,0.9,mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.10,0.9,mp-757636,NbTlO3,0.7458,0.0,False
+"only Hg,Cd excluded",0.10,0.9,mp-760151,LiAgF3,0.1695999999999999,0.0769721754999999,False
+"only Hg,Cd excluded",0.10,0.9,mp-768539,AlTlO3,0.7376999999999994,0.0753195514999998,False
+"only Hg,Cd excluded",0.10,0.9,mp-770581,MgMnO3,0.536,0.0767369350000004,False
+"only Hg,Cd excluded",0.10,0.9,mp-771055,EuZrO3,0.3877000000000006,0.0933191865000111,False
+"only Hg,Cd excluded",0.10,0.9,mp-772528,MnZnO3,0.1149,0.098382452,False
+"only Hg,Cd excluded",0.10,0.9,mp-776165,AgAuO3,0.2423000000000001,0.0594244018333327,False
+"only Hg,Cd excluded",0.10,0.9,mp-977408,NbTlO3,0.1116000000000001,0.0906740972499937,False
+"only Hg,Cd excluded",0.10,0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"only Hg,Cd excluded",0.10,0.9,mp-998153,TlGeBr3,0.7555999999999998,0.0279997379999996,False
+"only Hg,Cd excluded",0.10,0.9,mp-998157,RbSnBr3,0.6010000000000002,0.0446438260000023,False
+"only Hg,Cd excluded",0.10,0.9,mp-998350,BaZrSe3,0.2023999999999999,0.0775039104999999,False
+"only Hg,Cd excluded",0.10,0.9,mp-998352,BaHfS3,0.8438999999999997,0.0283550604999991,False
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1105306,TlCrO3,0.4300999999999995,0.039864296500002,False
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.6 (main),mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1105306,TlCrO3,0.4300999999999995,0.039864296500002,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1106224,MnVO3,0.3157000000000005,0.0417526665000043,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1206801,RbEuCl3,0.4541999999999997,0.0383723899999992,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1272753,LaCoO3,0.6738999999999997,0.0304298195000001,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1278986,MnBO3,0.5985999999999998,0.0323374645520715,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1383356,BaHfS3,0.7077999999999998,0.0282627044999985,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-19201,CaMnO3,0.4685999999999999,0.0350749438333366,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-25096,NiBiO3,0.3548,0.0322425907500036,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-505819,TlFeO3,0.7036999999999995,0.0472809699999992,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.05 (main),0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-757636,NbTlO3,0.7458,0.0,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-998153,TlGeBr3,0.7555999999999998,0.0279997379999996,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-998157,RbSnBr3,0.6010000000000002,0.0446438260000023,False
+"only Hg,Cd excluded",0.05 (main),0.9,mp-998352,BaHfS3,0.8438999999999997,0.0283550604999991,False
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.025,0.6 (main),mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.025,0.9,mp-1068377,CsEuCl3,0.8369,0.0105377620000037,False
+"only Hg,Cd excluded",0.025,0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-1112643,CsInI3,0.7619999999999998,0.02183132625,False
+"only Hg,Cd excluded",0.025,0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-1178513,BaSnO3,0.6650999999999998,0.0006460229999962,False
+"only Hg,Cd excluded",0.025,0.9,mp-1180782,KCrF3,0.1573999999999999,0.0020262390000009,True
+"only Hg,Cd excluded",0.025,0.9,mp-1189736,ErNiO3,0.3726000000000002,0.0015767070000007,True
+"only Hg,Cd excluded",0.025,0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-1273178,YCoO3,0.3085,0.0116558665892867,True
+"only Hg,Cd excluded",0.025,0.9,mp-1273989,LaCoO3,0.8045999999999998,0.0179204554999996,False
+"only Hg,Cd excluded",0.025,0.9,mp-1284950,LaNiO3,0.3559999999999998,0.020568577999998,True
+"only Hg,Cd excluded",0.025,0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-1288734,YCoO3,0.1141,0.0154647095892865,True
+"only Hg,Cd excluded",0.025,0.9,mp-1289597,MnBO3,0.1516999999999999,0.0203677105520725,True
+"only Hg,Cd excluded",0.025,0.9,mp-1435359,CaVO3,0.2606000000000001,0.0088146909107074,True
+"only Hg,Cd excluded",0.025,0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-22608,CaVO3,0.4338999999999999,0.0011566264107081,True
+"only Hg,Cd excluded",0.025,0.9,mp-27214,CsSnBr3,0.5984,0.0111951395000025,True
+"only Hg,Cd excluded",0.025,0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-505085,NaCuF3,0.6678000000000001,0.0043112520000008,False
+"only Hg,Cd excluded",0.025,0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-5168,AlSiP3,0.2885999999999997,0.0072239124999988,True
+"only Hg,Cd excluded",0.025,0.9,mp-568570,CsSnI3,0.6097000000000001,0.0110591610000034,False
+"only Hg,Cd excluded",0.025,0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-570223,CsGeBr3,0.7484000000000002,0.0168454720000017,False
+"only Hg,Cd excluded",0.025,0.9,mp-571458,RbGeI3,0.5181,0.013385509333331,True
+"only Hg,Cd excluded",0.025,0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-616378,CsSnI3,0.5435000000000003,0.0118439939999976,True
+"only Hg,Cd excluded",0.025,0.9,mp-691106,MnSnO3,0.2294,0.0223195970000018,True
+"only Hg,Cd excluded",0.025,0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.025,0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-756933,TaTlO3,0.4457999999999997,0.004274724750001,False
+"only Hg,Cd excluded",0.025,0.9,mp-757636,NbTlO3,0.7458,0.0,False
+"only Hg,Cd excluded",0.025,0.9,mp-989601,LaWN3,0.7063999999999995,0.0233291480000055,False
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.6 (main),mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1106293,EuZrO3,0.5096999999999996,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1120755,NaCO3,0.6623,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1189927,EuZrS3,0.1452999999999997,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1190059,EuHfS3,0.1287000000000002,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1212884,DyRhO3,0.8884318524889769,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-1288145,LaCoO3,0.2793000000000001,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-19063,ErCrO3,0.2483000000000004,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-2767717,LuVO3,0.2610999999999999,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-29164,SrBiO3,0.3106,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-29799,KBiO3,0.4914,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-3163,BaSnO3,0.3730000000000002,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-3317,SmRhO3,0.7331000000000003,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-4582,NdRhO3,0.6487000000000007,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-4789,PrRhO3,0.6036999999999999,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-5163,LaRhO3,0.5951000000000004,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-5692,TbRhO3,0.8749000000000002,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-614013,CsSnI3,0.4499999999999997,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-753781,EuHfO3,0.5973000000000006,0.0,True
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-755893,CaBiO3,0.6655289785034206,0.0,False
+"only Hg,Cd excluded",0.0 (stable only),0.9,mp-757636,NbTlO3,0.7458,0.0,False
