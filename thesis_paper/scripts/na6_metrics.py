@@ -11,7 +11,7 @@ Two kinds of interval, both reported:
     is computed per repeat and averaged over the 5 repeats; the 2.5th and 97.5th percentiles are the interval. This is the interval for "which chemistries are in the
     data", which the across-repeat interval does not capture (the repeats re-split the same clusters).
 Metrics: accuracy, balanced accuracy, precision, recall and F1 of the p class, precision and recall of the n class, ROC AUC (AUC: bootstrap on repeat 0 only, with
-weights, ties in the probabilities ignored; the number of exact ties is reported). The pooled accuracy is checked against results/na6/<stamp>/results.json.
+weights, tied probabilities count half; the number of exact ties is reported). The pooled accuracy is checked against results/na6/<stamp>/results.json.
 
 Usage (from the repository root):
     python thesis_paper/scripts/na6_metrics.py --na6-dir thesis_paper/results/na6/20261004T102905
@@ -48,12 +48,13 @@ def counts_to_metrics(tp, fp, tn, fn):
             "f1_p": 2 * prec_p * rec_p / (prec_p + rec_p), "precision_n": prec_n, "recall_n": rec_n}
 
 
-def weighted_auc(y, order, w):
-    """ROC AUC with row weights `w`, rows given in ascending order of score (`order` sorts the original arrays); ties ignored."""
+def weighted_auc(y, order, starts, w):
+    """ROC AUC with row weights `w`; `order` sorts the rows by score, `starts` are the indices (in sorted order) where each distinct score begins; tied scores count half."""
     ys, ws = y[order], w[order]
     neg, pos = ws * (1 - ys), ws * ys
-    below = np.cumsum(neg) - neg
-    return float((pos * below).sum() / (pos.sum() * neg.sum()))
+    neg_g, pos_g = np.add.reduceat(neg, starts), np.add.reduceat(pos, starts)
+    below = np.cumsum(neg_g) - neg_g
+    return float((pos_g * (below + 0.5 * neg_g)).sum() / (pos_g.sum() * neg_g.sum()))
 
 
 def main():
@@ -119,11 +120,13 @@ def main():
         for k in boots:
             boots[k].append(float(np.mean([m[k] for m in ms])))
     order = np.argsort(proba[0], kind="stable")
-    n_ties = int(len(proba[0]) - len(np.unique(proba[0])))
+    sorted_scores = proba[0][order]
+    starts = np.concatenate([[0], np.where(np.diff(sorted_scores) != 0)[0] + 1])
+    n_ties = int(len(proba[0]) - len(starts))
     auc_b = []
     for _ in range(args.n_boot_auc):
         w = np.bincount(rng.integers(0, nc, nc), minlength=nc).astype(float)[codes]
-        auc_b.append(weighted_auc(y, order, w))
+        auc_b.append(weighted_auc(y, order, starts, w))
     boot = {k: {"mean": float(np.mean(v)), "ci95": [float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5))]} for k, v in boots.items()}
     boot["roc_auc_repeat0"] = {"mean": float(np.mean(auc_b)), "ci95": [float(np.percentile(auc_b, 2.5)), float(np.percentile(auc_b, 97.5))], "n_boot": args.n_boot_auc,
                                "exact_ties_in_repeat0_probabilities": n_ties}
