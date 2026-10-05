@@ -56,6 +56,10 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na11_candidate_novelty/20261004T185101/run_config.json` | `cb1309823cacb9d70b24871286aef36eca83fc3a8596a5223208038a7deedfd2` | <!-- thesis analysis result -->
 | `thesis_paper/results/na2_random_forest_tuning/summary/tuning_summary.json` | `26862ec4aca385dc58b48c6a1a71081d80d5eb7ea63391894a710cbb7311e2fe` | <!-- thesis analysis result -->
 | `thesis_paper/results/na2_random_forest_tuning/summary/run_config.json` | `487302182489440337d206c9347ac021c330bdba4abd46d90cde5d1c4a2d5157` | <!-- thesis analysis result -->
+| `thesis_paper/results/na11_shortlist_limits/20261005T055401/shortlist_limits.csv` | `b998949e1d25f423e8cd19246ab081e7092f142d2fea00309d33dd73d4a57d37` | <!-- thesis analysis result -->
+| `thesis_paper/results/na11_shortlist_limits/20261005T055401/summary.json` | `735cf1d68435bcd78cbce37ee27a025f62443723f8673f31b064a76c3e2ffd77` | <!-- thesis analysis result -->
+| `thesis_paper/results/na11_shortlist_limits/20261005T055401/run_config.json` | `500f8bef0bd73f9c38cb72a029ef83420a47f947c9cfc2f9ce00512f1f28e7ff` | <!-- thesis analysis result -->
+| `thesis_paper/docs/shortlist_thermal_limits.csv` | `c8b9927a8f17ed4cd38f5aae53cde43e8259e7810b50f92781275d5fb2e204d1` | <!-- Paper A artifact / source -->
 | `thesis_paper/results/na11_ranked/20261005T053426/summary.json` | `c6e5a0cdc996b5035183edc6dbfddeb6ea6e0c71f8f50dc521f0a116407c90dd` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv` | `9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv` | `501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff` | <!-- thesis analysis result -->

@@ -168,14 +168,80 @@ def fig12_shares(out):
     plt.close(fig)
 
 
+def _clean_feature(name):
+    """A feature's column name shortened for an axis label."""
+    n = name.replace("MagpieData ", "").replace("CBFV_", "")
+    for junk in ("_(W/(m_K))_", "_(g/mL)", "(A^3)", "_(kJ/mol)_", "(kJ/mol)"):
+        n = n.replace(junk, "")
+    return n if len(n) <= 26 else n[:25] + "…"
+
+
+def load_na3_rows(run_dirs):
+    """{target: (shap, x, columns)} from NA3-rows bundles (directories): every saved row of repeat 0, all folds pooled."""
+    import json
+
+    out = {}
+    for d in run_dirs:
+        d = Path(d)
+        res = json.loads((d / "results.json").read_text(encoding="utf-8"))
+        st = json.loads((d / "status.json").read_text(encoding="utf-8"))
+        assert st["complete"] and st["units_done"] == st["units_total"], f"{d}: not complete"
+        for t in res["per_target"]:
+            parts = [np.load(d / "units" / f"{t}_repeat0_fold{f}.npz") for f in range(res["per_target"][t]["n_folds"])]
+            out[t] = (np.vstack([u["shap"] for u in parts]), np.vstack([u["x"] for u in parts]), res["feature_columns"])
+    return out
+
+
+def fig11_beeswarm(out, run_dirs, top_n=10):
+    """Beeswarm plots: SHAP value of every saved row for the top features of each target (NA3 rows, repeat 0, a seeded subsample of each test fold), coloured by the row's feature value (percentile rank)."""
+    data = load_na3_rows(run_dirs)
+    fs.apply()
+    fig, axes = fs.new_figure("double", 15.0, 2, 2)
+    order = [t for t in ("zT", "S", "kappa", "sigma") if t in data]
+    rng = np.random.default_rng(0)
+    sc = None
+    for ax, t, letter in zip(axes.ravel(), order, "abcd"):
+        shap, x, cols = data[t]
+        top = np.argsort(-np.abs(shap).mean(axis=0))[:top_n]
+        for rank, j in enumerate(top):
+            v = shap[:, j]
+            bins = np.digitize(v, np.linspace(v.min(), v.max() + 1e-12, 31))
+            counts = np.bincount(bins)[bins]
+            jitter = (rng.random(len(v)) - 0.5) * 0.7 * counts / counts.max()
+            pct = np.argsort(np.argsort(x[:, j])) / max(len(v) - 1, 1)  # percentile rank of the feature value among the saved rows
+            sc = ax.scatter(v, (top_n - 1 - rank) + jitter, c=pct, cmap="viridis", s=2.5, lw=0, alpha=0.7, rasterized=True, vmin=0, vmax=1)
+        ax.axvline(0, color="0.4", lw=0.5)
+        ax.set_yticks(np.arange(top_n)[::-1])
+        ax.set_yticklabels([_clean_feature(cols[j]) for j in top], fontsize=7)
+        ax.set_xlabel({"zT": "SHAP value (zT)", "S": "SHAP value (µV K$^{-1}$)", "kappa": "SHAP value (log$_{10}$)", "sigma": "SHAP value (log$_{10}$)"}[t])
+        fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
+        fs.grid(ax, axis="x")
+    for ax in axes.ravel()[len(order):]:
+        ax.set_visible(False)
+    fig.colorbar(sc, ax=axes, shrink=0.5, aspect=25, label="Feature value (percentile rank)")
+    fs.save(fig, str(out), expect_width_cm=16.0)
+    plt.close(fig)
+
+
 def main():
     """Entry point."""
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--na3-rows-dirs", default=None, help="comma-separated NA3-rows bundle directories: draws Figure 11")
+    ap.add_argument("--only-fig11-to", default=None, help="write only Figure 11, to this path without extension (for tests)")
+    args = ap.parse_args()
+    if args.only_fig11_to:
+        fig11_beeswarm(args.only_fig11_to, args.na3_rows_dirs.split(","))
+        return
     FIG.mkdir(parents=True, exist_ok=True)
     fig6_distributions(FIG / "fig6_property_distributions")
     fig7_parity(FIG / "fig7_predicted_vs_measured")
     fig9_estm(FIG / "fig9_estm_external")
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
+    if args.na3_rows_dirs:
+        fig11_beeswarm(FIG / "fig11_shap_beeswarm", args.na3_rows_dirs.split(","))
     print("Figures 6, 7, 9, 10 and 12 saved")
 
 

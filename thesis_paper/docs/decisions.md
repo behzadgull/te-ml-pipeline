@@ -112,3 +112,17 @@ random-forest test-fold prediction or score exists. The values of the 15 trials 
    forest that matches or beats XGBoost would be a result that survives the asymmetry. The size of the bias is unknown; the 15 trials bound it only for S.
 5. LightGBM keeps its tuning (20 trials, the XGBoost protocol). The random-forest rung is a new analysis (new identity): no `--restore-from` of the tuning bundle.
 6. The tuning bundle is committed as a record (`results/na2_random_forest_tuning/`), marked incomplete and not an accepted result.
+
+## 2026-10-05: shortlist physics check, per-row SHAP rerun and NA1 on Kaggle (after the G3 predictions had been seen)
+
+1. **Shortlist physics check (annotation, not a change of rule A).** Added at the maintainer's request after the predictions were seen; the shortlist, its order by the maximum over the grid and the
+   highlighting rule are unchanged. Thermal limits are in `docs/shortlist_thermal_limits.csv` with their sources: CsSnI3 melts at 451 C (724 K; from two open-access papers that cite the primary
+   study, which was not read), so its predictions are reported only up to 700 K (maximum 0.53 at 700 K instead of 0.58 at 800 K); no melting or decomposition temperature at or below 800 K was found for
+   BaSnO3 (doped films stable in air at 530 C), LaRhO3 (calculated decomposition 1728 K in air) or LaCoO3 (stable in air; reduced in a reducing atmosphere from about 500 C = 773 K, flagged, not applied).
+   The MP structure of CsSnI3 (cubic Pm-3m) is the phase above 440 K; the orthorhombic phase is stable below 362 K. A **secondary view** at 600 K is added as a labelled second ranking because 406 of
+   409 maxima sit at the 800 K edge; it gives the same order as the primary ranking.
+2. **Figure 11 (beeswarm)**: the G3 NA3 run saved only mean absolute SHAP per feature and fold. A new analysis `na3_rows` (script `kaggle/na3_rows.py`) repeats repeat 0 of the same chemistry-cluster folds
+   with the same frozen hyperparameters and saves the SHAP values and feature values of a fixed seeded subsample of 1,000 test rows per fold (generator `default_rng(seed + fold)`), 5,000 rows per
+   target, checked by SHAP additivity and by the fold R2 against the committed rung. Nothing else of the committed NA3 changes.
+3. **NA1 on Kaggle GPU** (`kaggle/na1_nested_cv.py`): same design as the planned department-machine run (re-tuning inside each outer training fold, 20 trials, 3 inner folds, the Paper A chemistry-cluster
+   folds, 5 repeats x 5 folds, four targets), with checkpointed trials and units.

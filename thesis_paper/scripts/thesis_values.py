@@ -212,6 +212,8 @@ NA11_NOVELTY = "thesis_paper/results/na11_candidate_novelty/20261004T185101"
 NA3_A = "thesis_paper/results/na3_a/20261004T201639"
 NA3_B = "thesis_paper/results/na3_b/20261004T201433"
 NA2_TUNING = "thesis_paper/results/na2_random_forest_tuning/summary"
+NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T055401"
+NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
@@ -355,6 +357,7 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
     f"{NA11_NOVELTY}/counts.json", f"{NA11_NOVELTY}/run_config.json",
     f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",
+    f"{NA11_LIMITS}/shortlist_limits.csv", f"{NA11_LIMITS}/summary.json", f"{NA11_LIMITS}/run_config.json", NA11_LIMITS_CSV,
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
 ]
@@ -450,7 +453,7 @@ def na11_ranked_values():
         sgn = "−" if r["S_at_max"] < 0 else ""
         v[f"t11_{k}_group"] = "seen" if r["cluster_seen_any"] else "unseen"
         v[f"t11_{k}_rank"] = str(int(r["rank_in_group_main_30"]))
-        v[f"t11_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "") + f" ({r['material_id']})"
+        v[f"t11_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "") + (" ‡" if (r["formula"] == "CsSnI3" and r["T_at_zT_max"] > 724.15) else "") + f" ({r['material_id']})"
         v[f"t11_{k}_ehull"] = f"{r['ehull']:.3f}"
         v[f"t11_{k}_stab"] = "on hull" if r["stability"] == "on the hull" else "metastable"
         v[f"t11_{k}_gap"] = f"{r['gap']:.2f}"
@@ -518,6 +521,44 @@ def _safe_eval(node):
     if isinstance(node, (ast.Tuple, ast.List)):
         return type(node).__name__ == "Tuple" and tuple(map(_safe_eval, node.elts)) or list(map(_safe_eval, node.elts))
     return ast.literal_eval(node)
+
+
+def na11_limits_values():
+    """NA11: the thermal limits of the shortlist (sourced) and the secondary 600 K view."""
+    import pandas as pd
+
+    assert pav._json(f"{NA11_LIMITS}/run_config.json")["tree_clean"]
+    d = pd.read_csv(REPO_ROOT / NA11_LIMITS / "shortlist_limits.csv")
+    sm = pav._json(f"{NA11_LIMITS}/summary.json")
+    assert sm["order_primary"] == sm["order_within_limit"] == sm["order_at_secondary_T"], "the prose says the three orders agree"
+    d = d.sort_values("rank_primary").reset_index(drop=True)
+    v = {"lim_secondary_T": str(sm["secondary_T_K"])}
+    for i, r in d.iterrows():
+        k = i + 1
+        v[f"lim_{k}_name"] = _formula_md(r["formula"])
+        ul, cl = r["unconditional_limit_K"], r["conditional_limit_K"]
+        if pd.notna(ul) and ul <= 800:
+            v[f"lim_{k}_text"] = f"melts at {ul:.0f} K"
+        elif pd.notna(ul):
+            v[f"lim_{k}_text"] = f"decomposes at {ul:.0f} K in air (none at or below 800 K)"
+        elif pd.notna(cl):
+            v[f"lim_{k}_text"] = f"none in air; reduced above {cl:.0f} K in a reducing atmosphere"
+        else:
+            v[f"lim_{k}_text"] = "none found at or below 800 K"
+        v[f"lim_{k}_range"] = f"{int(r['grid_max_reported_K'])}"
+        v[f"lim_{k}_zt"] = f"{r['zT_max_within_limit']:.2f}"
+        v[f"lim_{k}_zt_T"] = str(int(r["T_at_zT_max_within_limit"]))
+        v[f"lim_{k}_zt600"] = f"{r['zT_at_secondary_T']:.2f}"
+        v[f"lim_{k}_rank1"], v[f"lim_{k}_rank2"] = str(int(r["rank_primary"])), str(int(r["rank_at_secondary_T"]))
+    c = d[d["formula"] == "CsSnI3"].iloc[0]
+    v["cs_limit_K"] = f"{c['unconditional_limit_K']:.0f}"
+    v["cs_grid_max"] = str(int(c["grid_max_reported_K"]))
+    v["cs_zt_limit"], v["cs_zt_primary"] = f"{c['zT_max_within_limit']:.2f}", f"{c['zT_max_primary_all_grid']:.2f}"
+    v["cs_primary_T"] = str(int(c["T_at_zT_max_primary"]))
+    v["lco_cond_K"] = f"{d[d['formula'] == 'LaCoO3'].iloc[0]['conditional_limit_K']:.0f}"
+    v["lim_order"] = ", ".join(_formula_md(f) for f in sm["order_at_secondary_T"])
+    assert not bool(c["primary_value_inside_limit"]) and all(bool(x) for x in d[d["formula"] != "CsSnI3"]["primary_value_inside_limit"])
+    return v
 
 
 def config_value(pointer):
@@ -637,5 +678,6 @@ def new_analysis_values():
     v.update(na11_values())
     v.update(na3_values())
     v.update(na11_ranked_values())
+    v.update(na11_limits_values())
     v.update(na2_design_values())
     return v

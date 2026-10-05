@@ -138,13 +138,24 @@ def table11(v):
     head = (f"**Table 11:** Ranked list of the {v['mp_f6']} lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group "
             f"(chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over {v['t_min']}--{v['t_max']} K of the predicted zT, reached at the temperature "
             "T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, "
-            "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). Studied before: a paper whose title or abstract reports a thermoelectric measurement "
+            "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). ‡ the maximum lies above the melting point of the compound; see Table 11b. Studied before: a paper whose title or abstract reports a thermoelectric measurement "
             "or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing). The features are composition-only, so polymorphs of one compound (separate Materials Project entries) share their predictions.")
     lines = [head, "", "| **Cluster** | **#** | **Compound (MP id)** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |",
              "|------|---|-----------|------|--------|-----|-----|------|--------|-----|-----|---------|"]
     for k in range(1, 31):
         lines.append(f"| {v[f't11_{k}_group']} | {v[f't11_{k}_rank']} | {v[f't11_{k}_name']} | {v[f't11_{k}_ehull']} | {v[f't11_{k}_stab']} | {v[f't11_{k}_gap']} | {v[f't11_{k}_T']} | "
                      f"{v[f't11_{k}_S']} | {v[f't11_{k}_sigma']} | {v[f't11_{k}_kappa']} | {v[f't11_{k}_zT']} | {v[f't11_{k}_lit']} |")
+    return "\n".join(lines)
+
+
+def table11b(v):
+    """The shortlist: thermal limit, the maximum within the limit and the secondary view at 600 K."""
+    lines = [f"**Table 11b:** The {v['sl_n']} shortlist compounds with their thermal limits (sources in the text) and the predictions within them: the highest grid temperature reported, the maximum predicted zT up to it (at the temperature T), "
+             f"and the secondary view, the predicted zT at {v['lim_secondary_T']} K with the rank at {v['lim_secondary_T']} K next to the primary rank (maximum over the whole grid). Model outputs, not findings.", "",
+             f"| **Compound** | **Thermal limit** | **Highest T reported (K)** | **Maximum zT within the limit** | **T (K)** | **zT at {v['lim_secondary_T']} K** | **Rank, primary** | **Rank, {v['lim_secondary_T']} K** |",
+             "|-------------|--------------------|----------|---------|-----|-------|-----|-----|"]
+    for k in range(1, 5):
+        lines.append(f"| {v[f'lim_{k}_name']} | {v[f'lim_{k}_text']} | {v[f'lim_{k}_range']} | {v[f'lim_{k}_zt']} | {v[f'lim_{k}_zt_T']} | {v[f'lim_{k}_zt600']} | {v[f'lim_{k}_rank1']} | {v[f'lim_{k}_rank2']} |")
     return "\n".join(lines)
 
 
@@ -171,7 +182,7 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
 
 
 def render(text):

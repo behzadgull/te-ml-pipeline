@@ -78,6 +78,8 @@ def main():
         "na2_random_forest_fixed": ("na2_trees.py", ["--model", "random_forest", "--fixed-hyperparams", "--targets", "zT"]),
         "na2_lightgbm": ("na2_trees.py", ["--model", "lightgbm", "--targets", "zT"]),
         "na3": ("na3_shap.py", ["--targets", "zT,S"]),
+        "na3_rows": ("na3_rows.py", ["--targets", "zT,S"]),
+        "na1_nested": ("na1_nested_cv.py", ["--targets", "zT"]),
         "na6": ("na6_classifier.py", []),
         "na13": ("na13_feature_selection.py", ["--targets", "zT"]),
         "final_models": ("na_final_models.py", ["--jarvis-csv", args.jarvis_csv, "--jarvis-sha256", args.jarvis_sha256] if args.jarvis_csv else []),

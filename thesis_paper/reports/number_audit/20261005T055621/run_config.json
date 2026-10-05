@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "7959c46a29b3f28c6ca3f410cb06ac4e39334d3b618a6bcbe7dbf20441d02750",
+      "bytes": 104373
+    }
+  },
+  "git_head": "490dc9712c374d3237d919f84051c766341cc1b6",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/docs/shortlist_thermal_limits.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/paper/refs.bib",
+    "thesis_paper/reports/number_audit/20261005T054755/audit.csv",
+    "thesis_paper/reports/number_audit/20261005T054755/run_config.json",
+    "thesis_paper/reports/number_audit/20261005T054755/summary.json",
+    "thesis_paper/scripts/audit_numbers.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/results/na11_shortlist_limits/"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 38
+}

@@ -1071,22 +1071,22 @@ line,token,value,class,id,problem,section,context
 389,−1,1,EXCLUDED:NOTATION,,,,"l), E~g~ the PBE gap in eV, *σ* in S m^−1^, *κ* in W m^[−1]^ K^−1^. † the shortlist of the pre-registered rule (do"
 389,−1,1,EXCLUDED:NOTATION,,,,"g~ the PBE gap in eV, *σ* in S m^−1^, *κ* in W m^−1^ K^[−1]^. † the shortlist of the pre-registered rule (docs/dec"
 391,−1,1,EXCLUDED:NOTATION,,,,* | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^[−1]^)** | ***σ*** | ***κ*** | **zT** | **Studied before**
-393,1,1,GENERATED,table 11: t11_1_rank,,4.5 Virtual screening,|-----|------|--------|-----|-----|---------| | seen | [1] | CsSnI~3~ † (mp-614013) | 0.000 | on hull | 0.45 | 80
-393,3,3,EXCLUDED:NOTATION,,,,---|--------|-----|-----|---------| | seen | 1 | CsSnI~[3]~ † (mp-614013) | 0.000 | on hull | 0.45 | 800 | 144 |
-393,0.000,0,GENERATED,table 11: t11_1_ehull,,4.5 Virtual screening,-----|---------| | seen | 1 | CsSnI~3~ † (mp-614013) | [0.000] | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.
-393,0.45,0.45,GENERATED,table 11: t11_1_gap,,4.5 Virtual screening,seen | 1 | CsSnI~3~ † (mp-614013) | 0.000 | on hull | [0.45] | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen
-393,800,800,GENERATED,table 11: t11_1_T,,4.5 Virtual screening,1 | CsSnI~3~ † (mp-614013) | 0.000 | on hull | 0.45 | [800] | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 |
-393,144,144,GENERATED,table 11: t11_1_S,,4.5 Virtual screening,sSnI~3~ † (mp-614013) | 0.000 | on hull | 0.45 | 800 | [144] | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI
-393,9.2,9.2,GENERATED,table 11: t11_1_sigma,,4.5 Virtual screening,~ † (mp-614013) | 0.000 | on hull | 0.45 | 800 | 144 | [9.2] × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~3~ (m
-393,10^3^,10^3,GENERATED,table 11: t11_1_sigma,,4.5 Virtual screening,p-614013) | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × [10^3^] | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~3~ (mp-616378
-393,0.62,0.62,GENERATED,table 11: t11_1_kappa,,4.5 Virtual screening,) | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | [0.62] | 0.58 | yes | | seen | 2 | CsSnI~3~ (mp-616378) | 0.0
-393,0.58,0.58,GENERATED,table 11: t11_1_zT,,4.5 Virtual screening,00 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | [0.58] | yes | | seen | 2 | CsSnI~3~ (mp-616378) | 0.012 | me
-394,2,2,GENERATED,table 11: t11_2_rank,,4.5 Virtual screening,800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | [2] | CsSnI~3~ (mp-616378) | 0.012 | metastable | 0.54 | 8
-394,3,3,EXCLUDED:NOTATION,,,,| 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~[3]~ (mp-616378) | 0.012 | metastable | 0.54 | 800 | 144 |
-394,0.012,0.012,GENERATED,table 11: t11_2_ehull,,4.5 Virtual screening,.62 | 0.58 | yes | | seen | 2 | CsSnI~3~ (mp-616378) | [0.012] | metastable | 0.54 | 800 | 144 | 9.2 × 10^3^ | 0.62 |
-394,0.54,0.54,GENERATED,table 11: t11_2_gap,,4.5 Virtual screening,seen | 2 | CsSnI~3~ (mp-616378) | 0.012 | metastable | [0.54] | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen
-394,800,800,GENERATED,table 11: t11_2_T,,4.5 Virtual screening,2 | CsSnI~3~ (mp-616378) | 0.012 | metastable | 0.54 | [800] | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 3 |
-394,144,144,GENERATED,table 11: t11_2_S,,4.5 Virtual screening,SnI~3~ (mp-616378) | 0.012 | metastable | 0.54 | 800 | [144] | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 3 | BaSnO
+393,1,1,GENERATED,table 11: t11_1_rank,,4.5 Virtual screening,|-----|------|--------|-----|-----|---------| | seen | [1] | CsSnI~3~ † ‡ (mp-614013) | 0.000 | on hull | 0.45 |
+393,3,3,EXCLUDED:NOTATION,,,,---|--------|-----|-----|---------| | seen | 1 | CsSnI~[3]~ † ‡ (mp-614013) | 0.000 | on hull | 0.45 | 800 | 144
+393,0.000,0,GENERATED,table 11: t11_1_ehull,,4.5 Virtual screening,---|---------| | seen | 1 | CsSnI~3~ † ‡ (mp-614013) | [0.000] | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.
+393,0.45,0.45,GENERATED,table 11: t11_1_gap,,4.5 Virtual screening,een | 1 | CsSnI~3~ † ‡ (mp-614013) | 0.000 | on hull | [0.45] | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen
+393,800,800,GENERATED,table 11: t11_1_T,,4.5 Virtual screening,| CsSnI~3~ † ‡ (mp-614013) | 0.000 | on hull | 0.45 | [800] | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 |
+393,144,144,GENERATED,table 11: t11_1_S,,4.5 Virtual screening,nI~3~ † ‡ (mp-614013) | 0.000 | on hull | 0.45 | 800 | [144] | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI
+393,9.2,9.2,GENERATED,table 11: t11_1_sigma,,4.5 Virtual screening,† ‡ (mp-614013) | 0.000 | on hull | 0.45 | 800 | 144 | [9.2] × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~3~ ‡
+393,10^3^,10^3,GENERATED,table 11: t11_1_sigma,,4.5 Virtual screening,p-614013) | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × [10^3^] | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~3~ ‡ (mp-6163
+393,0.62,0.62,GENERATED,table 11: t11_1_kappa,,4.5 Virtual screening,) | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | [0.62] | 0.58 | yes | | seen | 2 | CsSnI~3~ ‡ (mp-616378) | 0
+393,0.58,0.58,GENERATED,table 11: t11_1_zT,,4.5 Virtual screening,00 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | [0.58] | yes | | seen | 2 | CsSnI~3~ ‡ (mp-616378) | 0.012 |
+394,2,2,GENERATED,table 11: t11_2_rank,,4.5 Virtual screening,800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | [2] | CsSnI~3~ ‡ (mp-616378) | 0.012 | metastable | 0.54 |
+394,3,3,EXCLUDED:NOTATION,,,,| 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 2 | CsSnI~[3]~ ‡ (mp-616378) | 0.012 | metastable | 0.54 | 800 | 144
+394,0.012,0.012,GENERATED,table 11: t11_2_ehull,,4.5 Virtual screening,2 | 0.58 | yes | | seen | 2 | CsSnI~3~ ‡ (mp-616378) | [0.012] | metastable | 0.54 | 800 | 144 | 9.2 × 10^3^ | 0.62 |
+394,0.54,0.54,GENERATED,table 11: t11_2_gap,,4.5 Virtual screening,en | 2 | CsSnI~3~ ‡ (mp-616378) | 0.012 | metastable | [0.54] | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen
+394,800,800,GENERATED,table 11: t11_2_T,,4.5 Virtual screening,| CsSnI~3~ ‡ (mp-616378) | 0.012 | metastable | 0.54 | [800] | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 3 |
+394,144,144,GENERATED,table 11: t11_2_S,,4.5 Virtual screening,I~3~ ‡ (mp-616378) | 0.012 | metastable | 0.54 | 800 | [144] | 9.2 × 10^3^ | 0.62 | 0.58 | yes | | seen | 3 | BaSnO
 394,9.2,9.2,GENERATED,table 11: t11_2_sigma,,4.5 Virtual screening,(mp-616378) | 0.012 | metastable | 0.54 | 800 | 144 | [9.2] × 10^3^ | 0.62 | 0.58 | yes | | seen | 3 | BaSnO~3~ †
 394,10^3^,10^3,GENERATED,table 11: t11_2_sigma,,4.5 Virtual screening,16378) | 0.012 | metastable | 0.54 | 800 | 144 | 9.2 × [10^3^] | 0.62 | 0.58 | yes | | seen | 3 | BaSnO~3~ † (mp-3163
 394,0.62,0.62,GENERATED,table 11: t11_2_kappa,,4.5 Virtual screening,0.012 | metastable | 0.54 | 800 | 144 | 9.2 × 10^3^ | [0.62] | 0.58 | yes | | seen | 3 | BaSnO~3~ † (mp-3163) | 0.0
@@ -1368,99 +1368,164 @@ line,token,value,class,id,problem,section,context
 422,800,800,GENERATED,table 11: t11_30_T,,4.5 Virtual screening,1 | MnSnO~3~ (mp-691106) | 0.022 | metastable | 0.23 | [800] | −67 | 1.0 × 10^4^ | 3.19 | 0.04 | no evidence |
 422,−67,67,GENERATED,table 11: t11_30_S,,4.5 Virtual screening,SnO~3~ (mp-691106) | 0.022 | metastable | 0.23 | 800 | [−67] | 1.0 × 10^4^ | 3.19 | 0.04 | no evidence |
 422,1.0,1,GENERATED,table 11: t11_30_sigma,,4.5 Virtual screening,(mp-691106) | 0.022 | metastable | 0.23 | 800 | −67 | [1.0] × 10^4^ | 3.19 | 0.04 | no evidence |
-422,10^4^,10^4,GENERATED,table 11: t11_30_sigma,,4.5 Virtual screening,91106) | 0.022 | metastable | 0.23 | 800 | −67 | 1.0 × [10^4^] | 3.19 | 0.04 | no evidence | T
-422,3.19,3.19,GENERATED,table 11: t11_30_kappa,,4.5 Virtual screening,0.022 | metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | [3.19] | 0.04 | no evidence | The list
-422,0.04,0.04,GENERATED,table 11: t11_30_zT,,4.5 Virtual screening,| metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | 3.19 | [0.04] | no evidence | The list is a s
-425,21,21,GENERATED,nv_main_unseen,,4.5 Virtual screening,"far it can be read. First, the [21] candidates in chemistry clusters absent from"
-425,4.1,4.1,EXCLUDED:XREF,,,,"ich the chemistry-cluster and ESTM results of Sections [4.1] and 4.2 apply, and those results show a substantial lo"
-425,4.2,4.2,EXCLUDED:XREF,,,,"chemistry-cluster and ESTM results of Sections 4.1 and [4.2] apply, and those results show a substantial loss of ac"
-425,9,9,GENERATED,nv_main_seen,,4.5 Virtual screening,substantial loss of accuracy; the [9] in seen clusters are closer to the training d
-425,4.2,4.2,EXCLUDED:XREF,,,,"es available here, the comparison with JARVIS (Section [4.2]), shows at most marginal sign transfer and a negative"
-425,-0.08,0.08,GENERATED,jv_rho_semi,,4.5 Virtual screening,"the magnitude for semiconductors ( [-0.08] , interval -0.11"
-425,-0.11,0.11,GENERATED,jv_rho_semi_lo,,4.5 Virtual screening,"-0.08 , interval [-0.11] -- -0.05 ), and"
-425,-0.05,0.05,GENERATED,jv_rho_semi_hi,,4.5 Virtual screening,"-0.11 -- [-0.05] ), and the candidates are semiconductors by co"
-425,0.1,0.1,DESIGN,scr_gap_lo,,4.5 Virtual screening,are semiconductors by construction ( [0.1] eV or more in PBE). The ranking should theref
-427,2.3,2.3,GENERATED,na4_pt_share,,4.5 Virtual screening,"composition-only family rules are [2.3] % of the S rows, manganites"
-427,2.1,2.1,GENERATED,na4_mn_share,,4.5 Virtual screening,"% of the S rows, manganites [2.1] % and cobaltites 4.6"
-427,4.6,4.6,GENERATED,na4_co_share,,4.5 Virtual screening,2.1 % and cobaltites [4.6] %. The chemistry-cluster MAE of zT is
-427,0.126,0.126,GENERATED,mae_zT,,4.5 Virtual screening,"%. The chemistry-cluster MAE of zT is [0.126] , so predicted zT should be read with an uncer"
-429,4.5,4.5,EXCLUDED:SECTION,,,,should be read with an uncertainty of that order. ### [4.5].1 Literature validation [[PENDING: NA12: comparison o
-431,800,800,UNCLASSIFIED,,,4.5.1 Literature validation,blished measurements for perovskite oxides at or below [800] K]] **Table 12:** Literature validation of predicted
-433,12,12,EXCLUDED:XREF,,,,nts for perovskite oxides at or below 800 K]] **Table [12]:** Literature validation of predicted zT and S against
-435,12,12,EXCLUDED:XREF,,,,and S against measured values. [[PENDING: NA12: Table [12]]] ## 4.6 Metrics and validation protocols reported in
-437,4.6,4.6,EXCLUDED:SECTION,,,,inst measured values. [[PENDING: NA12: Table 12]] ## [4.6] Metrics and validation protocols reported in the liter
-439,1,1,EXCLUDED:XREF,,,,validation protocols reported in the literature Table [1] lists the metric and the validation protocol that each
-439,2,2,EXCLUDED:NOTATION,,,,"lues are not comparable with one another or with the R^[2]^ values of this work, and no ranking is made. What Tab"
-439,1,1,EXCLUDED:XREF,,,,"alues of this work, and no ranking is made. What Table [1] shows is the protocol: row-level splits and k-fold CV"
-439,2,2,EXCLUDED:NOTATION,,,,"same model, features and frozen hyperparameters give R^[2]^ values that differ by 0.134 t"
-439,0.134,0.134,GENERATED,gap_lo,,4.6 Metrics and validation protocols reported in the literature,ameters give R^2^ values that differ by [0.134] to 0.213 between rand
-439,0.213,0.213,GENERATED,gap_hi,,4.6 Metrics and validation protocols reported in the literature,fer by 0.134 to [0.213] between random and chemistry-cluster validati
-439,6,6,EXCLUDED:XREF,,,,"between random and chemistry-cluster validation (Table [6]), and chemistry-cluster values are higher than the ext"
-439,8,8,EXCLUDED:XREF,,,,ster values are higher than the external values (Table [8]); a metric reported without its protocol therefore can
-440,4.7,4.7,EXCLUDED:SECTION,,,,efore cannot be read as a measure of model quality. ## [4.7] Limitations Prediction of electrical conductivity is
-442,2,2,EXCLUDED:NOTATION,,,,uctivity is intrinsically limited (chemistry-cluster R^[2]^ = 0.702 ; ESTM stratum (b)
-442,0.702,0.702,GENERATED,chem_sigma,,4.7 Limitations,y limited (chemistry-cluster R^2^ = [0.702] ; ESTM stratum (b) R^2^ =
-442,2,2,EXCLUDED:NOTATION,,,,0.702 ; ESTM stratum (b) R^[2]^ = 0.275 ) because carrie
-442,0.275,0.275,GENERATED,estm_b_sigma,,4.7 Limitations,; ESTM stratum (b) R^2^ = [0.275] ) because carrier concentration depends on dop
-442,0.948,0.948,GENERATED,cl_acc,,4.7 Limitations,he carrier-type classifier is right for [0.948] of the held-out rows under chemistry-cluster
-442,775,775,GENERATED,na4_sparse_bin,,4.7 Limitations,"t temperature bin is the one at [775] K ( 3,173 zT row"
-442,"3,173",3173,GENERATED,na4_sparse_n,,4.7 Limitations,"775 K ( [3,173] zT rows) and the densest the one at"
-442,450,450,GENERATED,na4_dense_bin,,4.7 Limitations,"rows) and the densest the one at [450] K ( 9,115 zT rows"
-442,"9,115",9115,GENERATED,na4_dense_n,,4.7 Limitations,"450 K ( [9,115] zT rows), so predictions near the top of the"
-442,30,30,GENERATED,mp_f6,,4.7 Limitations,"he window are the least constrained. All [30] candidates of the main list, and"
-442,406,406,GENERATED,mp_tmax_all_800,,4.7 Limitations,"ndidates of the main list, and [406] of the 409 featu"
-442,409,409,GENERATED,mp_tmax_all,,4.7 Limitations,"406 of the [409] featurised compounds, reach their maximum pre"
-442,800,800,GENERATED,mp_tmax_main,,4.7 Limitations,"ach their maximum predicted zT at [800] K, the end of the grid and of the training wi"
-444,5,5,EXCLUDED:SECTION,,,,rial] would make the screening more decision-ready. # [5] Conclusions A composition-only machine learning frame
-446,"280,664",280664,GENERATED,n_clean,,5 Conclusions,"to screen lead-free perovskites, using [280,664] cleaned rows from Starrydata2 and"
-446,397,397,GENERATED,n_feat,,5 Conclusions,"cleaned rows from Starrydata2 and [397] MAGPIE, CBFV and temperature descriptors. The"
-448,5,5,UNCLASSIFIED,,,5 Conclusions,"ation methodology dominates reported accuracy. Random, [5]-fold and 10-fold CV give nearly identical, inflated R^"
-448,10,10,UNCLASSIFIED,,,5 Conclusions,"dology dominates reported accuracy. Random, 5-fold and [10]-fold CV give nearly identical, inflated R^2^ values; c"
-448,2,2,EXCLUDED:NOTATION,,,,"-fold and 10-fold CV give nearly identical, inflated R^[2]^ values; chemistry-cluster CV reduces R^2^ by"
-448,2,2,EXCLUDED:NOTATION,,,,", inflated R^2^ values; chemistry-cluster CV reduces R^[2]^ by 0.134 (*κ*) to"
-448,0.134,0.134,GENERATED,gap_lo,,5 Conclusions,s; chemistry-cluster CV reduces R^2^ by [0.134] (*κ*) to 0.213 (*σ*).
-448,0.213,0.213,GENERATED,gap_hi,,5 Conclusions,"0.134 (*κ*) to [0.213] (*σ*). (RQ2) - Under chemistry-cluster CV, t"
-450,2,2,EXCLUDED:NOTATION,,,,"mistry-cluster CV, the composition-only ceilings are R^[2]^ = 0.753 (S),"
-450,0.753,0.753,GENERATED,chem_S,,5 Conclusions,"he composition-only ceilings are R^2^ = [0.753] (S), 0.702 (*σ*),"
-450,0.702,0.702,GENERATED,chem_sigma,,5 Conclusions,"0.753 (S), [0.702] (*σ*), 0.809 (*κ*"
-450,0.809,0.809,GENERATED,chem_kappa,,5 Conclusions,"0.702 (*σ*), [0.809] (*κ*) and 0.746 (zT)"
-450,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,0.809 (*κ*) and [0.746] (zT). Tripling the descriptor set adds at mos
-450,0.010,0.01,GENERATED,abl_delta_max,,5 Conclusions,"the descriptor set adds at most [0.010] to R^2^. [[PENDING: NA2: whether XGBoost, Lig"
-450,2,2,EXCLUDED:NOTATION,,,,"adds at most 0.010 to R^[2]^. [[PENDING: NA2: whether XGBoost, LightGBM, random fo"
-452,2,2,EXCLUDED:NOTATION,,,,"lexity]] (RQ1) - External validation on ESTM lowers R^[2]^ further, most for chemistries absent from training (z"
-452,2,2,EXCLUDED:NOTATION,,,,"rther, most for chemistries absent from training (zT R^[2]^ = 0.498 , against"
-452,0.498,0.498,GENERATED,estm_b_zT,,5 Conclusions,"ries absent from training (zT R^2^ = [0.498] , against 0.746 inter"
-452,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,"0.498 , against [0.746] internally and 0.662"
-452,0.662,0.662,GENERATED,estm_a_zT,,5 Conclusions,0.746 internally and [0.662] for rows sharing no source publication with t
-452,2,2,EXCLUDED:NOTATION,,,,"ith training), while *σ* remains poorly predictable (R^[2]^ = 0.275 in stratum b)."
-452,0.275,0.275,GENERATED,estm_b_sigma,,5 Conclusions,emains poorly predictable (R^2^ = [0.275] in stratum b). Against DFT-computed Seebeck c
-452,0.50,0.5,GENERATED,jv_sign_all,,5 Conclusions,"th the regressor's sign (agreement [0.50] , chance, on entries that are mostly metals) a"
-452,0.23,0.23,GENERATED,jv_rho_all,,5 Conclusions,nk correlation of the magnitudes of [0.23] that is largely confined to chemistries seen
-454,2,2,EXCLUDED:NOTATION,,,,emistries seen in training. - Direct zT regression (R^[2]^ = 0.727 ) outperforms the
-454,0.727,0.727,GENERATED,dvd_direct,,5 Conclusions,ng. - Direct zT regression (R^2^ = [0.727] ) outperforms the component-wise route S^2^*σ*
-454,2,2,EXCLUDED:NOTATION,,,,0.727 ) outperforms the component-wise route S^[2]^*σ*T/*κ* (R^2^ = 0.540 ) b
-454,2,2,EXCLUDED:NOTATION,,,,) outperforms the component-wise route S^2^*σ*T/*κ* (R^[2]^ = 0.540 ) because compone
-454,0.540,0.54,GENERATED,dvd_derived,,5 Conclusions,nt-wise route S^2^*σ*T/*κ* (R^2^ = [0.540] ) because component errors compound; component
-456,9,9,EXCLUDED:XREF,,,,"rgest mean \|SHAP\| belongs to a CBFV statistic (Table [9]), with temperature ranked second for *κ*.. - The scre"
-458,315,315,GENERATED,mp_f4,,5 Conclusions,screening of the Materials Project gives [315] perovskite-type compounds and 3
-458,30,30,GENERATED,mp_f6,,5 Conclusions,"5 perovskite-type compounds and [30] lead-free narrow-gap candidates,"
-458,9,9,GENERATED,nv_main_seen,,5 Conclusions,"lead-free narrow-gap candidates, [9] in chemistry clusters seen in training and"
-458,21,21,GENERATED,nv_main_unseen,,5 Conclusions,"y clusters seen in training and [21] unseen; it is hypothesis generation, and agai"
-458,3,3,EXCLUDED:NOTATION,,,,"The pre-registered shortlist ( CsSnI~[3]~ , BaSnO~3~ ,"
-458,3,3,EXCLUDED:NOTATION,,,,"CsSnI~3~ , BaSnO~[3]~ , LaRhO~3~ ,"
-458,3,3,EXCLUDED:NOTATION,,,,"BaSnO~3~ , LaRhO~[3]~ , LaCoO~3~ ) consis"
-458,3,3,EXCLUDED:NOTATION,,,,"LaRhO~3~ , LaCoO~[3]~ ) consists of compounds with an existing ther"
-458,11,11,EXCLUDED:XREF,,,,recovers known materials; the full ranked list (Table [11]) is offered as hypotheses. Future work should (i) add
-460,0.5,0.5,EXCLUDED:NOTATION,,,,"g doped compositions to parent-compound structures (Bi~[0.5]~Sb~1.5~Te~3~ → Bi~2~Te~3~), or by using crystal graph"
-460,1.5,1.5,EXCLUDED:NOTATION,,,,"compositions to parent-compound structures (Bi~0.5~Sb~[1.5]~Te~3~ → Bi~2~Te~3~), or by using crystal graph network"
-460,3,3,EXCLUDED:NOTATION,,,,"itions to parent-compound structures (Bi~0.5~Sb~1.5~Te~[3]~ → Bi~2~Te~3~), or by using crystal graph networks suc"
-460,2,2,EXCLUDED:NOTATION,,,,"o parent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~[2]~Te~3~), or by using crystal graph networks such as CGC"
-460,3,3,EXCLUDED:NOTATION,,,,"ent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~2~Te~[3]~), or by using crystal graph networks such as CGCNN [@"
-460,19,19,GENERATED,lit_main_no,,5 Conclusions,e literature check found no study ( [19] of the 30 main-list ca
-460,30,30,GENERATED,mp_f6,,5 Conclusions,( 19 of the [30] main-list candidates) to calibrate the framew
-472,22,22,GENERATED,snapshot_date,,Data availability,uses one pinned snapshot (pulled [22] August 2026 ) archived with its SHA-256 hash;
-472,2026,2026,GENERATED,snapshot_date,,Data availability,inned snapshot (pulled 22 August [2026] ) archived with its SHA-256 hash; the Material
-504,8,8,EXCLUDED:XREF,,,,ross-validation (also coefficient of variation in Step [8]) | | MAGPIE | Materials-Agnostic Platform for Informat
-522,2,2,EXCLUDED:NOTATION,,,,lattice thermal conductivity | | PF | Power factor (S^[2]^*σ*) | | L | Lorenz number | | R^2^ | Coefficient of d
-524,2,2,EXCLUDED:NOTATION,,,,F | Power factor (S^2^*σ*) | | L | Lorenz number | | R^[2]^ | Coefficient of determination | | T | Absolute tempe
-528,3,3,EXCLUDED:NOTATION,,,,ergy above the convex hull | | E~g~ | Band gap | | ABX~[3]~ | General perovskite stoichiometry | # References
+422,10^4^,10^4,GENERATED,table 11: t11_30_sigma,,4.5 Virtual screening,91106) | 0.022 | metastable | 0.23 | 800 | −67 | 1.0 × [10^4^] | 3.19 | 0.04 | no evidence |
+422,3.19,3.19,GENERATED,table 11: t11_30_kappa,,4.5 Virtual screening,0.022 | metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | [3.19] | 0.04 | no evidence |
+422,0.04,0.04,GENERATED,table 11: t11_30_zT,,4.5 Virtual screening,| metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | 3.19 | [0.04] | no evidence |
+426,4,4,GENERATED,table 11b: sl_n,,4.5 Virtual screening,**Table 11b:** The [4] shortlist compounds with their thermal limits (sources
+426,600,600,GENERATED,table 11b: lim_secondary_T,,4.5 Virtual screening,"rature T), and the secondary view, the predicted zT at [600] K with the rank at 600 K next to the primary rank (max"
+426,600,600,GENERATED,table 11b: lim_secondary_T,,4.5 Virtual screening,"ndary view, the predicted zT at 600 K with the rank at [600] K next to the primary rank (maximum over the whole gri"
+428,600,600,GENERATED,table 11b: lim_secondary_T,,4.5 Virtual screening,"**Maximum zT within the limit** | **T (K)** | **zT at [600] K** | **Rank, primary** | **Rank, 600 K** | |---------"
+428,600,600,GENERATED,table 11b: lim_secondary_T,,4.5 Virtual screening,"(K)** | **zT at 600 K** | **Rank, primary** | **Rank, [600] K** | |-------------|--------------------|----------|-"
+430,3,3,EXCLUDED:NOTATION,,,,---------|---------|-----|-------|-----|-----| | CsSnI~[3]~ | melts at 724 K | 700 | 0.53 | 700 | 0.42 | 1 | 1 |
+430,724,724,GENERATED,table 11b: lim_1_text,,4.5 Virtual screening,-----|-----|-------|-----|-----| | CsSnI~3~ | melts at [724] K | 700 | 0.53 | 700 | 0.42 | 1 | 1 | | BaSnO~3~ | non
+430,700,700,GENERATED,table 11b: lim_1_range,,4.5 Virtual screening,---|-------|-----|-----| | CsSnI~3~ | melts at 724 K | [700] | 0.53 | 700 | 0.42 | 1 | 1 | | BaSnO~3~ | none found
+430,0.53,0.53,GENERATED,table 11b: lim_1_zt,,4.5 Virtual screening,-----|-----|-----| | CsSnI~3~ | melts at 724 K | 700 | [0.53] | 700 | 0.42 | 1 | 1 | | BaSnO~3~ | none found at or b
+430,700,700,GENERATED,table 11b: lim_1_zt_T,,4.5 Virtual screening,----|-----| | CsSnI~3~ | melts at 724 K | 700 | 0.53 | [700] | 0.42 | 1 | 1 | | BaSnO~3~ | none found at or below 8
+430,0.42,0.42,GENERATED,table 11b: lim_1_zt600,,4.5 Virtual screening,----| | CsSnI~3~ | melts at 724 K | 700 | 0.53 | 700 | [0.42] | 1 | 1 | | BaSnO~3~ | none found at or below 800 K |
+430,1,1,GENERATED,table 11b: lim_1_rank1,,4.5 Virtual screening,CsSnI~3~ | melts at 724 K | 700 | 0.53 | 700 | 0.42 | [1] | 1 | | BaSnO~3~ | none found at or below 800 K | 800
+430,1,1,GENERATED,table 11b: lim_1_rank2,,4.5 Virtual screening,nI~3~ | melts at 724 K | 700 | 0.53 | 700 | 0.42 | 1 | [1] | | BaSnO~3~ | none found at or below 800 K | 800 | 0.
+431,3,3,EXCLUDED:NOTATION,,,,s at 724 K | 700 | 0.53 | 700 | 0.42 | 1 | 1 | | BaSnO~[3]~ | none found at or below 800 K | 800 | 0.10 | 800 | 0
+431,800,800,GENERATED,table 11b: lim_2_text,,4.5 Virtual screening,0 | 0.42 | 1 | 1 | | BaSnO~3~ | none found at or below [800] K | 800 | 0.10 | 800 | 0.07 | 2 | 2 | | LaRhO~3~ | dec
+431,800,800,GENERATED,table 11b: lim_2_range,,4.5 Virtual screening,| 1 | 1 | | BaSnO~3~ | none found at or below 800 K | [800] | 0.10 | 800 | 0.07 | 2 | 2 | | LaRhO~3~ | decomposes
+431,0.10,0.1,GENERATED,table 11b: lim_2_zt,,4.5 Virtual screening,1 | | BaSnO~3~ | none found at or below 800 K | 800 | [0.10] | 800 | 0.07 | 2 | 2 | | LaRhO~3~ | decomposes at 1728
+431,800,800,GENERATED,table 11b: lim_2_zt_T,,4.5 Virtual screening,BaSnO~3~ | none found at or below 800 K | 800 | 0.10 | [800] | 0.07 | 2 | 2 | | LaRhO~3~ | decomposes at 1728 K in
+431,0.07,0.07,GENERATED,table 11b: lim_2_zt600,,4.5 Virtual screening,3~ | none found at or below 800 K | 800 | 0.10 | 800 | [0.07] | 2 | 2 | | LaRhO~3~ | decomposes at 1728 K in air (no
+431,2,2,GENERATED,table 11b: lim_2_rank1,,4.5 Virtual screening,ne found at or below 800 K | 800 | 0.10 | 800 | 0.07 | [2] | 2 | | LaRhO~3~ | decomposes at 1728 K in air (none a
+431,2,2,GENERATED,table 11b: lim_2_rank2,,4.5 Virtual screening,ound at or below 800 K | 800 | 0.10 | 800 | 0.07 | 2 | [2] | | LaRhO~3~ | decomposes at 1728 K in air (none at or
+432,3,3,EXCLUDED:NOTATION,,,,elow 800 K | 800 | 0.10 | 800 | 0.07 | 2 | 2 | | LaRhO~[3]~ | decomposes at 1728 K in air (none at or below 800 K
+432,1728,1728,GENERATED,table 11b: lim_3_text,,4.5 Virtual screening,0.10 | 800 | 0.07 | 2 | 2 | | LaRhO~3~ | decomposes at [1728] K in air (none at or below 800 K) | 800 | 0.05 | 800 |
+432,800,800,GENERATED,table 11b: lim_3_text,,4.5 Virtual screening,RhO~3~ | decomposes at 1728 K in air (none at or below [800] K) | 800 | 0.05 | 800 | 0.03 | 3 | 3 | | LaCoO~3~ | no
+432,800,800,GENERATED,table 11b: lim_3_range,,4.5 Virtual screening,decomposes at 1728 K in air (none at or below 800 K) | [800] | 0.05 | 800 | 0.03 | 3 | 3 | | LaCoO~3~ | none in air
+432,0.05,0.05,GENERATED,table 11b: lim_3_zt,,4.5 Virtual screening,oses at 1728 K in air (none at or below 800 K) | 800 | [0.05] | 800 | 0.03 | 3 | 3 | | LaCoO~3~ | none in air; reduc
+432,800,800,GENERATED,table 11b: lim_3_zt_T,,4.5 Virtual screening,1728 K in air (none at or below 800 K) | 800 | 0.05 | [800] | 0.03 | 3 | 3 | | LaCoO~3~ | none in air; reduced abo
+432,0.03,0.03,GENERATED,table 11b: lim_3_zt600,,4.5 Virtual screening,K in air (none at or below 800 K) | 800 | 0.05 | 800 | [0.03] | 3 | 3 | | LaCoO~3~ | none in air; reduced above 773
+432,3,3,GENERATED,table 11b: lim_3_rank1,,4.5 Virtual screening,r (none at or below 800 K) | 800 | 0.05 | 800 | 0.03 | [3] | 3 | | LaCoO~3~ | none in air; reduced above 773 K in
+432,3,3,GENERATED,table 11b: lim_3_rank2,,4.5 Virtual screening,one at or below 800 K) | 800 | 0.05 | 800 | 0.03 | 3 | [3] | | LaCoO~3~ | none in air; reduced above 773 K in a r
+433,3,3,EXCLUDED:NOTATION,,,,low 800 K) | 800 | 0.05 | 800 | 0.03 | 3 | 3 | | LaCoO~[3]~ | none in air; reduced above 773 K in a reducing atmo
+433,773,773,GENERATED,table 11b: lim_4_text,,4.5 Virtual screening,0.03 | 3 | 3 | | LaCoO~3~ | none in air; reduced above [773] K in a reducing atmosphere | 800 | 0.04 | 800 | 0.03 |
+433,800,800,GENERATED,table 11b: lim_4_range,,4.5 Virtual screening,in air; reduced above 773 K in a reducing atmosphere | [800] | 0.04 | 800 | 0.03 | 4 | 4 |
+433,0.04,0.04,GENERATED,table 11b: lim_4_zt,,4.5 Virtual screening,; reduced above 773 K in a reducing atmosphere | 800 | [0.04] | 800 | 0.03 | 4 | 4 | Physics
+433,800,800,GENERATED,table 11b: lim_4_zt_T,,4.5 Virtual screening,ed above 773 K in a reducing atmosphere | 800 | 0.04 | [800] | 0.03 | 4 | 4 | Physics check
+433,0.03,0.03,GENERATED,table 11b: lim_4_zt600,,4.5 Virtual screening,ve 773 K in a reducing atmosphere | 800 | 0.04 | 800 | [0.03] | 4 | 4 | Physics check of the
+433,4,4,GENERATED,table 11b: lim_4_rank1,,4.5 Virtual screening,K in a reducing atmosphere | 800 | 0.04 | 800 | 0.03 | [4] | 4 | Physics check of the sho
+433,4,4,GENERATED,table 11b: lim_4_rank2,,4.5 Virtual screening,a reducing atmosphere | 800 | 0.04 | 800 | 0.03 | 4 | [4] | Physics check of the shortli
+436,3,3,EXCLUDED:NOTATION,,,,only at temperatures where the compound exists. CsSnI~[3]~ melts at 451 °C (
+436,451,451,CITED,cssni3_melt_c,,4.5 Virtual screening,mpound exists. CsSnI~3~ melts at [451] °C ( 724 K) [@gao2
+436,724,724,GENERATED,cs_limit_K,,4.5 Virtual screening,"451 °C ( [724] K) [@gao2022defect; @lin2021inorganic], so it"
+436,700,700,GENERATED,cs_grid_max,,4.5 Virtual screening,"redictions are reported only up to [700] K, where the maximum is 0"
+436,0.53,0.53,GENERATED,cs_zt_limit,,4.5 Virtual screening,"0 K, where the maximum is [0.53] and not the 0.58"
+436,0.58,0.58,GENERATED,cs_zt_primary,,4.5 Virtual screening,"0.53 and not the [0.58] at 800 K, which"
+436,800,800,GENERATED,cs_primary_T,,4.5 Virtual screening,"0.58 at [800] K, which lies above the melting point (Tables"
+436,11,11,EXCLUDED:XREF,,,,"K, which lies above the melting point (Tables [11] and 11b). The cubic structure of its Materials Project"
+436,362,362,CITED,cssni3_t1,,4.5 Virtual screening,"he black phase is orthorhombic below [362] K, tetragonal up to 440"
+436,440,440,CITED,cssni3_t2,,4.5 Virtual screening,"362 K, tetragonal up to [440] K and cubic above [@monacelli2023first]. For"
+436,800,800,GENERATED,t_max,,4.5 Virtual screening,or decomposition temperature at or below [800] K was found: doped BaSnO~3~ films changed the
+436,3,3,EXCLUDED:NOTATION,,,,ow 800 K was found: doped BaSnO~[3]~ films changed their conductivity by less than
+436,2,2,CITED,bso_air_pct,,4.5 Virtual screening,ed their conductivity by less than [2] % in air at 530 °C
+436,530,530,CITED,bso_air_c,,4.5 Virtual screening,2 % in air at [530] °C [@lee2017transparent]; LaRhO~3~ decomposes
+436,3,3,EXCLUDED:NOTATION,,,,530 °C [@lee2017transparent]; LaRhO~[3]~ decomposes at a calculated 1728
+436,1728,1728,CITED,lro_air_k,,4.5 Virtual screening,LaRhO~3~ decomposes at a calculated [1728] K in air [@jacob1995phase]; LaCoO~3~ is stabl
+436,3,3,EXCLUDED:NOTATION,,,,1728 K in air [@jacob1995phase]; LaCoO~[3]~ is stable in air but is reduced in a reducing atmosph
+436,500,500,CITED,lco_red_c,,4.5 Virtual screening,"in a reducing atmosphere from about [500] °C [@radovic2008thermal], so its predictions"
+436,773,773,GENERATED,lco_cond_K,,4.5 Virtual screening,"8thermal], so its predictions above [773] K apply to an oxidising atmosphere only. As a"
+436,800,800,GENERATED,mp_tmax_main,,4.5 Virtual screening,use the primary maxima lie at the [800] K edge of the grid ( 4
+436,406,406,GENERATED,mp_tmax_all_800,,4.5 Virtual screening,0 K edge of the grid ( [406] of the 409 compo
+436,409,409,GENERATED,mp_tmax_all,,4.5 Virtual screening,"406 of the [409] compounds), the shortlist ranked by the predi"
+436,600,600,DESIGN,secondary_t,,4.5 Virtual screening,"list ranked by the predicted zT at [600] K is CsSnI~3~, BaSnO~3~, La"
+436,3,3,EXCLUDED:NOTATION,,,,"600 K is CsSnI~[3]~, BaSnO~3~, LaRhO~3~, LaCoO~3~ , the same orde"
+436,3,3,EXCLUDED:NOTATION,,,,"600 K is CsSnI~3~, BaSnO~[3]~, LaRhO~3~, LaCoO~3~ , the same order as the p"
+436,3,3,EXCLUDED:NOTATION,,,,"K is CsSnI~3~, BaSnO~3~, LaRhO~[3]~, LaCoO~3~ , the same order as the primary one"
+436,3,3,EXCLUDED:NOTATION,,,,"CsSnI~3~, BaSnO~3~, LaRhO~3~, LaCoO~[3]~ , the same order as the primary one (Table 11"
+436,21,21,GENERATED,nv_main_unseen,,4.5 Virtual screening,"far it can be read. First, the [21] candidates in chemistry clusters absent from"
+436,4.1,4.1,EXCLUDED:XREF,,,,"ich the chemistry-cluster and ESTM results of Sections [4.1] and 4.2 apply, and those results show a substantial lo"
+436,4.2,4.2,EXCLUDED:XREF,,,,"chemistry-cluster and ESTM results of Sections 4.1 and [4.2] apply, and those results show a substantial loss of ac"
+436,9,9,GENERATED,nv_main_seen,,4.5 Virtual screening,substantial loss of accuracy; the [9] in seen clusters are closer to the training d
+436,4.2,4.2,EXCLUDED:XREF,,,,"es available here, the comparison with JARVIS (Section [4.2]), shows at most marginal sign transfer and a negative"
+436,-0.08,0.08,GENERATED,jv_rho_semi,,4.5 Virtual screening,"the magnitude for semiconductors ( [-0.08] , interval -0.11"
+436,-0.11,0.11,GENERATED,jv_rho_semi_lo,,4.5 Virtual screening,"-0.08 , interval [-0.11] -- -0.05 ), and"
+436,-0.05,0.05,GENERATED,jv_rho_semi_hi,,4.5 Virtual screening,"-0.11 -- [-0.05] ), and the candidates are semiconductors by co"
+436,0.1,0.1,DESIGN,scr_gap_lo,,4.5 Virtual screening,are semiconductors by construction ( [0.1] eV or more in PBE). The ranking should theref
+438,2.3,2.3,GENERATED,na4_pt_share,,4.5 Virtual screening,"composition-only family rules are [2.3] % of the S rows, manganites"
+438,2.1,2.1,GENERATED,na4_mn_share,,4.5 Virtual screening,"% of the S rows, manganites [2.1] % and cobaltites 4.6"
+438,4.6,4.6,GENERATED,na4_co_share,,4.5 Virtual screening,2.1 % and cobaltites [4.6] %. The chemistry-cluster MAE of zT is
+438,0.126,0.126,GENERATED,mae_zT,,4.5 Virtual screening,"%. The chemistry-cluster MAE of zT is [0.126] , so predicted zT should be read with an uncer"
+440,4.5,4.5,EXCLUDED:SECTION,,,,should be read with an uncertainty of that order. ### [4.5].1 Literature validation [[PENDING: NA12: comparison o
+442,800,800,UNCLASSIFIED,,,4.5.1 Literature validation,blished measurements for perovskite oxides at or below [800] K]] **Table 12:** Literature validation of predicted
+444,12,12,EXCLUDED:XREF,,,,nts for perovskite oxides at or below 800 K]] **Table [12]:** Literature validation of predicted zT and S against
+446,12,12,EXCLUDED:XREF,,,,and S against measured values. [[PENDING: NA12: Table [12]]] ## 4.6 Metrics and validation protocols reported in
+448,4.6,4.6,EXCLUDED:SECTION,,,,inst measured values. [[PENDING: NA12: Table 12]] ## [4.6] Metrics and validation protocols reported in the liter
+450,1,1,EXCLUDED:XREF,,,,validation protocols reported in the literature Table [1] lists the metric and the validation protocol that each
+450,2,2,EXCLUDED:NOTATION,,,,"lues are not comparable with one another or with the R^[2]^ values of this work, and no ranking is made. What Tab"
+450,1,1,EXCLUDED:XREF,,,,"alues of this work, and no ranking is made. What Table [1] shows is the protocol: row-level splits and k-fold CV"
+450,2,2,EXCLUDED:NOTATION,,,,"same model, features and frozen hyperparameters give R^[2]^ values that differ by 0.134 t"
+450,0.134,0.134,GENERATED,gap_lo,,4.6 Metrics and validation protocols reported in the literature,ameters give R^2^ values that differ by [0.134] to 0.213 between rand
+450,0.213,0.213,GENERATED,gap_hi,,4.6 Metrics and validation protocols reported in the literature,fer by 0.134 to [0.213] between random and chemistry-cluster validati
+450,6,6,EXCLUDED:XREF,,,,"between random and chemistry-cluster validation (Table [6]), and chemistry-cluster values are higher than the ext"
+450,8,8,EXCLUDED:XREF,,,,ster values are higher than the external values (Table [8]); a metric reported without its protocol therefore can
+451,4.7,4.7,EXCLUDED:SECTION,,,,efore cannot be read as a measure of model quality. ## [4.7] Limitations Prediction of electrical conductivity is
+453,2,2,EXCLUDED:NOTATION,,,,uctivity is intrinsically limited (chemistry-cluster R^[2]^ = 0.702 ; ESTM stratum (b)
+453,0.702,0.702,GENERATED,chem_sigma,,4.7 Limitations,y limited (chemistry-cluster R^2^ = [0.702] ; ESTM stratum (b) R^2^ =
+453,2,2,EXCLUDED:NOTATION,,,,0.702 ; ESTM stratum (b) R^[2]^ = 0.275 ) because carrie
+453,0.275,0.275,GENERATED,estm_b_sigma,,4.7 Limitations,; ESTM stratum (b) R^2^ = [0.275] ) because carrier concentration depends on dop
+453,0.948,0.948,GENERATED,cl_acc,,4.7 Limitations,he carrier-type classifier is right for [0.948] of the held-out rows under chemistry-cluster
+453,775,775,GENERATED,na4_sparse_bin,,4.7 Limitations,"t temperature bin is the one at [775] K ( 3,173 zT row"
+453,"3,173",3173,GENERATED,na4_sparse_n,,4.7 Limitations,"775 K ( [3,173] zT rows) and the densest the one at"
+453,450,450,GENERATED,na4_dense_bin,,4.7 Limitations,"rows) and the densest the one at [450] K ( 9,115 zT rows"
+453,"9,115",9115,GENERATED,na4_dense_n,,4.7 Limitations,"450 K ( [9,115] zT rows), so predictions near the top of the"
+453,30,30,GENERATED,mp_f6,,4.7 Limitations,"he window are the least constrained. All [30] candidates of the main list, and"
+453,406,406,GENERATED,mp_tmax_all_800,,4.7 Limitations,"ndidates of the main list, and [406] of the 409 featu"
+453,409,409,GENERATED,mp_tmax_all,,4.7 Limitations,"406 of the [409] featurised compounds, reach their maximum pre"
+453,800,800,GENERATED,mp_tmax_main,,4.7 Limitations,"ach their maximum predicted zT at [800] K, the end of the grid and of the training wi"
+455,5,5,EXCLUDED:SECTION,,,,rial] would make the screening more decision-ready. # [5] Conclusions A composition-only machine learning frame
+457,"280,664",280664,GENERATED,n_clean,,5 Conclusions,"to screen lead-free perovskites, using [280,664] cleaned rows from Starrydata2 and"
+457,397,397,GENERATED,n_feat,,5 Conclusions,"cleaned rows from Starrydata2 and [397] MAGPIE, CBFV and temperature descriptors. The"
+459,5,5,UNCLASSIFIED,,,5 Conclusions,"ation methodology dominates reported accuracy. Random, [5]-fold and 10-fold CV give nearly identical, inflated R^"
+459,10,10,UNCLASSIFIED,,,5 Conclusions,"dology dominates reported accuracy. Random, 5-fold and [10]-fold CV give nearly identical, inflated R^2^ values; c"
+459,2,2,EXCLUDED:NOTATION,,,,"-fold and 10-fold CV give nearly identical, inflated R^[2]^ values; chemistry-cluster CV reduces R^2^ by"
+459,2,2,EXCLUDED:NOTATION,,,,", inflated R^2^ values; chemistry-cluster CV reduces R^[2]^ by 0.134 (*κ*) to"
+459,0.134,0.134,GENERATED,gap_lo,,5 Conclusions,s; chemistry-cluster CV reduces R^2^ by [0.134] (*κ*) to 0.213 (*σ*).
+459,0.213,0.213,GENERATED,gap_hi,,5 Conclusions,"0.134 (*κ*) to [0.213] (*σ*). (RQ2) - Under chemistry-cluster CV, t"
+461,2,2,EXCLUDED:NOTATION,,,,"mistry-cluster CV, the composition-only ceilings are R^[2]^ = 0.753 (S),"
+461,0.753,0.753,GENERATED,chem_S,,5 Conclusions,"he composition-only ceilings are R^2^ = [0.753] (S), 0.702 (*σ*),"
+461,0.702,0.702,GENERATED,chem_sigma,,5 Conclusions,"0.753 (S), [0.702] (*σ*), 0.809 (*κ*"
+461,0.809,0.809,GENERATED,chem_kappa,,5 Conclusions,"0.702 (*σ*), [0.809] (*κ*) and 0.746 (zT)"
+461,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,0.809 (*κ*) and [0.746] (zT). Tripling the descriptor set adds at mos
+461,0.010,0.01,GENERATED,abl_delta_max,,5 Conclusions,"the descriptor set adds at most [0.010] to R^2^. [[PENDING: NA2: whether XGBoost, Lig"
+461,2,2,EXCLUDED:NOTATION,,,,"adds at most 0.010 to R^[2]^. [[PENDING: NA2: whether XGBoost, LightGBM, random fo"
+463,2,2,EXCLUDED:NOTATION,,,,"lexity]] (RQ1) - External validation on ESTM lowers R^[2]^ further, most for chemistries absent from training (z"
+463,2,2,EXCLUDED:NOTATION,,,,"rther, most for chemistries absent from training (zT R^[2]^ = 0.498 , against"
+463,0.498,0.498,GENERATED,estm_b_zT,,5 Conclusions,"ries absent from training (zT R^2^ = [0.498] , against 0.746 inter"
+463,0.746,0.746,GENERATED,chem_zT,,5 Conclusions,"0.498 , against [0.746] internally and 0.662"
+463,0.662,0.662,GENERATED,estm_a_zT,,5 Conclusions,0.746 internally and [0.662] for rows sharing no source publication with t
+463,2,2,EXCLUDED:NOTATION,,,,"ith training), while *σ* remains poorly predictable (R^[2]^ = 0.275 in stratum b)."
+463,0.275,0.275,GENERATED,estm_b_sigma,,5 Conclusions,emains poorly predictable (R^2^ = [0.275] in stratum b). Against DFT-computed Seebeck c
+463,0.50,0.5,GENERATED,jv_sign_all,,5 Conclusions,"th the regressor's sign (agreement [0.50] , chance, on entries that are mostly metals) a"
+463,0.23,0.23,GENERATED,jv_rho_all,,5 Conclusions,nk correlation of the magnitudes of [0.23] that is largely confined to chemistries seen
+465,2,2,EXCLUDED:NOTATION,,,,emistries seen in training. - Direct zT regression (R^[2]^ = 0.727 ) outperforms the
+465,0.727,0.727,GENERATED,dvd_direct,,5 Conclusions,ng. - Direct zT regression (R^2^ = [0.727] ) outperforms the component-wise route S^2^*σ*
+465,2,2,EXCLUDED:NOTATION,,,,0.727 ) outperforms the component-wise route S^[2]^*σ*T/*κ* (R^2^ = 0.540 ) b
+465,2,2,EXCLUDED:NOTATION,,,,) outperforms the component-wise route S^2^*σ*T/*κ* (R^[2]^ = 0.540 ) because compone
+465,0.540,0.54,GENERATED,dvd_derived,,5 Conclusions,nt-wise route S^2^*σ*T/*κ* (R^2^ = [0.540] ) because component errors compound; component
+467,9,9,EXCLUDED:XREF,,,,"rgest mean \|SHAP\| belongs to a CBFV statistic (Table [9]), with temperature ranked second for *κ*.. - The scre"
+469,315,315,GENERATED,mp_f4,,5 Conclusions,screening of the Materials Project gives [315] perovskite-type compounds and 3
+469,30,30,GENERATED,mp_f6,,5 Conclusions,"5 perovskite-type compounds and [30] lead-free narrow-gap candidates,"
+469,9,9,GENERATED,nv_main_seen,,5 Conclusions,"lead-free narrow-gap candidates, [9] in chemistry clusters seen in training and"
+469,21,21,GENERATED,nv_main_unseen,,5 Conclusions,"y clusters seen in training and [21] unseen; it is hypothesis generation, and agai"
+469,3,3,EXCLUDED:NOTATION,,,,"The pre-registered shortlist ( CsSnI~[3]~ , BaSnO~3~ ,"
+469,3,3,EXCLUDED:NOTATION,,,,"CsSnI~3~ , BaSnO~[3]~ , LaRhO~3~ ,"
+469,3,3,EXCLUDED:NOTATION,,,,"BaSnO~3~ , LaRhO~[3]~ , LaCoO~3~ ) consis"
+469,3,3,EXCLUDED:NOTATION,,,,"LaRhO~3~ , LaCoO~[3]~ ) consists of compounds with an existing ther"
+469,11,11,EXCLUDED:XREF,,,,recovers known materials; the full ranked list (Table [11]) is offered as hypotheses. Future work should (i) add
+471,0.5,0.5,EXCLUDED:NOTATION,,,,"g doped compositions to parent-compound structures (Bi~[0.5]~Sb~1.5~Te~3~ → Bi~2~Te~3~), or by using crystal graph"
+471,1.5,1.5,EXCLUDED:NOTATION,,,,"compositions to parent-compound structures (Bi~0.5~Sb~[1.5]~Te~3~ → Bi~2~Te~3~), or by using crystal graph network"
+471,3,3,EXCLUDED:NOTATION,,,,"itions to parent-compound structures (Bi~0.5~Sb~1.5~Te~[3]~ → Bi~2~Te~3~), or by using crystal graph networks suc"
+471,2,2,EXCLUDED:NOTATION,,,,"o parent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~[2]~Te~3~), or by using crystal graph networks such as CGC"
+471,3,3,EXCLUDED:NOTATION,,,,"ent-compound structures (Bi~0.5~Sb~1.5~Te~3~ → Bi~2~Te~[3]~), or by using crystal graph networks such as CGCNN [@"
+471,19,19,GENERATED,lit_main_no,,5 Conclusions,e literature check found no study ( [19] of the 30 main-list ca
+471,30,30,GENERATED,mp_f6,,5 Conclusions,( 19 of the [30] main-list candidates) to calibrate the framew
+483,22,22,GENERATED,snapshot_date,,Data availability,uses one pinned snapshot (pulled [22] August 2026 ) archived with its SHA-256 hash;
+483,2026,2026,GENERATED,snapshot_date,,Data availability,inned snapshot (pulled 22 August [2026] ) archived with its SHA-256 hash; the Material
+515,8,8,EXCLUDED:XREF,,,,ross-validation (also coefficient of variation in Step [8]) | | MAGPIE | Materials-Agnostic Platform for Informat
+533,2,2,EXCLUDED:NOTATION,,,,lattice thermal conductivity | | PF | Power factor (S^[2]^*σ*) | | L | Lorenz number | | R^2^ | Coefficient of d
+535,2,2,EXCLUDED:NOTATION,,,,F | Power factor (S^2^*σ*) | | L | Lorenz number | | R^[2]^ | Coefficient of determination | | T | Absolute tempe
+539,3,3,EXCLUDED:NOTATION,,,,ergy above the convex hull | | E~g~ | Band gap | | ABX~[3]~ | General perovskite stoichiometry | # References

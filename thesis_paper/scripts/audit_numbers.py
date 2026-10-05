@@ -46,7 +46,7 @@ OUT_ROOT = REPO / "thesis_paper" / "reports" / "number_audit"
 MARKER = re.compile(r"<!--([vcd]):([\w.\-]+)-->(.*?)<!--/\1-->")
 KEEP_COMMENT = re.compile(r"<!--\s*(?:/?[vcd](?::|-->)|BEGIN TABLE|END TABLE)")
 COMMENT = re.compile(r"<!--.*?-->", re.S)
-BLOCK = re.compile(r"<!-- BEGIN TABLE (\d+) -->\n(.*?)<!-- END TABLE \1 -->", re.S)
+BLOCK = re.compile(r"<!-- BEGIN TABLE (\d+[a-z]?) -->\n(.*?)<!-- END TABLE \1 -->", re.S)
 UNIT_SUFFIX = {"K", "eV", "meV", "nm", "GPa", "MPa", "Å", "h", "s", "mV", "V", "W"}
 NL = "\n"
 
