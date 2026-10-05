@@ -1,0 +1,23 @@
+{
+  "inputs": {
+    "candidate_lists": {
+      "path": "thesis_paper/results/na11_candidate_novelty/20261004T185101/candidate_lists.csv",
+      "sha256": "d4747f83c2d9b32ecf6a0e80dea63a6605ec53f09d895df3f7dedc0f0eade7ef",
+      "bytes": 49105
+    }
+  },
+  "git_head": "cd727db903eed5d36515f8c5a5003ef57f3edb84",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/candidate_literature_search.py",
+  "script_sha256": "501c88aef5a31f73a0afd7efad5bb7be97da32892ee217cb5a7786cc89c11d91",
+  "python": "3.12.10",
+  "queries": [
+    "{f} thermoelectric",
+    "{f} Seebeck coefficient electrical conductivity",
+    "{f}",
+    "{f} thermopower power factor figure of merit first-principles"
+  ],
+  "results_per_query": 10,
+  "n_formulas": 60
+}
