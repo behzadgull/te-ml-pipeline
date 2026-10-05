@@ -1,0 +1,65 @@
+{
+ "files": {
+  "results.json": "d993b6aec67020445a63e5d1ea5f6ff23bcc0fed7fe67a394d01647606cf6bef",
+  "run_configs/session_01.json": "381fb080fadcd5db56ec8ea8e622120ae0c2a0650cf0ccbaa45bfbcee42d6d8e",
+  "status.json": "5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4",
+  "units/S_repeat0_fold0.json": "cde39df3901045a1d5cc622387de407d949f3fc614e47004c941bedd3068da7c",
+  "units/S_repeat0_fold0.npz": "da84f88cfe982b4a8c468848bfc8b8570bad84cd988df1670d5a12b76bacec2c",
+  "units/S_repeat0_fold1.json": "f41bb7252824ec728741f8f195e96d78b4f26ac4de1f0e9bb33251a30214e563",
+  "units/S_repeat0_fold1.npz": "b116c1a2434518598a79fecfe12d1a03823d633ab4b00f83afbcd2d05680d6f0",
+  "units/S_repeat0_fold2.json": "12c8550b5f7c98ca3e58a25f5759cb4c32ac6973edac063d1fe9f9bd6b22b159",
+  "units/S_repeat0_fold2.npz": "efaf19b5fc3d675377942488baf30b5b5efab0322f7d7ee785db48fda9b73cf2",
+  "units/S_repeat0_fold3.json": "d23abd546c85e1bf63dbb640f151d32aa889e31949d9a0af445f9635b2fc8a8e",
+  "units/S_repeat0_fold3.npz": "18b1636a596fa9e1ce63480ee8b77e563c1874accd64a8ed5c478e1ac7a822ca",
+  "units/S_repeat0_fold4.json": "73e291176d47293d688de7671f7ced1089b0bbab49a51431403ef8ed460e5aa1",
+  "units/S_repeat0_fold4.npz": "fbb7fe7077c91feb24d72cb0ee6c920d70924e9408ee643aba53a14d8fdf017d",
+  "units/kappa_repeat0_fold0.json": "6f20549d9f6ce74544e52c56467896e32bdaecdb6e542294c86d3178f7b55d5d",
+  "units/kappa_repeat0_fold0.npz": "a6a1c4f38f235103be59454a4ff54d2c86190583a87c560c7a07d6eb8cab1a90",
+  "units/kappa_repeat0_fold1.json": "9020b38b16159a641544198d13318613066c5e2212ce3212fcc4961875f22b31",
+  "units/kappa_repeat0_fold1.npz": "e4b2fb39d4e215158e8526f564c8197beb7aabdb60e67195fd50b8cc89c8a047",
+  "units/kappa_repeat0_fold2.json": "5202135e8c04153d9ef6c2123b62e98479f3b1b4730f139730e852c881372501",
+  "units/kappa_repeat0_fold2.npz": "5182868a040a6284ad90ef3b45ca1637fab918e5863f458c2b9a45b22fbe5df0",
+  "units/kappa_repeat0_fold3.json": "be8221b98b32f444be2e2ab4c9690b62ba14b33e845ecee1971e73e3f6f21d5f",
+  "units/kappa_repeat0_fold3.npz": "268472c5273fa716d625b086af088b84982d98b9c2ba92cb1b07c11d163c3bfe",
+  "units/kappa_repeat0_fold4.json": "262f5235e4926bb157ff2ce5d752b5587274b91ca908629ef28abe395a283ed0",
+  "units/kappa_repeat0_fold4.npz": "aa6904087215788eccd1c9f2ff3ab5a3ce8ece7fe684d326786c96d356e04163"
+ },
+ "identity": {
+  "analysis": "na3_rows",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+  "params": {
+   "targets": [
+    "S",
+    "kappa"
+   ],
+   "repeat": 0,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rows_per_fold": 1000,
+   "hyperparams": {
+    "S": {
+     "n_estimators": 500,
+     "max_depth": 10,
+     "learning_rate": 0.03183308682237681,
+     "subsample": 0.8969010059780653,
+     "colsample_bytree": 0.5061521655432422,
+     "min_child_weight": 4,
+     "reg_lambda": 0.6494186419907995,
+     "reg_alpha": 8.79300330033791
+    },
+    "kappa": {
+     "n_estimators": 350,
+     "max_depth": 9,
+     "learning_rate": 0.05741815501967946,
+     "subsample": 0.9052182073106718,
+     "colsample_bytree": 0.7081730343531392,
+     "min_child_weight": 6,
+     "reg_lambda": 0.05444122226792827,
+     "reg_alpha": 3.3513428043937066
+    }
+   }
+  }
+ }
+}

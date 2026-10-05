@@ -211,6 +211,7 @@ NA11_SENS = "thesis_paper/results/na11_sensitivity/20261004T135205"
 NA11_NOVELTY = "thesis_paper/results/na11_candidate_novelty/20261004T185101"
 NA3_A = "thesis_paper/results/na3_a/20261004T201639"
 NA3_B = "thesis_paper/results/na3_b/20261004T201433"
+NA3_ROWS = ("thesis_paper/results/na3_rows_a/20261005T102144", "thesis_paper/results/na3_rows_b/20261005T102144")
 NA2_TUNING = "thesis_paper/results/na2_random_forest_tuning/summary"
 NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"

@@ -1,0 +1,65 @@
+{
+ "files": {
+  "results.json": "9dd28fdca34294f2a4e991ca8441ff98b49baa6bd3223a441040718f281dd85c",
+  "run_configs/session_01.json": "721923b67847a3e290415b64b2694dd02988a9325aeb1df96f07ba84de4f20a3",
+  "status.json": "5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4",
+  "units/sigma_repeat0_fold0.json": "be86ac15d54e3f3aff0a91805940563dacf27442ddbe4439110e81b9f28bb3c4",
+  "units/sigma_repeat0_fold0.npz": "867982e25081ee94003d33e3135c0ebcf4d8599a80f293134245ea08e90f3ebd",
+  "units/sigma_repeat0_fold1.json": "12eabde1c18607c27bb19e403d96a36931f3f96410c7a84de1795fc84631060c",
+  "units/sigma_repeat0_fold1.npz": "f939026a153ffed1c6ab96ff84005a9517f00a5d4052e50c1c0efbda7ecd43de",
+  "units/sigma_repeat0_fold2.json": "0ad639ac9f67d178025420347857beb67edd05f3e7127fc4a1281daa6978fedd",
+  "units/sigma_repeat0_fold2.npz": "1672cf378e0a63aaaf77b2256200286d1877d57be3592fbdb428fced646711f1",
+  "units/sigma_repeat0_fold3.json": "2960229b94a614f49dc7431aa1a3b086cee227ab3d8ab45c8cd87673721aecff",
+  "units/sigma_repeat0_fold3.npz": "64a541ea90c32ba0d17c3b9936f7ec38fffbe4565f446ea799bc192d37b512c3",
+  "units/sigma_repeat0_fold4.json": "e8fee6c38c51421b95c8f5f738d17dc9ce5c7755d676d1d5cfaf6c9dfc393ff5",
+  "units/sigma_repeat0_fold4.npz": "c749df577abdbb031fbe6e3e5277f69f667d234e69c2c7252402a10c83c57968",
+  "units/zT_repeat0_fold0.json": "b2ee245ad385c22cb41b7725b23e0f67333e2ca88faa46f50531f25495c5b946",
+  "units/zT_repeat0_fold0.npz": "bcd1c69b07f32c00161f40d4f7447ec7f5b881b04a36e20396f72ce3e280e6cc",
+  "units/zT_repeat0_fold1.json": "08e6f80caea5320dca596330da45a1a4009d22563b5dd08d3e3c155b56a1b084",
+  "units/zT_repeat0_fold1.npz": "309e0d9c9d95762f13dbce75f8bffe720c4bd4796d4a1b429321d13ca6b3a57d",
+  "units/zT_repeat0_fold2.json": "77a6b81db31db8e147919aa56a40957901aeedf67630d9c9408619287a5006db",
+  "units/zT_repeat0_fold2.npz": "e82292cd7faccf39ee7fd05511292c155806c1e6724b6ff39da16c91a2680c2f",
+  "units/zT_repeat0_fold3.json": "518d9ea0aadff774adab9ecef685f553f3f0ed7afe787eb67b5d6274bb5b6d44",
+  "units/zT_repeat0_fold3.npz": "3d610ddd539cb3d20249abc85b2f185ebd8e84423324e4d3d2de2ba6587b8e90",
+  "units/zT_repeat0_fold4.json": "19ef413729fa1d16b027c98b9d95189ae7ef288d52219551ffe5acadbae2ff1e",
+  "units/zT_repeat0_fold4.npz": "6ac438f47871de5b9082313af30bb6b4bfc8e1f42cf4d4ead30841a1788f4b43"
+ },
+ "identity": {
+  "analysis": "na3_rows",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+  "params": {
+   "targets": [
+    "sigma",
+    "zT"
+   ],
+   "repeat": 0,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rows_per_fold": 1000,
+   "hyperparams": {
+    "sigma": {
+     "n_estimators": 550,
+     "max_depth": 10,
+     "learning_rate": 0.02669280098570686,
+     "subsample": 0.8676496872090056,
+     "colsample_bytree": 0.5166510752439176,
+     "min_child_weight": 4,
+     "reg_lambda": 0.8073661687820751,
+     "reg_alpha": 6.547909796510876
+    },
+    "zT": {
+     "n_estimators": 500,
+     "max_depth": 9,
+     "learning_rate": 0.021879194372117446,
+     "subsample": 0.6803687069914941,
+     "colsample_bytree": 0.6984141242996358,
+     "min_child_weight": 4,
+     "reg_lambda": 1.7133930619789375,
+     "reg_alpha": 0.050328646865956124
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "analysis": "na3_rows",
+ "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+ "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+ "params": {
+  "targets": [
+   "S",
+   "kappa"
+  ],
+  "repeat": 0,
+  "n_folds": 5,
+  "seed": 0,
+  "smoke": false,
+  "rows_per_fold": 1000,
+  "hyperparams": {
+   "S": {
+    "n_estimators": 500,
+    "max_depth": 10,
+    "learning_rate": 0.03183308682237681,
+    "subsample": 0.8969010059780653,
+    "colsample_bytree": 0.5061521655432422,
+    "min_child_weight": 4,
+    "reg_lambda": 0.6494186419907995,
+    "reg_alpha": 8.79300330033791
+   },
+   "kappa": {
+    "n_estimators": 350,
+    "max_depth": 9,
+    "learning_rate": 0.05741815501967946,
+    "subsample": 0.9052182073106718,
+    "colsample_bytree": 0.7081730343531392,
+    "min_child_weight": 6,
+    "reg_lambda": 0.05444122226792827,
+    "reg_alpha": 3.3513428043937066
+   }
+  }
+ },
+ "dataset_path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+ "dataset_bytes": 974854507,
+ "tree_clean": true,
+ "dirty_files": [],
+ "allow_dirty": false,
+ "expect_commit": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+ "smoke": false,
+ "device": "cuda",
+ "script": "thesis_paper/scripts/kaggle/na3_rows.py",
+ "script_sha256": "7a7804ea216b4353506e3b827301c3137bc2b4cf644afdc0ef1a9065a8e85d01",
+ "python": "3.12.3",
+ "started_utc": "2026-10-05T10:21:44Z",
+ "numpy": "1.26.4",
+ "pandas": "2.2.2",
+ "xgboost": "2.0.3",
+ "sklearn": "1.4.2",
+ "lightgbm": "4.3.0",
+ "optuna": "3.6.1",
+ "gpu": "Tesla T4, 580.178.04, 15360 MiB\nTesla T4, 580.178.04, 15360 MiB",
+ "finished_utc": "2026-10-05T10:24:56Z",
+ "elapsed_hours": 0.0607317117111111
+}

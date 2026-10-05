@@ -228,7 +228,7 @@ def main():
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--na3-rows-dirs", default=None, help="comma-separated NA3-rows bundle directories: draws Figure 11")
+    ap.add_argument("--na3-rows-dirs", default=None, help="comma-separated NA3-rows bundle directories (tests only; Figure 11 of the paper uses thesis_values.NA3_ROWS)")
     ap.add_argument("--only-fig11-to", default=None, help="write only Figure 11, to this path without extension (for tests)")
     args = ap.parse_args()
     if args.only_fig11_to:
@@ -240,9 +240,8 @@ def main():
     fig9_estm(FIG / "fig9_estm_external")
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
-    if args.na3_rows_dirs:
-        fig11_beeswarm(FIG / "fig11_shap_beeswarm", args.na3_rows_dirs.split(","))
-    print("Figures 6, 7, 9, 10 and 12 saved")
+    fig11_beeswarm(FIG / "fig11_shap_beeswarm", [REPO / d for d in tv.NA3_ROWS])
+    print("Figures 6, 7, 9, 10, 11 and 12 saved")
 
 
 if __name__ == "__main__":
