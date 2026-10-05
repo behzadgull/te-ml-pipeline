@@ -360,6 +360,7 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",
     f"{NA11_LIMITS}/shortlist_limits.csv", f"{NA11_LIMITS}/summary.json", f"{NA11_LIMITS}/run_config.json", NA11_LIMITS_CSV,
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
+    *[f"{r}/{f}" for r in NA3_ROWS for f in ("results.json", "status.json", "run_configs/session_01.json")],
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
 ]
 
@@ -562,6 +563,29 @@ def na11_limits_values():
     return v
 
 
+def na3_rows_values():
+    """NA3 rows (G4): the per-row SHAP bundles behind Figure 11: the number of rows and the direction of the temperature feature (Spearman rank correlation of its value with its SHAP value)."""
+    import numpy as np
+    from scipy import stats
+
+    v = {}
+    for run in NA3_ROWS:
+        st, res, cfg = pav._json(f"{run}/status.json"), pav._json(f"{run}/results.json"), pav._json(f"{run}/run_configs/session_01.json")
+        assert st["complete"] and st["accepted_as_result"] and cfg["tree_clean"] and not cfg["smoke"] and cfg["params"]["repeat"] == 0
+        cols = res["feature_columns"]
+        j = cols.index("temperature_bin")
+        for t, d in res["per_target"].items():
+            shap = np.vstack([np.load(REPO_ROOT / run / "units" / f"{t}_repeat0_fold{f}.npz")["shap"] for f in range(d["n_folds"])])
+            x = np.vstack([np.load(REPO_ROOT / run / "units" / f"{t}_repeat0_fold{f}.npz")["x"] for f in range(d["n_folds"])])
+            assert len(shap) == d["n_rows_saved"]
+            rho = float(stats.spearmanr(x[:, j], shap[:, j])[0])
+            v[f"bs_rho_{t}"] = f"{rho:.2f}".replace("-", "−")
+            v[f"bs_rho_{t}_sign"] = rho
+            v["bs_rows"], v["bs_per_fold"] = _n(d["n_rows_saved"]), _n(res["rows_per_fold"])
+    assert v["bs_rho_zT_sign"] > 0.5 and v["bs_rho_kappa_sign"] < -0.5 and v["bs_rho_sigma_sign"] < -0.5 and abs(v["bs_rho_S_sign"]) < 0.5  # prose
+    return {k: x for k, x in v.items() if not k.endswith("_sign")}
+
+
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
     followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
@@ -678,6 +702,7 @@ def new_analysis_values():
     v.update(na6_values())
     v.update(na11_values())
     v.update(na3_values())
+    v.update(na3_rows_values())
     v.update(na11_ranked_values())
     v.update(na11_limits_values())
     v.update(na2_design_values())

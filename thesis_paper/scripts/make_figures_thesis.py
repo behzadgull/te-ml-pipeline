@@ -31,6 +31,7 @@ import thesis_values as tv  # noqa: E402
 REPO = Path(__file__).resolve().parents[2]
 FIG = REPO / "thesis_paper" / "figures"
 T4 = pav.TARGETS
+BEESWARM_TOP_N = 10  # features per target in the beeswarm plots of Figure 11 (a presentation choice, docs/design_constants.csv D23)
 SHAP_TOP_N = 20  # features shown per target in Figure 10 (a presentation choice, docs/design_constants.csv D23)
 LABEL = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
 
@@ -192,7 +193,7 @@ def load_na3_rows(run_dirs):
     return out
 
 
-def fig11_beeswarm(out, run_dirs, top_n=10):
+def fig11_beeswarm(out, run_dirs, top_n=BEESWARM_TOP_N):
     """Beeswarm plots: SHAP value of every saved row for the top features of each target (NA3 rows, repeat 0, a seeded subsample of each test fold), coloured by the row's feature value (percentile rank)."""
     data = load_na3_rows(run_dirs)
     fs.apply()

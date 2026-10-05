@@ -64,6 +64,12 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv` | `9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv` | `501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/run_config.json` | `3d1194f535879cdcbc627a5dacca158c0a1e333d5cf1757970369b3928ace6d3` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_a/20261005T102144/results.json` | `d993b6aec67020445a63e5d1ea5f6ff23bcc0fed7fe67a394d01647606cf6bef` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_a/20261005T102144/status.json` | `5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_a/20261005T102144/run_configs/session_01.json` | `381fb080fadcd5db56ec8ea8e622120ae0c2a0650cf0ccbaa45bfbcee42d6d8e` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_b/20261005T102144/results.json` | `9dd28fdca34294f2a4e991ca8441ff98b49baa6bd3223a441040718f281dd85c` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_b/20261005T102144/status.json` | `5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4` | <!-- thesis analysis result -->
+| `thesis_paper/results/na3_rows_b/20261005T102144/run_configs/session_01.json` | `721923b67847a3e290415b64b2694dd02988a9325aeb1df96f07ba84de4f20a3` | <!-- thesis analysis result -->
 | `thesis_paper/results/na3_a/20261004T201639/results.json` | `c3deb7e1122a9a3ab45edd38c07ae86bad5b5c9ab4e4a563e26236d2f20660f1` | <!-- thesis analysis result -->
 | `thesis_paper/results/na3_a/20261004T201639/status.json` | `eaf442ca79c074c4cc1f5408480809e417207bd0b6c79d42a8a9246e3ca62cf8` | <!-- thesis analysis result -->
 | `thesis_paper/results/na3_a/20261004T201639/run_configs/session_01.json` | `927ff243ccb12a38cfc816b216dbf5471cc17310accf918ac7b17167046db90d` | <!-- thesis analysis result -->

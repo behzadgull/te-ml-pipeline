@@ -613,7 +613,10 @@ line,token,value,class,id,problem,section,context
 255,3.7,3.7,EXCLUDED:SECTION,,,,s of their target with the frozen hyperparameters. ## [3.7] Model explainability SHAP TreeExplainer [@lundberg201
 257,"20,000",20000,GENERATED,shap_rows,,3.7 Model explainability,"model on a fixed random subsample of [20,000] rows of each of the 25"
 257,25,25,GENERATED,shap_folds,,3.7 Model explainability,"20,000 rows of each of the [25] chemistry-cluster test folds (five repeats of"
-257,20,20,DESIGN,shap_top_n,,3.7 Model explainability,er feature) are created for the top [20] features per target; beeswarm plots need the
+257,20,20,DESIGN,shap_top_n,,3.7 Model explainability,er feature) are created for the top [20] features per target; the beeswarm plots use a
+257,"1,000",1000,GENERATED,bs_per_fold,,3.7 Model explainability,"folds and frozen hyperparameters): [1,000] seeded test rows per fold, 5,"
+257,"5,000",5000,GENERATED,bs_rows,,3.7 Model explainability,"00 seeded test rows per fold, [5,000] per model, and show the"
+257,10,10,DESIGN,beeswarm_top_n,,3.7 Model explainability,"per model, and show the [10] features with the largest mean \|SHAP\| among"
 259,4,4,EXCLUDED:SECTION,,,,ul relationships rather than spurious correlations. # [4] Results and discussion ## 4.1 Model performance ###
 261,4.1,4.1,EXCLUDED:SECTION,,,,spurious correlations. # 4 Results and discussion ## [4.1] Model performance ### 4.1.1 Chemistry-cluster cross-v
 263,4.1,4.1,EXCLUDED:SECTION,,,,Results and discussion ## 4.1 Model performance ### [4.1].1 Chemistry-cluster cross-validation Table 5 presents
@@ -914,8 +917,13 @@ line,token,value,class,id,problem,section,context
 336,6,6,GENERATED,shap_S_temp_rank,,4.3 Feature importance and explainability,"ure second. Temperature ranks [6] for S, 4"
 336,4,4,GENERATED,shap_sigma_temp_rank,,4.3 Feature importance and explainability,"6 for S, [4] for *σ*, 2"
 336,2,2,GENERATED,shap_kappa_temp_rank,,4.3 Feature importance and explainability,"4 for *σ*, [2] for *κ* and first for zT among the"
-336,20,20,DESIGN,shap_top_n,,4.3 Feature importance and explainability,for *κ* and first for zT among the [20] features of Fig. 10. These are attributions o
-336,10,10,EXCLUDED:XREF,,,,"ng the 20 features of Fig. [10]. These are attributions of the fitted models, not caus"
+336,20,20,DESIGN,shap_top_n,,4.3 Feature importance and explainability,for *κ* and first for zT among the [20] features of Fig. 10. In the beeswarm plots (F
+336,10,10,EXCLUDED:XREF,,,,ng the 20 features of Fig. [10]. In the beeswarm plots (Fig. 11) the SHAP value of the
+336,11,11,EXCLUDED:XREF,,,,features of Fig. 10. In the beeswarm plots (Fig. [11]) the SHAP value of the temperature feature rises with
+336,0.95,0.95,GENERATED,bs_rho_zT,,4.3 Feature importance and explainability,he feature value with its SHAP value [0.95] ) and falls with temperature for *κ* (
+336,−0.90,0.9,GENERATED,bs_rho_kappa,,4.3 Feature importance and explainability,d falls with temperature for *κ* ( [−0.90] ) and *σ* ( −0.79
+336,−0.79,0.79,GENERATED,bs_rho_sigma,,4.3 Feature importance and explainability,"−0.90 ) and *σ* ( [−0.79] ), and depends only weakly on it for S ("
+336,0.19,0.19,GENERATED,bs_rho_S,,4.3 Feature importance and explainability,and depends only weakly on it for S ( [0.19] ). These are attributions of the fitted models
 336,10,10,EXCLUDED:XREF,,,,left to the reader: no mechanism is claimed here. Fig. [10] shows the bar plots with the SD across folds.
 339,9,9,EXCLUDED:XREF,,,,h the SD across folds. **Table [9]:** Top five features per target by mean \|SHAP\| value
 339,25,25,GENERATED,table 9: shap_folds,,4.3 Feature importance and explainability,"features per target by mean \|SHAP\| value (mean over [25] chemistry-cluster test folds, each on 20,000 random te"
@@ -954,8 +962,11 @@ line,token,value,class,id,problem,section,context
 352,100%,100,EXCLUDED:LINK,,,,![Figure 10](../figures/fig10_shap_global.png){width=[100%]} **Figure 10:** SHAP global feature importance (top
 354,10,10,EXCLUDED:XREF,,,,./figures/fig10_shap_global.png){width=100%} **Figure [10]:** SHAP global feature importance (top
 354,20,20,DESIGN,shap_top_n,,4.3 Feature importance and explainability,"SHAP global feature importance (top [20] features) for (a) zT, (b) S, (c) *κ* and (d)"
-356,11,11,EXCLUDED:XREF,,,,"T, (b) S, (c) *κ* and (d) *σ*. [[PENDING: NA3: Figure [11], beeswarm plots: the G3 run saved only the mean absolu"
-358,11,11,EXCLUDED:XREF,,,,"feature and fold, not per-row SHAP values]] **Figure [11]:** SHAP beeswarm plots for (a) zT, (b) S, (c) *κ* and"
+356,11,11,EXCLUDED:XREF,,,,"res) for (a) zT, (b) S, (c) *κ* and (d) *σ*. ![Figure [11]](../figures/fig11_shap_beeswarm.png){width=100%} **Fi"
+356,100%,100,EXCLUDED:LINK,,,,"![Figure 11](../figures/fig11_shap_beeswarm.png){width=[100%]} **Figure 11:** SHAP beeswarm plots for (a) zT, (b) S"
+358,11,11,EXCLUDED:XREF,,,,"figures/fig11_shap_beeswarm.png){width=100%} **Figure [11]:** SHAP beeswarm plots for (a) zT, (b) S, (c) *κ* and"
+358,"5,000",5000,GENERATED,bs_rows,,4.3 Feature importance and explainability,"* and (d) *σ*: one point per test row ( [5,000] per model, first repeat of the chemistry-clus"
+358,10,10,EXCLUDED:XREF,,,,"among these rows, so their order can differ from Fig. [10], which averages all folds of all repeats. The two fea"
 360,12,12,EXCLUDED:XREF,,,,"on schemes contribute differently to the targets (Fig. [12]). In the zT model, temperature accounts for"
 360,20,20,GENERATED,shap_share_temperature,,4.3 Feature importance and explainability,"emperature accounts for [20] % of the mean \|SHAP\|, CBFV features for"
 360,53,53,GENERATED,shap_share_cbfv,,4.3 Feature importance and explainability,"an \|SHAP\|, CBFV features for [53] % and MAGPIE features for"

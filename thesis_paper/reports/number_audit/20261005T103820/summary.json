@@ -1,17 +1,17 @@
 {
-  "numbers_total": 1530,
+  "numbers_total": 1541,
   "by_class": {
     "CITED": 15,
-    "DESIGN": 39,
+    "DESIGN": 40,
     "EXCLUDED:ENUM": 9,
     "EXCLUDED:EQNUM": 9,
     "EXCLUDED:FRONT": 1,
-    "EXCLUDED:LINK": 7,
+    "EXCLUDED:LINK": 8,
     "EXCLUDED:MATH": 17,
     "EXCLUDED:NOTATION": 243,
     "EXCLUDED:SECTION": 34,
-    "EXCLUDED:XREF": 106,
-    "GENERATED": 939,
+    "EXCLUDED:XREF": 108,
+    "GENERATED": 946,
     "UNCLASSIFIED": 111
   },
   "unclassified_or_invalid": 111,
