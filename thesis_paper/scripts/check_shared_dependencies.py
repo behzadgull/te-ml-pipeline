@@ -87,7 +87,7 @@ def wanted():
     new = []
     for name in tv.NA_RUNS:
         new += [tv.na_path(name), f"{tv.NA_RUNS[name]}/run_config.json"]
-    paths = [*pav.ARTIFACT_PATHS, SOURCE_DOCX, *new, *tv.NA7_FILES, *shared_code()]
+    paths = [*pav.ARTIFACT_PATHS, SOURCE_DOCX, *new, *tv.NA7_FILES, *tv.EXTRA_FILES, *shared_code()]
     return [(p, sha256(p)) for p in dict.fromkeys(paths)]
 
 

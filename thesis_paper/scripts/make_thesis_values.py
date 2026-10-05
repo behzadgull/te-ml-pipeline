@@ -123,6 +123,31 @@ def table10(v):
     return "\n".join(lines)
 
 
+def table9(v):
+    """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds)."""
+    lines = [f"**Table 9:** Top five features per target by mean \\|SHAP\\| value (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows). "
+             "Units of the SHAP values are those of the target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*).", "",
+             "| **Rank** | **zT** | **S** | ***κ*** | ***σ*** |", "|----|-------------|-------------|-------------|-------------|"]
+    for i in range(1, 6):
+        lines.append(f"| {v[f't9_rank_{i}']} | {v[f't9_zT_{i}']} | {v[f't9_S_{i}']} | {v[f't9_kappa_{i}']} | {v[f't9_sigma_{i}']} |")
+    return "\n".join(lines)
+
+
+def table11(v):
+    """The ranked list of the main-list candidates, in two groups (chemistry cluster seen or not seen in the training data)."""
+    head = (f"**Table 11:** Ranked list of the {v['mp_f6']} lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group "
+            f"(chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over {v['t_min']}--{v['t_max']} K of the predicted zT, reached at the temperature "
+            "T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, "
+            "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). Studied before: a paper whose title or abstract reports a thermoelectric measurement "
+            "or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing).")
+    lines = [head, "", "| **Cluster** | **#** | **Compound** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |",
+             "|------|---|-----------|------|--------|-----|-----|------|--------|-----|-----|---------|"]
+    for k in range(1, 31):
+        lines.append(f"| {v[f't11_{k}_group']} | {v[f't11_{k}_rank']} | {v[f't11_{k}_name']} | {v[f't11_{k}_ehull']} | {v[f't11_{k}_stab']} | {v[f't11_{k}_gap']} | {v[f't11_{k}_T']} | "
+                     f"{v[f't11_{k}_S']} | {v[f't11_{k}_sigma']} | {v[f't11_{k}_kappa']} | {v[f't11_{k}_zT']} | {v[f't11_{k}_lit']} |")
+    return "\n".join(lines)
+
+
 LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation protocol); values as the studies report them, N/R = not reported
     ("Parse et al. [@parse2024predicting]", "XGBoost", "Starrydata2", "18.1K", "R^2^ (zT) 0.815", "5-fold CV"),
     ("Jia et al. [@jia2024dealing]", "GBDT", "Starrydata2", "92K", "R^2^ (zT) 0.89--0.90", "Composition-level CV"),
@@ -146,7 +171,7 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 10": table10}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11}
 
 
 def render(text):

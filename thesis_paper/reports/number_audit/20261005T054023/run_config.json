@@ -1,0 +1,28 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "fd91290547df4e65c41dde247cc009980f056be14cb44c07bb8b0f84f41c8372",
+      "bytes": 98008
+    }
+  },
+  "git_head": "22ceda67d94bd26446b3243621e9ad6a62edfe0b",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/check_shared_dependencies.py",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/figures/fig10_shap_global.pdf",
+    "thesis_paper/figures/fig10_shap_global.png",
+    "thesis_paper/figures/fig12_shap_shares.pdf",
+    "thesis_paper/figures/fig12_shap_shares.png"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "508fb3556f43962709333f257ed244b749774e961411fbaf6681f4f9d6c9e6f0",
+  "python": "3.12.10",
+  "registry_rows": 27
+}

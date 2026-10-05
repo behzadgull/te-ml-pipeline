@@ -17,6 +17,7 @@ sys.path.insert(0, str(HERE))
 import paper_a_values as pav  # noqa: E402
 
 T4 = pav.TARGETS
+REPO_ROOT = Path(__file__).resolve().parents[2]
 NAME = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
 
 
@@ -173,13 +174,7 @@ def values():
     weakest = min(("S", "sigma_log10", "kappa_log10"), key=lambda k: d[k]["pooled_r2"])
     assert weakest == "sigma_log10"
 
-    # ---- SHAP (zT; the five folds kept in the committed npz)
-    top = pav.get("shap.zT.top5")[0].split(" (zT,")[0].split("; ")
-    names = [re.sub(r"\s*\(([0-9.]+)\)$", "", x) for x in top]
-    vals = [re.search(r"\(([0-9.]+)\)$", x).group(1) for x in top]
-    for i, (nm, val) in enumerate(zip(names, vals), 1):
-        v[f"shap_zT_{i}"], v[f"shap_zT_{i}_val"] = nm, val
-    assert names[0] == "temperature_bin" and names[2].endswith("NdValence")  # prose: temperature first, NdValence third
+    # ---- SHAP: the zT top five and the shares come from NA3 (thesis_paper/results/na3_b, 25 folds); see na3_values()
     coarse = {g["group"]: g["chemistry_mean_share"] for g in j(pav.SHAP)["coarse_group_comparison"]}
     for k in ("magpie", "cbfv", "temperature"):
         v[f"shap_share_{k}"] = f"{100 * coarse[k]:.0f}"
@@ -213,6 +208,9 @@ NA6_SIGN = "thesis_paper/results/na6_sign_override/20261004T194811_same_folds"
 NA11_FILTER = "thesis_paper/results/na11/20261004T135055"
 NA11_SENS = "thesis_paper/results/na11_sensitivity/20261004T135205"
 NA11_NOVELTY = "thesis_paper/results/na11_candidate_novelty/20261004T185101"
+NA3_A = "thesis_paper/results/na3_a/20261004T201639"
+NA3_B = "thesis_paper/results/na3_b/20261004T201433"
+NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
 
@@ -342,6 +340,146 @@ def na11_values():
             "nv_all": _n(lists["all_perovskite_type"]["n"]), "nv_all_seen": _n(lists["all_perovskite_type"]["cluster_seen_any"]), "nv_all_unseen": _n(lists["all_perovskite_type"]["cluster_unseen_any"])}
 
 
+EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
+    f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
+    f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json",
+    f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
+    f"{NA11_NOVELTY}/counts.json", f"{NA11_NOVELTY}/run_config.json",
+    f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
+    *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
+]
+
+
+def na3_per_target():
+    """NA3 (G3): SHAP attribution of the four models under chemistry-cluster folds, S and kappa from the first bundle, sigma and zT from the second."""
+    out = {}
+    for run in (NA3_A, NA3_B):
+        st, r, cfg = pav._json(f"{run}/status.json"), pav._json(f"{run}/results.json"), pav._json(f"{run}/run_configs/session_01.json")
+        assert st["complete"] and st["accepted_as_result"] and st["units_done"] == st["units_total"] == 50
+        assert cfg["tree_clean"] and not cfg["allow_dirty"] and not cfg["smoke"] and cfg["params"]["arm"] == "chemistry" and cfg["params"]["shap_rows"] == 20000
+        assert cfg["params"]["n_repeats"] == 5 and cfg["params"]["n_folds"] == 5
+        for t, d in r["per_target"].items():
+            assert d["n_folds"] == 25 and len(d["top20"]) == 20
+            out[t] = {**d, "feature_columns": r["feature_columns"], "shap_rows": cfg["params"]["shap_rows"]}
+    assert set(out) == set(T4), sorted(out)
+    return out
+
+
+def shap_display_name(raw):
+    """A feature's column name as shown in the paper (the column name itself, in code font)."""
+    return raw
+
+
+def na3_values():
+    """NA3: top features and the MAGPIE / CBFV / temperature shares per target (all from the Kaggle G3 bundles)."""
+    na3 = na3_per_target()
+    v = {"shap_rows": _n(na3["zT"]["shap_rows"]), "shap_folds": _n(na3["zT"]["n_folds"])}
+    cols = na3["zT"]["feature_columns"]
+    n_mag, n_cbfv = sum(c.startswith("MagpieData") for c in cols), sum(c.startswith("CBFV_") for c in cols)
+    assert n_mag + n_cbfv + 1 == len(cols) == 397
+    v["shap_n_magpie"], v["shap_n_cbfv"] = _n(n_mag), _n(n_cbfv)
+    ratios = {}
+    for i in range(1, 6):
+        v[f"t9_rank_{i}"] = str(i)
+    for t in T4:
+        d = na3[t]
+        for i, f in enumerate(d["top20"][:5], 1):
+            v[f"t9_{t}_{i}"] = f"`{shap_display_name(f['feature'])}` ({f['mean_abs_shap']:.1f})" if t == "S" else f"`{shap_display_name(f['feature'])}` ({f['mean_abs_shap']:.3f})"
+        v[f"shap_{t}_1"], v[f"shap_{t}_2"], v[f"shap_{t}_3"] = (f"`{shap_display_name(f['feature'])}`" for f in d["top20"][:3])
+        v[f"shap_{t}_1_val"], v[f"shap_{t}_2_val"], v[f"shap_{t}_3_val"] = (f"{f['mean_abs_shap']:.1f}" if t == "S" else f"{f['mean_abs_shap']:.3f}" for f in d["top20"][:3])
+        names = [f["feature"] for f in d["top20"]]
+        v[f"shap_{t}_temp_rank"] = str(names.index("temperature_bin") + 1)
+        sh = d["share_by_group"]
+        for g in ("magpie", "cbfv", "temperature"):
+            v[f"shap_share_{t}_{g}"] = f"{100 * sh[g]['mean']:.0f}"
+        assert abs(sum(sh[g]["mean"] for g in sh) - 1) < 1e-4
+        assert max(sh, key=lambda g: sh[g]["mean"]) == "cbfv"  # prose: CBFV features carry the largest share in every model
+        ratios[t] = (sh["cbfv"]["mean"] / n_cbfv) / (sh["magpie"]["mean"] / n_mag)
+        v[f"shap_ratio_{t}"] = f"{ratios[t]:.2f}"
+    assert max(T4, key=lambda t: float(v[f"shap_share_{t}_temperature"])) == "zT" and min(T4, key=lambda t: float(v[f"shap_share_{t}_temperature"])) == "S"  # prose
+    v["shap_cbfv_min"], v["shap_cbfv_max"] = (f"{min(float(v[f'shap_share_{t}_cbfv']) for t in T4):.0f}", f"{max(float(v[f'shap_share_{t}_cbfv']) for t in T4):.0f}")
+    v["shap_mag_min"], v["shap_mag_max"] = (f"{min(float(v[f'shap_share_{t}_magpie']) for t in T4):.0f}", f"{max(float(v[f'shap_share_{t}_magpie']) for t in T4):.0f}")
+    v["shap_ratio_min"], v["shap_ratio_max"] = f"{min(ratios.values()):.2f}", f"{max(ratios.values()):.2f}"
+    # the zT result must equal the earlier committed zT run (same frozen hyperparameters, same folds): shares to the integer the paper printed, and the prose about temperature first and NdValence third
+    old = {g["group"]: g["chemistry_mean_share"] for g in pav._json(pav.SHAP)["coarse_group_comparison"]}
+    for g in ("magpie", "cbfv", "temperature"):
+        assert f"{100 * old[g]:.0f}" == v[f"shap_share_zT_{g}"], g
+    for tt in ("S", "sigma", "kappa"):  # prose of the conclusion: the largest mean |SHAP| of S, sigma and kappa belongs to a CBFV statistic; temperature is second for kappa
+        assert na3[tt]["top20"][0]["feature"].startswith("CBFV_"), tt
+    assert v["shap_kappa_temp_rank"] == "2"
+    assert na3["zT"]["top20"][0]["feature"] == "temperature_bin" and na3["zT"]["top20"][2]["feature"].endswith("NdValence")
+    return v
+
+
+def _formula_md(f):
+    """A formula with pandoc subscripts: BaZrS3 -> BaZrS~3~."""
+    return re.sub(r"(?<=[A-Za-z\)])(\d+)", r"~\1~", f)
+
+
+def _sigma_md(x):
+    """A conductivity as 'm x 10^k^'."""
+    e = int(math.floor(math.log10(x)))
+    return f"{x / 10 ** e:.1f} × 10^{e}^"
+
+
+def na11_ranked_values():
+    """NA11: the ranked list (Table 11), the shortlist of the pre-registered rule A and the sign-override fractions, from the committed ranked-list run."""
+    import pandas as pd
+
+    summ = pav._json(f"{NA11_RANKED}/summary.json")
+    cfg = pav._json(f"{NA11_RANKED}/run_config.json")
+    assert cfg["tree_clean"]
+    d = pd.read_csv(REPO_ROOT / NA11_RANKED / "ranked_main_30.csv")
+    sl = pd.read_csv(REPO_ROOT / NA11_RANKED / "shortlist.csv")
+    assert len(d) == 30 and set(sl["material_id"]) == {"mp-3163", "mp-614013", "mp-1288145", "mp-5163"}
+    d = d.sort_values(["cluster_seen_any", "rank_in_group_main_30"], ascending=[False, True]).reset_index(drop=True)
+    assert d["cluster_seen_any"].iloc[:9].all() and not d["cluster_seen_any"].iloc[9:].any()
+    v = {}
+    for i, r in d.iterrows():
+        k = i + 1
+        sgn = "−" if r["S_at_max"] < 0 else ""
+        v[f"t11_{k}_group"] = "seen" if r["cluster_seen_any"] else "unseen"
+        v[f"t11_{k}_rank"] = str(int(r["rank_in_group_main_30"]))
+        v[f"t11_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "")
+        v[f"t11_{k}_ehull"] = f"{r['ehull']:.3f}"
+        v[f"t11_{k}_stab"] = "on hull" if r["stability"] == "on the hull" else "metastable"
+        v[f"t11_{k}_gap"] = f"{r['gap']:.2f}"
+        v[f"t11_{k}_T"] = str(int(r["T_at_zT_max"]))
+        v[f"t11_{k}_S"] = f"{sgn}{abs(r['S_at_max']):.0f}"
+        v[f"t11_{k}_sigma"] = _sigma_md(r["sigma_at_max"])
+        v[f"t11_{k}_kappa"] = f"{r['kappa_at_max']:.2f}"
+        v[f"t11_{k}_zT"] = f"{r['zT_max']:.2f}"
+        v[f"t11_{k}_lit"] = "yes" if r["previously_studied_as_thermoelectric"] == "yes" else "no evidence"
+    ov, ovm, ovs = summ["override_all_409"], summ["override_main_30"], summ["override_shortlist"]
+    assert ovm["entries"] == 30 and ovm["predictions"] == 180
+    v.update({"ov_main_k": _n(ovm["predictions_overridden"]), "ov_main_n": _n(ovm["predictions"]), "ov_main_share": f"{100 * ovm['share_predictions_overridden']:.0f}",
+              "ov_main_entries": _n(ovm["entries_with_any_override"]), "ov_all_k": _n(ov["predictions_overridden"]), "ov_all_n": _n(ov["predictions"]),
+              "ov_all_share": f"{100 * ov['share_predictions_overridden']:.0f}", "ov_all_entries": _n(ov["entries_with_any_override"]), "ov_all_cands": _n(ov["entries"]),
+              "ov_sl_k": _n(ovs["predictions_overridden"])})
+    sl = sl.sort_values("shortlist_order")
+    for i, r in enumerate(sl.itertuples(), 1):
+        v[f"sl_{i}_name"] = _formula_md(r.formula)
+        v[f"sl_{i}_zT"] = f"{r.zT_max:.2f}"
+        v[f"sl_{i}_T"] = str(int(r.T_at_zT_max))
+        v[f"sl_{i}_ehull"] = f"{r.ehull:.3f}"
+    assert list(sl["formula"]) == summ["shortlist_order"]
+    v["sl_n"] = _n(len(sl))
+    assert all(v[f"sl_{i}_T"] == v["sl_1_T"] for i in range(1, 5)) and set(summ["main_30"]["T_at_max_counts"]) == {"800"}
+    v["mp_tmax_main"] = str(max(int(k) for k in summ["main_30"]["T_at_max_counts"]))
+    v["mp_tmax_all_800"] = _n(summ["all_409"]["T_at_max_counts"]["800"])
+    v["mp_tmax_all"] = _n(sum(summ["all_409"]["T_at_max_counts"].values()))
+    v["mp_main_on_hull"] = _n(summ["main_30"]["on_the_hull"])
+    v["mp_main_ptype"] = _n(summ["main_30"]["p_type_at_max"])
+    v["mp_zt_all_max"] = f"{summ['all_409']['zT_max_range'][1]:.2f}"
+    v["mp_zt_main_max"] = f"{summ['main_30']['zT_max_range'][1]:.2f}"
+    v["mp_zt_main_min"] = f"{summ['main_30']['zT_max_range'][0]:.2f}"
+    lit = d["previously_studied_as_thermoelectric"] == "yes"
+    v["lit_main_yes"], v["lit_main_no"] = _n(lit.sum()), _n((~lit).sum())
+    v["lit_main_seen_yes"] = _n((lit & d["cluster_seen_any"]).sum())
+    v["lit_main_unseen_yes"] = _n((lit & ~d["cluster_seen_any"]).sum())
+    return v
+
+
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
     followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
@@ -457,4 +595,6 @@ def new_analysis_values():
     v.update(na10_values())
     v.update(na6_values())
     v.update(na11_values())
+    v.update(na3_values())
+    v.update(na11_ranked_values())
     return v

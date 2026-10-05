@@ -248,7 +248,7 @@ CUDA_VISIBLE_DEVICES=1 $PYV $K/na3_shap.py --targets sigma,zT --out-dir /kaggle/
 PB=$!
 wait $PA; wait $PB
 echo "exit codes: final_b $(cat /kaggle/working/logs/rc_final_b), na3_a $(cat /kaggle/working/logs/rc_na3_a)"
-tail -3 /kaggle/working/logs/final_b.log /kaggle/working/logs/na3_a.log /kaggle/working/logs/na3_b.log
+for f in final_b na3_a na3_b; do echo "== $f"; tail -n 3 /kaggle/working/logs/$f.log; done
 cat /kaggle/working/final_b/status.json; echo; cat /kaggle/working/na3_a/status.json; echo; cat /kaggle/working/na3_b/status.json; echo
 ```
 

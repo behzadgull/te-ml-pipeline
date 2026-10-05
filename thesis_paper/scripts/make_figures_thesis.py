@@ -5,6 +5,8 @@ against the source (Paper A style: scripts/figstyle.py, 16 cm wide, 300 dpi, no 
   Figure 6  property distributions (NA4)
   Figure 7  predicted versus measured values (NA8)
   Figure 9  ESTM external validation
+  Figure 10 SHAP global importance (NA3)
+  Figure 12 SHAP shares of MAGPIE, CBFV and temperature (NA3)
 
 Usage (from the repository root):
     python thesis_paper/scripts/make_figures_thesis.py
@@ -29,6 +31,7 @@ import thesis_values as tv  # noqa: E402
 REPO = Path(__file__).resolve().parents[2]
 FIG = REPO / "thesis_paper" / "figures"
 T4 = pav.TARGETS
+SHAP_TOP_N = 20  # features shown per target in Figure 10 (a presentation choice, docs/design_constants.csv D23)
 LABEL = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
 
 
@@ -113,13 +116,67 @@ def fig7_parity(out):
     plt.close(fig)
 
 
+def fig10_shap(out):
+    """SHAP global importance: the 20 features with the largest mean |SHAP| per target (NA3, chemistry-cluster folds), coloured by descriptor scheme; error bars are the SD across folds."""
+    na3 = tv.na3_per_target()
+    fs.apply()
+    fig, axes = fs.new_figure("double", 15.0, 2, 2)
+    order = ("zT", "S", "kappa", "sigma")
+    units = {"zT": "mean |SHAP| (zT)", "S": "mean |SHAP| (µV K$^{-1}$)", "kappa": "mean |SHAP| (log$_{10}$)", "sigma": "mean |SHAP| (log$_{10}$)"}
+    colour = {"MagpieData": fs.OI["blue"], "CBFV_": fs.OI["orange"], "temperature_bin": fs.OI["green"]}
+    for ax, t, letter in zip(axes.ravel(), order, "abcd"):
+        top = na3[t]["top20"]
+        assert len(top) == SHAP_TOP_N and all(top[i]["mean_abs_shap"] >= top[i + 1]["mean_abs_shap"] for i in range(SHAP_TOP_N - 1))
+        y = np.arange(SHAP_TOP_N)[::-1]
+        cols = [next(c for k, c in colour.items() if f["feature"].startswith(k)) for f in top]
+        ax.barh(y, [f["mean_abs_shap"] for f in top], xerr=[f["fold_sd"] for f in top], color=cols, ec=fs.EDGE_GREY, lw=0.4, error_kw={"lw": 0.6, "capsize": 1.5})
+        ax.set_yticks(y)
+        labels = []
+        for f in top:
+            n = f["feature"].replace("MagpieData ", "").replace("CBFV_", "")
+            for junk in ("_(W/(m_K))_", "_(g/mL)", "(A^3)", "_(kJ/mol)_", "(kJ/mol)"):
+                n = n.replace(junk, "")
+            labels.append(n if len(n) <= 26 else n[:25] + "…")
+        ax.set_yticklabels(labels, fontsize=7)
+        ax.set_xlabel(units[t])
+        fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
+        fs.grid(ax, axis="x")
+    fs.legend_row(fig, [Patch(color=c, ec=fs.EDGE_GREY) for c in colour.values()], ["MAGPIE", "CBFV", "Temperature"])
+    fs.save(fig, str(out), expect_width_cm=16.0)
+    plt.close(fig)
+
+
+def fig12_shares(out):
+    """Share of the mean |SHAP| carried by MAGPIE, CBFV and temperature features, per model (NA3)."""
+    na3 = tv.na3_per_target()
+    fs.apply()
+    fig, ax = fs.new_figure("single", 6.5)
+    order = ("zT", "S", "kappa", "sigma")
+    names = {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}
+    bottom = np.zeros(len(order))
+    for g, c, lab in (("magpie", fs.OI["blue"], "MAGPIE"), ("cbfv", fs.OI["orange"], "CBFV"), ("temperature", fs.OI["green"], "Temperature")):
+        vals = np.array([na3[t]["share_by_group"][g]["mean"] for t in order])
+        ax.bar(np.arange(len(order)), vals, 0.6, bottom=bottom, color=c, ec=fs.EDGE_GREY, lw=0.5, label=lab)
+        bottom += vals
+    assert np.allclose(bottom, 1.0, atol=1e-3)
+    ax.set_xticks(np.arange(len(order)))
+    ax.set_xticklabels([names[t] for t in order])
+    ax.set_ylabel("Share of mean |SHAP|")
+    ax.set_ylim(0, 1)
+    fs.legend_row(fig, *ax.get_legend_handles_labels())
+    fs.save(fig, str(out), expect_width_cm=8.0)
+    plt.close(fig)
+
+
 def main():
     """Entry point."""
     FIG.mkdir(parents=True, exist_ok=True)
     fig6_distributions(FIG / "fig6_property_distributions")
     fig7_parity(FIG / "fig7_predicted_vs_measured")
     fig9_estm(FIG / "fig9_estm_external")
-    print("Figures 6, 7 and 9 saved")
+    fig10_shap(FIG / "fig10_shap_global")
+    fig12_shares(FIG / "fig12_shap_shares")
+    print("Figures 6, 7, 9, 10 and 12 saved")
 
 
 if __name__ == "__main__":
