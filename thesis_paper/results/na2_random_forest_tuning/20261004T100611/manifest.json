@@ -1,0 +1,41 @@
+{
+ "files": {
+  "run_configs/session_01.json": "43286e4d0c93a701015c6601e9b4b97284db1565e99c7da9175896817c0eaa7e",
+  "status.json": "30f7a947c24501866df00116fe44300ce1b977217e14f631e05f2601516960fb",
+  "units/tune_S_trial000.json": "99f000a4ccdb4ac13f67f2966fce297bc7cc6677b4951a414abcecb9f17ffb1f",
+  "units/tune_S_trial001.json": "7630e71d4a57e7b0d2b337221518a3e5c3a27e1d614e79d7ad93da2cbbc26550",
+  "units/tune_S_trial002.json": "55d028b001e40897d690135482f91ea353250a8ea6700f65eab5f2405ff8bfbf",
+  "units/tune_S_trial003.json": "61fcc460bb10736cf0044b94b038a933896aee386d99b0e801adb8a4241bdab2",
+  "units/tune_S_trial004.json": "31befd01b0d9152598ea8a690e19a2c5c860da7a8c521cbf160d874fc86069b8",
+  "units/tune_S_trial005.json": "4236ece941114562e7e5cc23ab5e5e04a81b342c58d08c713ce233e5adbadd7f",
+  "units/tune_S_trial006.json": "fde640b65dc5039a09a7a0d0e5c9a0a93e4214fd78838fc2cb076ebde792db45",
+  "units/tune_S_trial007.json": "1cd0ee0cabf016eef57642de0d2f03d62749717393e3d433cd65062b400aef8d",
+  "units/tune_S_trial008.json": "908025adb20e96ea66b19e82e3d5e5ca369558b5f3ae3b1a77cc10a33ede8a2e",
+  "units/tune_S_trial009.json": "796d0a8487effd59d72ffe4d1dca06ad62ca97d82b546c30ef9e3f63765ad814",
+  "units/tune_S_trial010.json": "42c42481eafb2f9ab593ccd54d7f02ffea2a6af9d4cea4946aa5366127baf409",
+  "units/tune_S_trial011.json": "dcb528c707d4a007e1b8257e8706dc014fb2cebb8c8be85b88018a7aeb08d351",
+  "units/tune_S_trial012.json": "eadb2aa399b12adad9f232d59967a6d571f948ca5f59e38b4e0662e3d797acd3",
+  "units/tune_S_trial013.json": "794fab17ca857773cb7bd180b65458c650c5e6a8e33ea2e1b2bde1e7592e0dbc",
+  "units/tune_S_trial014.json": "012c08f0c4c3416c28a42ca842a9bef5b63809293d271f5f60ecc352f546c0d6"
+ },
+ "identity": {
+  "analysis": "na2_random_forest",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5",
+  "params": {
+   "model": "random_forest",
+   "targets": [
+    "S",
+    "sigma",
+    "kappa",
+    "zT"
+   ],
+   "n_trials": 20,
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false
+  }
+ }
+}

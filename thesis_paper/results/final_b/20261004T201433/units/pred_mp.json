@@ -1,0 +1,17 @@
+{
+ "unit": "pred_mp",
+ "meta": {
+  "n_candidates": 409,
+  "temperatures": [
+   300,
+   400,
+   500,
+   600,
+   700,
+   800
+  ],
+  "file": "predictions_mp.csv",
+  "classifier_used": true
+ },
+ "has_arrays": false
+}

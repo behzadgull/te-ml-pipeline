@@ -1,0 +1,15 @@
+{
+ "unit": "kappa_repeat0_fold2",
+ "meta": {
+  "target": "kappa",
+  "repeat": 0,
+  "fold": 2,
+  "n_train": 96888,
+  "n_test": 24222,
+  "n_shap_rows": 20000,
+  "fold_r2": 0.8046395917614289,
+  "committed_fold_r2": 0.8046395917614289,
+  "seconds": 19.062860709000006
+ },
+ "has_arrays": true
+}

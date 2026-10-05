@@ -1,0 +1,144 @@
+{
+ "jarvis_S": {
+  "all": {
+   "n": 23218,
+   "r2_vs_p": -0.7346676041625846,
+   "r2_vs_n": -0.9674312485039012,
+   "r2_sign_matched": 0.26496538731964714,
+   "sign_agreement_with_p_value": 0.5172710827806013,
+   "mae_sign_matched": 120.12857082178712
+  },
+  "abx3_stoichiometry": {
+   "n": 1319,
+   "r2_vs_p": -1.456198179375646,
+   "r2_vs_n": -0.7530753967712391,
+   "r2_sign_matched": 0.2759571048327867,
+   "sign_agreement_with_p_value": 0.40106141015921154,
+   "mae_sign_matched": 124.87684809296485
+  },
+  "not_abx3_stoichiometry": {
+   "n": 21899,
+   "r2_vs_p": -0.693385033393549,
+   "r2_vs_n": -0.9872744432391611,
+   "r2_sign_matched": 0.2597673464577528,
+   "sign_agreement_with_p_value": 0.5242705146353714,
+   "mae_sign_matched": 119.84257704487113
+  },
+  "cluster_seen": {
+   "n": 1150,
+   "r2_vs_p": -1.9810490036283568,
+   "r2_vs_n": -2.531624651819674,
+   "r2_sign_matched": 0.2207317694276384,
+   "sign_agreement_with_p_value": 0.5234782608695652,
+   "mae_sign_matched": 113.57427656300862
+  },
+  "not_cluster_seen": {
+   "n": 22068,
+   "r2_vs_p": -0.6812844312676836,
+   "r2_vs_n": -0.8975611654652678,
+   "r2_sign_matched": 0.2666953219997237,
+   "sign_agreement_with_p_value": 0.5169476164582201,
+   "mae_sign_matched": 120.47012594221465
+  },
+  "composition_seen": {
+   "n": 885,
+   "r2_vs_p": -2.031425908205817,
+   "r2_vs_n": -2.6014973149999703,
+   "r2_sign_matched": 0.13708597897029973,
+   "sign_agreement_with_p_value": 0.5186440677966102,
+   "mae_sign_matched": 105.37022029737341
+  },
+  "not_composition_seen": {
+   "n": 22333,
+   "r2_vs_p": -0.6927848507845165,
+   "r2_vs_n": -0.9193715397582334,
+   "r2_sign_matched": 0.26810818734463726,
+   "sign_agreement_with_p_value": 0.5172166748757444,
+   "mae_sign_matched": 120.71340672444713
+  }
+ },
+ "units": [
+  "fit_S",
+  "fit_sigma",
+  "fit_kappa",
+  "fit_zT",
+  "pred_jarvis",
+  "pred_mp"
+ ],
+ "pred_jarvis": {
+  "n": 23218,
+  "scoring": {
+   "all": {
+    "n": 23218,
+    "r2_vs_p": -0.7346676041625846,
+    "r2_vs_n": -0.9674312485039012,
+    "r2_sign_matched": 0.26496538731964714,
+    "sign_agreement_with_p_value": 0.5172710827806013,
+    "mae_sign_matched": 120.12857082178712
+   },
+   "abx3_stoichiometry": {
+    "n": 1319,
+    "r2_vs_p": -1.456198179375646,
+    "r2_vs_n": -0.7530753967712391,
+    "r2_sign_matched": 0.2759571048327867,
+    "sign_agreement_with_p_value": 0.40106141015921154,
+    "mae_sign_matched": 124.87684809296485
+   },
+   "not_abx3_stoichiometry": {
+    "n": 21899,
+    "r2_vs_p": -0.693385033393549,
+    "r2_vs_n": -0.9872744432391611,
+    "r2_sign_matched": 0.2597673464577528,
+    "sign_agreement_with_p_value": 0.5242705146353714,
+    "mae_sign_matched": 119.84257704487113
+   },
+   "cluster_seen": {
+    "n": 1150,
+    "r2_vs_p": -1.9810490036283568,
+    "r2_vs_n": -2.531624651819674,
+    "r2_sign_matched": 0.2207317694276384,
+    "sign_agreement_with_p_value": 0.5234782608695652,
+    "mae_sign_matched": 113.57427656300862
+   },
+   "not_cluster_seen": {
+    "n": 22068,
+    "r2_vs_p": -0.6812844312676836,
+    "r2_vs_n": -0.8975611654652678,
+    "r2_sign_matched": 0.2666953219997237,
+    "sign_agreement_with_p_value": 0.5169476164582201,
+    "mae_sign_matched": 120.47012594221465
+   },
+   "composition_seen": {
+    "n": 885,
+    "r2_vs_p": -2.031425908205817,
+    "r2_vs_n": -2.6014973149999703,
+    "r2_sign_matched": 0.13708597897029973,
+    "sign_agreement_with_p_value": 0.5186440677966102,
+    "mae_sign_matched": 105.37022029737341
+   },
+   "not_composition_seen": {
+    "n": 22333,
+    "r2_vs_p": -0.6927848507845165,
+    "r2_vs_n": -0.9193715397582334,
+    "r2_sign_matched": 0.26810818734463726,
+    "sign_agreement_with_p_value": 0.5172166748757444,
+    "mae_sign_matched": 120.71340672444713
+   }
+  },
+  "file": "predictions_jarvis.csv",
+  "classifier_used": true
+ },
+ "pred_mp": {
+  "n_candidates": 409,
+  "temperatures": [
+   300,
+   400,
+   500,
+   600,
+   700,
+   800
+  ],
+  "file": "predictions_mp.csv",
+  "classifier_used": true
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "unit": "fit_zT",
+ "meta": {
+  "target": "zT",
+  "n_rows": 129419,
+  "scale": "linear",
+  "seconds": 20.897517635999975,
+  "model_file": "models/zT.json"
+ },
+ "has_arrays": false
+}

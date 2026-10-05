@@ -12,7 +12,11 @@ For each target (S, sigma, kappa, zT):
 Targets sigma and kappa are trained and scored in log10 space, as in Paper A. The first full-size unit of the rung is checked against the committed
 XGBoost fold sizes (n_test must match), which proves the fold assignment is the same.
 
-Smoke mode: ~3,000 rows, 2 trials, 1 repeat x 3 folds.
+--fixed-hyperparams (random_forest only; design change recorded in docs/decisions.md, 2026-10-05): no tuning. Every target uses the one pre-stated set RF_FIXED (the
+software defaults for regression of Probst, Wright & Boulesteix 2019: a third of the features per split, node size 5, 500 trees, bootstrap sampling); step 1 is skipped and
+each target has only its 25 rung units. The set is part of the run's identity.
+
+Smoke mode: ~3,000 rows, 2 trials, 1 repeat x 3 folds (with --fixed-hyperparams: 20 trees).
 
 Usage:
     python thesis_paper/scripts/kaggle/na2_trees.py --model random_forest --out-dir /kaggle/working/na2_rf --expect-commit <sha> --time-budget-hours 10.5
@@ -34,6 +38,7 @@ import harness as H  # noqa: E402
 from src import nested_cv as ncv  # noqa: E402
 
 LADDER_DIR = "results/ladder_regen_snapfix/20260917T150000"
+RF_FIXED = {"n_estimators": 500, "max_features": 1 / 3, "min_samples_leaf": 5, "max_depth": None, "min_samples_split": 2, "bootstrap": True}
 TARGETS = ("S", "sigma", "kappa", "zT")
 TARGET_ROWS = {"S": 185064, "sigma": 182755, "kappa": 121110, "zT": 129419}
 
@@ -99,16 +104,21 @@ def main():
     ap.add_argument("--n-repeats", type=int, default=5)
     ap.add_argument("--n-folds", type=int, default=5)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--fixed-hyperparams", action="store_true", help="random_forest only: no tuning, use RF_FIXED for every target")
     args = ap.parse_args()
+    if args.fixed_hyperparams and args.model != "random_forest":
+        raise SystemExit("--fixed-hyperparams is defined for random_forest only (LightGBM keeps its tuning)")
     if args.smoke:
         args.n_trials, args.n_repeats, args.n_folds, args.device = 2, 1, 3, "cpu"
+    fixed = dict(RF_FIXED, n_estimators=20) if (args.fixed_hyperparams and args.smoke) else (dict(RF_FIXED) if args.fixed_hyperparams else None)
     targets = [t for t in args.targets.split(",") if t]
     sess = H.Session(f"na2_{args.model}", args, {"model": args.model, "targets": targets, "n_trials": args.n_trials, "n_inner_folds": args.n_inner_folds,
-                                                 "n_repeats": args.n_repeats, "n_folds": args.n_folds, "seed": args.seed, "smoke": args.smoke})
+                                                 "n_repeats": args.n_repeats, "n_folds": args.n_folds, "seed": args.seed, "smoke": args.smoke,
+                                                 "fixed_hyperparams": fixed})
     df_all = H.load_frame(sess)
     units_total = 0
     for target in targets:
-        units_total += args.n_trials + 1 + args.n_repeats * args.n_folds
+        units_total += (0 if fixed else args.n_trials + 1) + args.n_repeats * args.n_folds
         df = df_all[df_all[target].notna()].reset_index(drop=True)
         if args.smoke:
             df = H.smoke_subset(df, ncv.GROUP_COL, 3000)
@@ -119,7 +129,12 @@ def main():
         y = ncv._transform_target(df[target].to_numpy(dtype=np.float64), target)
         groups = df[ncv.GROUP_COL].to_numpy()
         frozen_path = sess.out / "frozen" / f"{target}_{args.model}.json"
-        if frozen_path.exists() and sess.done(f"tune_{target}_best"):
+        if fixed:
+            frozen = {"target": target, "target_scale": ncv._target_scale(target), "model_type": args.model, "tuned": False, "n_trials": 0, "seed": args.seed, "device": "cpu",
+                      "n_rows": int(len(y)), "n_features": int(X.shape[1]), "inner_cv_r2": None, "best_params": fixed}
+            frozen_path.parent.mkdir(exist_ok=True)
+            frozen_path.write_text(json.dumps(frozen, indent=2), encoding="utf-8")
+        elif frozen_path.exists() and sess.done(f"tune_{target}_best"):
             frozen = json.loads(frozen_path.read_text(encoding="utf-8"))
         else:
             frozen = tune_target(sess, args.model, target, X, y, groups, args)

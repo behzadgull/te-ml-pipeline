@@ -75,6 +75,7 @@ def main():
     jobs = {
         "na7": ("na7_random_dvd.py", []),
         "na2_random_forest": ("na2_trees.py", ["--model", "random_forest", "--targets", "zT"]),
+        "na2_random_forest_fixed": ("na2_trees.py", ["--model", "random_forest", "--fixed-hyperparams", "--targets", "zT"]),
         "na2_lightgbm": ("na2_trees.py", ["--model", "lightgbm", "--targets", "zT"]),
         "na3": ("na3_shap.py", ["--targets", "zT,S"]),
         "na6": ("na6_classifier.py", []),
@@ -90,6 +91,11 @@ def main():
         check(f"{name}_manifest_matches_files", ok and manifest_ok(out))
         check(f"{name}_records_identity", ok and bool(cfg.get("dataset_sha256")) and bool(cfg.get("git_head")) and "tree_clean" in cfg,
               f"tree_clean={cfg.get('tree_clean')} allow_dirty={cfg.get('allow_dirty')}")
+
+    fixed_out = work / "na2_random_forest_fixed"
+    cfg_f = json.loads(next((fixed_out / "run_configs").glob("session_*.json")).read_text(encoding="utf-8")) if (fixed_out / "run_configs").exists() else {}
+    check("na2_fixed_rf_has_no_tuning_units_and_records_the_set", bool(cfg_f.get("params", {}).get("fixed_hyperparams")) and not list((fixed_out / "units").glob("tune_*")),
+          str(cfg_f.get("params", {}).get("fixed_hyperparams")))
 
     # 2. identity enforcement (the script must refuse before touching the data)
     ok, p, _ = run("na7_random_dvd.py", "--out-dir", str(work / "refuse1"), "--dataset", args.dataset, "--smoke", expect_fail=True)

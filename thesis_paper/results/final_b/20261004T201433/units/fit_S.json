@@ -1,0 +1,11 @@
+{
+ "unit": "fit_S",
+ "meta": {
+  "target": "S",
+  "n_rows": 185064,
+  "scale": "linear",
+  "seconds": 23.99908770799999,
+  "model_file": "models/S.json"
+ },
+ "has_arrays": false
+}

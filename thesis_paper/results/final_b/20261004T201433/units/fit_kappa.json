@@ -1,0 +1,11 @@
+{
+ "unit": "fit_kappa",
+ "meta": {
+  "target": "kappa",
+  "n_rows": 121110,
+  "scale": "log10",
+  "seconds": 14.702198379000038,
+  "model_file": "models/kappa.json"
+ },
+ "has_arrays": false
+}

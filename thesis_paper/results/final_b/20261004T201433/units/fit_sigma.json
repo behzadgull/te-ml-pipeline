@@ -1,0 +1,11 @@
+{
+ "unit": "fit_sigma",
+ "meta": {
+  "target": "sigma",
+  "n_rows": 182755,
+  "scale": "log10",
+  "seconds": 29.862969901000042,
+  "model_file": "models/sigma.json"
+ },
+ "has_arrays": false
+}

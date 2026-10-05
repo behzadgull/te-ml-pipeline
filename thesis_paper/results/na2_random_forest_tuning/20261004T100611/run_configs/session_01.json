@@ -1,0 +1,41 @@
+{
+ "analysis": "na2_random_forest",
+ "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+ "git_head": "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5",
+ "params": {
+  "model": "random_forest",
+  "targets": [
+   "S",
+   "sigma",
+   "kappa",
+   "zT"
+  ],
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0,
+  "smoke": false
+ },
+ "dataset_path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+ "dataset_bytes": 974854507,
+ "tree_clean": true,
+ "dirty_files": [],
+ "allow_dirty": false,
+ "expect_commit": "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5",
+ "smoke": false,
+ "device": "cpu",
+ "script": "thesis_paper/scripts/kaggle/na2_trees.py",
+ "script_sha256": "a5e17cd696f11362ca36437c6d8f6565106182315b44930b4495a4c089c1bc5b",
+ "python": "3.12.3",
+ "started_utc": "2026-10-04T10:06:11Z",
+ "numpy": "1.26.4",
+ "pandas": "2.2.2",
+ "xgboost": "2.0.3",
+ "sklearn": "1.4.2",
+ "lightgbm": "4.3.0",
+ "optuna": "3.6.1",
+ "gpu": null,
+ "finished_utc": "2026-10-04T20:48:03Z",
+ "elapsed_hours": 10.704299810914723
+}

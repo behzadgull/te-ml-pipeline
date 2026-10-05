@@ -1,0 +1,15 @@
+{
+ "unit": "S_repeat0_fold0",
+ "meta": {
+  "target": "S",
+  "repeat": 0,
+  "fold": 0,
+  "n_train": 148051,
+  "n_test": 37013,
+  "n_shap_rows": 20000,
+  "fold_r2": 0.7975013729388587,
+  "committed_fold_r2": 0.7975013729388587,
+  "seconds": 31.659004589000006
+ },
+ "has_arrays": true
+}

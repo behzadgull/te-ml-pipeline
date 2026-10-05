@@ -1,0 +1,77 @@
+{
+ "files": {
+  "models/S.json": "f94d4052ede66930592982d1c6f9762457508acf2723741f0597594d1cb5661c",
+  "models/kappa.json": "026b6e6b6080826246bb39bad27e0fabfc5b14f8b5cb8f61f619d8abf4234967",
+  "models/sigma.json": "b76f65aca7a90184d2e34c747f449ea38aa454e3680dd28ea67c516cb1f76684",
+  "models/zT.json": "cca78dd976a399e055f072ce47d15a36c6a45dabadc7e9b5cf0d0dfebe7fd426",
+  "predictions_jarvis.csv": "923c0306140f28e2076933942d2d268313159f5a911b27677c4d4c67fe9386da",
+  "predictions_mp.csv": "080416929fc31d0bf35a6a1e958e59504e8c25347c0febc9234177596620b54b",
+  "results.json": "babd17bf0ce4a570e57c0d0a4e01b34a68f4a1d701266c69cf089f9a8419e8cf",
+  "run_configs/session_01.json": "3021b83df9d2c260254f7b95dc764c6d7b174e66df8aa329508c9a9a6c57e46c",
+  "status.json": "808351f46270d20a3dfcb6b2df27860c4bb951a6abf05355898ed0c6745930d9",
+  "units/fit_S.json": "85923fe986771cae50267f75f71ed8ebbbd9d2e0247d04f290c92640e96097c0",
+  "units/fit_kappa.json": "435f26687c3073ae79b605e791ef76a96a1e7790d39911baa34a6e36180ae912",
+  "units/fit_sigma.json": "45f2442392b2e340ce6f07fb2b389cbca17471fcaca9204b24c279c2bb9087d0",
+  "units/fit_zT.json": "9460b1fc0117d8f0845b8c799d989b4c0f582c3edf7786e351450e16ee92d256",
+  "units/pred_jarvis.json": "cebde83db80771329007cc3c8a705a35e6366346e3ba6ae6f43c2f545e9ce5c1",
+  "units/pred_mp.json": "0e6ca1a4f1a4ee29c5492a15505073ecf607583f24b47fd07e937439fd066429"
+ },
+ "identity": {
+  "analysis": "na_final_models",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "33e9662838ba299a30bc8fccba0caee26d6bc435",
+  "params": {
+   "seed": 0,
+   "smoke": false,
+   "hyperparams": {
+    "S": {
+     "n_estimators": 500,
+     "max_depth": 10,
+     "learning_rate": 0.03183308682237681,
+     "subsample": 0.8969010059780653,
+     "colsample_bytree": 0.5061521655432422,
+     "min_child_weight": 4,
+     "reg_lambda": 0.6494186419907995,
+     "reg_alpha": 8.79300330033791
+    },
+    "sigma": {
+     "n_estimators": 550,
+     "max_depth": 10,
+     "learning_rate": 0.02669280098570686,
+     "subsample": 0.8676496872090056,
+     "colsample_bytree": 0.5166510752439176,
+     "min_child_weight": 4,
+     "reg_lambda": 0.8073661687820751,
+     "reg_alpha": 6.547909796510876
+    },
+    "kappa": {
+     "n_estimators": 350,
+     "max_depth": 9,
+     "learning_rate": 0.05741815501967946,
+     "subsample": 0.9052182073106718,
+     "colsample_bytree": 0.7081730343531392,
+     "min_child_weight": 6,
+     "reg_lambda": 0.05444122226792827,
+     "reg_alpha": 3.3513428043937066
+    },
+    "zT": {
+     "n_estimators": 500,
+     "max_depth": 9,
+     "learning_rate": 0.021879194372117446,
+     "subsample": 0.6803687069914941,
+     "colsample_bytree": 0.6984141242996358,
+     "min_child_weight": 4,
+     "reg_lambda": 1.7133930619789375,
+     "reg_alpha": 0.050328646865956124
+    }
+   },
+   "smear": {
+    "sigma": 1.381672625807156,
+    "kappa": 1.0715385748979032
+   },
+   "jarvis_sha256": "3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49",
+   "mp_sha256": "6386c09781667cc86a52d23dee1ee6f86ea899c39cea4d22f4ca10e143aec95c",
+   "classifier_sha256": "11b20af8138e815ae6aeb04cecd3c92ed62b4ddf48aa15f84a931d0a9b0363c7"
+  }
+ }
+}

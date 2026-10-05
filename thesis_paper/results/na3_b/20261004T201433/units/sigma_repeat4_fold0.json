@@ -1,0 +1,15 @@
+{
+ "unit": "sigma_repeat4_fold0",
+ "meta": {
+  "target": "sigma",
+  "repeat": 4,
+  "fold": 0,
+  "n_train": 146204,
+  "n_test": 36551,
+  "n_shap_rows": 20000,
+  "fold_r2": 0.74923181003138,
+  "committed_fold_r2": 0.74923181003138,
+  "seconds": 40.48011091299986
+ },
+ "has_arrays": true
+}

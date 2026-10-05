@@ -1,0 +1,17 @@
+{
+ "unit": "tune_S_trial004",
+ "meta": {
+  "state": "complete",
+  "value": 0.7376513499948087,
+  "params": {
+   "n_estimators": 600,
+   "max_depth": 25,
+   "min_samples_split": 10,
+   "min_samples_leaf": 8,
+   "max_features": 0.20644698328203992
+  },
+  "seconds": 2385.374593638,
+  "trial_number": 4
+ },
+ "has_arrays": false
+}

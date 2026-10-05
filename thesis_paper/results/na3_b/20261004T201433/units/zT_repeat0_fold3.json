@@ -1,0 +1,15 @@
+{
+ "unit": "zT_repeat0_fold3",
+ "meta": {
+  "target": "zT",
+  "repeat": 0,
+  "fold": 3,
+  "n_train": 103535,
+  "n_test": 25884,
+  "n_shap_rows": 20000,
+  "fold_r2": 0.6762659670003923,
+  "committed_fold_r2": 0.6762659670003923,
+  "seconds": 26.776573724999935
+ },
+ "has_arrays": true
+}
