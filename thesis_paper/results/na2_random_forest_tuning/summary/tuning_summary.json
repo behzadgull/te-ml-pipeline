@@ -1,0 +1,39 @@
+{
+  "run": "thesis_paper/results/na2_random_forest_tuning/20261004T100611",
+  "n_trials": 15,
+  "n_complete": 12,
+  "n_pruned": 3,
+  "inner_cv_r2_all_complete": {
+    "min": 0.3061210579201681,
+    "max": 0.7389834817101358,
+    "range": 0.43286242378996775,
+    "mean": 0.6990979205111394,
+    "sd": 0.12382654526061326
+  },
+  "deep_trees_max_depth_ge": 15,
+  "n_deep": 11,
+  "inner_cv_r2_deep": {
+    "min": 0.7252527739314342,
+    "max": 0.7389834817101358,
+    "range": 0.013730707778701667
+  },
+  "shallowest_trial": {
+    "max_depth": 3,
+    "inner_cv_r2": 0.3061210579201681
+  },
+  "best_trial": {
+    "trial": 13,
+    "inner_cv_r2": 0.7389834817101358,
+    "params": {
+      "n_estimators": 550,
+      "max_depth": 27,
+      "min_samples_split": 9,
+      "min_samples_leaf": 8,
+      "max_features": 0.29031885470133145
+    }
+  },
+  "trial_hours_total": 10.692013788780834,
+  "xgboost_S_frozen_inner_cv_r2": 0.7972220210002797,
+  "xgboost_S_n_trials": 20,
+  "gap_xgboost_minus_best_random_forest_trial": 0.05823853929014389
+}
