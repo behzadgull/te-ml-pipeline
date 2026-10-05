@@ -1,0 +1,108 @@
+{
+  "n_jobs": 4,
+  "trees_timed": [
+    4,
+    12
+  ],
+  "targets": {
+    "S": {
+      "n_rows": 185064,
+      "n_train_outer": 148051,
+      "rf_fixed_local_seconds_per_tree": 1.9238372874970082,
+      "rf_fixed_local_seconds_per_fit": 961.9186437485041,
+      "rf_fixed_kaggle_seconds_per_fit": 1579.67521708398,
+      "rf_fixed_kaggle_hours_for_25_fits": 10.969966785305415
+    },
+    "sigma": {
+      "n_rows": 182755,
+      "n_train_outer": 146204,
+      "rf_fixed_local_seconds_per_tree": 1.5474841374962125,
+      "rf_fixed_local_seconds_per_fit": 773.7420687481062,
+      "rf_fixed_kaggle_seconds_per_fit": 1270.649215877175,
+      "rf_fixed_kaggle_hours_for_25_fits": 8.823952888035938
+    },
+    "kappa": {
+      "n_rows": 121110,
+      "n_train_outer": 96888,
+      "rf_fixed_local_seconds_per_tree": 1.1422182749956846,
+      "rf_fixed_local_seconds_per_fit": 571.1091374978423,
+      "rf_fixed_kaggle_seconds_per_fit": 937.8827997759677,
+      "rf_fixed_kaggle_hours_for_25_fits": 6.513074998444219
+    },
+    "zT": {
+      "n_rows": 129419,
+      "n_train_outer": 103535,
+      "rf_fixed_local_seconds_per_tree": 1.2906584625015967,
+      "rf_fixed_local_seconds_per_fit": 645.3292312507983,
+      "rf_fixed_kaggle_seconds_per_fit": 1059.7679960689795,
+      "rf_fixed_kaggle_hours_for_25_fits": 7.359499972701246
+    }
+  },
+  "calibration": {
+    "trial": 12,
+    "params": {
+      "n_estimators": 600,
+      "max_depth": 30,
+      "min_samples_split": 8,
+      "min_samples_leaf": 4,
+      "max_features": 0.2806459769518766
+    },
+    "kaggle_trial_seconds": 3534.415806514,
+    "local_seconds_per_tree_fit_predict": 1.195681949990103,
+    "raw_seconds": [
+      5.562695200089365,
+      15.12815080001019
+    ],
+    "n_train_inner": 123376,
+    "local_estimated_trial_seconds": 2152.2275099821854,
+    "factor_kaggle_over_local": 1.6422129120277138
+  },
+  "lightgbm_S_local": {
+    "smallest": {
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 3,
+        "num_leaves": 15,
+        "learning_rate": 0.1,
+        "subsample": 0.5,
+        "colsample_bytree": 0.5,
+        "min_child_samples": 50,
+        "reg_lambda": 1.0,
+        "reg_alpha": 1.0
+      },
+      "local_inner_fit_seconds": 5.595858700107783,
+      "local_outer_fit_seconds": 8.755158700048923
+    },
+    "middle": {
+      "params": {
+        "n_estimators": 350,
+        "max_depth": 8,
+        "num_leaves": 63,
+        "learning_rate": 0.05,
+        "subsample": 0.75,
+        "colsample_bytree": 0.75,
+        "min_child_samples": 20,
+        "reg_lambda": 1.0,
+        "reg_alpha": 1.0
+      },
+      "local_inner_fit_seconds": 22.58689589984715,
+      "local_outer_fit_seconds": 26.366866399999708
+    },
+    "largest": {
+      "params": {
+        "n_estimators": 600,
+        "max_depth": 12,
+        "num_leaves": 255,
+        "learning_rate": 0.02,
+        "subsample": 1.0,
+        "colsample_bytree": 1.0,
+        "min_child_samples": 5,
+        "reg_lambda": 0.01,
+        "reg_alpha": 0.01
+      },
+      "local_inner_fit_seconds": 90.67957150004804,
+      "local_outer_fit_seconds": 102.76818990008906
+    }
+  },
+  "lightgbm_note": "local seconds with 4 threads, not calibrated: the LightGBM factor Kaggle / local was not measured; the random-forest factor is reported for reference"
+}

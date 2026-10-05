@@ -440,7 +440,7 @@ def na11_ranked_values():
         sgn = "−" if r["S_at_max"] < 0 else ""
         v[f"t11_{k}_group"] = "seen" if r["cluster_seen_any"] else "unseen"
         v[f"t11_{k}_rank"] = str(int(r["rank_in_group_main_30"]))
-        v[f"t11_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "")
+        v[f"t11_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "") + f" ({r['material_id']})"
         v[f"t11_{k}_ehull"] = f"{r['ehull']:.3f}"
         v[f"t11_{k}_stab"] = "on hull" if r["stability"] == "on the hull" else "metastable"
         v[f"t11_{k}_gap"] = f"{r['gap']:.2f}"

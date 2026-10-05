@@ -139,8 +139,8 @@ def table11(v):
             f"(chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over {v['t_min']}--{v['t_max']} K of the predicted zT, reached at the temperature "
             "T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, "
             "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). Studied before: a paper whose title or abstract reports a thermoelectric measurement "
-            "or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing).")
-    lines = [head, "", "| **Cluster** | **#** | **Compound** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |",
+            "or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing). The features are composition-only, so polymorphs of one compound (separate Materials Project entries) share their predictions.")
+    lines = [head, "", "| **Cluster** | **#** | **Compound (MP id)** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |",
              "|------|---|-----------|------|--------|-----|-----|------|--------|-----|-----|---------|"]
     for k in range(1, 31):
         lines.append(f"| {v[f't11_{k}_group']} | {v[f't11_{k}_rank']} | {v[f't11_{k}_name']} | {v[f't11_{k}_ehull']} | {v[f't11_{k}_stab']} | {v[f't11_{k}_gap']} | {v[f't11_{k}_T']} | "

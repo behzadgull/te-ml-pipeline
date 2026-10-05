@@ -384,40 +384,40 @@ so the quadratic dependence on S doubles its relative error, and the weakest com
 The screening starts from <!--v:mp_f0-->75,508<!--/v--> Materials Project compounds with E~hull~ ≤ <!--d:scr_ehull-->0.05<!--/d--> eV atom^−1^. <!--v:mp_f1-->26,355<!--/v--> have a PBE gap in the window, <!--v:mp_f2-->24,723<!--/v--> remain after the exclusion of lead and radioactive elements, and <!--v:mp_f3-->806<!--/v--> have ABX~3~ stoichiometry, of which <!--v:mp_anti-->30<!--/v--> are anti-perovskites and are set aside. The connectivity test keeps <!--v:mp_f4-->315<!--/v--> compounds as perovskite-type; a space-group rule alone would have kept <!--v:mp_sg_rule-->281<!--/v-->, <!--v:mp_sg_not_conn-->62<!--/v--> of which fail the connectivity test, while <!--v:mp_conn_not_sg-->118<!--/v--> perovskite-type compounds lie outside the space groups of the rule. <!--v:mp_f5-->32<!--/v--> have a gap of at most <!--d:scr_gap_cap-->0.6<!--/d--> eV, and <!--v:mp_f6-->30<!--/v--> remain after the exclusion of Tl, Hg, Cd, As and Be. Of these <!--v:mp_f6-->30<!--/v--> candidates, <!--v:nv_main_seen-->9<!--/v--> (BaSnO~3~, CaMnO~3~, CsSnI~3~ in two entries, LaCoO~3~, LaNiO~3~, LaRhO~3~ and YCoO~3~ in two entries) lie in chemistry clusters that occur in the training data and <!--v:nv_main_unseen-->21<!--/v--> do not; the two groups are reported separately because the models are validated only where the training data contain the chemistry. Of the <!--v:mp_f6-->30<!--/v--> candidates, <!--v:mp_surv-->12<!--/v--> remain at every tighter stability limit and are on the convex hull. Raising the stability limit to <!--d:scr_ehull_sens-->0.1<!--/d--> eV atom^−1^ keeps all of them and adds <!--v:nv_e10_added-->14<!--/v--> (<!--v:mp_s3_f6-->44<!--/v--> in total, all of the added ones in unseen clusters), widening the cap to <!--d:scr_gap_cap_sens-->0.9<!--/d--> eV adds <!--v:nv_cap_added-->19<!--/v--> (<!--v:nv_cap_added_seen-->4<!--/v--> in seen clusters), both together give <!--v:mp_s4_f6-->73<!--/v-->, and allowing Tl, As and Be adds <!--v:mp_tl-->2<!--/v-->. The list is therefore sensitive to the criteria, which are choices, and every candidate beyond the stable ones depends on them.
 
 <!-- BEGIN TABLE 11 -->
-**Table 11:** Ranked list of the 30 lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group (chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over 300--800 K of the predicted zT, reached at the temperature T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, *σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). Studied before: a paper whose title or abstract reports a thermoelectric measurement or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing).
+**Table 11:** Ranked list of the 30 lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group (chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over 300--800 K of the predicted zT, reached at the temperature T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, *σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). Studied before: a paper whose title or abstract reports a thermoelectric measurement or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing). The features are composition-only, so polymorphs of one compound (separate Materials Project entries) share their predictions.
 
-| **Cluster** | **#** | **Compound** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |
+| **Cluster** | **#** | **Compound (MP id)** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |
 |------|---|-----------|------|--------|-----|-----|------|--------|-----|-----|---------|
-| seen | 1 | CsSnI~3~ † | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes |
-| seen | 2 | CsSnI~3~ | 0.012 | metastable | 0.54 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes |
-| seen | 3 | BaSnO~3~ † | 0.000 | on hull | 0.37 | 800 | −74 | 3.0 × 10^4^ | 6.70 | 0.10 | yes |
-| seen | 4 | CaMnO~3~ | 0.035 | metastable | 0.47 | 800 | −289 | 2.8 × 10^3^ | 3.77 | 0.08 | yes |
-| seen | 5 | YCoO~3~ | 0.012 | metastable | 0.31 | 800 | 208 | 1.1 × 10^4^ | 2.99 | 0.05 | yes |
-| seen | 6 | YCoO~3~ | 0.015 | metastable | 0.11 | 800 | 208 | 1.1 × 10^4^ | 2.99 | 0.05 | yes |
-| seen | 7 | LaRhO~3~ † | 0.000 | on hull | 0.60 | 800 | 421 | 3.5 × 10^3^ | 1.81 | 0.05 | yes |
-| seen | 8 | LaNiO~3~ | 0.021 | metastable | 0.36 | 800 | −12 | 2.7 × 10^4^ | 2.86 | 0.04 | yes |
-| seen | 9 | LaCoO~3~ † | 0.000 | on hull | 0.28 | 800 | 35 | 3.8 × 10^4^ | 2.58 | 0.04 | yes |
-| unseen | 1 | RbGeI~3~ | 0.013 | metastable | 0.52 | 800 | 100 | 1.8 × 10^4^ | 0.69 | 0.61 | yes |
-| unseen | 2 | CsSnBr~3~ | 0.011 | metastable | 0.60 | 800 | 38 | 1.4 × 10^4^ | 0.67 | 0.57 | yes |
-| unseen | 3 | AlSiP~3~ | 0.007 | metastable | 0.29 | 800 | 165 | 1.3 × 10^4^ | 4.64 | 0.37 | no evidence |
-| unseen | 4 | RbEuCl~3~ | 0.038 | metastable | 0.45 | 800 | 17 | 3.6 × 10^4^ | 1.33 | 0.35 | no evidence |
-| unseen | 5 | SrBiO~3~ | 0.000 | on hull | 0.31 | 800 | −134 | 6.0 × 10^3^ | 2.19 | 0.21 | no evidence |
-| unseen | 6 | KCrF~3~ | 0.002 | metastable | 0.16 | 800 | 29 | 2.4 × 10^4^ | 2.19 | 0.21 | no evidence |
-| unseen | 7 | EuHfS~3~ | 0.000 | on hull | 0.13 | 800 | −68 | 3.1 × 10^4^ | 1.52 | 0.20 | no evidence |
-| unseen | 8 | KBiO~3~ | 0.000 | on hull | 0.49 | 800 | −83 | 1.3 × 10^4^ | 2.02 | 0.17 | no evidence |
-| unseen | 9 | EuZrS~3~ | 0.000 | on hull | 0.15 | 800 | −136 | 2.4 × 10^4^ | 1.25 | 0.16 | no evidence |
-| unseen | 10 | MnBO~3~ | 0.032 | metastable | 0.60 | 800 | −55 | 9.5 × 10^3^ | 2.31 | 0.14 | no evidence |
-| unseen | 11 | MnBO~3~ | 0.020 | metastable | 0.15 | 800 | −55 | 9.5 × 10^3^ | 2.31 | 0.14 | no evidence |
-| unseen | 12 | EuHfO~3~ | 0.000 | on hull | 0.60 | 800 | −131 | 5.1 × 10^4^ | 1.23 | 0.12 | no evidence |
-| unseen | 13 | CaVO~3~ | 0.001 | metastable | 0.43 | 800 | −82 | 8.1 × 10^4^ | 3.11 | 0.11 | no evidence |
-| unseen | 14 | CaVO~3~ | 0.009 | metastable | 0.26 | 800 | −82 | 8.1 × 10^4^ | 3.11 | 0.11 | no evidence |
-| unseen | 15 | LuVO~3~ | 0.000 | on hull | 0.26 | 800 | 27 | 2.2 × 10^4^ | 1.23 | 0.08 | no evidence |
-| unseen | 16 | EuZrO~3~ | 0.000 | on hull | 0.51 | 800 | −169 | 4.6 × 10^4^ | 0.90 | 0.07 | no evidence |
-| unseen | 17 | ErNiO~3~ | 0.002 | metastable | 0.37 | 800 | −15 | 1.4 × 10^4^ | 1.12 | 0.07 | no evidence |
-| unseen | 18 | NiBiO~3~ | 0.032 | metastable | 0.35 | 800 | 7 | 1.2 × 10^4^ | 1.95 | 0.06 | no evidence |
-| unseen | 19 | MnVO~3~ | 0.042 | metastable | 0.32 | 800 | −60 | 6.9 × 10^3^ | 3.63 | 0.06 | no evidence |
-| unseen | 20 | ErCrO~3~ | 0.000 | on hull | 0.25 | 800 | 88 | 1.1 × 10^4^ | 2.10 | 0.06 | no evidence |
-| unseen | 21 | MnSnO~3~ | 0.022 | metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | 3.19 | 0.04 | no evidence |
+| seen | 1 | CsSnI~3~ † (mp-614013) | 0.000 | on hull | 0.45 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes |
+| seen | 2 | CsSnI~3~ (mp-616378) | 0.012 | metastable | 0.54 | 800 | 144 | 9.2 × 10^3^ | 0.62 | 0.58 | yes |
+| seen | 3 | BaSnO~3~ † (mp-3163) | 0.000 | on hull | 0.37 | 800 | −74 | 3.0 × 10^4^ | 6.70 | 0.10 | yes |
+| seen | 4 | CaMnO~3~ (mp-19201) | 0.035 | metastable | 0.47 | 800 | −289 | 2.8 × 10^3^ | 3.77 | 0.08 | yes |
+| seen | 5 | YCoO~3~ (mp-1273178) | 0.012 | metastable | 0.31 | 800 | 208 | 1.1 × 10^4^ | 2.99 | 0.05 | yes |
+| seen | 6 | YCoO~3~ (mp-1288734) | 0.015 | metastable | 0.11 | 800 | 208 | 1.1 × 10^4^ | 2.99 | 0.05 | yes |
+| seen | 7 | LaRhO~3~ † (mp-5163) | 0.000 | on hull | 0.60 | 800 | 421 | 3.5 × 10^3^ | 1.81 | 0.05 | yes |
+| seen | 8 | LaNiO~3~ (mp-1284950) | 0.021 | metastable | 0.36 | 800 | −12 | 2.7 × 10^4^ | 2.86 | 0.04 | yes |
+| seen | 9 | LaCoO~3~ † (mp-1288145) | 0.000 | on hull | 0.28 | 800 | 35 | 3.8 × 10^4^ | 2.58 | 0.04 | yes |
+| unseen | 1 | RbGeI~3~ (mp-571458) | 0.013 | metastable | 0.52 | 800 | 100 | 1.8 × 10^4^ | 0.69 | 0.61 | yes |
+| unseen | 2 | CsSnBr~3~ (mp-27214) | 0.011 | metastable | 0.60 | 800 | 38 | 1.4 × 10^4^ | 0.67 | 0.57 | yes |
+| unseen | 3 | AlSiP~3~ (mp-5168) | 0.007 | metastable | 0.29 | 800 | 165 | 1.3 × 10^4^ | 4.64 | 0.37 | no evidence |
+| unseen | 4 | RbEuCl~3~ (mp-1206801) | 0.038 | metastable | 0.45 | 800 | 17 | 3.6 × 10^4^ | 1.33 | 0.35 | no evidence |
+| unseen | 5 | SrBiO~3~ (mp-29164) | 0.000 | on hull | 0.31 | 800 | −134 | 6.0 × 10^3^ | 2.19 | 0.21 | no evidence |
+| unseen | 6 | KCrF~3~ (mp-1180782) | 0.002 | metastable | 0.16 | 800 | 29 | 2.4 × 10^4^ | 2.19 | 0.21 | no evidence |
+| unseen | 7 | EuHfS~3~ (mp-1190059) | 0.000 | on hull | 0.13 | 800 | −68 | 3.1 × 10^4^ | 1.52 | 0.20 | no evidence |
+| unseen | 8 | KBiO~3~ (mp-29799) | 0.000 | on hull | 0.49 | 800 | −83 | 1.3 × 10^4^ | 2.02 | 0.17 | no evidence |
+| unseen | 9 | EuZrS~3~ (mp-1189927) | 0.000 | on hull | 0.15 | 800 | −136 | 2.4 × 10^4^ | 1.25 | 0.16 | no evidence |
+| unseen | 10 | MnBO~3~ (mp-1278986) | 0.032 | metastable | 0.60 | 800 | −55 | 9.5 × 10^3^ | 2.31 | 0.14 | no evidence |
+| unseen | 11 | MnBO~3~ (mp-1289597) | 0.020 | metastable | 0.15 | 800 | −55 | 9.5 × 10^3^ | 2.31 | 0.14 | no evidence |
+| unseen | 12 | EuHfO~3~ (mp-753781) | 0.000 | on hull | 0.60 | 800 | −131 | 5.1 × 10^4^ | 1.23 | 0.12 | no evidence |
+| unseen | 13 | CaVO~3~ (mp-22608) | 0.001 | metastable | 0.43 | 800 | −82 | 8.1 × 10^4^ | 3.11 | 0.11 | no evidence |
+| unseen | 14 | CaVO~3~ (mp-1435359) | 0.009 | metastable | 0.26 | 800 | −82 | 8.1 × 10^4^ | 3.11 | 0.11 | no evidence |
+| unseen | 15 | LuVO~3~ (mp-2767717) | 0.000 | on hull | 0.26 | 800 | 27 | 2.2 × 10^4^ | 1.23 | 0.08 | no evidence |
+| unseen | 16 | EuZrO~3~ (mp-1106293) | 0.000 | on hull | 0.51 | 800 | −169 | 4.6 × 10^4^ | 0.90 | 0.07 | no evidence |
+| unseen | 17 | ErNiO~3~ (mp-1189736) | 0.002 | metastable | 0.37 | 800 | −15 | 1.4 × 10^4^ | 1.12 | 0.07 | no evidence |
+| unseen | 18 | NiBiO~3~ (mp-25096) | 0.032 | metastable | 0.35 | 800 | 7 | 1.2 × 10^4^ | 1.95 | 0.06 | no evidence |
+| unseen | 19 | MnVO~3~ (mp-1106224) | 0.042 | metastable | 0.32 | 800 | −60 | 6.9 × 10^3^ | 3.63 | 0.06 | no evidence |
+| unseen | 20 | ErCrO~3~ (mp-19063) | 0.000 | on hull | 0.25 | 800 | 88 | 1.1 × 10^4^ | 2.10 | 0.06 | no evidence |
+| unseen | 21 | MnSnO~3~ (mp-691106) | 0.022 | metastable | 0.23 | 800 | −67 | 1.0 × 10^4^ | 3.19 | 0.04 | no evidence |
 <!-- END TABLE 11 -->
 
 The list is a set of hypotheses for experimental or higher-level computational follow-up, not a result of this paper. Two limits decide how far it can be read. First, the <!--v:nv_main_unseen-->21<!--/v--> candidates in chemistry clusters absent from the training data are the ones for which the chemistry-cluster and ESTM results of Sections 4.1 and 4.2 apply, and those results show a substantial loss of accuracy; the <!--v:nv_main_seen-->9<!--/v--> in seen clusters are closer to the training data. Second, the only transfer test against computed values available here, the comparison with JARVIS (Section 4.2), shows no sign transfer and a negative rank correlation of the magnitude for semiconductors (<!--v:jv_rho_semi-->-0.08<!--/v-->, interval <!--v:jv_rho_semi_lo-->-0.11<!--/v-->--<!--v:jv_rho_semi_hi-->-0.05<!--/v-->), and the candidates are semiconductors by construction (<!--d:scr_gap_lo-->0.1<!--/d--> eV or more in PBE). The ranking should therefore be read as an ordering produced by a composition-only model, not as an estimate of the performance of any compound. The PBE gap used for the narrow-gap criterion underestimates measured gaps, so the gap criterion is itself uncertain.
