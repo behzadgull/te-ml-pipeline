@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "fa6c63cb6c5274df9bdbf26860dea8db96a0218f170a586635bf0e732eff37be",
+      "bytes": 100585
+    }
+  },
+  "git_head": "939809fe80d815b889290a1ece29741432b0ca9b",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/paper/refs.bib",
+    "thesis_paper/reports/number_audit/20261005T054023/audit.csv",
+    "thesis_paper/reports/number_audit/20261005T054023/run_config.json",
+    "thesis_paper/reports/number_audit/20261005T054023/summary.json",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "508fb3556f43962709333f257ed244b749774e961411fbaf6681f4f9d6c9e6f0",
+  "python": "3.12.10",
+  "registry_rows": 30
+}

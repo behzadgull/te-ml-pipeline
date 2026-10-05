@@ -210,6 +210,7 @@ NA11_SENS = "thesis_paper/results/na11_sensitivity/20261004T135205"
 NA11_NOVELTY = "thesis_paper/results/na11_candidate_novelty/20261004T185101"
 NA3_A = "thesis_paper/results/na3_a/20261004T201639"
 NA3_B = "thesis_paper/results/na3_b/20261004T201433"
+NA2_TUNING = "thesis_paper/results/na2_random_forest_tuning/summary"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
@@ -345,6 +346,7 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json",
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
     f"{NA11_NOVELTY}/counts.json", f"{NA11_NOVELTY}/run_config.json",
+    f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
 ]
@@ -480,6 +482,36 @@ def na11_ranked_values():
     return v
 
 
+def na2_design_values():
+    """NA2: the random-forest design change: the first (tuned, stopped) session's S tuning record against the frozen XGBoost model, from the committed tuning summary."""
+    t = pav._json(f"{NA2_TUNING}/tuning_summary.json")
+    assert pav._json(f"{NA2_TUNING}/run_config.json")["tree_clean"]
+    assert t["n_trials"] == t["n_complete"] + t["n_pruned"] and t["xgboost_S_n_trials"] == 20
+    return {"rf_trials_done": _n(t["n_trials"]), "rf_complete": _n(t["n_complete"]), "rf_pruned": _n(t["n_pruned"]), "rf_hours": f"{t['trial_hours_total']:.1f}",
+            "rf_min": _r3(t["inner_cv_r2_all_complete"]["min"]), "rf_max": _r3(t["inner_cv_r2_all_complete"]["max"]),
+            "rf_deep_min": _r3(t["inner_cv_r2_deep"]["min"]), "rf_deep_max": _r3(t["inner_cv_r2_deep"]["max"]), "rf_deep_range": _r3(t["inner_cv_r2_deep"]["range"]),
+            "rf_n_deep": _n(t["n_deep"]), "rf_shallow_depth": _n(t["shallowest_trial"]["max_depth"]), "rf_shallow": _r3(t["shallowest_trial"]["inner_cv_r2"]),
+            "xgb_inner": _r3(t["xgboost_S_frozen_inner_cv_r2"])}
+
+
+def _safe_eval(node):
+    """Value of a constant expression of numbers, strings, None, booleans, tuples, lists and dicts, allowing + - * / between numbers (e.g. 1 / 3)."""
+    import ast
+    import operator
+
+    ops = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
+    if isinstance(node, ast.BinOp) and type(node.op) in ops:
+        return ops[type(node.op)](_safe_eval(node.left), _safe_eval(node.right))
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.USub, ast.UAdd)):
+        x = _safe_eval(node.operand)
+        return -x if isinstance(node.op, ast.USub) else x
+    if isinstance(node, ast.Dict):
+        return {_safe_eval(k): _safe_eval(v) for k, v in zip(node.keys, node.values)}
+    if isinstance(node, (ast.Tuple, ast.List)):
+        return type(node).__name__ == "Tuple" and tuple(map(_safe_eval, node.elts)) or list(map(_safe_eval, node.elts))
+    return ast.literal_eval(node)
+
+
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
     followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
@@ -492,7 +524,7 @@ def config_value(pointer):
     val = None
     for node in tree.body:
         if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and node.targets[0].id == name:
-            val = ast.literal_eval(node.value)
+            val = _safe_eval(node.value)
     assert val is not None, f"{name} not found in {path}"
     if sub is not None:
         val = val[ast.literal_eval(sub)]
@@ -597,4 +629,5 @@ def new_analysis_values():
     v.update(na11_values())
     v.update(na3_values())
     v.update(na11_ranked_values())
+    v.update(na2_design_values())
     return v

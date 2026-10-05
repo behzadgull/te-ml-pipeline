@@ -52,6 +52,8 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na11_sensitivity/20261004T135205/run_config.json` | `840a7e7d6c1451abe1658f386e06f6c8717b5d0f8921c0f2b222114586676b92` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_candidate_novelty/20261004T185101/counts.json` | `9e529950a650d73914607455ff99cdc69d77c249ae4a0f93f8098b9deef4e0df` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_candidate_novelty/20261004T185101/run_config.json` | `cb1309823cacb9d70b24871286aef36eca83fc3a8596a5223208038a7deedfd2` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_random_forest_tuning/summary/tuning_summary.json` | `26862ec4aca385dc58b48c6a1a71081d80d5eb7ea63391894a710cbb7311e2fe` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_random_forest_tuning/summary/run_config.json` | `487302182489440337d206c9347ac021c330bdba4abd46d90cde5d1c4a2d5157` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/summary.json` | `c6e5a0cdc996b5035183edc6dbfddeb6ea6e0c71f8f50dc521f0a116407c90dd` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv` | `9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv` | `501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff` | <!-- thesis analysis result -->
