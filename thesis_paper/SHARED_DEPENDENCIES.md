@@ -46,6 +46,8 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na6_sign_override/20261004T194811_same_folds/run_config.json` | `9c5e67c27f90609922213170a1381fadb6a9b7d344f629d2df88e2c6687f61e5` | <!-- thesis analysis result -->
 | `thesis_paper/results/na10_analysis/20261004T190444/analysis.json` | `ffe5f9d085ec11d2ed5d91548451f1410511082f9f8f2cc0caa2e025ac948cc6` | <!-- thesis analysis result -->
 | `thesis_paper/results/na10_analysis/20261004T190444/run_config.json` | `95b7cb4ef93535e01e5dea8fe7ee9e45cd80fa80e7b8ac9c34990157ee2fda41` | <!-- thesis analysis result -->
+| `thesis_paper/results/na10_analysis/20261005T054659/analysis.json` | `a0b48cf58fc4cf3d6116fee5208d460d4b8ac02e3f392c4e19e5dd4d0f2d1563` | <!-- thesis analysis result -->
+| `thesis_paper/results/na10_analysis/20261005T054659/run_config.json` | `590fdb425c5569c0e67c2a2015d6d0158d09d3f54194c15fc16727f1a45a9e0e` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11/20261004T135055/counts.json` | `e9c26ddf5788fe673006c17a072ffd04982d90b72ec25ac6894c6815b0851acf` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11/20261004T135055/run_config.json` | `39b6c156436b662d72e4c706bb06c268b0639e8deb6e6146f2f718da3b7c5d84` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_sensitivity/20261004T135205/counts.json` | `08d78804c8cb16b3734a731ecbbd1e157d14f95e4865e44f0013163a7f302bd7` | <!-- thesis analysis result -->

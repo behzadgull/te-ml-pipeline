@@ -1,5 +1,5 @@
 {
-  "numbers_total": 1454,
+  "numbers_total": 1465,
   "by_class": {
     "CITED": 8,
     "DESIGN": 38,
@@ -11,7 +11,7 @@
     "EXCLUDED:NOTATION": 231,
     "EXCLUDED:SECTION": 34,
     "EXCLUDED:XREF": 105,
-    "GENERATED": 884,
+    "GENERATED": 895,
     "UNCLASSIFIED": 111
   },
   "unclassified_or_invalid": 111,

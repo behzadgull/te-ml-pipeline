@@ -203,6 +203,7 @@ NA_RUNS = {
 NA7_RUN = "thesis_paper/results/na7/20261004T093502"
 NA7_FILES = [f"{NA7_RUN}/results.json", f"{NA7_RUN}/status.json", f"{NA7_RUN}/manifest.json"]
 NA10_ANALYSIS = "thesis_paper/results/na10_analysis/20261004T190444"
+NA10_CLF = "thesis_paper/results/na10_analysis/20261005T054659"
 NA6_METRICS = "thesis_paper/results/na6_metrics/20261004T135638"
 NA6_SIGN = "thesis_paper/results/na6_sign_override/20261004T194811_same_folds"
 NA11_FILTER = "thesis_paper/results/na11/20261004T135055"
@@ -281,6 +282,13 @@ def na10_values():
     for key, stratum in (("jv_sign_all", "all"), ("jv_sign_metal", "metal_or_semimetal"), ("jv_sign_semi", "semiconductor"), ("jv_sign_mseen", "metal_cluster_seen"),
                          ("jv_sign_munseen", "metal_cluster_unseen")):
         put(key, stratum, sign=True)
+    # the same analysis with the classifier's sign (the screening configuration)
+    ac = pav._json(f"{NA10_CLF}/analysis.json")
+    assert pav._json(f"{NA10_CLF}/run_config.json")["tree_clean"] and ac["predicted_sign_source"] == "classifier" and ac["counts_per_step"] == a["counts_per_step"]
+    for key, stratum in (("jvc_all", "all"), ("jvc_semi", "semiconductor"), ("jvc_mseen", "metal_cluster_seen"), ("jvc_munseen", "metal_cluster_unseen")):
+        sc = ac["strata"][stratum]["sign_analysis_same_sign_entries_with_reference_ge_20"]
+        v[key], v[f"{key}_lo"], v[f"{key}_hi"] = f"{sc['sign_agreement']:.2f}", f"{sc['sign_agreement_ci95_cluster_bootstrap'][0]:.2f}", f"{sc['sign_agreement_ci95_cluster_bootstrap'][1]:.2f}"
+    assert ac["strata"]["all"]["spearman_abs_pred_vs_mean_abs_jarvis"] == st["all"]["spearman_abs_pred_vs_mean_abs_jarvis"]  # |S| is unchanged by the sign override
     s_all = st["all"]["sign_analysis_same_sign_entries_with_reference_ge_20"]
     v["jv_pred_pos"], v["jv_jarvis_pos"] = f"{100 * s_all['share_predicted_positive']:.0f}", f"{100 * s_all['share_jarvis_positive']:.0f}"
     assert "sign_analysis_same_sign_entries_with_reference_ge_20" not in st["semiconductor_cluster_seen"]
@@ -343,7 +351,7 @@ def na11_values():
 
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
     f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
-    f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json",
+    f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json", f"{NA10_CLF}/analysis.json", f"{NA10_CLF}/run_config.json",
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
     f"{NA11_NOVELTY}/counts.json", f"{NA11_NOVELTY}/run_config.json",
     f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",

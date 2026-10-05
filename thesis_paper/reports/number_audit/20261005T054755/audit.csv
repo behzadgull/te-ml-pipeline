@@ -23,6 +23,7 @@ line,token,value,class,id,problem,section,context
 9,30,30,GENERATED,mp_f6,,,"f the Materials Project, the models give [30] candidates, 9 o"
 9,9,9,GENERATED,nv_main_seen,,,"30 candidates, [9] of them in chemistry clusters present in the"
 9,21,21,GENERATED,nv_main_unseen,,,resent in the training data and [21] in clusters that are not; against DFT-compute
+9,0.52,0.52,GENERATED,jvc_all,,,most marginal sign transfer (agreement [0.52] ) and a negative rank correlation for semicond
 9,-0.08,0.08,GENERATED,jv_rho_semi,,,"nk correlation for semiconductors ( [-0.08] ), so the ranked list is a set of hypotheses t"
 9,4,4,GENERATED,sl_n,,,"edictions were seen, the shortlist is the [4] candidates that are on the convex hull and in"
 9,3,3,EXCLUDED:NOTATION,,,,"present in the training data ( CsSnI~[3]~ , BaSnO~3~ ,"
@@ -866,7 +867,17 @@ line,token,value,class,id,problem,section,context
 332,0.58,0.58,GENERATED,jv_sign_semi_hi,,4.2 External validation,"0.47 -- [0.58] , only 351 ent"
 332,351,351,GENERATED,jv_sign_semi_n,,4.2 External validation,"0.58 , only [351] entries). The model predicts p-type for"
 332,63,63,GENERATED,jv_pred_pos,,4.2 External validation,es). The model predicts p-type for [63] % of these entries and JARVIS has
-332,53,53,GENERATED,jv_jarvis_pos,,4.2 External validation,of these entries and JARVIS has [53] % positive. The rank correlation of the absolu
+332,53,53,GENERATED,jv_jarvis_pos,,4.2 External validation,of these entries and JARVIS has [53] % positive. With the carrier-type classifier's
+332,0.52,0.52,GENERATED,jvc_all,,4.2 External validation,"h the screening uses, the agreement is [0.52] ( 0.50 --"
+332,0.50,0.5,GENERATED,jvc_all_lo,,4.2 External validation,t is 0.52 ( [0.50] -- 0.54 ) overall an
+332,0.54,0.54,GENERATED,jvc_all_hi,,4.2 External validation,( 0.50 -- [0.54] ) overall and 0.57 (
+332,0.57,0.57,GENERATED,jvc_semi,,4.2 External validation,0.54 ) overall and [0.57] ( 0.51 --
+332,0.51,0.51,GENERATED,jvc_semi_lo,,4.2 External validation,nd 0.57 ( [0.51] -- 0.62 ) for the s
+332,0.62,0.62,GENERATED,jvc_semi_hi,,4.2 External validation,0.51 -- [0.62] ) for the semiconductors: marginally above cha
+332,0.67,0.67,GENERATED,jvc_mseen,,4.2 External validation,"metals in clusters seen in training ( [0.67] , 0.59 --"
+332,0.59,0.59,GENERATED,jvc_mseen_lo,,4.2 External validation,"( 0.67 , [0.59] -- 0.74 ), against"
+332,0.74,0.74,GENERATED,jvc_mseen_hi,,4.2 External validation,"0.59 -- [0.74] ), against 0.51 f"
+332,0.51,0.51,GENERATED,jvc_munseen,,4.2 External validation,"0.74 ), against [0.51] for unseen clusters. The rank correlation of"
 332,0.23,0.23,GENERATED,jv_rho_all,,4.2 External validation,cted S with the JARVIS magnitude is [0.23] ( 0.21 --
 332,0.21,0.21,GENERATED,jv_rho_all_lo,,4.2 External validation,0.23 ( [0.21] -- 0.24 ) over al
 332,0.24,0.24,GENERATED,jv_rho_all_hi,,4.2 External validation,"0.21 -- [0.24] ) over all entries, 0.11"
@@ -890,7 +901,7 @@ line,token,value,class,id,problem,section,context
 332,0.53,0.53,GENERATED,jv_sign_mseen_lo,,4.2 External validation,"0.62 ( [0.53] -- 0.69 ,"
 332,0.69,0.69,GENERATED,jv_sign_mseen_hi,,4.2 External validation,"0.53 -- [0.69] , 172 entries"
 332,172,172,GENERATED,jv_sign_mseen_n,,4.2 External validation,"0.69 , [172] entries) against 0.50"
-332,0.50,0.5,GENERATED,jv_sign_munseen,,4.2 External validation,172 entries) against [0.50] for unseen ones. The models therefore carry n
+332,0.50,0.5,GENERATED,jv_sign_munseen,,4.2 External validation,172 entries) against [0.50] for unseen ones. The models therefore carry e
 334,4.3,4.3,EXCLUDED:SECTION,,,,"al ways, not a measure of accuracy on perovskites. ## [4.3] Feature importance and explainability Table 9 lists t"
 336,9,9,EXCLUDED:XREF,,,,. ## 4.3 Feature importance and explainability Table [9] lists the five most important features per target. Tem
 336,0.128,0.128,GENERATED,shap_zT_1_val,,4.3 Feature importance and explainability,"es the zT model (mean \|SHAP\| = [0.128] ), consistent with the explicit T dependence i"
@@ -1364,7 +1375,7 @@ line,token,value,class,id,problem,section,context
 425,4.1,4.1,EXCLUDED:XREF,,,,"ich the chemistry-cluster and ESTM results of Sections [4.1] and 4.2 apply, and those results show a substantial lo"
 425,4.2,4.2,EXCLUDED:XREF,,,,"chemistry-cluster and ESTM results of Sections 4.1 and [4.2] apply, and those results show a substantial loss of ac"
 425,9,9,GENERATED,nv_main_seen,,4.5 Virtual screening,substantial loss of accuracy; the [9] in seen clusters are closer to the training d
-425,4.2,4.2,EXCLUDED:XREF,,,,"es available here, the comparison with JARVIS (Section [4.2]), shows no sign transfer and a negative rank correlati"
+425,4.2,4.2,EXCLUDED:XREF,,,,"es available here, the comparison with JARVIS (Section [4.2]), shows at most marginal sign transfer and a negative"
 425,-0.08,0.08,GENERATED,jv_rho_semi,,4.5 Virtual screening,"the magnitude for semiconductors ( [-0.08] , interval -0.11"
 425,-0.11,0.11,GENERATED,jv_rho_semi_lo,,4.5 Virtual screening,"-0.08 , interval [-0.11] -- -0.05 ), and"
 425,-0.05,0.05,GENERATED,jv_rho_semi_hi,,4.5 Virtual screening,"-0.11 -- [-0.05] ), and the candidates are semiconductors by co"
@@ -1423,7 +1434,7 @@ line,token,value,class,id,problem,section,context
 452,0.662,0.662,GENERATED,estm_a_zT,,5 Conclusions,0.746 internally and [0.662] for rows sharing no source publication with t
 452,2,2,EXCLUDED:NOTATION,,,,"ith training), while *σ* remains poorly predictable (R^[2]^ = 0.275 in stratum b)."
 452,0.275,0.275,GENERATED,estm_b_sigma,,5 Conclusions,emains poorly predictable (R^2^ = [0.275] in stratum b). Against DFT-computed Seebeck c
-452,0.50,0.5,GENERATED,jv_sign_all,,5 Conclusions,"shows no sign transfer (agreement [0.50] , chance, on entries that are mostly metals) a"
+452,0.50,0.5,GENERATED,jv_sign_all,,5 Conclusions,"th the regressor's sign (agreement [0.50] , chance, on entries that are mostly metals) a"
 452,0.23,0.23,GENERATED,jv_rho_all,,5 Conclusions,nk correlation of the magnitudes of [0.23] that is largely confined to chemistries seen
 454,2,2,EXCLUDED:NOTATION,,,,emistries seen in training. - Direct zT regression (R^[2]^ = 0.727 ) outperforms the
 454,0.727,0.727,GENERATED,dvd_direct,,5 Conclusions,ng. - Direct zT regression (R^2^ = [0.727] ) outperforms the component-wise route S^2^*σ*

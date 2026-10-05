@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "predictions": {
+      "path": "thesis_paper\\results\\final_b\\20261004T201433\\predictions_jarvis.csv",
+      "sha256": "923c0306140f28e2076933942d2d268313159f5a911b27677c4d4c67fe9386da",
+      "bytes": 5010462
+    },
+    "na10_summary": {
+      "path": "thesis_paper/results/na10/20261003T133155/summary.json",
+      "sha256": "a110890961b8cfa3b1e449dc954ab8490dc91c4aec4107ce28fccd92263a3eb0",
+      "bytes": 530
+    },
+    "na10_entries": {
+      "path": "thesis_paper/results/na10/20261003T133155/jarvis_entries.csv",
+      "sha256": "7e451f90ff36cd992e7156c77504542773df1c4279496b1bcbbec6458e93770a",
+      "bytes": 2207595
+    }
+  },
+  "git_head": "300525bda6466979204f363e21ff99f973d30fb3",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na10_jarvis_analysis.py",
+  "script_sha256": "14d641abe0afc8edc47985a838c3dbb9d1b31b429720af8c38ea1b18896e48ed",
+  "python": "3.12.10"
+}
