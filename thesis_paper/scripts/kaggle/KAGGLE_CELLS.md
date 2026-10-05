@@ -10,7 +10,7 @@ commit is not this file's own commit; that is intended.
 |---|---|---|---|---|
 | S0. Linux smoke test | None (CPU) | snapfix dataset | none | `smoke_report.json` (I verify it, then commit it under `thesis_paper/results/smoke_test_linux/<UTC>/`) |
 | G1. NA7 | GPU T4 x2 | snapfix dataset | none (first session) | `na7.tar.gz` (merged result); if the status says incomplete, also `na7_a.tar.gz` and `na7_b.tar.gz` |
-| C1. NA2 random forest | None (CPU) | snapfix dataset | none (first session) | `na2_random_forest.tar.gz` |
+| R-S, R-sigma, R-kappa, R-zT, L. NA2 random forest (fixed setting) and LightGBM, see section 3 | None (CPU) | snapfix dataset | none | `na2_rf_<target>.tar.gz` x 4, `na2_lightgbm.tar.gz` |
 
 * **Snapfix dataset**: Kaggle dataset `muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix`, file
   `featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv`, 974,854,507 bytes, SHA256
@@ -264,28 +264,69 @@ ls -la /kaggle/working/final_b/models /kaggle/working/final_b/predictions_mp.csv
 If a status says `"complete": false` (NA3 is the long part: 25 folds per target, each a fit plus TreeSHAP on 20,000 rows; per-unit time on T4 unmeasured), upload that tar.gz as a
 dataset and rerun Cell 2 with `--restore-from <that tar.gz>` added to that process only (`na3_a`, `na3_b` or `final_b`). `na3_a` and `na3_b` have disjoint targets, so they are not merged.
 
-## 3. Session C1 (CPU, Accelerator None): NA2 random forest
+## 3. NA2 CPU sessions: random forest with one fixed setting (four sessions, one per target) and LightGBM with its tuning
 
-Accelerator: None. Internet on. Attach the snapfix dataset. No previous output.
+**Design change (docs/decisions.md, 2026-10-05, committed before any random-forest test-fold result existed).** The random forest is not tuned: every target uses the one set
+`n_estimators` 500, `max_features` 1/3, `min_samples_leaf` 5, no depth limit, bootstrap sampling (Probst, Wright & Boulesteix 2019); the set is recorded in each run's identity
+(`params.fixed_hyperparams`) and in `frozen/<target>_random_forest.json`. LightGBM keeps its tuning (20 Optuna trials per target, then the 25 rung folds). The abandoned tuned run of
+session C1 (S only, 15 of 20 trials) is committed as a record; do not restore from it.
 
-Cell 1: the same clone-and-install cell as S0.
+Code commit for these sessions: `9543576be4710b9c76057494ec44a52b6668ea0c` (the commit that added `--fixed-hyperparams` to `na2_trees.py` and a check of it to the smoke test; the scripts
+are unchanged since). **Run S0 once on this commit first** (same cells as section 1 with this commit in `COMMIT`): its checks now include
+`na2_random_forest_fixed_completes` and `na2_fixed_rf_has_no_tuning_units_and_records_the_set`; start the long sessions only after `all_passed: True`.
 
-Cell 2 (bash):
+Accelerator: None (CPU, 4 cores) for all five sessions. Internet on. Attach the snapfix dataset only. No previous output.
+
+| Session | Command (Cell 2, after Cell 1 below) | `--time-budget-hours` | Estimated run time | Download |
+|---|---|---|---|---|
+| R-S | `na2_trees.py --model random_forest --fixed-hyperparams --targets S --out-dir /kaggle/working/na2_rf_S` | 10.8 | 25 fits x 26 min = 11.0 h | `na2_rf_S.tar.gz` |
+| R-sigma | same with `--targets sigma --out-dir /kaggle/working/na2_rf_sigma` | 10.5 | 25 x 21 min = 8.8 h | `na2_rf_sigma.tar.gz` |
+| R-kappa | same with `--targets kappa --out-dir /kaggle/working/na2_rf_kappa` | 10.5 | 25 x 16 min = 6.5 h | `na2_rf_kappa.tar.gz` |
+| R-zT | same with `--targets zT --out-dir /kaggle/working/na2_rf_zT` | 10.5 | 25 x 18 min = 7.4 h | `na2_rf_zT.tar.gz` |
+| L | `na2_trees.py --model lightgbm --out-dir /kaggle/working/na2_lightgbm` (all four targets, tuning on) | 10.5 | about 3 to 4 h, anywhere from 1 to 12 h (see below) | `na2_lightgbm.tar.gz` |
+
+The four random-forest sessions have disjoint targets, so their identities differ and they can run at the same time if the account allows several CPU sessions at once (not verified
+here); otherwise one after the other. They are not merged: `na2_stacking.py --rf-dir a,b,c,d` takes the four bundles. A session whose status says `"complete": false` is continued by
+rerunning the same cells with `--restore-from <its tar.gz, attached as a dataset>` added (same `--targets`).
+
+**Where the estimates come from** (`thesis_paper/results/na2_timing/20261005T054113`): one fixed-setting fit on the first outer training fold was timed locally with 4 threads and scaled to 500
+trees; the factor Kaggle / local, 1.64, comes from one real Kaggle measurement (tuning trial 12 of the first random-forest session, 3,534 s on Kaggle against 2,152 s estimated locally) and is
+assumed to hold for the new fits. The estimates are therefore good to perhaps 20 to 30 percent: R-S may need `--restore-from` for its last fits (the budget of 10.8 h starts the 25th fit
+at about 10.5 h). LightGBM was timed locally only (S, 4 threads, fit and predict): smallest / middle / largest search-space configuration 5.6 / 22.6 / 90.7 s on an inner fold and 8.8 / 26.4 /
+102.8 s on an outer fold, uncalibrated. A tuning trial is three inner fits, so 20 trials cost between about 0.1 h and 2.5 h (x 1.64 if the factor applies) depending on the sizes TPE
+samples, and the 25 rung fits 0.1 to 1.2 h; the middle configuration gives about 0.9 h for S (0.6 h tuning, 0.3 h rung), so about 3 to 4 h for the session; if TPE settles on the largest models it approaches 12 h. Rows differ per target (kappa and zT have 65 to 70 percent of the rows of S).
+
+Cell 1 (Python): the clone-and-install cell of section 1 with `COMMIT = "9543576be4710b9c76057494ec44a52b6668ea0c"` (everything else identical: clone, checkout, assert HEAD and a clean
+tree, the uv Python 3.12 venv with the pins, the version probe).
+
+Cell 2 (bash), for session R-S; for the other sessions change the two occurrences of `S`/`na2_rf_S` as in the table and the time budget:
 
 ```bash
 %%bash
 cd /kaggle/working/te-ml-pipeline
 nproc; free -g | head -2
-/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na2_trees.py --model random_forest --out-dir /kaggle/working/na2_random_forest \
-    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.5 2>&1 | tee /kaggle/working/logs/na2_random_forest.log
-cat /kaggle/working/na2_random_forest/status.json; echo
-ls -la /kaggle/working/na2_random_forest.tar.gz && sha256sum /kaggle/working/na2_random_forest.tar.gz
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na2_trees.py --model random_forest --fixed-hyperparams --targets S \
+    --out-dir /kaggle/working/na2_rf_S --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.8 2>&1 | tee /kaggle/working/logs/na2_rf_S.log
+cat /kaggle/working/na2_rf_S/status.json; echo
+ls -la /kaggle/working/na2_rf_S.tar.gz && sha256sum /kaggle/working/na2_rf_S.tar.gz
 ```
 
-Download `na2_random_forest.tar.gz`. If `status.json` says incomplete, start C2 with the same cells and `--restore-from
-<that tar.gz as an attached dataset>` added. For each target the script first tunes (Optuna, the project's trial count, each trial a checkpointed
-unit), freezes the best set, then runs the 25 chemistry-cluster folds; the first fold of each target is asserted to have the same row counts as the
-committed XGBoost rung. Memory can be the limit for a forest at the top of the search space; Save Version keeps what was finished.
+Cell 2 (bash), for session L (LightGBM):
+
+```bash
+%%bash
+cd /kaggle/working/te-ml-pipeline
+nproc; free -g | head -2
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na2_trees.py --model lightgbm --out-dir /kaggle/working/na2_lightgbm \
+    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.5 2>&1 | tee /kaggle/working/logs/na2_lightgbm.log
+cat /kaggle/working/na2_lightgbm/status.json; echo
+ls -la /kaggle/working/na2_lightgbm.tar.gz && sha256sum /kaggle/working/na2_lightgbm.tar.gz
+```
+
+Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` text. For the fixed-setting random forest the first fold of each target is asserted to have the same
+row counts as the committed XGBoost rung; the 25 units of a target are the rung folds only (no tuning units). Memory: a 500-tree forest without a depth limit on 148,000 rows needs a few GB
+(the machine reports it in the first lines of the cell); if a session dies from memory, Save Version keeps the finished units and the session is continued with `--restore-from`.
+Afterwards, locally: `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-dir <S>,<sigma>,<kappa>,<zT> --lgbm-dir <lightgbm>`.
 
 ## 4. Later sessions (the same Cell 1, then these)
 
@@ -293,7 +334,7 @@ committed XGBoost rung. Memory can be the limit for a forest at the top of the s
 |---|---|---|---|---|
 | 2 | Final models, no classifier, plus NA6, concurrently | GPU T4 x2 | process A (GPU 0): `na6_classifier.py --out-dir /kaggle/working/na6 --device cuda`; process B (GPU 1): `na_final_models.py --out-dir /kaggle/working/final_a --device cuda --jarvis-csv $J --jarvis-sha256 3c23d550...9c49` (`J=$(find /kaggle/input -name jarvis_dft3d_seebeck_featurized.csv)`), both with `--expect-commit`, `&`, `wait` as in G1 | snapfix dataset, `thesis-jarvis-featurized` |
 | 3 | NA3 SHAP | GPU T4 x2 | A (GPU 0): `na3_shap.py --targets S,kappa --out-dir /kaggle/working/na3_a`; B (GPU 1): `--targets sigma,zT --out-dir /kaggle/working/na3_b` | snapfix dataset |
-| C2 | NA2 LightGBM | CPU | `na2_trees.py --model lightgbm --out-dir /kaggle/working/na2_lightgbm` | snapfix dataset |
+| C2 | NA2 LightGBM | CPU | see section 3 (session L) | snapfix dataset |
 | C3 | NA13 feature selection | CPU | `na13_feature_selection.py --out-dir /kaggle/working/na13` | snapfix dataset |
 | later | Final models again, with the classifier and the MP candidates | GPU | as the final-models command plus `--classifier-dir <na6 dir> --classifier-sha256 <sha of final_classifier.json> --mp-csv ... --mp-sha256 ...` | snapfix, JARVIS, the na6 output, the MP csv |
 | local | NA2 stacking | your PC | `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-dir <tar.gz> --lgbm-dir <tar.gz>` | the two NA2 bundles (committed XGBoost predictions are local) |

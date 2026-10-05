@@ -13,7 +13,8 @@ either way, and a large gain would have to be rechecked with nested stacking bef
 optimism is expected to be tiny, but it is not zero.
 
 Inputs: --rf-dir and --lgbm-dir are the na2_trees.py output bundles (a directory or the .tar.gz); each is verified (status complete, manifest SHA256,
-identity fields) before use. The XGBoost OOF predictions are the committed results/ladder_regen_snapfix/20260917T150000/<target>_chemistry_full/
+identity fields) before use. Either may be several bundles separated by commas, when the model ran as one session per target (the random forest does):
+every target must then be covered by exactly one bundle, and the bundles must share the dataset SHA256 and the code commit. The XGBoost OOF predictions are the committed results/ladder_regen_snapfix/20260917T150000/<target>_chemistry_full/
 (Git LFS; must be present locally).
 
 Usage:
@@ -58,6 +59,23 @@ def open_bundle(path, tmp):
     return p, cfg
 
 
+def open_parts(arg, tmp, targets=TARGETS):
+    """The bundles of one model (comma-separated paths) as ({target: units directory}, config of the first bundle); every target is covered by exactly one bundle."""
+    parts = [open_bundle(x, tmp) for x in str(arg).split(",") if x]
+    cfgs = [c for _, c in parts]
+    assert len({c["dataset_sha256"] for c in cfgs}) == 1 and len({c["git_head"] for c in cfgs}) == 1, "the bundles of one model differ in dataset or code commit"
+    where = {}
+    for p, _ in parts:
+        for t in targets:
+            if (p / "units" / f"rung_{t}_repeat0_fold0.npz").exists():
+                assert t not in where, f"target {t} is in two bundles"
+                where[t] = p / "units"
+    missing = [t for t in targets if t not in where]
+    if missing:
+        raise SystemExit(f"no bundle covers the targets {missing}")
+    return where, cfgs[0]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rf-dir", required=True)
@@ -67,8 +85,8 @@ def main():
     ap.add_argument("--n-folds", type=int, default=5)
     args = ap.parse_args()
     tmp = Path(tempfile.mkdtemp())
-    rf, rf_cfg = open_bundle(args.rf_dir, tmp)
-    lg, lg_cfg = open_bundle(args.lgbm_dir, tmp)
+    rf, rf_cfg = open_parts(args.rf_dir, tmp)
+    lg, lg_cfg = open_parts(args.lgbm_dir, tmp)
     assert rf_cfg["dataset_sha256"] == lg_cfg["dataset_sha256"], "random forest and LightGBM ran on different datasets"
     ladder = json.loads((H.repo_root() / "reports" / "regen_snapfix" / "20260917T150000" / "ladder_metrics.json").read_text(encoding="utf-8"))["runs"]
     out = Path(args.out_dir) if args.out_dir else H.repo_root() / "thesis_paper" / "results" / "na2_stacking" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
@@ -82,8 +100,8 @@ def main():
             Y, P = [], []
             for f in range(args.n_folds):
                 x = np.load(LADDER_DIR / f"{target}_chemistry_full" / f"repeat{r}_fold{f}_predictions.npz")
-                a = np.load(rf / "units" / f"rung_{target}_repeat{r}_fold{f}.npz")
-                b = np.load(lg / "units" / f"rung_{target}_repeat{r}_fold{f}.npz")
+                a = np.load(rf[target] / f"rung_{target}_repeat{r}_fold{f}.npz")
+                b = np.load(lg[target] / f"rung_{target}_repeat{r}_fold{f}.npz")
                 assert np.array_equal(x["y_true"], a["y_true"]) and np.array_equal(x["y_true"], b["y_true"]), f"{target} r{r} f{f}: y_true differs between models"
                 Y.append(x["y_true"])
                 P.append(np.column_stack([x["y_pred"], a["y_pred"], b["y_pred"]]))
