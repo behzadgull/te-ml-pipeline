@@ -1,0 +1,89 @@
+{
+  "n_entries": 409,
+  "grid_K": [
+    300,
+    400,
+    500,
+    600,
+    700,
+    800
+  ],
+  "shortlist_ids": [
+    "mp-1288145",
+    "mp-3163",
+    "mp-5163",
+    "mp-614013"
+  ],
+  "shortlist_order": [
+    "CsSnI3",
+    "BaSnO3",
+    "LaRhO3",
+    "LaCoO3"
+  ],
+  "shortlist_zT_max": {
+    "CsSnI3": [
+      0.5773439407348633,
+      800
+    ],
+    "BaSnO3": [
+      0.103229820728302,
+      800
+    ],
+    "LaRhO3": [
+      0.0464451909065246,
+      800
+    ],
+    "LaCoO3": [
+      0.0388060510158538,
+      800
+    ]
+  },
+  "override_all_409": {
+    "entries": 409,
+    "predictions": 2454,
+    "predictions_overridden": 579,
+    "share_predictions_overridden": 0.23594132029339854,
+    "entries_with_any_override": 142,
+    "entries_overridden_at_max": 94
+  },
+  "override_main_30": {
+    "entries": 30,
+    "predictions": 180,
+    "predictions_overridden": 16,
+    "share_predictions_overridden": 0.08888888888888889,
+    "entries_with_any_override": 3,
+    "entries_overridden_at_max": 3
+  },
+  "override_shortlist": {
+    "entries": 4,
+    "predictions": 24,
+    "predictions_overridden": 0,
+    "share_predictions_overridden": 0.0,
+    "entries_with_any_override": 0,
+    "entries_overridden_at_max": 0
+  },
+  "main_30": {
+    "seen": 9,
+    "unseen": 21,
+    "zT_max_range": [
+      0.0388060510158538,
+      0.6067349910736084
+    ],
+    "on_the_hull": 12,
+    "p_type_at_max": 14,
+    "T_at_max_counts": {
+      "800": 30
+    }
+  },
+  "all_409": {
+    "T_at_max_counts": {
+      "400": 2,
+      "600": 1,
+      "800": 406
+    },
+    "zT_max_range": [
+      0.030245155096054,
+      1.3143850564956665
+    ]
+  }
+}

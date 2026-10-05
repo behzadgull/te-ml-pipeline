@@ -1,0 +1,30 @@
+{
+  "inputs": {
+    "predictions_mp": {
+      "path": "thesis_paper/results/final_b/20261004T201433/predictions_mp.csv",
+      "sha256": "080416929fc31d0bf35a6a1e958e59504e8c25347c0febc9234177596620b54b",
+      "bytes": 544339
+    },
+    "candidate_lists": {
+      "path": "thesis_paper/results/na11_candidate_novelty/20261004T185101/candidate_lists.csv",
+      "sha256": "d4747f83c2d9b32ecf6a0e80dea63a6605ec53f09d895df3f7dedc0f0eade7ef",
+      "bytes": 49105
+    },
+    "membership": {
+      "path": "thesis_paper/results/na11_sensitivity/20261004T135205/membership.csv",
+      "sha256": "19ccf5c65c996086625ac2e8af0a4f74a53f83158389299f905fea30fc6952d8",
+      "bytes": 57746
+    },
+    "labels": {
+      "path": "thesis_paper/docs/candidate_literature_labels.csv",
+      "sha256": "60dacf72b7d95c6ddd9368666d4c10133c9a3509bb19e241689421af1d8207d7",
+      "bytes": 33610
+    }
+  },
+  "git_head": "a1bb42912097cfda517eb7be7d1af57ff8df0d4e",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na11_ranked_list.py",
+  "script_sha256": "950ae49add4227d0df561855f45d414511575baf7b687ef27875243b5c101ebc",
+  "python": "3.12.10"
+}
