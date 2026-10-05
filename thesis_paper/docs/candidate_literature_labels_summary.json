@@ -1,0 +1,69 @@
+{
+  "search_run": "thesis_paper/reports/candidate_literature/20261005T045225",
+  "n_entries": 73,
+  "n_formulas": 60,
+  "lists": {
+    "main_30": {
+      "entries": 30,
+      "yes": 11,
+      "no_evidence": 19,
+      "formulas": 26,
+      "formulas_yes": 9,
+      "yes_seen_cluster": 9,
+      "no_evidence_seen_cluster": 0
+    },
+    "E_hull_0.10_44": {
+      "entries": 44,
+      "yes": 12,
+      "no_evidence": 32,
+      "formulas": 37,
+      "formulas_yes": 10,
+      "yes_seen_cluster": 9,
+      "no_evidence_seen_cluster": 0
+    },
+    "gap_cap_0.9_49": {
+      "entries": 49,
+      "yes": 20,
+      "no_evidence": 29,
+      "formulas": 40,
+      "formulas_yes": 13,
+      "yes_seen_cluster": 13,
+      "no_evidence_seen_cluster": 0
+    },
+    "both_relaxed_73": {
+      "entries": 73,
+      "yes": 23,
+      "no_evidence": 50,
+      "formulas": 60,
+      "formulas_yes": 15,
+      "yes_seen_cluster": 15,
+      "no_evidence_seen_cluster": 0
+    }
+  },
+  "shortlist_rule_A_labels": {
+    "BaSnO3": "yes",
+    "CsSnI3": "yes",
+    "LaCoO3": "yes",
+    "LaRhO3": "yes"
+  },
+  "provenance": {
+    "inputs": {
+      "candidate_lists": {
+        "path": "thesis_paper/results/na11_candidate_novelty/20261004T185101/candidate_lists.csv",
+        "sha256": "d4747f83c2d9b32ecf6a0e80dea63a6605ec53f09d895df3f7dedc0f0eade7ef",
+        "bytes": 49105
+      },
+      "search_flagged": {
+        "path": "thesis_paper/reports/candidate_literature/20261005T045225/flagged.csv",
+        "sha256": "baf4d5b30198fb7deebf9e7a7a3cc8e4d9328f1ee9a99350523bbbf78041ef50",
+        "bytes": 8723
+      }
+    },
+    "git_head": "3d0ac6ac3600e4b50ddd3e0e701be1a189dd8601",
+    "tree_clean": true,
+    "dirty_files": [],
+    "script": "thesis_paper/scripts/make_candidate_labels.py",
+    "script_sha256": "aa6e4f9e8cc9f8dbe681b195882636f0492a0f9f7258f12bf7e1ee84b4682df5",
+    "python": "3.12.10"
+  }
+}
