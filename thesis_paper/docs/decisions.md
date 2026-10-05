@@ -88,3 +88,27 @@ uses only the committed sensitivity and training-cluster tables (`results/na11_s
   800 K is recorded and not compared, because the pipeline's 25 K bins cover 300 K to 800 K exclusive.
 - **Script**: `scripts/na12_literature_comparison.py` (tested on synthetic rows for PbTe and Bi2Te3 only, never for a pre-registered compound). It compares the out-of-fold predictions at two
   levels (exact composition; cluster-level) and refits nothing; with an empty values file it stops with exit code 3.
+
+## 2026-10-05: NA2 random forest: one fixed, pre-stated hyperparameter set (design change, made before any random-forest test-fold result exists)
+
+**State when this was written.** The first random-forest session (C1) was stopped by its budget after 15 of 20 tuning trials for S (10.7 h, status incomplete; bundle `na2_random_forest.tar.gz`,
+SHA256 fe755d4b701ebcb6734ccb1658c69bcc0c5fdd39b78e45cfb83283bdbefcc0dc, verified). Its listing holds only tuning units (`units/tune_S_trial000..014.json`), no outer-fold unit: no
+random-forest test-fold prediction or score exists. The values of the 15 trials had not been read when the set below was chosen; the set comes from the literature.
+
+**Decision.**
+1. Random forest is run with ONE fixed hyperparameter set for all four targets, no tuning: `n_estimators` 500, `max_features` 1/3 (a third of the 397 features, 132), `min_samples_leaf` 5,
+   `max_depth` None, bootstrap sampling with replacement of full size, `min_samples_split` 2, squared-error criterion, `random_state` 0. sigma and kappa are fitted in log10 as in Paper A.
+2. Justification (verified in the text of Probst, Wright & Boulesteix 2019, WIREs Data Min. Knowl. Discov. 9:e1301, DOI 10.1002/widm.1301, arXiv:1804.03515v2, PDF pages given):
+   - the typical software defaults for regression are mtry = p/3 and a node size of 5, with 500 or 1000 trees and sampling with replacement (Table 1, page 2; text on page 3);
+   - the number of trees is "not tunable in the classical sense but should be set sufficiently high" (page 4), so a fixed 500 is not a tuned value;
+   - RF "works reasonably well with the default values" (abstract, page 1), and the average gain from tuning the defaults over 38 datasets was small: an AUC increase of 0.010 for all hyperparameters
+     together, with 0.006 for mtry, 0.004 for sample size, 0.001 for node size and 0.002 for the replacement rule, per hyperparameter (page 7, citing Probst et al. 2018).
+   Limits of this source, to be stated in the paper: those gains are for classification (AUC) on 38 datasets, not for regression on composition features; and the same review (page 3) reports that for
+   high-dimensional data higher mtry values gave lower error (Genuer et al. 2008; Goldstein et al. 2011), so mtry = p/3 may sit below the optimum for these 397 features.
+3. The 15 completed S tuning trials are reported as evidence of tuning insensitivity: the range of their inner-CV R2 (grouped 3-fold CV on all S rows), no trial excluded, with the search space
+   (`src/nested_cv.py`, `_random_forest_search_space`). They are not used to choose the fixed set and are not part of the RF test-fold result.
+4. **Asymmetry, stated in the paper:** XGBoost is tuned once on the chemistry-cluster split (20 Optuna trials, frozen) and random forest is not tuned. Direction: if tuning would improve the random
+   forest, the fixed setting understates it, so the comparison is biased in favour of XGBoost and an XGBoost advantage over this random forest is an upper bound on its advantage over a tuned one; a random
+   forest that matches or beats XGBoost would be a result that survives the asymmetry. The size of the bias is unknown; the 15 trials bound it only for S.
+5. LightGBM keeps its tuning (20 trials, the XGBoost protocol). The random-forest rung is a new analysis (new identity): no `--restore-from` of the tuning bundle.
+6. The tuning bundle is committed as a record (`results/na2_random_forest_tuning/`), marked incomplete and not an accepted result.
