@@ -1,7 +1,7 @@
 # Kaggle cells for the thesis-paper compute
 
-The scripts are pinned to code commit `b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5` (every cell checks out exactly that commit, asserts HEAD equals it and the tree is clean, and
-every script refuses to start otherwise). This file was committed afterwards, in a later commit that changes nothing but this file, so the cells'
+All remaining sessions (S0, the random-forest and LightGBM sessions of section 3, G4 and G5 of section 3b) are pinned to ONE code commit, `7529e7cfb7f14341994d1f57123e11edc75443e4` (every cell checks out exactly that commit,
+asserts HEAD equals it and the tree is clean, and every script refuses to start otherwise). Sessions G1, G2 and G3 (sections 2, 2b, 2c) have already run, at the earlier commits stated there. This file was committed afterwards, in a later commit that changes nothing but this file, so the cells'
 commit is not this file's own commit; that is intended.
 
 ## 0. Files to attach or download
@@ -33,13 +33,14 @@ commit is not this file's own commit; that is intended.
 
 ## 1. Session S0 (CPU, Accelerator None): Linux smoke test
 
-Run once before G1 and C1. Expected last line: `all_passed: True`. If any line says FAIL, send me the output and do not start G1 or C1.
+Run once on commit `7529e7cfb7f14341994d1f57123e11edc75443e4` before any remaining session (R-S, R-sigma, R-kappa, R-zT, L, G4, G5). Its smoke test covers the fixed-setting random forest, `na3_rows.py` and `na1_nested_cv.py`.
+Expected last line: `all_passed: True`. If any line says FAIL, send me the output and do not start the other sessions.
 
 Cell 1 (Python): clone at the commit, verify, install the pins.
 
 ```python
 import os, subprocess, sys
-COMMIT = "b2ad3cf83ff33a15de294bf8db22d8f1d5e40ed5"
+COMMIT = "7529e7cfb7f14341994d1f57123e11edc75443e4"
 os.makedirs("/kaggle/working/logs", exist_ok=True)
 env = {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"}
 os.chdir("/kaggle/working")
@@ -271,8 +272,7 @@ dataset and rerun Cell 2 with `--restore-from <that tar.gz>` added to that proce
 (`params.fixed_hyperparams`) and in `frozen/<target>_random_forest.json`. LightGBM keeps its tuning (20 Optuna trials per target, then the 25 rung folds). The abandoned tuned run of
 session C1 (S only, 15 of 20 trials) is committed as a record; do not restore from it.
 
-Code commit for these sessions: `9543576be4710b9c76057494ec44a52b6668ea0c` (the commit that added `--fixed-hyperparams` to `na2_trees.py` and a check of it to the smoke test; the scripts
-are unchanged since). **Run S0 once on this commit first** (same cells as section 1 with this commit in `COMMIT`): its checks now include
+Code commit for these sessions: `7529e7cfb7f14341994d1f57123e11edc75443e4`, the same as S0 and section 3b (`na2_trees.py` and the harness are byte-identical between `9543576` and `7529e7c`, checked with `git diff`). **Run S0 first** (section 1, which is pinned to this commit): its checks include
 `na2_random_forest_fixed_completes` and `na2_fixed_rf_has_no_tuning_units_and_records_the_set`; start the long sessions only after `all_passed: True`.
 
 Accelerator: None (CPU, 4 cores) for all five sessions. Internet on. Attach the snapfix dataset only. No previous output.
@@ -296,7 +296,7 @@ at about 10.5 h). LightGBM was timed locally only (S, 4 threads, fit and predict
 102.8 s on an outer fold, uncalibrated. A tuning trial is three inner fits, so 20 trials cost between about 0.1 h and 2.5 h (x 1.64 if the factor applies) depending on the sizes TPE
 samples, and the 25 rung fits 0.1 to 1.2 h; the middle configuration gives about 0.9 h for S (0.6 h tuning, 0.3 h rung), so about 3 to 4 h for the session; if TPE settles on the largest models it approaches 12 h. Rows differ per target (kappa and zT have 65 to 70 percent of the rows of S).
 
-Cell 1 (Python): the clone-and-install cell of section 1 with `COMMIT = "9543576be4710b9c76057494ec44a52b6668ea0c"` (everything else identical: clone, checkout, assert HEAD and a clean
+Cell 1 (Python): the clone-and-install cell of section 1 (its `COMMIT` is already `7529e7cfb7f14341994d1f57123e11edc75443e4`) (everything else identical: clone, checkout, assert HEAD and a clean
 tree, the uv Python 3.12 venv with the pins, the version probe).
 
 Cell 2 (bash), for session R-S; for the other sessions change the two occurrences of `S`/`na2_rf_S` as in the table and the time budget:
@@ -330,10 +330,9 @@ Afterwards, locally: `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-di
 
 ## 3b. GPU sessions G4 (NA3 rows, for Figure 11) and G5 (NA1 nested CV), both T4 x2
 
-Code commit for both: `7529e7cfb7f14341994d1f57123e11edc75443e4` (it adds `na3_rows.py` and `na1_nested_cv.py` and their smoke-test jobs; every other script is unchanged since the commit of
-section 3). **Run S0 once on this commit before G4 or G5** (section 1 with this commit in `COMMIT`): the smoke test now also runs both new scripts, and the Linux run is what proves them on Kaggle
+Code commit for both: `7529e7cfb7f14341994d1f57123e11edc75443e4`, the same as S0 and section 3 (it adds `na3_rows.py` and `na1_nested_cv.py` and their smoke-test jobs). **Run S0 first** (section 1, pinned to this commit): the smoke test also runs both new scripts, and the Linux run is what proves them on Kaggle
 (here they passed a CPU smoke run on Windows only; the GPU path of both reuses the calls of `na3_shap.py` and `src/nested_cv.py`, which ran on the T4).
-Accelerator: GPU T4 x2 for both. Internet on. Attach the snapfix dataset only. No previous output. Cell 1 is the clone-and-install cell of section 1 with the commit above.
+Accelerator: GPU T4 x2 for both. Internet on. Attach the snapfix dataset only. No previous output. Cell 1 is the clone-and-install cell of section 1 (its `COMMIT` is the commit above).
 
 ### G4: NA3 rows (per-row SHAP values for the beeswarm, Figure 11)
 
