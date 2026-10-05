@@ -1,0 +1,5 @@
+material_id,formula,unconditional_limit_K,conditional_limit_K,limit_kind,grid_max_reported_K,n_grid_points_reported,zT_max_primary_all_grid,T_at_zT_max_primary,zT_max_within_limit,T_at_zT_max_within_limit,zT_at_secondary_T,primary_value_inside_limit,rank_primary,rank_within_limit,rank_at_secondary_T
+mp-614013,CsSnI3,724.15,,melting point,700,5,0.5773439407348633,800,0.5318894982337952,700,0.4216349422931671,False,1,1,1
+mp-3163,BaSnO3,,,none found at or below 800 K,800,6,0.103229820728302,800,0.103229820728302,800,0.0677599310874939,True,2,2,2
+mp-5163,LaRhO3,1728.0,,decomposition (calculated),800,6,0.0464451909065246,800,0.0464451909065246,800,0.0319556593894958,True,3,3,3
+mp-1288145,LaCoO3,,773.15,none in air at or below 800 K; reduction in a reducing atmosphere,800,6,0.0388060510158538,800,0.0388060510158538,800,0.0266483724117279,True,4,4,4

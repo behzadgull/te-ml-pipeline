@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "predictions_mp": {
+      "path": "thesis_paper/results/final_b/20261004T201433/predictions_mp.csv",
+      "sha256": "080416929fc31d0bf35a6a1e958e59504e8c25347c0febc9234177596620b54b",
+      "bytes": 544339
+    },
+    "limits": {
+      "path": "thesis_paper/docs/shortlist_thermal_limits.csv",
+      "sha256": "9af771b7bcb680a2a108d7a64520a1b5b2786ce696204a9c247f8f38eac70a0b",
+      "bytes": 2704
+    },
+    "shortlist": {
+      "path": "thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv",
+      "sha256": "501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff",
+      "bytes": 1421
+    }
+  },
+  "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na11_shortlist_limits.py",
+  "script_sha256": "eeede4ffafaa1f20cc3b37ba738251900d6d6c8a655e4ca0b23fa60f332979d6",
+  "python": "3.12.10"
+}

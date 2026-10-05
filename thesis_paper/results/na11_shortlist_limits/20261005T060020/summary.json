@@ -1,0 +1,24 @@
+{
+  "secondary_T_K": 600,
+  "order_primary": [
+    "CsSnI3",
+    "BaSnO3",
+    "LaRhO3",
+    "LaCoO3"
+  ],
+  "order_within_limit": [
+    "CsSnI3",
+    "BaSnO3",
+    "LaRhO3",
+    "LaCoO3"
+  ],
+  "order_at_secondary_T": [
+    "CsSnI3",
+    "BaSnO3",
+    "LaRhO3",
+    "LaCoO3"
+  ],
+  "limited_compounds": [
+    "CsSnI3"
+  ]
+}

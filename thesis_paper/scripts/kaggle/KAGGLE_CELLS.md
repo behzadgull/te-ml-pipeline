@@ -328,6 +328,89 @@ row counts as the committed XGBoost rung; the 25 units of a target are the rung 
 (the machine reports it in the first lines of the cell); if a session dies from memory, Save Version keeps the finished units and the session is continued with `--restore-from`.
 Afterwards, locally: `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-dir <S>,<sigma>,<kappa>,<zT> --lgbm-dir <lightgbm>`.
 
+## 3b. GPU sessions G4 (NA3 rows, for Figure 11) and G5 (NA1 nested CV), both T4 x2
+
+Code commit for both: `7529e7cfb7f14341994d1f57123e11edc75443e4` (it adds `na3_rows.py` and `na1_nested_cv.py` and their smoke-test jobs; every other script is unchanged since the commit of
+section 3). **Run S0 once on this commit before G4 or G5** (section 1 with this commit in `COMMIT`): the smoke test now also runs both new scripts, and the Linux run is what proves them on Kaggle
+(here they passed a CPU smoke run on Windows only; the GPU path of both reuses the calls of `na3_shap.py` and `src/nested_cv.py`, which ran on the T4).
+Accelerator: GPU T4 x2 for both. Internet on. Attach the snapfix dataset only. No previous output. Cell 1 is the clone-and-install cell of section 1 with the commit above.
+
+### G4: NA3 rows (per-row SHAP values for the beeswarm, Figure 11)
+
+What it does: repeat 0 of the same chemistry-cluster folds as Paper A, the same frozen hyperparameters; for a fixed seeded subsample of 1,000 test rows per fold (`default_rng(seed + fold)`, 5,000 rows
+per target) it saves the SHAP value of every feature, the feature values, the row positions, the measured and the predicted value. Each unit asserts that the SHAP values plus the bias equal the
+prediction, and records the fold R2 next to the committed one. 20 units in all; one fit and a TreeSHAP of 1,000 rows per unit, about 30 to 40 s on a T4 (a fit of the S model on 148,000 rows took 19 s in
+the NA6 run and 24 s on all rows in `final_b`), so about 6 minutes per process. Bundles are about 16 MB per target.
+
+Cell 2 (bash):
+
+```bash
+%%bash
+cd /kaggle/working/te-ml-pipeline
+PYV=/kaggle/working/venv/bin/python
+nvidia-smi --query-gpu=index,name,memory.total --format=csv
+for g in 0 1; do
+  CUDA_VISIBLE_DEVICES=$g $PYV -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('GPU $g: xgboost', x.__version__, 'cuda fit ok')" || { echo "GPU $g: xgboost cuda fit FAILED"; exit 1; }
+done
+H=$(git rev-parse HEAD)
+K=thesis_paper/scripts/kaggle
+CUDA_VISIBLE_DEVICES=0 $PYV $K/na3_rows.py --targets S,kappa --out-dir /kaggle/working/na3r_a --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na3r_a.log 2>&1 &
+PA=$!
+CUDA_VISIBLE_DEVICES=1 $PYV $K/na3_rows.py --targets sigma,zT --out-dir /kaggle/working/na3r_b --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na3r_b.log 2>&1 &
+PB=$!
+wait $PA; echo "na3r_a exit $?"; wait $PB; echo "na3r_b exit $?"
+for f in na3r_a na3r_b; do echo "== $f"; tail -n 4 /kaggle/working/logs/$f.log; cat /kaggle/working/$f/status.json; echo; done
+ls -la /kaggle/working/na3r_a.tar.gz /kaggle/working/na3r_b.tar.gz
+sha256sum /kaggle/working/na3r_a.tar.gz /kaggle/working/na3r_b.tar.gz
+```
+
+Download `na3r_a.tar.gz` and `na3r_b.tar.gz` and send me the printed SHA256 lines. I verify, commit them under `results/na3_rows_a` and `na3_rows_b`, and draw Figure 11 with
+`python thesis_paper/scripts/make_figures_thesis.py --na3-rows-dirs <dir a>,<dir b>`.
+
+### G5: NA1 nested grouped CV (re-tuning inside every outer training fold)
+
+What it does: for each target and each of the 25 outer folds of the Paper A rung (5 repeats x 5 folds, the same folds, checked against the committed fold sizes), a fresh Optuna search of 20 trials
+(TPE, median pruner, the project's XGBoost search space, 3 inner chemistry-cluster folds) on the outer TRAINING rows only, then a refit of the best set and a prediction of the outer test rows. Every trial
+and every fold is a checkpointed unit (525 units per target). The result is each target's nested pooled R2 per repeat against the committed frozen-hyperparameter value, and the mean inner-CV R2 of the best trials.
+
+**Estimate** (a model, not a measurement of this script). Reference: on the T4 one XGBoost fit with the frozen S set (500 trees, depth 10) on 148,000 rows took 19.2 s including its prediction (median of the 25
+NA6 classifier fits). A trial is three fits on two thirds of the outer training rows. Averaging the cost over the search space (trees 100 to 600, depth 3 to 10, column and row subsampling) with the cost
+of a deeper tree taken from the CPU measurements in CLAUDE.md (factor 1.18 per level), or growing linearly with depth, or not at all, gives a mean trial of 20 s, 22 s or 33 s for S (148,000
+training rows), and TPE tends to move towards the larger frozen-like models; I take **about 28 s per trial for S and sigma, 18 s for kappa and 19 s for zT** (rows scale linearly), minus a few percent for pruned trials.
+That is about 9.6 min per outer fold for S (6.7 to 14 min across the three cost models), 9.5 min for sigma, 6.2 min for kappa and 6.7 min for zT. For 25 outer folds per target: **S 4.0 h, sigma 4.0 h,
+kappa 2.6 h, zT 2.8 h, 13.4 h in all on one T4 (about 9.5 to 19 h across the cost models)**.
+
+Session plan: two processes, one per T4, split by targets so that each carries about the same load: process A `S,kappa` (about 6.6 h) and process B `sigma,zT` (about 6.8 h). **One session is expected to
+be enough** (budget 10.5 h; the range of the estimate is about 5 to 10 h); if a process stops on the budget, `status.json` says `"complete": false` and the same cells are rerun with
+`--restore-from <that tar.gz>` for that process only (a second session of a few hours). One repeat only (`--n-repeats 1`, 20 outer folds, about 2.7 h of T4 time, 1.4 h with both T4s) is an
+option if the budget matters more than the five-repeat spread; it is a different analysis identity and would not be extended afterwards.
+
+Cell 2 (bash):
+
+```bash
+%%bash
+cd /kaggle/working/te-ml-pipeline
+PYV=/kaggle/working/venv/bin/python
+nvidia-smi --query-gpu=index,name,memory.total --format=csv
+for g in 0 1; do
+  CUDA_VISIBLE_DEVICES=$g $PYV -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('GPU $g: xgboost', x.__version__, 'cuda fit ok')" || { echo "GPU $g: xgboost cuda fit FAILED"; exit 1; }
+done
+H=$(git rev-parse HEAD)
+K=thesis_paper/scripts/kaggle
+CUDA_VISIBLE_DEVICES=0 $PYV $K/na1_nested_cv.py --targets S,kappa --out-dir /kaggle/working/na1_a --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na1_a.log 2>&1 &
+PA=$!
+CUDA_VISIBLE_DEVICES=1 $PYV $K/na1_nested_cv.py --targets sigma,zT --out-dir /kaggle/working/na1_b --expect-commit $H --device cuda --time-budget-hours 10.5 > /kaggle/working/logs/na1_b.log 2>&1 &
+PB=$!
+wait $PA; echo "na1_a exit $?"; wait $PB; echo "na1_b exit $?"
+for f in na1_a na1_b; do echo "== $f"; tail -n 4 /kaggle/working/logs/$f.log; cat /kaggle/working/$f/status.json; echo; done
+ls -la /kaggle/working/na1_a.tar.gz /kaggle/working/na1_b.tar.gz
+sha256sum /kaggle/working/na1_a.tar.gz /kaggle/working/na1_b.tar.gz
+```
+
+To watch the speed while it runs, a separate cell can `tail -n 3 /kaggle/working/logs/na1_a.log`: each finished outer fold prints its nested R2, the committed frozen R2 and the tuning seconds, which gives the real
+per-fold time within the first hour; compare it with 9.6 min (S) before letting the session run on. Download `na1_a.tar.gz` and `na1_b.tar.gz` and send me the printed SHA256 lines and both `status.json` texts.
+The two halves have disjoint targets and therefore their own identities; they are combined at analysis time. The department V100S remains an alternative; `scripts/gpu/calibrate_gpu.py` is its calibration.
+
 ## 4. Later sessions (the same Cell 1, then these)
 
 | Order | Session | Accelerator | Cell 2 | Attach |
@@ -338,7 +421,7 @@ Afterwards, locally: `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-di
 | C3 | NA13 feature selection | CPU | `na13_feature_selection.py --out-dir /kaggle/working/na13` | snapfix dataset |
 | later | Final models again, with the classifier and the MP candidates | GPU | as the final-models command plus `--classifier-dir <na6 dir> --classifier-sha256 <sha of final_classifier.json> --mp-csv ... --mp-sha256 ...` | snapfix, JARVIS, the na6 output, the MP csv |
 | local | NA2 stacking | your PC | `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-dir <tar.gz> --lgbm-dir <tar.gz>` | the two NA2 bundles (committed XGBoost predictions are local) |
-| held | NA1 nested CV | department V100S | `thesis_paper/scripts/gpu/` | not run on Kaggle |
+| G5 | NA1 nested CV | GPU T4 x2 (or the department V100S) | see section 3b | snapfix dataset |
 
 NA6 and the first final-models run are different analyses and run side by side. NA3's two halves have disjoint targets and therefore their own
 identities and results; they are not merged, and are combined at analysis time.

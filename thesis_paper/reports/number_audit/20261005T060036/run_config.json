@@ -6,19 +6,13 @@
       "bytes": 104373
     }
   },
-  "git_head": "490dc9712c374d3237d919f84051c766341cc1b6",
+  "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
   "tree_clean": false,
   "dirty_files": [
     "thesis_paper/SHARED_DEPENDENCIES.md",
-    "thesis_paper/docs/number_registry.csv",
-    "thesis_paper/docs/shortlist_thermal_limits.csv",
-    "thesis_paper/paper/paper.md",
-    "thesis_paper/paper/refs.bib",
-    "thesis_paper/reports/number_audit/20261005T054755/audit.csv",
-    "thesis_paper/reports/number_audit/20261005T054755/run_config.json",
-    "thesis_paper/reports/number_audit/20261005T054755/summary.json",
-    "thesis_paper/scripts/audit_numbers.py",
-    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/reports/number_audit/20261005T055621/audit.csv",
+    "thesis_paper/reports/number_audit/20261005T055621/run_config.json",
+    "thesis_paper/reports/number_audit/20261005T055621/summary.json",
     "thesis_paper/scripts/thesis_values.py",
     "thesis_paper/results/na11_shortlist_limits/"
   ],
