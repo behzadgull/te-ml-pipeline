@@ -1,0 +1,188 @@
+{
+  "checks": {
+    "na7_completes": {
+      "ok": true,
+      "detail": "6 units in 46s"
+    },
+    "na7_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na7_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na2_random_forest_completes": {
+      "ok": true,
+      "detail": "6 units in 122s"
+    },
+    "na2_random_forest_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na2_random_forest_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na2_random_forest_fixed_completes": {
+      "ok": true,
+      "detail": "3 units in 25s"
+    },
+    "na2_random_forest_fixed_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na2_random_forest_fixed_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na2_lightgbm_completes": {
+      "ok": true,
+      "detail": "6 units in 30s"
+    },
+    "na2_lightgbm_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na2_lightgbm_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na3_completes": {
+      "ok": true,
+      "detail": "6 units in 25s"
+    },
+    "na3_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na3_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na3_rows_completes": {
+      "ok": true,
+      "detail": "6 units in 26s"
+    },
+    "na3_rows_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na3_rows_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na1_nested_completes": {
+      "ok": true,
+      "detail": "9 units in 26s"
+    },
+    "na1_nested_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na1_nested_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na6_completes": {
+      "ok": true,
+      "detail": "4 units in 25s"
+    },
+    "na6_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na6_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na13_completes": {
+      "ok": true,
+      "detail": "3 units in 26s"
+    },
+    "na13_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "na13_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "final_models_completes": {
+      "ok": true,
+      "detail": "4 units in 27s"
+    },
+    "final_models_manifest_matches_files": {
+      "ok": true,
+      "detail": ""
+    },
+    "final_models_records_identity": {
+      "ok": true,
+      "detail": "tree_clean=True allow_dirty=False"
+    },
+    "na2_fixed_rf_has_no_tuning_units_and_records_the_set": {
+      "ok": true,
+      "detail": "{'n_estimators': 20, 'max_features': 0.3333333333333333, 'min_samples_leaf': 5, 'max_depth': None, 'min_samples_split': 2, 'bootstrap': True}"
+    },
+    "refuses_without_expect_commit_or_allow_dirty": {
+      "ok": true,
+      "detail": ""
+    },
+    "refuses_wrong_commit": {
+      "ok": true,
+      "detail": ""
+    },
+    "resume_session_a_incomplete": {
+      "ok": true,
+      "detail": ""
+    },
+    "resume_session_b_completes_with_restored_unit": {
+      "ok": true,
+      "detail": "{'complete': True, 'units_total': 6, 'units_done': 6, 'units_computed_this_session': 5, 'units_restored_this_session': 1, 'accepted_as_result': False}"
+    },
+    "resume_session_c_recomputes_nothing": {
+      "ok": true,
+      "detail": "{'complete': True, 'units_total': 6, 'units_done': 6, 'units_computed_this_session': 0, 'units_restored_this_session': 6, 'accepted_as_result': False}"
+    },
+    "resumed_results_equal_uninterrupted_results": {
+      "ok": true,
+      "detail": ""
+    },
+    "split_halves_each_complete_without_results": {
+      "ok": true,
+      "detail": ""
+    },
+    "split_halves_merge_computes_nothing": {
+      "ok": true,
+      "detail": "{'complete': True, 'units_total': 6, 'units_done': 6, 'units_computed_this_session': 0, 'units_restored_this_session': 6, 'accepted_as_result': False}"
+    },
+    "split_halves_results_equal_uninterrupted": {
+      "ok": true,
+      "detail": ""
+    },
+    "restore_refused_on_different_parameters": {
+      "ok": true,
+      "detail": ""
+    },
+    "restore_refused_on_tampered_unit": {
+      "ok": true,
+      "detail": ""
+    },
+    "time_budget_stops_before_any_unit": {
+      "ok": true,
+      "detail": ""
+    },
+    "budget_stopped_session_is_continued": {
+      "ok": true,
+      "detail": ""
+    }
+  },
+  "all_passed": true,
+  "environment": {
+    "python": "3.12.3",
+    "platform": "linux",
+    "git_head": "7529e7cfb7f14341994d1f57123e11edc75443e4",
+    "tree_clean": true,
+    "allow_dirty": false
+  }
+}
