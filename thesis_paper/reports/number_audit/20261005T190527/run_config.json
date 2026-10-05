@@ -1,0 +1,35 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "14e574dec6ee6e2ff9e131aea9b0f7a269fd349b872abeb31ea3d711eb07716c",
+      "bytes": 107481
+    }
+  },
+  "git_head": "0f09901c802fbc70e1257af725c69bbff18cd486",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/docs/decisions.md",
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/figures/fig10_shap_global.pdf",
+    "thesis_paper/figures/fig10_shap_global.png",
+    "thesis_paper/figures/fig11_shap_beeswarm.pdf",
+    "thesis_paper/figures/fig11_shap_beeswarm.png",
+    "thesis_paper/figures/fig12_shap_shares.pdf",
+    "thesis_paper/figures/fig12_shap_shares.png",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/reports/number_audit/20261005T103820/audit.csv",
+    "thesis_paper/reports/number_audit/20261005T103820/run_config.json",
+    "thesis_paper/reports/number_audit/20261005T103820/summary.json",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/docs/feature_labels.csv",
+    "thesis_paper/scripts/feature_labels.py",
+    "thesis_paper/scripts/make_feature_labels.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 39
+}

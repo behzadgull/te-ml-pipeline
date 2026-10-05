@@ -124,12 +124,14 @@ def table10(v):
 
 
 def table9(v):
-    """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds)."""
+    """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds), in the order S, sigma, kappa, zT."""
     lines = [f"**Table 9:** Top five features per target by mean \\|SHAP\\| value (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows). "
-             "Units of the SHAP values are those of the target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*).", "",
-             "| **Rank** | **zT** | **S** | ***κ*** | ***σ*** |", "|----|-------------|-------------|-------------|-------------|"]
+             "Units of the SHAP values are those of the target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*). Every feature is a statistic of an ELEMENTAL property of the elements in the formula (or the temperature), "
+             "not a measured property of the material; the statistic is the atomic-fraction-weighted mean, the weighted mean absolute deviation about it (mean abs. deviation), the range, the minimum or the maximum over the elements, "
+             "or the mode (the value of the most abundant element), from the MAGPIE or CBFV element tables. The labels come from docs/feature_labels.csv.", "",
+             "| **Rank** | **S** | ***σ*** | ***κ*** | **zT** |", "|----|-------------|-------------|-------------|-------------|"]
     for i in range(1, 6):
-        lines.append(f"| {v[f't9_rank_{i}']} | {v[f't9_zT_{i}']} | {v[f't9_S_{i}']} | {v[f't9_kappa_{i}']} | {v[f't9_sigma_{i}']} |")
+        lines.append(f"| {v[f't9_rank_{i}']} | {v[f't9_S_{i}']} | {v[f't9_sigma_{i}']} | {v[f't9_kappa_{i}']} | {v[f't9_zT_{i}']} |")
     return "\n".join(lines)
 
 

@@ -126,3 +126,12 @@ random-forest test-fold prediction or score exists. The values of the 15 trials 
    target, checked by SHAP additivity and by the fold R2 against the committed rung. Nothing else of the committed NA3 changes.
 3. **NA1 on Kaggle GPU** (`kaggle/na1_nested_cv.py`): same design as the planned department-machine run (re-tuning inside each outer training fold, 20 trials, 3 inner folds, the Paper A chemistry-cluster
    folds, 5 repeats x 5 folds, four targets), with checkpointed trials and units.
+
+## 2026-10-06: feature labels and the layout of Figures 10 to 12
+
+1. Every feature is named from one committed mapping table, `docs/feature_labels.csv` (built by `scripts/make_feature_labels.py`, read by `scripts/feature_labels.py`): "Elemental <property>, <statistic> (MAGPIE or CBFV)",
+   "Temperature" for the temperature bin; source typos are fixed in the label only. Figure 10, Figure 11, Table 9 and the text use it; nothing is typed per plot. The statistic names were checked in the code of the packages:
+   the CBFV "dev" statistic is the atomic-fraction-weighted MEAN ABSOLUTE deviation about the weighted mean (CBFV composition.py), not a standard deviation, and is labelled so; MAGPIE "avg_dev" is the same quantity.
+2. Captions and the Table 9 note state that every feature other than temperature is a statistic of an ELEMENTAL property of the formula, not a measured property of the material.
+3. Panels and columns are in the order S, sigma, kappa, zT. Figure 10 shows the top 15 features per target instead of 20 (D23 and `shap_top_n`) so that the labels, which need two lines, do not overlap; Figure 11 shows 10.
+4. An earlier sentence that the third zT feature "governs carrier transport in transition-metal compounds" was an uncited physical claim and is removed.

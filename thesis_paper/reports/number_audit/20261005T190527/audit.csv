@@ -613,7 +613,7 @@ line,token,value,class,id,problem,section,context
 255,3.7,3.7,EXCLUDED:SECTION,,,,s of their target with the frozen hyperparameters. ## [3.7] Model explainability SHAP TreeExplainer [@lundberg201
 257,"20,000",20000,GENERATED,shap_rows,,3.7 Model explainability,"model on a fixed random subsample of [20,000] rows of each of the 25"
 257,25,25,GENERATED,shap_folds,,3.7 Model explainability,"20,000 rows of each of the [25] chemistry-cluster test folds (five repeats of"
-257,20,20,DESIGN,shap_top_n,,3.7 Model explainability,er feature) are created for the top [20] features per target; the beeswarm plots use a
+257,15,15,DESIGN,shap_top_n,,3.7 Model explainability,er feature) are created for the top [15] features per target; the beeswarm plots use a
 257,"1,000",1000,GENERATED,bs_per_fold,,3.7 Model explainability,"folds and frozen hyperparameters): [1,000] seeded test rows per fold, 5,"
 257,"5,000",5000,GENERATED,bs_rows,,3.7 Model explainability,"00 seeded test rows per fold, [5,000] per model, and show the"
 257,10,10,DESIGN,beeswarm_top_n,,3.7 Model explainability,"per model, and show the [10] features with the largest mean \|SHAP\| among"
@@ -908,17 +908,17 @@ line,token,value,class,id,problem,section,context
 334,4.3,4.3,EXCLUDED:SECTION,,,,"al ways, not a measure of accuracy on perovskites. ## [4.3] Feature importance and explainability Table 9 lists t"
 336,9,9,EXCLUDED:XREF,,,,. ## 4.3 Feature importance and explainability Table [9] lists the five most important features per target. Tem
 336,0.128,0.128,GENERATED,shap_zT_1_val,,4.3 Feature importance and explainability,"es the zT model (mean \|SHAP\| = [0.128] ), consistent with the explicit T dependence i"
-336,1,1,EXCLUDED:XREF,,,,"), consistent with the explicit T dependence in Eq. ([1]); the third feature, mean NdValence (d-electron count;"
-336,0.027,0.027,GENERATED,shap_zT_3_val,,4.3 Feature importance and explainability,"ean NdValence (d-electron count; [0.027] ), governs carrier transport in transition-met"
-336,12.9,12.9,GENERATED,shap_S_1_val,,4.3 Feature importance and explainability,"onductivity_(W/(m_K))_` ( [12.9] *µ*V K^−1^), then `CBFV_dev_"
-336,−1,1,EXCLUDED:NOTATION,,,,"_` ( 12.9 *µ*V K^[−1]^), then `CBFV_dev_Density_(g/mL)`"
-336,0.069,0.069,GENERATED,shap_sigma_1_val,,4.3 Feature importance and explainability,"B_electonegativity` ( [0.069] ), then `CBFV_avg_Pauling"
-336,0.032,0.032,GENERATED,shap_kappa_1_val,,4.3 Feature importance and explainability,"rization_(kJ/mol)_` ( [0.032] ), with temperature second. Temperature ranks"
+336,1,1,EXCLUDED:XREF,,,,"), consistent with the explicit T dependence in Eq. ([1]); the third feature is Elemental d v"
+336,0.027,0.027,GENERATED,shap_zT_3_val,,4.3 Feature importance and explainability,"ectrons, mean (MAGPIE) ( [0.027] ). All features other than temperature are sta"
+336,12.9,12.9,GENERATED,shap_S_1_val,,4.3 Feature importance and explainability,"n abs. deviation (CBFV) ( [12.9] *µ*V K^−1^), then Elemental"
+336,−1,1,EXCLUDED:NOTATION,,,,"V) ( 12.9 *µ*V K^[−1]^), then Elemental density, mean abs."
+336,0.069,0.069,GENERATED,shap_sigma_1_val,,4.3 Feature importance and explainability,"s. deviation (CBFV) ( [0.069] ), then Elemental Pauling"
+336,0.032,0.032,GENERATED,shap_kappa_1_val,,4.3 Feature importance and explainability,"ion, maximum (CBFV) ( [0.032] ), with temperature second. Temperature ranks"
 336,6,6,GENERATED,shap_S_temp_rank,,4.3 Feature importance and explainability,"ure second. Temperature ranks [6] for S, 4"
 336,4,4,GENERATED,shap_sigma_temp_rank,,4.3 Feature importance and explainability,"6 for S, [4] for *σ*, 2"
 336,2,2,GENERATED,shap_kappa_temp_rank,,4.3 Feature importance and explainability,"4 for *σ*, [2] for *κ* and first for zT among the"
-336,20,20,DESIGN,shap_top_n,,4.3 Feature importance and explainability,for *κ* and first for zT among the [20] features of Fig. 10. In the beeswarm plots (F
-336,10,10,EXCLUDED:XREF,,,,ng the 20 features of Fig. [10]. In the beeswarm plots (Fig. 11) the SHAP value of the
+336,15,15,DESIGN,shap_top_n,,4.3 Feature importance and explainability,for *κ* and first for zT among the [15] features of Fig. 10. In the beeswarm plots (F
+336,10,10,EXCLUDED:XREF,,,,ng the 15 features of Fig. [10]. In the beeswarm plots (Fig. 11) the SHAP value of the
 336,11,11,EXCLUDED:XREF,,,,features of Fig. 10. In the beeswarm plots (Fig. [11]) the SHAP value of the temperature feature rises with
 336,0.95,0.95,GENERATED,bs_rho_zT,,4.3 Feature importance and explainability,he feature value with its SHAP value [0.95] ) and falls with temperature for *κ* (
 336,−0.90,0.9,GENERATED,bs_rho_kappa,,4.3 Feature importance and explainability,d falls with temperature for *κ* ( [−0.90] ) and *σ* ( −0.79
@@ -928,45 +928,47 @@ line,token,value,class,id,problem,section,context
 339,9,9,EXCLUDED:XREF,,,,h the SD across folds. **Table [9]:** Top five features per target by mean \|SHAP\| value
 339,25,25,GENERATED,table 9: shap_folds,,4.3 Feature importance and explainability,"features per target by mean \|SHAP\| value (mean over [25] chemistry-cluster test folds, each on 20,000 random te"
 339,"20,000",20000,GENERATED,table 9: shap_rows,,4.3 Feature importance and explainability,"ue (mean over 25 chemistry-cluster test folds, each on [20,000] random test rows). Units of the SHAP values are those"
-339,−1,1,EXCLUDED:NOTATION,,,,its of the SHAP values are those of the target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). | **Rank** |
-339,10,10,EXCLUDED:NOTATION,,,,values are those of the target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). | **Rank** | **zT** | **S**
-343,1,1,GENERATED,table 9: t9_rank_1,,4.3 Feature importance and explainability,---------|-------------|-------------|-------------| | [1] | `temperature_bin` (0.128) | `CBFV_dev_thermal_conduc
-343,0.128,0.128,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,|-------------|-------------| | 1 | `temperature_bin` ([0.128]) | `CBFV_dev_thermal_conductivity_(W/(m_K))_` (12.9) |
-343,12.9,12.9,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,(0.128) | `CBFV_dev_thermal_conductivity_(W/(m_K))_` ([12.9]) | `CBFV_max_heat_of_vaporization_(kJ/mol)_` (0.032) |
-343,0.032,0.032,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,_` (12.9) | `CBFV_max_heat_of_vaporization_(kJ/mol)_` ([0.032]) | `CBFV_dev_MB_electonegativity` (0.069) | | 2 | `CBF
-343,0.069,0.069,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,n_(kJ/mol)_` (0.032) | `CBFV_dev_MB_electonegativity` ([0.069]) | | 2 | `CBFV_dev_Zunger_radii_sum` (0.032) | `CBFV_d
-344,2,2,GENERATED,table 9: t9_rank_2,,4.3 Feature importance and explainability,` (0.032) | `CBFV_dev_MB_electonegativity` (0.069) | | [2] | `CBFV_dev_Zunger_radii_sum` (0.032) | `CBFV_dev_Dens
-344,0.032,0.032,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,gativity` (0.069) | | 2 | `CBFV_dev_Zunger_radii_sum` ([0.032]) | `CBFV_dev_Density_(g/mL)` (7.4) | `temperature_bin`
-344,7.4,7.4,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,Zunger_radii_sum` (0.032) | `CBFV_dev_Density_(g/mL)` ([7.4]) | `temperature_bin` (0.028) | `CBFV_avg_Pauling_Elect
-344,0.028,0.028,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,| `CBFV_dev_Density_(g/mL)` (7.4) | `temperature_bin` ([0.028]) | `CBFV_avg_Pauling_Electronegativity` (0.039) | | 3
-344,0.039,0.039,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,e_bin` (0.028) | `CBFV_avg_Pauling_Electronegativity` ([0.039]) | | 3 | `MagpieData mean NdValence` (0.027) | `CBFV_d
-345,3,3,GENERATED,table 9: t9_rank_3,,4.3 Feature importance and explainability,28) | `CBFV_avg_Pauling_Electronegativity` (0.039) | | [3] | `MagpieData mean NdValence` (0.027) | `CBFV_dev_gilm
-345,0.027,0.027,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,gativity` (0.039) | | 3 | `MagpieData mean NdValence` ([0.027]) | `CBFV_dev_gilmor_number_of_valence_electron` (6.4)
-345,6.4,6.4,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,0.027) | `CBFV_dev_gilmor_number_of_valence_electron` ([6.4]) | `CBFV_avg_Melting_point_(K)` (0.021) | `MagpieData
-345,0.021,0.021,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,alence_electron` (6.4) | `CBFV_avg_Melting_point_(K)` ([0.021]) | `MagpieData mode MeltingT` (0.037) | | 4 | `MagpieD
-345,0.037,0.037,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,lting_point_(K)` (0.021) | `MagpieData mode MeltingT` ([0.037]) | | 4 | `MagpieData maximum MendeleevNumber` (0.012)
-346,4,4,GENERATED,table 9: t9_rank_4,,4.3 Feature importance and explainability,_(K)` (0.021) | `MagpieData mode MeltingT` (0.037) | | [4] | `MagpieData maximum MendeleevNumber` (0.012) | `CBFV
-346,0.012,0.012,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,(0.037) | | 4 | `MagpieData maximum MendeleevNumber` ([0.012]) | `CBFV_avg_polarizability(A^3)` (5.4) | `CBFV_dev_he
-346,3,3,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,MendeleevNumber` (0.012) | `CBFV_avg_polarizability(A^[3])` (5.4) | `CBFV_dev_heat_atomization(kJ/mol)` (0.020)
-346,5.4,5.4,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,eleevNumber` (0.012) | `CBFV_avg_polarizability(A^3)` ([5.4]) | `CBFV_dev_heat_atomization(kJ/mol)` (0.020) | `temp
-346,0.020,0.02,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,ity(A^3)` (5.4) | `CBFV_dev_heat_atomization(kJ/mol)` ([0.020]) | `temperature_bin` (0.035) | | 5 | `MagpieData mean
-346,0.035,0.035,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,heat_atomization(kJ/mol)` (0.020) | `temperature_bin` ([0.035]) | | 5 | `MagpieData mean MendeleevNumber` (0.011) | `
-347,5,5,GENERATED,table 9: t9_rank_5,,4.3 Feature importance and explainability,ation(kJ/mol)` (0.020) | `temperature_bin` (0.035) | | [5] | `MagpieData mean MendeleevNumber` (0.011) | `CBFV_av
-347,0.011,0.011,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,in` (0.035) | | 5 | `MagpieData mean MendeleevNumber` ([0.011]) | `CBFV_avg_Metal` (5.4) | `MagpieData maximum Mendel
-347,5.4,5.4,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,Data mean MendeleevNumber` (0.011) | `CBFV_avg_Metal` ([5.4]) | `MagpieData maximum MendeleevNumber` (0.018) | `CBF
-347,0.018,0.018,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,g_Metal` (5.4) | `MagpieData maximum MendeleevNumber` ([0.018]) | `CBFV_dev_gilmor_number_of_valence_electron` (0.023
-347,0.023,0.023,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,0.018) | `CBFV_dev_gilmor_number_of_valence_electron` ([0.023]) | SHAP values are in the units
-350,−1,1,EXCLUDED:NOTATION,,,,SHAP values are in the units of each target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Prefixes avg/s
-350,10,10,EXCLUDED:NOTATION,,,,are in the units of each target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Prefixes avg/sum/dev/mode den
-352,10,10,EXCLUDED:XREF,,,,tics; mean/avg_dev denote MAGPIE statistics. ![Figure [10]](../figures/fig10_shap_global.png){width=100%} **Figu
+339,−1,1,EXCLUDED:NOTATION,,,,its of the SHAP values are those of the target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Every feature
+339,10,10,EXCLUDED:NOTATION,,,,values are those of the target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Every feature is a statistic
+343,1,1,GENERATED,table 9: t9_rank_1,,4.3 Feature importance and explainability,"---------|-------------|-------------|-------------| | [1] | Elemental thermal conductivity, mean abs. deviation"
+343,12.9,12.9,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"ntal thermal conductivity, mean abs. deviation (CBFV) ([12.9]) | Elemental MB electronegativity, mean abs. deviation"
+343,0.069,0.069,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"ntal MB electronegativity, mean abs. deviation (CBFV) ([0.069]) | Elemental heat of vaporization, maximum (CBFV) (0.0"
+343,0.032,0.032,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"069) | Elemental heat of vaporization, maximum (CBFV) ([0.032]) | Temperature (0.128) | | 2 | Elemental density, mean"
+343,0.128,0.128,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"of vaporization, maximum (CBFV) (0.032) | Temperature ([0.128]) | | 2 | Elemental density, mean abs. deviation (CBFV)"
+344,2,2,GENERATED,table 9: t9_rank_2,,4.3 Feature importance and explainability,"tion, maximum (CBFV) (0.032) | Temperature (0.128) | | [2] | Elemental density, mean abs. deviation (CBFV) (7.4)"
+344,7.4,7.4,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"| | 2 | Elemental density, mean abs. deviation (CBFV) ([7.4]) | Elemental Pauling electronegativity, mean (CBFV) (0"
+344,0.039,0.039,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"4) | Elemental Pauling electronegativity, mean (CBFV) ([0.039]) | Temperature (0.028) | Elemental Zunger radii sum, m"
+344,0.028,0.028,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,"electronegativity, mean (CBFV) (0.039) | Temperature ([0.028]) | Elemental Zunger radii sum, mean abs. deviation (CB"
+344,0.032,0.032,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,"lemental Zunger radii sum, mean abs. deviation (CBFV) ([0.032]) | | 3 | Elemental Gilmor number of valence electrons,"
+345,3,3,GENERATED,table 9: t9_rank_3,,4.3 Feature importance and explainability,"nger radii sum, mean abs. deviation (CBFV) (0.032) | | [3] | Elemental Gilmor number of valence electrons, mean a"
+345,6.4,6.4,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([6.4]) | Elemental melting temperature, mode (MAGPIE) (0.037"
+345,0.037,0.037,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"(6.4) | Elemental melting temperature, mode (MAGPIE) ([0.037]) | Elemental melting point, mean (CBFV) (0.021) | Elem"
+345,0.021,0.021,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"AGPIE) (0.037) | Elemental melting point, mean (CBFV) ([0.021]) | Elemental d valence electrons, mean (MAGPIE) (0.027"
+345,0.027,0.027,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"0.021) | Elemental d valence electrons, mean (MAGPIE) ([0.027]) | | 4 | Elemental polarizability, mean (CBFV) (5.4) |"
+346,4,4,GENERATED,table 9: t9_rank_4,,4.3 Feature importance and explainability,"emental d valence electrons, mean (MAGPIE) (0.027) | | [4] | Elemental polarizability, mean (CBFV) (5.4) | Temper"
+346,5.4,5.4,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"(0.027) | | 4 | Elemental polarizability, mean (CBFV) ([5.4]) | Temperature (0.035) | Elemental heat of atomization"
+346,0.035,0.035,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,"ental polarizability, mean (CBFV) (5.4) | Temperature ([0.035]) | Elemental heat of atomization, mean abs. deviation"
+346,0.020,0.02,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"ental heat of atomization, mean abs. deviation (CBFV) ([0.020]) | Elemental Mendeleev number, maximum (MAGPIE) (0.012"
+346,0.012,0.012,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"0.020) | Elemental Mendeleev number, maximum (MAGPIE) ([0.012]) | | 5 | Elemental metal flag, mean (CBFV) (5.4) | Ele"
+347,5,5,GENERATED,table 9: t9_rank_5,,4.3 Feature importance and explainability,"emental Mendeleev number, maximum (MAGPIE) (0.012) | | [5] | Elemental metal flag, mean (CBFV) (5.4) | Elemental"
+347,5.4,5.4,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"IE) (0.012) | | 5 | Elemental metal flag, mean (CBFV) ([5.4]) | Elemental Gilmor number of valence electrons, mean"
+347,0.023,0.023,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([0.023]) | Elemental Mendeleev number, maximum (MAGPIE) (0.018"
+347,0.018,0.018,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"0.023) | Elemental Mendeleev number, maximum (MAGPIE) ([0.018]) | Elemental Mendeleev number, mean (MAGPIE) (0.011) |"
+347,0.011,0.011,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,") (0.018) | Elemental Mendeleev number, mean (MAGPIE) ([0.011]) | SHAP values are in the units"
+350,−1,1,EXCLUDED:NOTATION,,,,SHAP values are in the units of each target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Feature labels
+350,10,10,EXCLUDED:NOTATION,,,,"are in the units of each target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Feature labels read ""Elementa"
+352,10,10,EXCLUDED:XREF,,,,not the thermal conductivity of the sample. ![Figure [10]](../figures/fig10_shap_global.png){width=100%} **Figu
 352,100%,100,EXCLUDED:LINK,,,,![Figure 10](../figures/fig10_shap_global.png){width=[100%]} **Figure 10:** SHAP global feature importance (top
 354,10,10,EXCLUDED:XREF,,,,./figures/fig10_shap_global.png){width=100%} **Figure [10]:** SHAP global feature importance (top
-354,20,20,DESIGN,shap_top_n,,4.3 Feature importance and explainability,"SHAP global feature importance (top [20] features) for (a) zT, (b) S, (c) *κ* and (d)"
-356,11,11,EXCLUDED:XREF,,,,"res) for (a) zT, (b) S, (c) *κ* and (d) *σ*. ![Figure [11]](../figures/fig11_shap_beeswarm.png){width=100%} **Fi"
-356,100%,100,EXCLUDED:LINK,,,,"![Figure 11](../figures/fig11_shap_beeswarm.png){width=[100%]} **Figure 11:** SHAP beeswarm plots for (a) zT, (b) S"
-358,11,11,EXCLUDED:XREF,,,,"figures/fig11_shap_beeswarm.png){width=100%} **Figure [11]:** SHAP beeswarm plots for (a) zT, (b) S, (c) *κ* and"
-358,"5,000",5000,GENERATED,bs_rows,,4.3 Feature importance and explainability,"* and (d) *σ*: one point per test row ( [5,000] per model, first repeat of the chemistry-clus"
-358,10,10,EXCLUDED:XREF,,,,"among these rows, so their order can differ from Fig. [10], which averages all folds of all repeats. The two fea"
+354,15,15,DESIGN,shap_top_n,,4.3 Feature importance and explainability,"SHAP global feature importance (top [15] features, mean over the folds with the SD acr"
+354,−1,1,EXCLUDED:NOTATION,,,,"h the SD across folds as error bars) for (a) S (*µ*V K^[−1]^), (b) *σ* (log~10~ units), (c) *κ* (log~10~ units) an"
+354,10,10,EXCLUDED:NOTATION,,,,"ds as error bars) for (a) S (*µ*V K^−1^), (b) *σ* (log~[10]~ units), (c) *κ* (log~10~ units) and (d) zT. Every fea"
+354,10,10,EXCLUDED:NOTATION,,,,"S (*µ*V K^−1^), (b) *σ* (log~10~ units), (c) *κ* (log~[10]~ units) and (d) zT. Every feature other than temperatu"
+356,11,11,EXCLUDED:XREF,,,,"ties, not the sample's thermal conductivity. ![Figure [11]](../figures/fig11_shap_beeswarm.png){width=100%} **Fi"
+356,100%,100,EXCLUDED:LINK,,,,"![Figure 11](../figures/fig11_shap_beeswarm.png){width=[100%]} **Figure 11:** SHAP beeswarm plots for (a) S, (b) *σ"
+358,11,11,EXCLUDED:XREF,,,,"figures/fig11_shap_beeswarm.png){width=100%} **Figure [11]:** SHAP beeswarm plots for (a) S, (b) *σ*, (c) *κ* and"
+358,"5,000",5000,GENERATED,bs_rows,,4.3 Feature importance and explainability,"κ* and (d) zT: one point per test row ( [5,000] per model, first repeat of the chemistry-clus"
+358,10,10,EXCLUDED:XREF,,,,"among these rows, so their order can differ from Fig. [10], which averages all folds of all repeats. Every featur"
 360,12,12,EXCLUDED:XREF,,,,"on schemes contribute differently to the targets (Fig. [12]). In the zT model, temperature accounts for"
 360,20,20,GENERATED,shap_share_temperature,,4.3 Feature importance and explainability,"emperature accounts for [20] % of the mean \|SHAP\|, CBFV features for"
 360,53,53,GENERATED,shap_share_cbfv,,4.3 Feature importance and explainability,"an \|SHAP\|, CBFV features for [53] % and MAGPIE features for"
@@ -1517,7 +1519,7 @@ line,token,value,class,id,problem,section,context
 465,2,2,EXCLUDED:NOTATION,,,,0.727 ) outperforms the component-wise route S^[2]^*σ*T/*κ* (R^2^ = 0.540 ) b
 465,2,2,EXCLUDED:NOTATION,,,,) outperforms the component-wise route S^2^*σ*T/*κ* (R^[2]^ = 0.540 ) because compone
 465,0.540,0.54,GENERATED,dvd_derived,,5 Conclusions,nt-wise route S^2^*σ*T/*κ* (R^2^ = [0.540] ) because component errors compound; component
-467,9,9,EXCLUDED:XREF,,,,"rgest mean \|SHAP\| belongs to a CBFV statistic (Table [9]), with temperature ranked second for *κ*.. - The scre"
+467,9,9,EXCLUDED:XREF,,,,"s to a statistic of an elemental property (CBFV; Table [9]), not to a measured property of the material, and temp"
 469,315,315,GENERATED,mp_f4,,5 Conclusions,screening of the Materials Project gives [315] perovskite-type compounds and 3
 469,30,30,GENERATED,mp_f6,,5 Conclusions,"5 perovskite-type compounds and [30] lead-free narrow-gap candidates,"
 469,9,9,GENERATED,nv_main_seen,,5 Conclusions,"lead-free narrow-gap candidates, [9] in chemistry clusters seen in training and"

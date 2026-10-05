@@ -381,8 +381,10 @@ def na3_per_target():
 
 
 def shap_display_name(raw):
-    """A feature's column name as shown in the paper (the column name itself, in code font)."""
-    return raw
+    """A feature's label as shown in the paper, from the committed mapping table (docs/feature_labels.csv)."""
+    import feature_labels as fl
+
+    return fl.label(raw)
 
 
 def na3_values():
@@ -399,8 +401,8 @@ def na3_values():
     for t in T4:
         d = na3[t]
         for i, f in enumerate(d["top20"][:5], 1):
-            v[f"t9_{t}_{i}"] = f"`{shap_display_name(f['feature'])}` ({f['mean_abs_shap']:.1f})" if t == "S" else f"`{shap_display_name(f['feature'])}` ({f['mean_abs_shap']:.3f})"
-        v[f"shap_{t}_1"], v[f"shap_{t}_2"], v[f"shap_{t}_3"] = (f"`{shap_display_name(f['feature'])}`" for f in d["top20"][:3])
+            v[f"t9_{t}_{i}"] = f"{shap_display_name(f['feature'])} ({f['mean_abs_shap']:.1f})" if t == "S" else f"{shap_display_name(f['feature'])} ({f['mean_abs_shap']:.3f})"
+        v[f"shap_{t}_1"], v[f"shap_{t}_2"], v[f"shap_{t}_3"] = (shap_display_name(f['feature']) for f in d["top20"][:3])
         v[f"shap_{t}_1_val"], v[f"shap_{t}_2_val"], v[f"shap_{t}_3_val"] = (f"{f['mean_abs_shap']:.1f}" if t == "S" else f"{f['mean_abs_shap']:.3f}" for f in d["top20"][:3])
         names = [f["feature"] for f in d["top20"]]
         v[f"shap_{t}_temp_rank"] = str(names.index("temperature_bin") + 1)

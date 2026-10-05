@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 from matplotlib.patches import Patch  # noqa: E402
 
+import feature_labels as fl  # noqa: E402
 import figstyle as fs  # noqa: E402
 import paper_a_values as pav  # noqa: E402
 import thesis_values as tv  # noqa: E402
@@ -32,7 +33,7 @@ REPO = Path(__file__).resolve().parents[2]
 FIG = REPO / "thesis_paper" / "figures"
 T4 = pav.TARGETS
 BEESWARM_TOP_N = 10  # features per target in the beeswarm plots of Figure 11 (a presentation choice, docs/design_constants.csv D23)
-SHAP_TOP_N = 20  # features shown per target in Figure 10 (a presentation choice, docs/design_constants.csv D23)
+SHAP_TOP_N = 15  # features shown per target in Figure 10 (a presentation choice, docs/design_constants.csv D23; reduced from 20 so that two-line labels fit)
 LABEL = {"S": "S", "sigma": "σ", "kappa": "κ", "zT": "zT"}
 
 
@@ -121,25 +122,19 @@ def fig10_shap(out):
     """SHAP global importance: the 20 features with the largest mean |SHAP| per target (NA3, chemistry-cluster folds), coloured by descriptor scheme; error bars are the SD across folds."""
     na3 = tv.na3_per_target()
     fs.apply()
-    fig, axes = fs.new_figure("double", 15.0, 2, 2)
-    order = ("zT", "S", "kappa", "sigma")
-    units = {"zT": "mean |SHAP| (zT)", "S": "mean |SHAP| (µV K$^{-1}$)", "kappa": "mean |SHAP| (log$_{10}$)", "sigma": "mean |SHAP| (log$_{10}$)"}
+    fig, axes = fs.new_figure("double", 21.0, 2, 2)
+    order = ("S", "sigma", "kappa", "zT")
+    units = {"zT": "mean |SHAP|", "S": "mean |SHAP| (µV K$^{-1}$)", "kappa": "mean |SHAP|", "sigma": "mean |SHAP|"}
     colour = {"MagpieData": fs.OI["blue"], "CBFV_": fs.OI["orange"], "temperature_bin": fs.OI["green"]}
     for ax, t, letter in zip(axes.ravel(), order, "abcd"):
-        top = na3[t]["top20"]
+        top = na3[t]["top20"][:SHAP_TOP_N]
         assert len(top) == SHAP_TOP_N and all(top[i]["mean_abs_shap"] >= top[i + 1]["mean_abs_shap"] for i in range(SHAP_TOP_N - 1))
         y = np.arange(SHAP_TOP_N)[::-1]
         cols = [next(c for k, c in colour.items() if f["feature"].startswith(k)) for f in top]
         ax.barh(y, [f["mean_abs_shap"] for f in top], xerr=[f["fold_sd"] for f in top], color=cols, ec=fs.EDGE_GREY, lw=0.4, error_kw={"lw": 0.6, "capsize": 1.5})
         ax.set_yticks(y)
-        labels = []
-        for f in top:
-            n = f["feature"].replace("MagpieData ", "").replace("CBFV_", "")
-            for junk in ("_(W/(m_K))_", "_(g/mL)", "(A^3)", "_(kJ/mol)_", "(kJ/mol)"):
-                n = n.replace(junk, "")
-            labels.append(n if len(n) <= 26 else n[:25] + "…")
-        ax.set_yticklabels(labels, fontsize=7)
-        ax.set_xlabel(units[t])
+        ax.set_yticklabels([fl.wrapped(fl.label(f["feature"]), 46) for f in top], fontsize=6.5)
+        ax.set_xlabel(units[t], fontsize=7.5)
         fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
         fs.grid(ax, axis="x")
     fs.legend_row(fig, [Patch(color=c, ec=fs.EDGE_GREY) for c in colour.values()], ["MAGPIE", "CBFV", "Temperature"])
@@ -152,7 +147,7 @@ def fig12_shares(out):
     na3 = tv.na3_per_target()
     fs.apply()
     fig, ax = fs.new_figure("single", 6.5)
-    order = ("zT", "S", "kappa", "sigma")
+    order = ("S", "sigma", "kappa", "zT")
     names = {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}
     bottom = np.zeros(len(order))
     for g, c, lab in (("magpie", fs.OI["blue"], "MAGPIE"), ("cbfv", fs.OI["orange"], "CBFV"), ("temperature", fs.OI["green"], "Temperature")):
@@ -167,14 +162,6 @@ def fig12_shares(out):
     fs.legend_row(fig, *ax.get_legend_handles_labels())
     fs.save(fig, str(out), expect_width_cm=8.0)
     plt.close(fig)
-
-
-def _clean_feature(name):
-    """A feature's column name shortened for an axis label."""
-    n = name.replace("MagpieData ", "").replace("CBFV_", "")
-    for junk in ("_(W/(m_K))_", "_(g/mL)", "(A^3)", "_(kJ/mol)_", "(kJ/mol)"):
-        n = n.replace(junk, "")
-    return n if len(n) <= 26 else n[:25] + "…"
 
 
 def load_na3_rows(run_dirs):
@@ -197,8 +184,8 @@ def fig11_beeswarm(out, run_dirs, top_n=BEESWARM_TOP_N):
     """Beeswarm plots: SHAP value of every saved row for the top features of each target (NA3 rows, repeat 0, a seeded subsample of each test fold), coloured by the row's feature value (percentile rank)."""
     data = load_na3_rows(run_dirs)
     fs.apply()
-    fig, axes = fs.new_figure("double", 15.0, 2, 2)
-    order = [t for t in ("zT", "S", "kappa", "sigma") if t in data]
+    fig, axes = fs.new_figure("double", 22.0, 2, 2)
+    order = [t for t in ("S", "sigma", "kappa", "zT") if t in data]
     rng = np.random.default_rng(0)
     sc = None
     for ax, t, letter in zip(axes.ravel(), order, "abcd"):
@@ -213,13 +200,14 @@ def fig11_beeswarm(out, run_dirs, top_n=BEESWARM_TOP_N):
             sc = ax.scatter(v, (top_n - 1 - rank) + jitter, c=pct, cmap="viridis", s=2.5, lw=0, alpha=0.7, rasterized=True, vmin=0, vmax=1)
         ax.axvline(0, color="0.4", lw=0.5)
         ax.set_yticks(np.arange(top_n)[::-1])
-        ax.set_yticklabels([_clean_feature(cols[j]) for j in top], fontsize=7)
+        ax.set_yticklabels([fl.wrapped(fl.label(cols[j]), 38) for j in top], fontsize=6.5)
+        ax.xaxis.set_major_locator(plt.MaxNLocator(4))
         ax.set_xlabel({"zT": "SHAP value (zT)", "S": "SHAP value (µV K$^{-1}$)", "kappa": "SHAP value (log$_{10}$)", "sigma": "SHAP value (log$_{10}$)"}[t])
         fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
         fs.grid(ax, axis="x")
     for ax in axes.ravel()[len(order):]:
         ax.set_visible(False)
-    fig.colorbar(sc, ax=axes, shrink=0.5, aspect=25, label="Feature value (percentile rank)")
+    fig.colorbar(sc, ax=axes, orientation="horizontal", location="bottom", shrink=0.5, aspect=40, label="Feature value (percentile rank)")
     fs.save(fig, str(out), expect_width_cm=16.0)
     plt.close(fig)
 
