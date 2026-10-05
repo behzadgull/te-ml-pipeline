@@ -2,8 +2,8 @@
 Literature search for the MP screening candidates: has the compound been studied as a thermoelectric (measurement or calculation)? Literature only: it reads the committed candidate lists
 (results/na11_candidate_novelty/<stamp>/candidate_lists.csv, which holds E_hull, gap and list membership but no prediction) and queries Crossref; it opens no prediction file.
 
-For every distinct formula of the compounds in the largest reported list (E_hull <= 0.10 and gap cap 0.9), two Crossref bibliographic queries are made,
-    "<formula> thermoelectric"   and   "<formula> Seebeck coefficient electrical conductivity",
+For every distinct formula of the compounds in the largest reported list (E_hull <= 0.10 and gap cap 0.9), four Crossref bibliographic queries are made,
+    "<formula> thermoelectric", "<formula> Seebeck coefficient electrical conductivity", "<formula>" and "<formula> thermopower power factor figure of merit first-principles",
 and the top RESULTS_PER_QUERY hits of each are stored with DOI, title (markup stripped), year, journal and the abstract when Crossref has one. A hit is flagged for review when the normalised
 title contains the normalised formula (case-insensitive, subscript digits and markup removed) together with a thermoelectric term, or when the abstract does. The flags only direct the manual
 review (docs/candidate_literature_labels.csv records the basis of every label, which is a title or abstract statement); nothing is labelled automatically.
@@ -29,7 +29,7 @@ import run_record as rr  # noqa: E402
 
 LISTS = "thesis_paper/results/na11_candidate_novelty/20261004T185101/candidate_lists.csv"
 RESULTS_PER_QUERY = 10
-QUERIES = ("{f} thermoelectric", "{f} Seebeck coefficient electrical conductivity")
+QUERIES = ("{f} thermoelectric", "{f} Seebeck coefficient electrical conductivity", "{f}", "{f} thermopower power factor figure of merit first-principles")
 TE_TERMS = ("thermoelectric", "seebeck", "power factor", "figure of merit", "thermopower", "zt")
 SUB = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
 
