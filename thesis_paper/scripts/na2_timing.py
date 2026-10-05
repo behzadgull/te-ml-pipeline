@@ -71,6 +71,7 @@ def main():
     g = s[ncv.GROUP_COL].to_numpy()
     tr, te = next(iter(GroupKFold(n_splits=3).split(np.empty(len(g)), groups=g)))
     trial = json.loads((REPO / TRIAL_RECORD).read_text(encoding="utf-8"))
+    trial = trial.get("meta", trial)
     p12 = {**trial["params"]}
     per_tree, raw = per_tree_seconds(p12, X, y, tr, te)
     local_trial_seconds = 3 * per_tree * p12["n_estimators"]
