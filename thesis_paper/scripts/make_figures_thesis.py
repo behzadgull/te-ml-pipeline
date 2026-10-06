@@ -265,7 +265,7 @@ def fig4_workflow(out):
 
     W = 16.0
     top_w, top_h, gap = 3.4, 2.45, 0.8
-    a_h, m_h, e_h, o_h, g = 3.75, 1.15, 3.3, 1.15, 0.6
+    a_h, m_h, e_h, o_h, g = 4.25, 0.9, 3.9, 1.15, 0.6
     H = 0.1 + o_h + g + e_h + g + m_h + g + a_h + 0.85 + top_h + 0.2
     fsz = 8.0
     fig = plt.figure(figsize=(W * fs.CM, H * fs.CM))
@@ -301,7 +301,7 @@ def fig4_workflow(out):
     a_w = (W - 3 * a_gap) / 4
     a_y = 0.1 + o_h + g + e_h + g + m_h + g
     A = [
-        (f"(A) §{s_ladder}, §{s_methods}\nValidation ladder\nand ceiling", f"five splits, grouped\nCV {v['n_repeats']} × {v['n_folds']};\nchemistry-cluster\nceilings R²:\nS {v['chem_S']}, σ {v['chem_sigma']}\nκ {v['chem_kappa']}, zT {v['chem_zT']}"),
+        (f"(A) §{s_ladder}, §{s_methods}\nValidation ladder\nand noise ceiling", f"five splits, grouped\nCV {v['n_repeats']} × {v['n_folds']};\nchemistry-cluster R²:\nS {v['chem_S']}, σ {v['chem_sigma']}\nκ {v['chem_kappa']}, zT {v['chem_zT']}\nlabel-noise ceiling\n{v['nc_all_lo']}–{v['nc_all_hi']}"),
         (f"(B) §{s_algo}\nModel\ncomparison", "XGBoost, LightGBM,\nrandom forest,\nstacking; paired,\nsame folds"),
         (f"(C) §{s_nested}\nNested CV", f"{v['optuna_trials']} trials inside\neach outer fold;\noptimism ≤ {v['n1_max']} R²"),
         (f"(D) §{s_dvd}\nDirect vs\nderived zT", f"{v['dvd_rows']} rows\ndirect R² {v['dvd_direct']}\nderived R² {v['dvd_derived']}"),
@@ -322,9 +322,9 @@ def fig4_workflow(out):
     # model band
     m_y = a_y - g - m_h
     ax.add_patch(FancyBboxPatch((0, m_y), W, m_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
-    t = ax.text(W / 2, m_y + m_h / 2 + 0.22, "XGBoost, frozen per-target hyperparameters; carrier-type classifier", ha="center", va="center", fontsize=fsz, fontweight="bold", color="0.1")
-    t2 = ax.text(W / 2, m_y + m_h / 2 - 0.26, f"classifier accuracy {v['cl_acc']} under chemistry-cluster CV", ha="center", va="center", fontsize=fsz, color="0.1", style="italic")
-    checks.extend([(t, (0, m_y, W, m_y + m_h)), (t2, (0, m_y, W, m_y + m_h))])
+    t = ax.text(W / 2, m_y + m_h / 2 + 0.22, "XGBoost, frozen per-target hyperparameters (all analyses; alternatives compared in B)", ha="center", va="center", fontsize=fsz, fontweight="bold", color="0.1")
+    t.set_position((W / 2, m_y + m_h / 2))
+    checks.append((t, (0, m_y, W, m_y + m_h)))
     for xc in cx:
         arrow((xc, a_y), (xc, m_y + m_h + 0.03), dashed=True)
 
@@ -334,8 +334,8 @@ def fig4_workflow(out):
     e_y = m_y - g - e_h
     E = [
         (f"(E) §{s_shap}\nSHAP attribution", f"{v['shap_folds']} folds, {v['shap_rows']} rows\neach; features are\nstatistics of elemental\nproperties, not measured\nproperties"),
-        (f"(F) §{s_ext}\nExternal transfer", f"ESTM: {v['estm_scope']} rows,\nDOI-disjoint and\ncluster-disjoint strata\nJARVIS: {v['jv_both']}\nDFT entries (description)"),
-        (f"(G) §{s_screen}\nScreening (hypotheses)", f"Materials Project:\n{v['mp_f0']} → {v['mp_f4']} perovskite-type\n(connectivity test)\n→ {v['mp_f6']} candidates:\n{v['nv_main_seen']} seen, {v['nv_main_unseen']} unseen clusters"),
+        (f"(F) §{s_ext}\nExternal transfer", f"ESTM: {v['estm_scope']} rows,\nDOI-disjoint and\ncluster-disjoint strata\nJARVIS: {v['jv_both']}\nDFT entries (description;\nsign by carrier-type\nclassifier)"),
+        (f"(G) §{s_screen}\nScreening (hypotheses)", f"Materials Project:\n{v['mp_f0']} → {v['mp_f4']} perovskite-type\n(connectivity test)\n→ {v['mp_f6']} candidates:\n{v['nv_main_seen']} seen, {v['nv_main_unseen']} unseen clusters;\ncarrier-type classifier,\naccuracy {v['cl_acc']}"),
     ]
     ex = []
     for i, (hd, bd) in enumerate(E):
@@ -347,7 +347,7 @@ def fig4_workflow(out):
     # outputs
     ax.add_patch(FancyBboxPatch((0, 0.1), W, o_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
     t = ax.text(W / 2, 0.1 + o_h / 2 + 0.22, "Outputs", ha="center", va="center", fontsize=fsz, fontweight="bold", color="0.1")
-    t2 = ax.text(W / 2, 0.1 + o_h / 2 - 0.26, "composition-only ceilings; ranked list of candidates as hypotheses, not findings", ha="center", va="center", fontsize=fsz, color="0.1", style="italic")
+    t2 = ax.text(W / 2, 0.1 + o_h / 2 - 0.26, "grouped performance and its label-noise ceiling; ranked candidates as hypotheses, not findings", ha="center", va="center", fontsize=fsz, color="0.1", style="italic")
     checks.extend([(t, (0, 0.1, W, 0.1 + o_h)), (t2, (0, 0.1, W, 0.1 + o_h))])
     for xc in ex:
         arrow((xc, e_y), (xc, 0.1 + o_h + 0.03))

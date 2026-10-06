@@ -686,6 +686,28 @@ def na2_na1_values():
     return v
 
 
+def base_chem(t):
+    """The chemistry-cluster R2 of the paper for a target (the ladder run)."""
+    return pav._json(pav.LADDER)["runs"][f"{t}_chemistry_full"]["per_repeat_r2_mean"]
+
+
+def noise_ceiling_values():
+    """The label-noise ceiling per target (measurement plus digitisation noise, lower and upper value) and the headroom range, from the committed noise-floor artifact."""
+    n = pav._json(pav.NOISE)
+    rows = n["item3_combined_ceiling_new"]
+    v = {}
+    allr = []
+    for t in T4:
+        rs = [r for r in rows if r["label"].split(" ")[0] == t]
+        assert rs
+        v[f"nc_{t}_lo"], v[f"nc_{t}_hi"] = f"{min(r['r2_comb_lower'] for r in rs):.3f}", f"{max(r['r2_comb_upper'] for r in rs):.3f}"
+        assert all(abs(r["confirmed_new"] - float(base_chem(t))) < 6e-4 for r in rs), t  # the chemistry-cluster R2 of the artifact is the one of the paper
+        allr += rs
+    v["nc_head_lo"], v["nc_head_hi"] = f"{min(r['headroom_lower'] for r in allr):.3f}", f"{max(r['headroom_upper'] for r in allr):.3f}"
+    v["nc_all_lo"], v["nc_all_hi"] = f"{min(r['r2_comb_lower'] for r in allr):.2f}", f"{max(r['r2_comb_upper'] for r in allr):.2f}"
+    return v
+
+
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
     followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
@@ -806,5 +828,6 @@ def new_analysis_values():
     v.update(na11_ranked_values())
     v.update(na11_limits_values())
     v.update(na2_na1_values())
+    v.update(noise_ceiling_values())
     v.update(na2_design_values())
     return v

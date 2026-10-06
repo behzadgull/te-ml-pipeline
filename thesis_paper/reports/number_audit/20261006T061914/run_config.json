@@ -1,0 +1,24 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "f95eb6ad4488c229b6af49893eb8d710bd880bc961b821331fdb0ad2f4319d11",
+      "bytes": 114719
+    }
+  },
+  "git_head": "2f05d217b1dfeddeb255e6efb8ca8ddeeb28088f",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/figures/fig4_workflow.pdf",
+    "thesis_paper/figures/fig4_workflow.png",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/paper/refs.bib",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/reports/number_audit/20261006T061901/"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 41
+}
