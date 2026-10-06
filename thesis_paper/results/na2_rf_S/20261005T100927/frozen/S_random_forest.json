@@ -1,0 +1,20 @@
+{
+  "target": "S",
+  "target_scale": "linear",
+  "model_type": "random_forest",
+  "tuned": false,
+  "n_trials": 0,
+  "seed": 0,
+  "device": "cpu",
+  "n_rows": 185064,
+  "n_features": 397,
+  "inner_cv_r2": null,
+  "best_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+  }
+}
