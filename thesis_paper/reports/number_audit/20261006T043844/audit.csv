@@ -906,63 +906,179 @@ line,token,value,class,id,problem,section,context
 332,172,172,GENERATED,jv_sign_mseen_n,,4.2 External validation,"0.69 , [172] entries) against 0.50"
 332,0.50,0.5,GENERATED,jv_sign_munseen,,4.2 External validation,172 entries) against [0.50] for unseen ones. The models therefore carry e
 334,4.3,4.3,EXCLUDED:SECTION,,,,"al ways, not a measure of accuracy on perovskites. ## [4.3] Feature importance and explainability Table 9 lists t"
-336,9,9,EXCLUDED:XREF,,,,. ## 4.3 Feature importance and explainability Table [9] lists the five most important features per target. Tem
-336,0.128,0.128,GENERATED,shap_zT_1_val,,4.3 Feature importance and explainability,"es the zT model (mean \|SHAP\| = [0.128] ), consistent with the explicit T dependence i"
-336,1,1,EXCLUDED:XREF,,,,"), consistent with the explicit T dependence in Eq. ([1]); the third feature is Elemental d v"
-336,0.027,0.027,GENERATED,shap_zT_3_val,,4.3 Feature importance and explainability,"ectrons, mean (MAGPIE) ( [0.027] ). All features other than temperature are sta"
-336,12.9,12.9,GENERATED,shap_S_1_val,,4.3 Feature importance and explainability,"n abs. deviation (CBFV) ( [12.9] *µ*V K^−1^), then Elemental"
-336,−1,1,EXCLUDED:NOTATION,,,,"V) ( 12.9 *µ*V K^[−1]^), then Elemental density, mean abs."
-336,0.069,0.069,GENERATED,shap_sigma_1_val,,4.3 Feature importance and explainability,"s. deviation (CBFV) ( [0.069] ), then Elemental Pauling"
-336,0.032,0.032,GENERATED,shap_kappa_1_val,,4.3 Feature importance and explainability,"ion, maximum (CBFV) ( [0.032] ), with temperature second. Temperature ranks"
-336,6,6,GENERATED,shap_S_temp_rank,,4.3 Feature importance and explainability,"ure second. Temperature ranks [6] for S, 4"
-336,4,4,GENERATED,shap_sigma_temp_rank,,4.3 Feature importance and explainability,"6 for S, [4] for *σ*, 2"
-336,2,2,GENERATED,shap_kappa_temp_rank,,4.3 Feature importance and explainability,"4 for *σ*, [2] for *κ* and first for zT among the"
-336,15,15,DESIGN,shap_top_n,,4.3 Feature importance and explainability,for *κ* and first for zT among the [15] features of Fig. 10. In the beeswarm plots (F
-336,10,10,EXCLUDED:XREF,,,,ng the 15 features of Fig. [10]. In the beeswarm plots (Fig. 11) the SHAP value of the
-336,11,11,EXCLUDED:XREF,,,,features of Fig. 10. In the beeswarm plots (Fig. [11]) the SHAP value of the temperature feature rises with
+336,9,9,EXCLUDED:XREF,,,,. ## 4.3 Feature importance and explainability Table [9] lists the five features with the largest mean \|SHAP\|
+336,2.5,2.5,DESIGN,iv_lo,,4.3 Feature importance and explainability,"AP\| per target, each with the interval ( [2.5] th to 97.5 th percentile"
+336,97.5,97.5,DESIGN,iv_hi,,4.3 Feature importance and explainability,nterval ( 2.5 th to [97.5] th percentile) of its per-fold mean across the
+336,25,25,GENERATED,shap_folds,,4.3 Feature importance and explainability,le) of its per-fold mean across the [25] chemistry-cluster folds and the number of fol
+336,25,25,GENERATED,rb_zT_n,,4.3 Feature importance and explainability,portant feature of the zT model in all [25] folds (mean \|SHAP\| 0.1
+336,0.128,0.128,GENERATED,rb_zT_1_mean,,4.3 Feature importance and explainability,"25 folds (mean \|SHAP\| [0.128] , interval 0.120 t"
+336,0.120,0.12,GENERATED,rb_zT_1_lo,,4.3 Feature importance and explainability,"0.128 , interval [0.120] to 0.136 ), consis"
+336,0.136,0.136,GENERATED,rb_zT_1_hi,,4.3 Feature importance and explainability,"0.120 to [0.136] ), consistent with the explicit T dependence i"
+336,1,1,EXCLUDED:XREF,,,,"), consistent with the explicit T dependence in Eq. ([1]); the next two features by the mean,"
+336,16,16,GENERATED,rb_zT_2_top3,,4.3 Feature importance and explainability,", are among the top three in [16] and 15 folds an"
+336,15,15,GENERATED,rb_zT_3_top3,,4.3 Feature importance and explainability,"16 and [15] folds and their intervals overlap, so their o"
+336,24,24,GENERATED,rb_S_1_top3,,4.3 Feature importance and explainability,is among the top three in [24] of 25 folds and first
+336,25,25,GENERATED,rb_S_n,,4.3 Feature importance and explainability,e in 24 of [25] folds and first in 17
+336,17,17,GENERATED,rb_S_1_top1,,4.3 Feature importance and explainability,"25 folds and first in [17] ; for *σ*, Elemental M"
+336,24,24,GENERATED,rb_sigma_1_top3,,4.3 Feature importance and explainability,is among the top three in [24] folds (first in 14
+336,14,14,GENERATED,rb_sigma_1_top1,,4.3 Feature importance and explainability,24 folds (first in [14] ) and temperature in 2
+336,22,22,GENERATED,rb_sigma_t_top3,,4.3 Feature importance and explainability,"4 ) and temperature in [22] ; for *κ*, temperature is among the top three"
+336,20,20,GENERATED,rb_kappa_t_top3,,4.3 Feature importance and explainability,ture is among the top three in [20] folds and among the top five in all
+336,25,25,GENERATED,rb_kappa_n,,4.3 Feature importance and explainability,"folds and among the top five in all [25] , whereas the feature that leads on average,"
+336,14,14,GENERATED,rb_kappa_1_top3,,4.3 Feature importance and explainability,is among the top three in only [14] folds and its interval reaches almost zero (
+336,0.001,0.001,GENERATED,rb_kappa_1_lo,,4.3 Feature importance and explainability,ts interval reaches almost zero ( [0.001] to 0.056 ). In
+336,0.056,0.056,GENERATED,rb_kappa_1_hi,,4.3 Feature importance and explainability,0.001 to [0.056] ). In every model the intervals of the feature
+336,15,15,GENERATED,rb_S_t_top5,,4.3 Feature importance and explainability,is among the top five features in [15] of 25 folds for S and
+336,25,25,GENERATED,rb_S_n,,4.3 Feature importance and explainability,"s in 15 of [25] folds for S and in all of them for *σ*, *κ* a"
+336,11,11,EXCLUDED:XREF,,,,"them for *σ*, *κ* and zT. In the beeswarm plots (Fig. [11]) the SHAP value of the temperature feature rises with"
 336,0.95,0.95,GENERATED,bs_rho_zT,,4.3 Feature importance and explainability,he feature value with its SHAP value [0.95] ) and falls with temperature for *κ* (
 336,−0.90,0.9,GENERATED,bs_rho_kappa,,4.3 Feature importance and explainability,d falls with temperature for *κ* ( [−0.90] ) and *σ* ( −0.79
 336,−0.79,0.79,GENERATED,bs_rho_sigma,,4.3 Feature importance and explainability,"−0.90 ) and *σ* ( [−0.79] ), and depends only weakly on it for S ("
 336,0.19,0.19,GENERATED,bs_rho_S,,4.3 Feature importance and explainability,and depends only weakly on it for S ( [0.19] ). These are attributions of the fitted models
 336,10,10,EXCLUDED:XREF,,,,left to the reader: no mechanism is claimed here. Fig. [10] shows the bar plots with the SD across folds.
-339,9,9,EXCLUDED:XREF,,,,h the SD across folds. **Table [9]:** Top five features per target by mean \|SHAP\| value
-339,25,25,GENERATED,table 9: shap_folds,,4.3 Feature importance and explainability,"features per target by mean \|SHAP\| value (mean over [25] chemistry-cluster test folds, each on 20,000 random te"
-339,"20,000",20000,GENERATED,table 9: shap_rows,,4.3 Feature importance and explainability,"ue (mean over 25 chemistry-cluster test folds, each on [20,000] random test rows). Units of the SHAP values are those"
+339,9,9,EXCLUDED:XREF,,,,h the SD across folds. **Table [9]:** The five features with the largest mean \|SHAP\| pe
+339,25,25,GENERATED,table 9: shap_folds,,4.3 Feature importance and explainability,"s with the largest mean \|SHAP\| per target (mean over [25] chemistry-cluster test folds, each on 20,000 random te"
+339,"20,000",20000,GENERATED,table 9: shap_rows,,4.3 Feature importance and explainability,"et (mean over 25 chemistry-cluster test folds, each on [20,000] random test rows), each with the 2.5th to 97.5th perce"
+339,25,25,GENERATED,table 9: shap_folds,,4.3 Feature importance and explainability,h to 97.5th percentile of the per-fold mean across the [25] folds and the number of folds in which it is among the
 339,−1,1,EXCLUDED:NOTATION,,,,its of the SHAP values are those of the target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Every feature
 339,10,10,EXCLUDED:NOTATION,,,,values are those of the target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Every feature is a statistic
 343,1,1,GENERATED,table 9: t9_rank_1,,4.3 Feature importance and explainability,"---------|-------------|-------------|-------------| | [1] | Elemental thermal conductivity, mean abs. deviation"
-343,12.9,12.9,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"ntal thermal conductivity, mean abs. deviation (CBFV) ([12.9]) | Elemental MB electronegativity, mean abs. deviation"
-343,0.069,0.069,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"ntal MB electronegativity, mean abs. deviation (CBFV) ([0.069]) | Elemental heat of vaporization, maximum (CBFV) (0.0"
-343,0.032,0.032,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"069) | Elemental heat of vaporization, maximum (CBFV) ([0.032]) | Temperature (0.128) | | 2 | Elemental density, mean"
-343,0.128,0.128,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"of vaporization, maximum (CBFV) (0.032) | Temperature ([0.128]) | | 2 | Elemental density, mean abs. deviation (CBFV)"
-344,2,2,GENERATED,table 9: t9_rank_2,,4.3 Feature importance and explainability,"tion, maximum (CBFV) (0.032) | Temperature (0.128) | | [2] | Elemental density, mean abs. deviation (CBFV) (7.4)"
-344,7.4,7.4,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"| | 2 | Elemental density, mean abs. deviation (CBFV) ([7.4]) | Elemental Pauling electronegativity, mean (CBFV) (0"
-344,0.039,0.039,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"4) | Elemental Pauling electronegativity, mean (CBFV) ([0.039]) | Temperature (0.028) | Elemental Zunger radii sum, m"
-344,0.028,0.028,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,"electronegativity, mean (CBFV) (0.039) | Temperature ([0.028]) | Elemental Zunger radii sum, mean abs. deviation (CB"
-344,0.032,0.032,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,"lemental Zunger radii sum, mean abs. deviation (CBFV) ([0.032]) | | 3 | Elemental Gilmor number of valence electrons,"
-345,3,3,GENERATED,table 9: t9_rank_3,,4.3 Feature importance and explainability,"nger radii sum, mean abs. deviation (CBFV) (0.032) | | [3] | Elemental Gilmor number of valence electrons, mean a"
-345,6.4,6.4,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([6.4]) | Elemental melting temperature, mode (MAGPIE) (0.037"
-345,0.037,0.037,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"(6.4) | Elemental melting temperature, mode (MAGPIE) ([0.037]) | Elemental melting point, mean (CBFV) (0.021) | Elem"
-345,0.021,0.021,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"AGPIE) (0.037) | Elemental melting point, mean (CBFV) ([0.021]) | Elemental d valence electrons, mean (MAGPIE) (0.027"
-345,0.027,0.027,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"0.021) | Elemental d valence electrons, mean (MAGPIE) ([0.027]) | | 4 | Elemental polarizability, mean (CBFV) (5.4) |"
-346,4,4,GENERATED,table 9: t9_rank_4,,4.3 Feature importance and explainability,"emental d valence electrons, mean (MAGPIE) (0.027) | | [4] | Elemental polarizability, mean (CBFV) (5.4) | Temper"
-346,5.4,5.4,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"(0.027) | | 4 | Elemental polarizability, mean (CBFV) ([5.4]) | Temperature (0.035) | Elemental heat of atomization"
-346,0.035,0.035,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,"ental polarizability, mean (CBFV) (5.4) | Temperature ([0.035]) | Elemental heat of atomization, mean abs. deviation"
-346,0.020,0.02,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"ental heat of atomization, mean abs. deviation (CBFV) ([0.020]) | Elemental Mendeleev number, maximum (MAGPIE) (0.012"
-346,0.012,0.012,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"0.020) | Elemental Mendeleev number, maximum (MAGPIE) ([0.012]) | | 5 | Elemental metal flag, mean (CBFV) (5.4) | Ele"
-347,5,5,GENERATED,table 9: t9_rank_5,,4.3 Feature importance and explainability,"emental Mendeleev number, maximum (MAGPIE) (0.012) | | [5] | Elemental metal flag, mean (CBFV) (5.4) | Elemental"
-347,5.4,5.4,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"IE) (0.012) | | 5 | Elemental metal flag, mean (CBFV) ([5.4]) | Elemental Gilmor number of valence electrons, mean"
-347,0.023,0.023,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([0.023]) | Elemental Mendeleev number, maximum (MAGPIE) (0.018"
-347,0.018,0.018,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"0.023) | Elemental Mendeleev number, maximum (MAGPIE) ([0.018]) | Elemental Mendeleev number, mean (MAGPIE) (0.011) |"
-347,0.011,0.011,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,") (0.018) | Elemental Mendeleev number, mean (MAGPIE) ([0.011]) | SHAP values are in the units"
+343,12.9,12.9,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"ntal thermal conductivity, mean abs. deviation (CBFV) ([12.9]; 7.9--17.6; top 3 in 24 of 25 folds) | Elemental MB el"
+343,7.9,7.9,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"hermal conductivity, mean abs. deviation (CBFV) (12.9; [7.9]--17.6; top 3 in 24 of 25 folds) | Elemental MB electro"
+343,17.6,17.6,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"l conductivity, mean abs. deviation (CBFV) (12.9; 7.9--[17.6]; top 3 in 24 of 25 folds) | Elemental MB electronegati"
+343,3,3,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"vity, mean abs. deviation (CBFV) (12.9; 7.9--17.6; top [3] in 24 of 25 folds) | Elemental MB electronegativity, m"
+343,24,24,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"mean abs. deviation (CBFV) (12.9; 7.9--17.6; top 3 in [24] of 25 folds) | Elemental MB electronegativity, mean ab"
+343,25,25,GENERATED,table 9: t9_S_1,,4.3 Feature importance and explainability,"abs. deviation (CBFV) (12.9; 7.9--17.6; top 3 in 24 of [25] folds) | Elemental MB electronegativity, mean abs. dev"
+343,0.069,0.069,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"ntal MB electronegativity, mean abs. deviation (CBFV) ([0.069]; 0.032--0.098; top 3 in 24 of 25 folds) | Elemental he"
+343,0.032,0.032,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"electronegativity, mean abs. deviation (CBFV) (0.069; [0.032]--0.098; top 3 in 24 of 25 folds) | Elemental heat of v"
+343,0.098,0.098,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"onegativity, mean abs. deviation (CBFV) (0.069; 0.032--[0.098]; top 3 in 24 of 25 folds) | Elemental heat of vaporiza"
+343,3,3,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (0.069; 0.032--0.098; top [3] in 24 of 25 folds) | Elemental heat of vaporization, m"
+343,24,24,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"n abs. deviation (CBFV) (0.069; 0.032--0.098; top 3 in [24] of 25 folds) | Elemental heat of vaporization, maximum"
+343,25,25,GENERATED,table 9: t9_sigma_1,,4.3 Feature importance and explainability,"deviation (CBFV) (0.069; 0.032--0.098; top 3 in 24 of [25] folds) | Elemental heat of vaporization, maximum (CBFV"
+343,0.032,0.032,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"lds) | Elemental heat of vaporization, maximum (CBFV) ([0.032]; 0.001--0.056; top 3 in 14 of 25 folds) | Temperature"
+343,0.001,0.001,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"Elemental heat of vaporization, maximum (CBFV) (0.032; [0.001]--0.056; top 3 in 14 of 25 folds) | Temperature (0.128;"
+343,0.056,0.056,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"al heat of vaporization, maximum (CBFV) (0.032; 0.001--[0.056]; top 3 in 14 of 25 folds) | Temperature (0.128; 0.120-"
+343,3,3,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"vaporization, maximum (CBFV) (0.032; 0.001--0.056; top [3] in 14 of 25 folds) | Temperature (0.128; 0.120--0.136;"
+343,14,14,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"ization, maximum (CBFV) (0.032; 0.001--0.056; top 3 in [14] of 25 folds) | Temperature (0.128; 0.120--0.136; top 3"
+343,25,25,GENERATED,table 9: t9_kappa_1,,4.3 Feature importance and explainability,"n, maximum (CBFV) (0.032; 0.001--0.056; top 3 in 14 of [25] folds) | Temperature (0.128; 0.120--0.136; top 3 in 25"
+343,0.128,0.128,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,0.001--0.056; top 3 in 14 of 25 folds) | Temperature ([0.128]; 0.120--0.136; top 3 in 25 of 25 folds) | | 2 | Elemen
+343,0.120,0.12,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,-0.056; top 3 in 14 of 25 folds) | Temperature (0.128; [0.120]--0.136; top 3 in 25 of 25 folds) | | 2 | Elemental den
+343,0.136,0.136,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"top 3 in 14 of 25 folds) | Temperature (0.128; 0.120--[0.136]; top 3 in 25 of 25 folds) | | 2 | Elemental density, m"
+343,3,3,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"4 of 25 folds) | Temperature (0.128; 0.120--0.136; top [3] in 25 of 25 folds) | | 2 | Elemental density, mean abs"
+343,25,25,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"25 folds) | Temperature (0.128; 0.120--0.136; top 3 in [25] of 25 folds) | | 2 | Elemental density, mean abs. devi"
+343,25,25,GENERATED,table 9: t9_zT_1,,4.3 Feature importance and explainability,"ds) | Temperature (0.128; 0.120--0.136; top 3 in 25 of [25] folds) | | 2 | Elemental density, mean abs. deviation"
+344,2,2,GENERATED,table 9: t9_rank_2,,4.3 Feature importance and explainability,"ure (0.128; 0.120--0.136; top 3 in 25 of 25 folds) | | [2] | Elemental density, mean abs. deviation (CBFV) (7.4;"
+344,7.4,7.4,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"| | 2 | Elemental density, mean abs. deviation (CBFV) ([7.4]; 3.5--11.2; top 3 in 15 of 25 folds) | Elemental Pauli"
+344,3.5,3.5,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"| Elemental density, mean abs. deviation (CBFV) (7.4; [3.5]--11.2; top 3 in 15 of 25 folds) | Elemental Pauling el"
+344,11.2,11.2,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"emental density, mean abs. deviation (CBFV) (7.4; 3.5--[11.2]; top 3 in 15 of 25 folds) | Elemental Pauling electron"
+344,3,3,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"nsity, mean abs. deviation (CBFV) (7.4; 3.5--11.2; top [3] in 15 of 25 folds) | Elemental Pauling electronegativi"
+344,15,15,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (7.4; 3.5--11.2; top 3 in [15] of 25 folds) | Elemental Pauling electronegativity, me"
+344,25,25,GENERATED,table 9: t9_S_2,,4.3 Feature importance and explainability,"abs. deviation (CBFV) (7.4; 3.5--11.2; top 3 in 15 of [25] folds) | Elemental Pauling electronegativity, mean (CB"
+344,0.039,0.039,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"s) | Elemental Pauling electronegativity, mean (CBFV) ([0.039]; 0.002--0.086; top 3 in 14 of 25 folds) | Temperature"
+344,0.002,0.002,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"emental Pauling electronegativity, mean (CBFV) (0.039; [0.002]--0.086; top 3 in 14 of 25 folds) | Temperature (0.028;"
+344,0.086,0.086,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"Pauling electronegativity, mean (CBFV) (0.039; 0.002--[0.086]; top 3 in 14 of 25 folds) | Temperature (0.028; 0.025-"
+344,3,3,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"ectronegativity, mean (CBFV) (0.039; 0.002--0.086; top [3] in 14 of 25 folds) | Temperature (0.028; 0.025--0.031;"
+344,14,14,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"negativity, mean (CBFV) (0.039; 0.002--0.086; top 3 in [14] of 25 folds) | Temperature (0.028; 0.025--0.031; top 3"
+344,25,25,GENERATED,table 9: t9_sigma_2,,4.3 Feature importance and explainability,"vity, mean (CBFV) (0.039; 0.002--0.086; top 3 in 14 of [25] folds) | Temperature (0.028; 0.025--0.031; top 3 in 20"
+344,0.028,0.028,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,0.002--0.086; top 3 in 14 of 25 folds) | Temperature ([0.028]; 0.025--0.031; top 3 in 20 of 25 folds) | Elemental Zu
+344,0.025,0.025,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,-0.086; top 3 in 14 of 25 folds) | Temperature (0.028; [0.025]--0.031; top 3 in 20 of 25 folds) | Elemental Zunger ra
+344,0.031,0.031,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,top 3 in 14 of 25 folds) | Temperature (0.028; 0.025--[0.031]; top 3 in 20 of 25 folds) | Elemental Zunger radii sum
+344,3,3,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,"4 of 25 folds) | Temperature (0.028; 0.025--0.031; top [3] in 20 of 25 folds) | Elemental Zunger radii sum, mean"
+344,20,20,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,"25 folds) | Temperature (0.028; 0.025--0.031; top 3 in [20] of 25 folds) | Elemental Zunger radii sum, mean abs. d"
+344,25,25,GENERATED,table 9: t9_kappa_2,,4.3 Feature importance and explainability,"ds) | Temperature (0.028; 0.025--0.031; top 3 in 20 of [25] folds) | Elemental Zunger radii sum, mean abs. deviati"
+344,0.032,0.032,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,"lemental Zunger radii sum, mean abs. deviation (CBFV) ([0.032]; 0.004--0.062; top 3 in 16 of 25 folds) | | 3 | Elemen"
+344,0.004,0.004,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,"l Zunger radii sum, mean abs. deviation (CBFV) (0.032; [0.004]--0.062; top 3 in 16 of 25 folds) | | 3 | Elemental Gil"
+344,0.062,0.062,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,"r radii sum, mean abs. deviation (CBFV) (0.032; 0.004--[0.062]; top 3 in 16 of 25 folds) | | 3 | Elemental Gilmor num"
+344,3,3,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (0.032; 0.004--0.062; top [3] in 16 of 25 folds) | | 3 | Elemental Gilmor number of"
+344,16,16,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,n abs. deviation (CBFV) (0.032; 0.004--0.062; top 3 in [16] of 25 folds) | | 3 | Elemental Gilmor number of valenc
+344,25,25,GENERATED,table 9: t9_zT_2,,4.3 Feature importance and explainability,deviation (CBFV) (0.032; 0.004--0.062; top 3 in 16 of [25] folds) | | 3 | Elemental Gilmor number of valence elec
+345,3,3,GENERATED,table 9: t9_rank_3,,4.3 Feature importance and explainability,"FV) (0.032; 0.004--0.062; top 3 in 16 of 25 folds) | | [3] | Elemental Gilmor number of valence electrons, mean a"
+345,6.4,6.4,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([6.4]; 2.0--13.8; top 3 in 10 of 25 folds) | Elemental melti"
+345,2.0,2,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"of valence electrons, mean abs. deviation (CBFV) (6.4; [2.0]--13.8; top 3 in 10 of 25 folds) | Elemental melting te"
+345,13.8,13.8,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"lence electrons, mean abs. deviation (CBFV) (6.4; 2.0--[13.8]; top 3 in 10 of 25 folds) | Elemental melting temperat"
+345,3,3,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"trons, mean abs. deviation (CBFV) (6.4; 2.0--13.8; top [3] in 10 of 25 folds) | Elemental melting temperature, mo"
+345,10,10,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (6.4; 2.0--13.8; top 3 in [10] of 25 folds) | Elemental melting temperature, mode (MA"
+345,25,25,GENERATED,table 9: t9_S_3,,4.3 Feature importance and explainability,"abs. deviation (CBFV) (6.4; 2.0--13.8; top 3 in 10 of [25] folds) | Elemental melting temperature, mode (MAGPIE)"
+345,0.037,0.037,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"folds) | Elemental melting temperature, mode (MAGPIE) ([0.037]; 0.011--0.096; top 3 in 9 of 25 folds) | Elemental mel"
+345,0.011,0.011,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"| Elemental melting temperature, mode (MAGPIE) (0.037; [0.011]--0.096; top 3 in 9 of 25 folds) | Elemental melting po"
+345,0.096,0.096,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"ntal melting temperature, mode (MAGPIE) (0.037; 0.011--[0.096]; top 3 in 9 of 25 folds) | Elemental melting point, me"
+345,3,3,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"g temperature, mode (MAGPIE) (0.037; 0.011--0.096; top [3] in 9 of 25 folds) | Elemental melting point, mean (CBF"
+345,9,9,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"perature, mode (MAGPIE) (0.037; 0.011--0.096; top 3 in [9] of 25 folds) | Elemental melting point, mean (CBFV) (0"
+345,25,25,GENERATED,table 9: t9_sigma_3,,4.3 Feature importance and explainability,"ure, mode (MAGPIE) (0.037; 0.011--0.096; top 3 in 9 of [25] folds) | Elemental melting point, mean (CBFV) (0.021;"
+345,0.021,0.021,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"9 of 25 folds) | Elemental melting point, mean (CBFV) ([0.021]; 0.001--0.060; top 3 in 8 of 25 folds) | Elemental d v"
+345,0.001,0.001,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"folds) | Elemental melting point, mean (CBFV) (0.021; [0.001]--0.060; top 3 in 8 of 25 folds) | Elemental d valence"
+345,0.060,0.06,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"| Elemental melting point, mean (CBFV) (0.021; 0.001--[0.060]; top 3 in 8 of 25 folds) | Elemental d valence electro"
+345,3,3,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"l melting point, mean (CBFV) (0.021; 0.001--0.060; top [3] in 8 of 25 folds) | Elemental d valence electrons, mea"
+345,8,8,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"ting point, mean (CBFV) (0.021; 0.001--0.060; top 3 in [8] of 25 folds) | Elemental d valence electrons, mean (MA"
+345,25,25,GENERATED,table 9: t9_kappa_3,,4.3 Feature importance and explainability,"point, mean (CBFV) (0.021; 0.001--0.060; top 3 in 8 of [25] folds) | Elemental d valence electrons, mean (MAGPIE)"
+345,0.027,0.027,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"folds) | Elemental d valence electrons, mean (MAGPIE) ([0.027]; 0.011--0.057; top 3 in 15 of 25 folds) | | 4 | Elemen"
+345,0.011,0.011,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"| Elemental d valence electrons, mean (MAGPIE) (0.027; [0.011]--0.057; top 3 in 15 of 25 folds) | | 4 | Elemental pol"
+345,0.057,0.057,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"ntal d valence electrons, mean (MAGPIE) (0.027; 0.011--[0.057]; top 3 in 15 of 25 folds) | | 4 | Elemental polarizabi"
+345,3,3,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"nce electrons, mean (MAGPIE) (0.027; 0.011--0.057; top [3] in 15 of 25 folds) | | 4 | Elemental polarizability, m"
+345,15,15,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"lectrons, mean (MAGPIE) (0.027; 0.011--0.057; top 3 in [15] of 25 folds) | | 4 | Elemental polarizability, mean (C"
+345,25,25,GENERATED,table 9: t9_zT_3,,4.3 Feature importance and explainability,"ns, mean (MAGPIE) (0.027; 0.011--0.057; top 3 in 15 of [25] folds) | | 4 | Elemental polarizability, mean (CBFV) ("
+346,4,4,GENERATED,table 9: t9_rank_4,,4.3 Feature importance and explainability,"IE) (0.027; 0.011--0.057; top 3 in 15 of 25 folds) | | [4] | Elemental polarizability, mean (CBFV) (5.4; 0.7--16."
+346,5.4,5.4,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"folds) | | 4 | Elemental polarizability, mean (CBFV) ([5.4]; 0.7--16.6; top 3 in 8 of 25 folds) | Temperature (0.0"
+346,0.7,0.7,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"s) | | 4 | Elemental polarizability, mean (CBFV) (5.4; [0.7]--16.6; top 3 in 8 of 25 folds) | Temperature (0.035; 0"
+346,16.6,16.6,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"| 4 | Elemental polarizability, mean (CBFV) (5.4; 0.7--[16.6]; top 3 in 8 of 25 folds) | Temperature (0.035; 0.031--"
+346,3,3,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"ental polarizability, mean (CBFV) (5.4; 0.7--16.6; top [3] in 8 of 25 folds) | Temperature (0.035; 0.031--0.040;"
+346,8,8,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"polarizability, mean (CBFV) (5.4; 0.7--16.6; top 3 in [8] of 25 folds) | Temperature (0.035; 0.031--0.040; top 3"
+346,25,25,GENERATED,table 9: t9_S_4,,4.3 Feature importance and explainability,"rizability, mean (CBFV) (5.4; 0.7--16.6; top 3 in 8 of [25] folds) | Temperature (0.035; 0.031--0.040; top 3 in 22"
+346,0.035,0.035,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,5.4; 0.7--16.6; top 3 in 8 of 25 folds) | Temperature ([0.035]; 0.031--0.040; top 3 in 22 of 25 folds) | Elemental he
+346,0.031,0.031,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,7--16.6; top 3 in 8 of 25 folds) | Temperature (0.035; [0.031]--0.040; top 3 in 22 of 25 folds) | Elemental heat of a
+346,0.040,0.04,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,; top 3 in 8 of 25 folds) | Temperature (0.035; 0.031--[0.040]; top 3 in 22 of 25 folds) | Elemental heat of atomizat
+346,3,3,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,"8 of 25 folds) | Temperature (0.035; 0.031--0.040; top [3] in 22 of 25 folds) | Elemental heat of atomization, me"
+346,22,22,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,"25 folds) | Temperature (0.035; 0.031--0.040; top 3 in [22] of 25 folds) | Elemental heat of atomization, mean abs"
+346,25,25,GENERATED,table 9: t9_sigma_4,,4.3 Feature importance and explainability,"ds) | Temperature (0.035; 0.031--0.040; top 3 in 22 of [25] folds) | Elemental heat of atomization, mean abs. devi"
+346,0.020,0.02,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"ental heat of atomization, mean abs. deviation (CBFV) ([0.020]; 0.003--0.046; top 3 in 12 of 25 folds) | Elemental Me"
+346,0.003,0.003,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"eat of atomization, mean abs. deviation (CBFV) (0.020; [0.003]--0.046; top 3 in 12 of 25 folds) | Elemental Mendeleev"
+346,0.046,0.046,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"atomization, mean abs. deviation (CBFV) (0.020; 0.003--[0.046]; top 3 in 12 of 25 folds) | Elemental Mendeleev number"
+346,3,3,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (0.020; 0.003--0.046; top [3] in 12 of 25 folds) | Elemental Mendeleev number, maxim"
+346,12,12,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"n abs. deviation (CBFV) (0.020; 0.003--0.046; top 3 in [12] of 25 folds) | Elemental Mendeleev number, maximum (MA"
+346,25,25,GENERATED,table 9: t9_kappa_4,,4.3 Feature importance and explainability,"deviation (CBFV) (0.020; 0.003--0.046; top 3 in 12 of [25] folds) | Elemental Mendeleev number, maximum (MAGPIE)"
+346,0.012,0.012,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"folds) | Elemental Mendeleev number, maximum (MAGPIE) ([0.012]; 0.002--0.048; top 3 in 5 of 25 folds) | | 5 | Element"
+346,0.002,0.002,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"| Elemental Mendeleev number, maximum (MAGPIE) (0.012; [0.002]--0.048; top 3 in 5 of 25 folds) | | 5 | Elemental meta"
+346,0.048,0.048,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"ntal Mendeleev number, maximum (MAGPIE) (0.012; 0.002--[0.048]; top 3 in 5 of 25 folds) | | 5 | Elemental metal flag,"
+346,3,3,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"eev number, maximum (MAGPIE) (0.012; 0.002--0.048; top [3] in 5 of 25 folds) | | 5 | Elemental metal flag, mean ("
+346,5,5,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,"umber, maximum (MAGPIE) (0.012; 0.002--0.048; top 3 in [5] of 25 folds) | | 5 | Elemental metal flag, mean (CBFV)"
+346,25,25,GENERATED,table 9: t9_zT_4,,4.3 Feature importance and explainability,", maximum (MAGPIE) (0.012; 0.002--0.048; top 3 in 5 of [25] folds) | | 5 | Elemental metal flag, mean (CBFV) (5.4;"
+347,5,5,GENERATED,table 9: t9_rank_5,,4.3 Feature importance and explainability,"PIE) (0.012; 0.002--0.048; top 3 in 5 of 25 folds) | | [5] | Elemental metal flag, mean (CBFV) (5.4; 2.0--9.9; to"
+347,5.4,5.4,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"f 25 folds) | | 5 | Elemental metal flag, mean (CBFV) ([5.4]; 2.0--9.9; top 3 in 6 of 25 folds) | Elemental Gilmor"
+347,2.0,2,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"folds) | | 5 | Elemental metal flag, mean (CBFV) (5.4; [2.0]--9.9; top 3 in 6 of 25 folds) | Elemental Gilmor numbe"
+347,9.9,9.9,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,") | | 5 | Elemental metal flag, mean (CBFV) (5.4; 2.0--[9.9]; top 3 in 6 of 25 folds) | Elemental Gilmor number of"
+347,3,3,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"Elemental metal flag, mean (CBFV) (5.4; 2.0--9.9; top [3] in 6 of 25 folds) | Elemental Gilmor number of valence"
+347,6,6,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"ental metal flag, mean (CBFV) (5.4; 2.0--9.9; top 3 in [6] of 25 folds) | Elemental Gilmor number of valence elec"
+347,25,25,GENERATED,table 9: t9_S_5,,4.3 Feature importance and explainability,"metal flag, mean (CBFV) (5.4; 2.0--9.9; top 3 in 6 of [25] folds) | Elemental Gilmor number of valence electrons,"
+347,0.023,0.023,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"mber of valence electrons, mean abs. deviation (CBFV) ([0.023]; 0.016--0.032; top 3 in 0 of 25 folds) | Elemental Men"
+347,0.016,0.016,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"valence electrons, mean abs. deviation (CBFV) (0.023; [0.016]--0.032; top 3 in 0 of 25 folds) | Elemental Mendeleev"
+347,0.032,0.032,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"e electrons, mean abs. deviation (CBFV) (0.023; 0.016--[0.032]; top 3 in 0 of 25 folds) | Elemental Mendeleev number,"
+347,3,3,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,", mean abs. deviation (CBFV) (0.023; 0.016--0.032; top [3] in 0 of 25 folds) | Elemental Mendeleev number, maximu"
+347,0,0,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,"n abs. deviation (CBFV) (0.023; 0.016--0.032; top 3 in [0] of 25 folds) | Elemental Mendeleev number, maximum (MA"
+347,25,25,GENERATED,table 9: t9_sigma_5,,4.3 Feature importance and explainability,". deviation (CBFV) (0.023; 0.016--0.032; top 3 in 0 of [25] folds) | Elemental Mendeleev number, maximum (MAGPIE)"
+347,0.018,0.018,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"folds) | Elemental Mendeleev number, maximum (MAGPIE) ([0.018]; 0.008--0.041; top 3 in 3 of 25 folds) | Elemental Men"
+347,0.008,0.008,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"| Elemental Mendeleev number, maximum (MAGPIE) (0.018; [0.008]--0.041; top 3 in 3 of 25 folds) | Elemental Mendeleev"
+347,0.041,0.041,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"ntal Mendeleev number, maximum (MAGPIE) (0.018; 0.008--[0.041]; top 3 in 3 of 25 folds) | Elemental Mendeleev number,"
+347,3,3,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"eev number, maximum (MAGPIE) (0.018; 0.008--0.041; top [3] in 3 of 25 folds) | Elemental Mendeleev number, mean ("
+347,3,3,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,"umber, maximum (MAGPIE) (0.018; 0.008--0.041; top 3 in [3] of 25 folds) | Elemental Mendeleev number, mean (MAGPI"
+347,25,25,GENERATED,table 9: t9_kappa_5,,4.3 Feature importance and explainability,", maximum (MAGPIE) (0.018; 0.008--0.041; top 3 in 3 of [25] folds) | Elemental Mendeleev number, mean (MAGPIE) (0."
+347,0.011,0.011,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"25 folds) | Elemental Mendeleev number, mean (MAGPIE) ([0.011]; 0.008--0.017; top 3 in 0 of 25 folds) |"
+347,0.008,0.008,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"s) | Elemental Mendeleev number, mean (MAGPIE) (0.011; [0.008]--0.017; top 3 in 0 of 25 folds) |"
+347,0.017,0.017,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"emental Mendeleev number, mean (MAGPIE) (0.011; 0.008--[0.017]; top 3 in 0 of 25 folds) | SHAP"
+347,3,3,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"deleev number, mean (MAGPIE) (0.011; 0.008--0.017; top [3] in 0 of 25 folds) | SHAP values"
+347,0,0,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"v number, mean (MAGPIE) (0.011; 0.008--0.017; top 3 in [0] of 25 folds) | SHAP values are i"
+347,25,25,GENERATED,table 9: t9_zT_5,,4.3 Feature importance and explainability,"ber, mean (MAGPIE) (0.011; 0.008--0.017; top 3 in 0 of [25] folds) | SHAP values are in the"
 350,−1,1,EXCLUDED:NOTATION,,,,SHAP values are in the units of each target (*µ*V K^[−1]^ for S; log~10~ units for *σ* and *κ*). Feature labels
 350,10,10,EXCLUDED:NOTATION,,,,"are in the units of each target (*µ*V K^−1^ for S; log~[10]~ units for *σ* and *κ*). Feature labels read ""Elementa"
 352,10,10,EXCLUDED:XREF,,,,not the thermal conductivity of the sample. ![Figure [10]](../figures/fig10_shap_global.png){width=100%} **Figu
 352,100%,100,EXCLUDED:LINK,,,,![Figure 10](../figures/fig10_shap_global.png){width=[100%]} **Figure 10:** SHAP global feature importance (top
 354,10,10,EXCLUDED:XREF,,,,./figures/fig10_shap_global.png){width=100%} **Figure [10]:** SHAP global feature importance (top
-354,15,15,DESIGN,shap_top_n,,4.3 Feature importance and explainability,"SHAP global feature importance (top [15] features, mean over the folds with the SD acr"
-354,−1,1,EXCLUDED:NOTATION,,,,"h the SD across folds as error bars) for (a) S (*µ*V K^[−1]^), (b) *σ* (log~10~ units), (c) *κ* (log~10~ units) an"
-354,10,10,EXCLUDED:NOTATION,,,,"ds as error bars) for (a) S (*µ*V K^−1^), (b) *σ* (log~[10]~ units), (c) *κ* (log~10~ units) and (d) zT. Every fea"
+354,15,15,DESIGN,shap_top_n,,4.3 Feature importance and explainability,"SHAP global feature importance (top [15] features, bars: mean over the"
+354,25,25,GENERATED,shap_folds,,4.3 Feature importance and explainability,"features, bars: mean over the [25] folds; error bars: 2.5"
+354,2.5,2.5,DESIGN,iv_lo,,4.3 Feature importance and explainability,25 folds; error bars: [2.5] th to 97.5 th percentile
+354,97.5,97.5,DESIGN,iv_hi,,4.3 Feature importance and explainability,or bars: 2.5 th to [97.5] th percentile of the per-fold mean across the
+354,25,25,GENERATED,shap_folds,,4.3 Feature importance and explainability,"ile of the per-fold mean across the [25] folds, which are five repeats of five grouped"
+354,−1,1,EXCLUDED:NOTATION,,,,"t supported where intervals overlap) for (a) S (*µ*V K^[−1]^), (b) *σ* (log~10~ units), (c) *κ* (log~10~ units) an"
+354,10,10,EXCLUDED:NOTATION,,,,"ntervals overlap) for (a) S (*µ*V K^−1^), (b) *σ* (log~[10]~ units), (c) *κ* (log~10~ units) and (d) zT. Every fea"
 354,10,10,EXCLUDED:NOTATION,,,,"S (*µ*V K^−1^), (b) *σ* (log~10~ units), (c) *κ* (log~[10]~ units) and (d) zT. Every feature other than temperatu"
 356,11,11,EXCLUDED:XREF,,,,"ties, not the sample's thermal conductivity. ![Figure [11]](../figures/fig11_shap_beeswarm.png){width=100%} **Fi"
 356,100%,100,EXCLUDED:LINK,,,,"![Figure 11](../figures/fig11_shap_beeswarm.png){width=[100%]} **Figure 11:** SHAP beeswarm plots for (a) S, (b) *σ"

@@ -119,22 +119,28 @@ def fig7_parity(out):
 
 
 def fig10_shap(out):
-    """SHAP global importance: the 20 features with the largest mean |SHAP| per target (NA3, chemistry-cluster folds), coloured by descriptor scheme; error bars are the SD across folds."""
+    """SHAP global importance: the features with the largest mean |SHAP| per target (NA3, chemistry-cluster folds), coloured by descriptor scheme; error bars are the 2.5th to 97.5th percentile of the per-fold mean over the 25 folds."""
     na3 = tv.na3_per_target()
     fs.apply()
     fig, axes = fs.new_figure("double", 21.0, 2, 2)
     order = ("S", "sigma", "kappa", "zT")
-    units = {"zT": "mean |SHAP|", "S": "mean |SHAP| (µV K$^{-1}$)", "kappa": "mean |SHAP|", "sigma": "mean |SHAP|"}
+    units = {"zT": "mean |SHAP| (zT)", "S": "mean |SHAP| (µV K$^{-1}$)", "kappa": "mean |SHAP| (log$_{10}$)", "sigma": "mean |SHAP| (log$_{10}$)"}
     colour = {"MagpieData": fs.OI["blue"], "CBFV_": fs.OI["orange"], "temperature_bin": fs.OI["green"]}
     for ax, t, letter in zip(axes.ravel(), order, "abcd"):
         top = na3[t]["top20"][:SHAP_TOP_N]
         assert len(top) == SHAP_TOP_N and all(top[i]["mean_abs_shap"] >= top[i + 1]["mean_abs_shap"] for i in range(SHAP_TOP_N - 1))
         y = np.arange(SHAP_TOP_N)[::-1]
         cols = [next(c for k, c in colour.items() if f["feature"].startswith(k)) for f in top]
-        ax.barh(y, [f["mean_abs_shap"] for f in top], xerr=[f["fold_sd"] for f in top], color=cols, ec=fs.EDGE_GREY, lw=0.4, error_kw={"lw": 0.6, "capsize": 1.5})
+        st_ = tv.shap_fold_stats(na3[t])
+        idx = [na3[t]["feature_columns"].index(f["feature"]) for f in top]
+        mean_ = np.array([f["mean_abs_shap"] for f in top])
+        lo_, hi_ = st_["lo"][idx], st_["hi"][idx]
+        assert (lo_ >= 0).all() and (lo_ <= mean_ + 1e-9).all() and (mean_ <= hi_ + 1e-9).all()  # a non-negative interval that contains the mean
+        ax.barh(y, mean_, xerr=[mean_ - lo_, hi_ - mean_], color=cols, ec=fs.EDGE_GREY, lw=0.4, error_kw={"lw": 0.6, "capsize": 1.5})
+        ax.set_xlim(left=0)
         ax.set_yticks(y)
         ax.set_yticklabels([fl.wrapped(fl.label(f["feature"]), 46) for f in top], fontsize=6.5)
-        ax.set_xlabel(units[t], fontsize=7.5)
+        ax.set_xlabel(units[t].replace(" (", "\n("), fontsize=7.5)
         fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
         fs.grid(ax, axis="x")
     fs.legend_row(fig, [Patch(color=c, ec=fs.EDGE_GREY) for c in colour.values()], ["MAGPIE", "CBFV", "Temperature"])

@@ -124,8 +124,10 @@ def table10(v):
 
 
 def table9(v):
-    """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds), in the order S, sigma, kappa, zT."""
-    lines = [f"**Table 9:** Top five features per target by mean \\|SHAP\\| value (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows). "
+    """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds), in the order S, sigma, kappa, zT; with the interval across the folds and the number of folds in which the feature is in the top three."""
+    lines = [f"**Table 9:** The five features with the largest mean \\|SHAP\\| per target (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows), each with the {v['iv_lo']}th to {v['iv_hi']}th percentile "
+             f"of the per-fold mean across the {v['shap_folds']} folds and the number of folds in which it is among the three most important features. The folds are five repeats of five grouped folds, so they are not independent. "
+             "Only orderings the folds support are interpreted: the intervals of ranks two to five overlap in every model, so those ranks are listed by their mean without a ranking claim. "
              "Units of the SHAP values are those of the target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*). Every feature is a statistic of an ELEMENTAL property of the elements in the formula (or the temperature), "
              "not a measured property of the material; the statistic is the atomic-fraction-weighted mean, the weighted mean absolute deviation about it (mean abs. deviation), the range, the minimum or the maximum over the elements, "
              "or the mode (the value of the most abundant element), from the MAGPIE or CBFV element tables. The labels come from docs/feature_labels.csv.", "",

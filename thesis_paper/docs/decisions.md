@@ -135,3 +135,12 @@ random-forest test-fold prediction or score exists. The values of the 15 trials 
 2. Captions and the Table 9 note state that every feature other than temperature is a statistic of an ELEMENTAL property of the formula, not a measured property of the material.
 3. Panels and columns are in the order S, sigma, kappa, zT. Figure 10 shows the top 15 features per target instead of 20 (D23 and `shap_top_n`) so that the labels, which need two lines, do not overlap; Figure 11 shows 10.
 4. An earlier sentence that the third zT feature "governs carrier transport in transition-metal compounds" was an uncited physical claim and is removed.
+
+## 2026-10-06: Figure 10 and Table 9: non-negative intervals across the folds, and only supported orderings are interpreted
+
+1. The error bars of Figure 10 and the intervals of Table 9 are the 2.5th to 97.5th percentile of the per-fold mean |SHAP| across the 25 folds (`thesis_values.INTERVAL`), never mean +/- SD, so no bar can extend below zero (asserted
+   in the figure code). The 25 folds are five repeats of five grouped folds and are not independent; the caption says so.
+2. Table 9 gives, per feature, the interval and the number of folds in which it is among the three most important features. The text interprets only what the folds support: temperature first in all 25 folds for zT; the
+   leading feature of S and sigma in the top three in 24 of 25 folds; temperature in the top five in all 25 folds for sigma, kappa and zT. The intervals of the features ranked second to fifth overlap in every model
+   (asserted in the value hook, which stops the build if that stops being true), so their order is not interpreted; for kappa the feature that leads on average is in the top three in only 14 folds.
+3. X-axis labels state the units: S in uV/K, sigma and kappa in log10, zT unitless.

@@ -375,9 +375,29 @@ def na3_per_target():
         assert cfg["params"]["n_repeats"] == 5 and cfg["params"]["n_folds"] == 5
         for t, d in r["per_target"].items():
             assert d["n_folds"] == 25 and len(d["top20"]) == 20
-            out[t] = {**d, "feature_columns": r["feature_columns"], "shap_rows": cfg["params"]["shap_rows"]}
+            import numpy as np
+
+            M = np.array([np.load(REPO_ROOT / run / "units" / f"{t}_repeat{rr_}_fold{ff}.npz")["mean_abs_shap"] for rr_ in range(5) for ff in range(5)])
+            assert M.shape == (25, len(r["feature_columns"])) and (M >= 0).all()
+            names = r["feature_columns"]
+            for e in d["top20"]:  # the stored mean over the folds must equal the mean of the per-fold values
+                assert abs(float(M[:, names.index(e["feature"])].mean()) - e["mean_abs_shap"]) < 1e-5 * max(1.0, e["mean_abs_shap"]), e["feature"]
+            out[t] = {**d, "feature_columns": names, "shap_rows": cfg["params"]["shap_rows"], "fold_matrix": M}
     assert set(out) == set(T4), sorted(out)
     return out
+
+
+INTERVAL = (2.5, 97.5)  # percentiles of the per-fold mean |SHAP| shown as the interval of Figure 10 and Table 9
+
+
+def shap_fold_stats(d):
+    """Per-feature statistics across the 25 folds of one target: (mean, lo, hi, in-top-3 count, in-top-5 count, rank-1 count) arrays, with lo and hi the INTERVAL percentiles (never negative)."""
+    import numpy as np
+
+    M = d["fold_matrix"]
+    ranks = np.argsort(np.argsort(-M, axis=1), axis=1)
+    return {"mean": M.mean(axis=0), "lo": np.percentile(M, INTERVAL[0], axis=0), "hi": np.percentile(M, INTERVAL[1], axis=0),
+            "top1": (ranks == 0).sum(axis=0), "top3": (ranks < 3).sum(axis=0), "top5": (ranks < 5).sum(axis=0), "n": M.shape[0]}
 
 
 def shap_display_name(raw):
@@ -396,12 +416,35 @@ def na3_values():
     assert n_mag + n_cbfv + 1 == len(cols) == 397
     v["shap_n_magpie"], v["shap_n_cbfv"] = _n(n_mag), _n(n_cbfv)
     ratios = {}
+    fs_all = {}
     for i in range(1, 6):
         v[f"t9_rank_{i}"] = str(i)
     for t in T4:
         d = na3[t]
+        fs_ = shap_fold_stats(d)
+        cols_ = d["feature_columns"]
+        nd = 1 if t == "S" else 3
         for i, f in enumerate(d["top20"][:5], 1):
-            v[f"t9_{t}_{i}"] = f"{shap_display_name(f['feature'])} ({f['mean_abs_shap']:.1f})" if t == "S" else f"{shap_display_name(f['feature'])} ({f['mean_abs_shap']:.3f})"
+            j = cols_.index(f["feature"])
+            v[f"t9_{t}_{i}"] = (f"{shap_display_name(f['feature'])} ({f['mean_abs_shap']:.{nd}f}; {fs_['lo'][j]:.{nd}f}--{fs_['hi'][j]:.{nd}f}; top 3 in {int(fs_['top3'][j])} of {fs_['n']} folds)")
+        # robustness statements: only what the folds support
+        tj = cols_.index("temperature_bin")
+        order_ = [cols_.index(f["feature"]) for f in d["top20"]]
+        v[f"rb_{t}_n"] = str(fs_["n"])
+        v["iv_lo"], v["iv_hi"] = f"{INTERVAL[0]:g}", f"{INTERVAL[1]:g}"
+        v[f"rb_{t}_t_top1"], v[f"rb_{t}_t_top3"], v[f"rb_{t}_t_top5"] = (str(int(fs_[k][tj])) for k in ("top1", "top3", "top5"))
+        j1 = order_[0]
+        v[f"rb_{t}_1_name"] = shap_display_name(cols_[j1])
+        v[f"rb_{t}_1_top1"], v[f"rb_{t}_1_top3"] = str(int(fs_["top1"][j1])), str(int(fs_["top3"][j1]))
+        v[f"rb_{t}_1_lo"], v[f"rb_{t}_1_hi"] = f"{fs_['lo'][j1]:.{nd}f}", f"{fs_['hi'][j1]:.{nd}f}"
+        # intervals of the features ranked 2 to 5 by the mean must overlap each other (the order below the first is then not interpreted)
+        grp = order_[1:5]
+        assert all(fs_["lo"][a_] <= fs_["hi"][b_] and fs_["lo"][b_] <= fs_["hi"][a_] for a_ in grp for b_ in grp), f"{t}: intervals of ranks 2 to 5 do not all overlap"
+        if t != "zT":
+            v[f"rb_{t}_2_name"] = shap_display_name(cols_[order_[1]])
+        v[f"rb_{t}_2_top3"], v[f"rb_{t}_3_top3"] = str(int(fs_["top3"][order_[1]])), str(int(fs_["top3"][order_[2]]))
+        v[f"rb_{t}_1_mean"] = f"{fs_['mean'][j1]:.{nd}f}"
+        fs_all[t] = fs_
         v[f"shap_{t}_1"], v[f"shap_{t}_2"], v[f"shap_{t}_3"] = (shap_display_name(f['feature']) for f in d["top20"][:3])
         v[f"shap_{t}_1_val"], v[f"shap_{t}_2_val"], v[f"shap_{t}_3_val"] = (f"{f['mean_abs_shap']:.1f}" if t == "S" else f"{f['mean_abs_shap']:.3f}" for f in d["top20"][:3])
         names = [f["feature"] for f in d["top20"]]
@@ -413,6 +456,11 @@ def na3_values():
         assert max(sh, key=lambda g: sh[g]["mean"]) == "cbfv"  # prose: CBFV features carry the largest share in every model
         ratios[t] = (sh["cbfv"]["mean"] / n_cbfv) / (sh["magpie"]["mean"] / n_mag)
         v[f"shap_ratio_{t}"] = f"{ratios[t]:.2f}"
+    # prose of 4.3: only what the folds support
+    assert v["rb_zT_t_top1"] == "25" and v["rb_zT_1_name"] == "Temperature"
+    assert int(v["rb_S_1_top3"]) >= 20 and int(v["rb_sigma_1_top3"]) >= 20 and int(v["rb_S_1_top1"]) > 12 and int(v["rb_sigma_1_top1"]) > 12
+    assert v["rb_kappa_t_top5"] == "25" and int(v["rb_kappa_t_top3"]) > int(v["rb_kappa_1_top3"]) and int(v["rb_kappa_1_top3"]) < 20
+    assert v["rb_sigma_t_top5"] == "25" and int(v["rb_S_t_top5"]) < 25 and int(v["rb_sigma_t_top3"]) >= 20
     assert max(T4, key=lambda t: float(v[f"shap_share_{t}_temperature"])) == "zT" and min(T4, key=lambda t: float(v[f"shap_share_{t}_temperature"])) == "S"  # prose
     v["shap_cbfv_min"], v["shap_cbfv_max"] = (f"{min(float(v[f'shap_share_{t}_cbfv']) for t in T4):.0f}", f"{max(float(v[f'shap_share_{t}_cbfv']) for t in T4):.0f}")
     v["shap_mag_min"], v["shap_mag_max"] = (f"{min(float(v[f'shap_share_{t}_magpie']) for t in T4):.0f}", f"{max(float(v[f'shap_share_{t}_magpie']) for t in T4):.0f}")
