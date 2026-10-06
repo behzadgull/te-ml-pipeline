@@ -410,6 +410,56 @@ To watch the speed while it runs, a separate cell can `tail -n 3 /kaggle/working
 per-fold time within the first hour; compare it with 9.6 min (S) before letting the session run on. Download `na1_a.tar.gz` and `na1_b.tar.gz` and send me the printed SHA256 lines and both `status.json` texts.
 The two halves have disjoint targets and therefore their own identities; they are combined at analysis time. The department V100S remains an alternative; `scripts/gpu/calibrate_gpu.py` is its calibration.
 
+## 3c. NA2 nested stacking (CPU sessions, ten of them; the stack with a fitted meta-learner, trained on inner out-of-fold predictions only)
+
+What it does (`na2_stacking_nested.py`, header of the file): for every outer fold of the Paper A rung (same folds, fold sizes checked), inside the outer TRAINING rows three inner chemistry-cluster folds
+(`GroupKFold(3)`, as the tuning uses); XGBoost (the canonical frozen set of the target), LightGBM (the frozen tuned set of `results/na2_lightgbm`) and the fixed random forest are fitted on the inner training
+rows and predict the inner validation rows; a non-negative ridge meta-learner (alpha 1) is fitted on those inner out-of-fold predictions and its weights are the unit. `assert_nested` checks, in the code, that
+the outer train and test rows and clusters are disjoint, that the inner validation folds partition the outer training rows exactly once with disjoint rows and clusters against their own inner training
+sets, and that the meta-learner is fitted on exactly the outer training rows. The stack's outer prediction is made locally (`scripts/na2_stacking_analysis.py`) from the committed outer predictions of the
+three base models; no outer test label is used here. XGBoost runs on the CPU in this script (the Paper A outer fits ran on a GPU); only the inner predictions the weights are learned from are affected.
+
+**Code commit: `13a0efd582fe9abae95a00d29c677b70eb8ff103`** (not 7529e7c: the two new scripts exist only from this commit on; `git diff 7529e7c 13a0efd -- src thesis_paper/scripts/kaggle` shows only the
+two stacking scripts, so the base-model code is unchanged). Cell 1 is the clone-and-install cell of section 1 with `COMMIT` set to it. Accelerator: None (CPU, 4 cores). Internet on. Attach the snapfix dataset only.
+The new script has not run on Kaggle Linux: Cell 2 starts with a smoke run (about 2 minutes, `--smoke --allow-dirty`, never a result) and stops if it fails.
+
+**Estimate** (a model built on `results/na2_timing`, not a measurement of this script): the forest dominates. One fixed-setting forest fit on the full outer training rows took 26 / 21 / 16 / 18 min (S / sigma / kappa / zT)
+on Kaggle by the timing note; an inner fit uses two thirds of those rows (about 0.65 of the time), three inner fits per fold, so 51 / 41 / 31 / 35 min of forest per outer fold, plus about 7 / 7 / 5 / 5 min for LightGBM and XGBoost:
+**about 58 / 48 / 36 / 40 min per outer fold, 24 / 20 / 15 / 17 h per target for 25 folds, about 76 CPU hours in all.** The slices below keep each session under about 10 h.
+
+| Session | Targets, repeats | `--time-budget-hours` | Estimate | Download |
+|---|---|---|---|---|
+| K-S1 | `--targets S --repeats 0,1 --out-dir /kaggle/working/na2_stk_S_1` | 10.8 | 10 folds, 9.7 h | `na2_stk_S_1.tar.gz` |
+| K-S2 | `--targets S --repeats 2,3 --out-dir /kaggle/working/na2_stk_S_2` | 10.8 | 9.7 h | `na2_stk_S_2.tar.gz` |
+| K-S3 | `--targets S --repeats 4 --out-dir /kaggle/working/na2_stk_S_3` | 10.5 | 4.8 h | `na2_stk_S_3.tar.gz` |
+| K-sigma1, 2, 3 | `--targets sigma`, repeats `0,1` / `2,3` / `4`, `--out-dir /kaggle/working/na2_stk_sigma_{1,2,3}` | 10.5 | 8.0 / 8.0 / 4.0 h | `na2_stk_sigma_{1,2,3}.tar.gz` |
+| K-kappa1, 2 | `--targets kappa`, repeats `0,1,2` / `3,4`, `--out-dir /kaggle/working/na2_stk_kappa_{1,2}` | 10.5 | 9.0 / 6.0 h | `na2_stk_kappa_{1,2}.tar.gz` |
+| K-zT1, 2 | `--targets zT`, repeats `0,1,2` / `3,4`, `--out-dir /kaggle/working/na2_stk_zT_{1,2}` | 10.8 | 10.0 / 6.7 h | `na2_stk_zT_{1,2}.tar.gz` |
+
+The ten sessions have disjoint units, so they are independent and can run at the same time if the account allows it. They are not merged here: `na2_stacking_analysis.py --stack-dirs` takes the ten bundles and
+asserts that together they cover every target, repeat and fold once. A session whose `status.json` says `"complete": false` is continued by rerunning its cell with `--restore-from <its tar.gz>`.
+A cheaper design is `--n-inner-folds 2` (about half the cost, about 40 CPU hours); it changes the design and I will not use it without your decision.
+
+Cell 2 (bash), for session K-S1; for the others change `--targets`, `--repeats`, the out-dir and the budget as in the table:
+
+```bash
+%%bash
+set -o pipefail
+cd /kaggle/working/te-ml-pipeline
+nproc; free -g | head -2
+PYV=/kaggle/working/venv/bin/python
+K=thesis_paper/scripts/kaggle
+$PYV $K/na2_stacking_nested.py --smoke --allow-dirty --targets S --out-dir /kaggle/working/smoke_stk 2>&1 | tail -n 3 || { echo "SMOKE FAILED"; exit 1; }
+$PYV $K/na2_stacking_nested.py --targets S --repeats 0,1 --out-dir /kaggle/working/na2_stk_S_1 \
+    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.8 2>&1 | tee /kaggle/working/logs/na2_stk_S_1.log
+cat /kaggle/working/na2_stk_S_1/status.json; echo
+ls -la /kaggle/working/na2_stk_S_1.tar.gz && sha256sum /kaggle/working/na2_stk_S_1.tar.gz
+```
+
+Each finished outer fold prints its meta-learner weights, the intercept and the inner out-of-fold R2 of each base model with the seconds; the first fold gives the real per-fold time (compare with 58 min for S before
+letting the rest run). Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` texts. Afterwards, locally:
+`python thesis_paper/scripts/na2_stacking_analysis.py --stack-dirs <the ten bundles>` and `python thesis_paper/scripts/model_comparison.py na2 --stacking-dir <its output>`.
+
 ## 4. Later sessions (the same Cell 1, then these)
 
 | Order | Session | Accelerator | Cell 2 | Attach |
@@ -419,7 +469,7 @@ The two halves have disjoint targets and therefore their own identities; they ar
 | C2 | NA2 LightGBM | CPU | see section 3 (session L) | snapfix dataset |
 | C3 | NA13 feature selection | CPU | `na13_feature_selection.py --out-dir /kaggle/working/na13` | snapfix dataset |
 | later | Final models again, with the classifier and the MP candidates | GPU | as the final-models command plus `--classifier-dir <na6 dir> --classifier-sha256 <sha of final_classifier.json> --mp-csv ... --mp-sha256 ...` | snapfix, JARVIS, the na6 output, the MP csv |
-| local | NA2 stacking | your PC | `python thesis_paper/scripts/kaggle/na2_stacking.py --rf-dir <tar.gz> --lgbm-dir <tar.gz>` | the two NA2 bundles (committed XGBoost predictions are local) |
+| K | NA2 nested stacking | CPU, ten sessions | see section 3c (the earlier local `na2_stacking.py` is the interim cross-fitted version, not used in the paper) | snapfix dataset |
 | G5 | NA1 nested CV | GPU T4 x2 (or the department V100S) | see section 3b | snapfix dataset |
 
 NA6 and the first final-models run are different analyses and run side by side. NA3's two halves have disjoint targets and therefore their own

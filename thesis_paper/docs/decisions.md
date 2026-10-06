@@ -144,3 +144,19 @@ random-forest test-fold prediction or score exists. The values of the 15 trials 
    leading feature of S and sigma in the top three in 24 of 25 folds; temperature in the top five in all 25 folds for sigma, kappa and zT. The intervals of the features ranked second to fifth overlap in every model
    (asserted in the value hook, which stops the build if that stops being true), so their order is not interpreted; for kappa the feature that leads on average is in the top three in only 14 folds.
 3. X-axis labels state the units: S in uV/K, sigma and kappa in log10, zT unitless.
+
+## 2026-10-06: NA2 stacking is nested; the mean of three is reported as the leak-free comparison; the random forest ties XGBoost on S
+
+1. The random forest for S is in (`results/na2_rf_S`, code 7529e7c, 25 of 25 folds). Paired against XGBoost on the same folds (cluster bootstrap, `results/na2_comparison/20261006T132724`) its difference for S
+   is +0.0003 with an interval that spans zero, so XGBoost is highest on three of the four targets (sigma, kappa, zT), not on every target. The text and the hook (`thesis_values.na2_na1_values`, which stops the build
+   if the prose stops being true) say so; the earlier "highest on every target" is withdrawn.
+2. Stacking design, stated before any nested result exists: a non-negative ridge meta-learner (alpha 1, intercept) on the out-of-fold base predictions of XGBoost (frozen Paper A set), LightGBM (frozen tuned set) and the
+   fixed forest, where those base predictions are made by INNER 3-fold chemistry-cluster CV inside each outer training fold, never in-fold; asserted in the code (`assert_nested` in `scripts/kaggle/na2_stacking_nested.py`).
+   The stack's outer prediction applies the weights to the committed outer-fold predictions. Reported: stack against the best single model per target (the best by mean R2 on the same folds, which favours the single
+   model), against XGBoost, and against the unweighted mean of the three, each paired with a cluster-bootstrap interval; a null result is reported as one.
+3. The earlier local `na2_stacking.py` (cross-fitted over the outer folds; the base predictions of the meta-training folds come from models that saw the held-out fold) is not that design. Its run
+   (`results/na2_stacking_crossfit_interim`) is kept with a README and is not quoted in the paper. It did not give a null: the stack and the plain mean were both 0.002 to 0.005 above XGBoost.
+4. The unweighted mean of the three base models involves no fitted weights, so it needs no nesting; it is computed in `scripts/model_comparison.py` from the same predictions and is reported now (Table 7): above XGBoost on
+   all four targets, with intervals that exclude zero. The nested stack can only be judged as an addition to that.
+5. The nested stack costs about 76 CPU hours on Kaggle (inner forest fits dominate); the cells are in `scripts/kaggle/KAGGLE_CELLS.md` section 3c, pinned to code commit 13a0efd582fe9abae95a00d29c677b70eb8ff103
+   (the single-commit rule 7529e7c is broken for these sessions only, because the two stacking scripts did not exist at that commit; the base-model code is unchanged between the two).

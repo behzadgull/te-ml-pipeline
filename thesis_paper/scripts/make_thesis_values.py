@@ -168,7 +168,7 @@ def table7(v):
     names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
     lines = [f"**Table 7:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM and a random forest on the same folds, with each model's difference from XGBoost "
              f"(same folds, paired) and the chemistry-cluster bootstrap interval of that difference in brackets. XGBoost and LightGBM are tuned with the same {v['optuna_trials']}-trial search; the random forest uses one fixed, "
-             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. Stacking is pending.", "",
+             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. The mean of the three models has no fitted weights; the stack with a fitted meta-learner is pending.", "",
              "| **Model** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
     for k, nm in names.items():
         cells = []
@@ -180,7 +180,8 @@ def table7(v):
             else:
                 cells.append(f"{v[f'a2_{k}_{t}']} ± {v[f'a2_{k}_{t}_sd']} ({v[f'a2_{k}_{t}_d']} [{v[f'a2_{k}_{t}_lo']}, {v[f'a2_{k}_{t}_hi']}])")
         lines.append(f"| {nm} | " + " | ".join(cells) + " |")
-    lines.append("| Stacking (XGBoost + LightGBM + random forest, ridge meta-learner) | " + " | ".join([_pend("NA2: stacking")] * 4) + " |")
+    lines.append("| Mean of the three (no fitted weights) | " + " | ".join(f"{v[f'a2_m3_{t}']} ± {v[f'a2_m3_{t}_sd']} ({v[f'a2_m3_{t}_d']} [{v[f'a2_m3_{t}_lo']}, {v[f'a2_m3_{t}_hi']}])" for t in T4) + " |")
+    lines.append("| Stacking (XGBoost + LightGBM + random forest, ridge meta-learner) | " + " | ".join([_pend("NA2: nested stacking")] * 4) + " |")
     return "\n".join(lines)
 
 

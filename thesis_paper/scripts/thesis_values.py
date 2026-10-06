@@ -217,7 +217,7 @@ NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
 TEMATDB_INVENTORY = "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json"
 TEMATDB_INVENTORY_FILE_A = "results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json"
-NA2_CMP = "thesis_paper/results/na2_comparison/20261006T131403"
+NA2_CMP = "thesis_paper/results/na2_comparison/20261006T132724"
 NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
@@ -671,6 +671,15 @@ def na2_na1_values():
     tops = [t for t in T4 if all(d < 0 for d in (c2["targets"][t]["differences_vs_reference"][m]["mean_diff"] for m in c2["targets"][t]["differences_vs_reference"] if m in ("lightgbm", "random_forest")))]
     assert tops == ["sigma", "kappa", "zT"], tops  # XGBoost highest on these three; on S the forest is nominally higher (a tie within the interval)
     v["a2_n_top"] = str(len(tops))
+    gains = []
+    for t in T4:  # the unweighted mean of the three base models: no fitted weights, hence no leak
+        x, d = c2["targets"][t]["models"]["mean_of_three"], c2["targets"][t]["differences_vs_reference"]["mean_of_three"]
+        lo, hi = d["ci95_cluster_bootstrap"]
+        v[f"a2_m3_{t}"], v[f"a2_m3_{t}_sd"] = _r3(x["mean"]), _r3(x["sd"])
+        v[f"a2_m3_{t}_d"], v[f"a2_m3_{t}_lo"], v[f"a2_m3_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
+        assert d["mean_diff"] > 0 and lo > 0, f"{t}: the prose says the mean of the three is above XGBoost with an interval that excludes zero"
+        gains.append(d["mean_diff"])
+    v["a2_m3_dmin"], v["a2_m3_dmax"] = _r3(min(gains)), _r3(max(gains))
     for m, k in (("lightgbm", "lgbm"), ("random_forest", "rf")):
         vals = [abs(c2["targets"][t]["differences_vs_reference"][m]["mean_diff"]) for t in tops] if m == "random_forest" else [abs(d) for mm, d in diffs if mm == m]
         v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _r3(min(vals)), _r3(max(vals)), str(len(vals))

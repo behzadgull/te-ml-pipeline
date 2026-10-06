@@ -1,0 +1,23 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "692eaae6b357d793a79c07ef929b85bf121d338c5a307eee928e7ae7c09da0a1",
+      "bytes": 116612
+    }
+  },
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/docs/decisions.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/kaggle/KAGGLE_CELLS.md",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 41
+}

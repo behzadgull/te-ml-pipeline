@@ -62,8 +62,8 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na11_shortlist_limits/20261005T060020/summary.json` | `735cf1d68435bcd78cbce37ee27a025f62443723f8673f31b064a76c3e2ffd77` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_shortlist_limits/20261005T060020/run_config.json` | `81ddbff5dc19ba1c52872ff4c227f22f0ef4396f9c0e09c19bca968ac840c486` | <!-- thesis analysis result -->
 | `thesis_paper/docs/shortlist_thermal_limits.csv` | `c8b9927a8f17ed4cd38f5aae53cde43e8259e7810b50f92781275d5fb2e204d1` | <!-- Paper A artifact / source -->
-| `thesis_paper/results/na2_comparison/20261006T050153/comparison.json` | `3a6bbae357b379072236ad0c31296c159f40e931f4bcfa3a321eeecc16b0473b` | <!-- thesis analysis result -->
-| `thesis_paper/results/na2_comparison/20261006T050153/run_config.json` | `52469bfec17bef8ad9b6f6b730d42fc9815b4cd5addc612f75c94023cc7c3035` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_comparison/20261006T132724/comparison.json` | `a9089cd2ffed78c0a5c7bf7f751641cbe073e2d279c6bfe089dae46ea7f5f936` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_comparison/20261006T132724/run_config.json` | `be0fb88cdaa9d124db1bde5a460a0ccd338add84ed62f1b513960fe2100ee660` | <!-- thesis analysis result -->
 | `thesis_paper/results/na1_comparison/20261006T050237/comparison.json` | `44fd28b348a5c88d65cf2e60af66c3a3c33e7a127d9ec9c06df55d8c2b458f60` | <!-- thesis analysis result -->
 | `thesis_paper/results/na1_comparison/20261006T050237/run_config.json` | `17c43a38a39e8a7774834a0a9622882571c5417a86b18c7a378b9630ca2f4752` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/summary.json` | `c6e5a0cdc996b5035183edc6dbfddeb6ea6e0c71f8f50dc521f0a116407c90dd` | <!-- thesis analysis result -->
