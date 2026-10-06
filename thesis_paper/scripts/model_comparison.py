@@ -38,7 +38,7 @@ TARGETS = ("S", "sigma", "kappa", "zT")
 N_REPEATS, N_FOLDS, SEED = 5, 5, 0
 BUNDLES = {  # analysis -> {model: {target: results folder (a run folder under thesis_paper/results)}}
     "na2": {"lightgbm": {t: f"{RESULTS}/na2_lightgbm/20261005T101837" for t in TARGETS},
-            "random_forest": {"sigma": f"{RESULTS}/na2_rf_sigma/20261005T102059", "kappa": f"{RESULTS}/na2_rf_kappa/20261005T101358", "zT": f"{RESULTS}/na2_rf_zT/20261005T101629"}},
+            "random_forest": {"S": f"{RESULTS}/na2_rf_S/20261005T100927", "sigma": f"{RESULTS}/na2_rf_sigma/20261005T102059", "kappa": f"{RESULTS}/na2_rf_kappa/20261005T101358", "zT": f"{RESULTS}/na2_rf_zT/20261005T101629"}},
     "na1": {"nested": {"S": f"{RESULTS}/na1_a/20261005T103553", "kappa": f"{RESULTS}/na1_a/20261005T103553", "sigma": f"{RESULTS}/na1_b/20261005T103553", "zT": f"{RESULTS}/na1_b/20261005T103553"}},
 }
 
