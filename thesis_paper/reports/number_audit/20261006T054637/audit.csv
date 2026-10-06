@@ -235,10 +235,11 @@ line,token,value,class,id,problem,section,context
 149,2,2,EXCLUDED:ENUM,,,,: (1) data acquisition and curation from Starrydata2; ([2]) feature engineering with two complementary compositio
 149,3,3,EXCLUDED:ENUM,,,,wo complementary compositional featurization schemes; ([3]) model development with chemistry-aware validation; an
 149,4,4,EXCLUDED:ENUM,,,,odel development with chemistry-aware validation; and ([4]) virtual screening of lead-free perovskite candidates
-151,4,4,EXCLUDED:XREF,,,,omising lead-free candidates. [[PENDING: NA11: Figure [4] is redrawn from the final numbers once the screening h
-153,4,4,EXCLUDED:XREF,,,,al was machine-generated and is not reused]] **Figure [4]:** Research workflow showing the four phases from data
-155,3.2,3.2,EXCLUDED:SECTION,,,,phases from data acquisition to virtual screening. ## [3.2] Data acquisition and curation ### 3.2.1 Source data
-157,3.2,3.2,EXCLUDED:SECTION,,,,screening. ## 3.2 Data acquisition and curation ### [3.2].1 Source data The main data source is Starrydata2 [@k
+151,4,4,EXCLUDED:XREF,,,,ification of promising lead-free candidates. ![Figure [4]](../figures/fig4_workflow.png){width=100%} **Figure 4
+151,100%,100,EXCLUDED:LINK,,,,"ates. ![Figure 4](../figures/fig4_workflow.png){width=[100%]} **Figure 4:** Study workflow, from data acquisition"
+153,4,4,EXCLUDED:XREF,,,,"4](../figures/fig4_workflow.png){width=100%} **Figure [4]:** Study workflow, from data acquisition to the output"
+155,3.2,3.2,EXCLUDED:SECTION,,,,the stacking comparison is still to be completed. ## [3.2] Data acquisition and curation ### 3.2.1 Source data
+157,3.2,3.2,EXCLUDED:SECTION,,,,completed. ## 3.2 Data acquisition and curation ### [3.2].1 Source data The main data source is Starrydata2 [@k
 159,22,22,GENERATED,snapshot_date,,3.2.1 Source data,"the Starrydata2 export taken on [22] August 2026 (the export is regenerated daily,"
 159,2026,2026,GENERATED,snapshot_date,,3.2.1 Source data,"ydata2 export taken on 22 August [2026] (the export is regenerated daily, so an unpin"
 159,"9,494",9494,GENERATED,raw_papers,,3.2.1 Source data,"unpinned pull is not reproducible): [9,494] publications, 55,261"

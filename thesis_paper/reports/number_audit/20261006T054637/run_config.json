@@ -1,0 +1,24 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "57e73181eb75e6a8aa7688626f3f5cfa9c7bdf7a6b332fc2e0b6dd68dc8b1526",
+      "bytes": 113494
+    }
+  },
+  "git_head": "450ec5973d86feefd4d6d9a3691f839109cb9332",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/reports/number_audit/20261006T050452/audit.csv",
+    "thesis_paper/reports/number_audit/20261006T050452/run_config.json",
+    "thesis_paper/reports/number_audit/20261006T050452/summary.json",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/figures/fig4_workflow.pdf",
+    "thesis_paper/figures/fig4_workflow.png"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 41
+}

@@ -218,25 +218,169 @@ def fig11_beeswarm(out, run_dirs, top_n=BEESWARM_TOP_N):
     plt.close(fig)
 
 
+def fig4_workflow(out):
+    """
+    Study workflow (Figure 4): data pipeline on top, four validation and model analyses, the shared model band, then interpretation, transfer and screening, and the outputs. Drawn at 16 cm width in
+    figstyle (text 8 pt or larger, every text block checked to lie inside its box); every count and every section number is read from a committed artifact or from paper.md and asserted.
+    """
+    import json
+    import re
+    from datetime import datetime
+
+    from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+    v = tv.values()
+    v.update(tv.new_analysis_values())
+    paper = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
+    heads = {m.group(1): m.group(2).strip() for m in re.finditer(r"^#{2,3} (\d(?:\.\d+)*) (.+)$", paper, flags=re.M)}
+
+    def sec(title):
+        found = [n for n, h in heads.items() if h == title]
+        assert len(found) == 1, (title, found)
+        return found[0]
+
+    s_ladder, s_methods, s_algo = sec("Chemistry-cluster cross-validation"), sec("Validation method comparison"), sec("Algorithm comparison")
+    s_nested, s_dvd, s_shap, s_ext = sec("Model development"), sec("Direct versus component-wise zT prediction"), sec("Feature importance and explainability"), sec("External validation")
+    s_screen = [n for n, h in heads.items() if h == "Virtual screening" and n.startswith("4.")]
+    assert len(s_screen) == 1
+    s_screen = s_screen[0]
+
+    funnel = pav._json(pav.FUNNEL)
+    assert len(funnel["funnel"]) == 11 and funnel["verification_gate"]["match"] is True
+    papers, curves, cleaned = funnel["raw_input_row_counts"]["papers"], funnel["raw_input_row_counts"]["curves"], funnel["funnel"][-1]["rows"]
+    assert f"{cleaned:,}" == v["n_clean"]
+    meta = pav._json(pav.RAWMETA)
+    assert meta["files"]["papers"]["counted_row_count"] == papers and meta["files"]["curves"]["counted_row_count"] == curves
+    pulled = datetime.fromisoformat(meta["extraction_timestamp_utc"])
+    assert meta["upstream_db_snapshot"].startswith(pulled.strftime("%Y-%m-%d"))
+    snap = f"{pulled.day} {pulled:%b %Y}"
+    ladder = pav._json(pav.LADDER)["runs"]
+    rows = {t: ladder[f"{t}_chemistry_full"]["n_rows_header"] for t in pav.TARGETS}
+    for t in pav.TARGETS:
+        assert f"{rows[t]:,}" == v[f"n_{t}"]
+    assert int(v["shap_n_magpie"]) + int(v["shap_n_cbfv"]) + 1 == int(v["n_feat"]) == 397
+    # asserted against the stated sources of the later analyses
+    assert v["optuna_trials"] == "20" and v["shap_rows"] == "20,000" and v["shap_folds"] == "25" and v["estm_scope"] == "4,539" and v["jv_both"] == "23,218"
+    assert v["mp_f0"] == "75,508" and v["mp_f4"] == "315" and v["mp_f6"] == "30" and v["nv_main_seen"] == "9" and v["nv_main_unseen"] == "21"
+
+    W = 16.0
+    top_w, top_h, gap = 3.4, 2.45, 0.8
+    a_h, m_h, e_h, o_h, g = 3.75, 1.15, 3.3, 1.15, 0.6
+    H = 0.1 + o_h + g + e_h + g + m_h + g + a_h + 0.85 + top_h + 0.2
+    fsz = 8.0
+    fig = plt.figure(figsize=(W * fs.CM, H * fs.CM))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(-0.1, W + 0.1)
+    ax.set_ylim(0, H)
+    ax.axis("off")
+    checks = []
+
+    def box(x, y, w, h, head, body, face="white"):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.0,rounding_size=0.12", fc=face, ec="0.15", lw=0.9))
+        t1 = ax.text(x + w / 2, y + h - 0.13, head, ha="center", va="top", fontsize=fsz, fontweight="bold", color="0.1", linespacing=1.25)
+        fig.canvas.draw()
+        hb = ax.transData.inverted().transform((0, t1.get_window_extent(fig.canvas.get_renderer()).y0))[1]
+        t2 = ax.text(x + w / 2, hb - 0.2, body, ha="center", va="top", fontsize=fsz, color="0.1", linespacing=1.25)
+        checks.extend([(t1, (x, y, x + w, y + h)), (t2, (x, y, x + w, y + h))])
+
+    def arrow(p0, p1, dashed=False):
+        ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=9, lw=0.9, color="0.25", shrinkA=0, shrinkB=0, ls=(0, (3, 2)) if dashed else "-"))
+
+    # data pipeline
+    top_y = H - 0.2 - top_h
+    xs = [i * (top_w + gap) for i in range(4)]
+    box(xs[0], top_y, top_w, top_h, "Starrydata2\nsnapshot", f"{snap}\n{papers:,} papers\n{curves:,} curves")
+    box(xs[1], top_y, top_w, top_h, "Cleaning", f"11 steps\n{cleaned:,} rows")
+    box(xs[2], top_y, top_w, top_h, "Featurisation", f"{v['shap_n_magpie']} MAGPIE\n+ {v['shap_n_cbfv']} CBFV\n+ temperature\n= {v['n_feat']} features")
+    box(xs[3], top_y, top_w, top_h, "Per-target data", "\n".join(f"{n}  {rows[t]:,}" for n, t in (("S", "S"), ("σ", "sigma"), ("κ", "kappa"), ("zT", "zT"))))
+    for i in range(3):
+        arrow((xs[i] + top_w + 0.03, top_y + top_h / 2), (xs[i + 1] - 0.03, top_y + top_h / 2))
+
+    # analyses A to D
+    a_gap = 0.3
+    a_w = (W - 3 * a_gap) / 4
+    a_y = 0.1 + o_h + g + e_h + g + m_h + g
+    A = [
+        (f"(A) §{s_ladder}, §{s_methods}\nValidation ladder\nand ceiling", f"five splits, grouped\nCV {v['n_repeats']} × {v['n_folds']};\nchemistry-cluster\nceilings R²:\nS {v['chem_S']}, σ {v['chem_sigma']}\nκ {v['chem_kappa']}, zT {v['chem_zT']}"),
+        (f"(B) §{s_algo}\nModel\ncomparison", "XGBoost, LightGBM,\nrandom forest,\nstacking; paired,\nsame folds"),
+        (f"(C) §{s_nested}\nNested CV", f"{v['optuna_trials']} trials inside\neach outer fold;\noptimism ≤ {v['n1_max']} R²"),
+        (f"(D) §{s_dvd}\nDirect vs\nderived zT", f"{v['dvd_rows']} rows\ndirect R² {v['dvd_direct']}\nderived R² {v['dvd_derived']}"),
+    ]
+    cx = []
+    for i, (hd, bd) in enumerate(A):
+        x0 = i * (a_w + a_gap)
+        cx.append(x0 + a_w / 2)
+        box(x0, a_y, a_w, a_h, hd, bd, face="0.95")
+    bus_y = top_y - 0.42
+    x_src = cx[-1]
+    assert xs[3] < x_src < xs[3] + top_w
+    ax.plot([x_src, x_src], [top_y, bus_y], color="0.25", lw=0.9)
+    ax.plot([cx[0], x_src], [bus_y, bus_y], color="0.25", lw=0.9)
+    for xc in cx:
+        arrow((xc, bus_y), (xc, a_y + a_h + 0.03))
+
+    # model band
+    m_y = a_y - g - m_h
+    ax.add_patch(FancyBboxPatch((0, m_y), W, m_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
+    t = ax.text(W / 2, m_y + m_h / 2 + 0.22, "XGBoost, frozen per-target hyperparameters; carrier-type classifier", ha="center", va="center", fontsize=fsz, fontweight="bold", color="0.1")
+    t2 = ax.text(W / 2, m_y + m_h / 2 - 0.26, f"classifier accuracy {v['cl_acc']} under chemistry-cluster CV", ha="center", va="center", fontsize=fsz, color="0.1", style="italic")
+    checks.extend([(t, (0, m_y, W, m_y + m_h)), (t2, (0, m_y, W, m_y + m_h))])
+    for xc in cx:
+        arrow((xc, a_y), (xc, m_y + m_h + 0.03), dashed=True)
+
+    # E to G
+    e_gap = 0.3
+    e_w = (W - 2 * e_gap) / 3
+    e_y = m_y - g - e_h
+    E = [
+        (f"(E) §{s_shap}\nSHAP attribution", f"{v['shap_folds']} folds, {v['shap_rows']} rows\neach; features are\nstatistics of elemental\nproperties, not measured\nproperties"),
+        (f"(F) §{s_ext}\nExternal transfer", f"ESTM: {v['estm_scope']} rows,\nDOI-disjoint and\ncluster-disjoint strata\nJARVIS: {v['jv_both']}\nDFT entries (description)"),
+        (f"(G) §{s_screen}\nScreening (hypotheses)", f"Materials Project:\n{v['mp_f0']} → {v['mp_f4']} perovskite-type\n(connectivity test)\n→ {v['mp_f6']} candidates:\n{v['nv_main_seen']} seen, {v['nv_main_unseen']} unseen clusters"),
+    ]
+    ex = []
+    for i, (hd, bd) in enumerate(E):
+        x0 = i * (e_w + e_gap)
+        ex.append(x0 + e_w / 2)
+        box(x0, e_y, e_w, e_h, hd, bd, face="0.95")
+        arrow((x0 + e_w / 2, m_y), (x0 + e_w / 2, e_y + e_h + 0.03))
+
+    # outputs
+    ax.add_patch(FancyBboxPatch((0, 0.1), W, o_h, boxstyle="round,pad=0.0,rounding_size=0.12", fc="0.85", ec="0.15", lw=0.9))
+    t = ax.text(W / 2, 0.1 + o_h / 2 + 0.22, "Outputs", ha="center", va="center", fontsize=fsz, fontweight="bold", color="0.1")
+    t2 = ax.text(W / 2, 0.1 + o_h / 2 - 0.26, "composition-only ceilings; ranked list of candidates as hypotheses, not findings", ha="center", va="center", fontsize=fsz, color="0.1", style="italic")
+    checks.extend([(t, (0, 0.1, W, 0.1 + o_h)), (t2, (0, 0.1, W, 0.1 + o_h))])
+    for xc in ex:
+        arrow((xc, e_y), (xc, 0.1 + o_h + 0.03))
+
+    fs.check_text_fits(fig, ax, checks)
+    fs.save(fig, str(out), expect_width_cm=16.0)
+    plt.close(fig)
+
+
 def main():
     """Entry point."""
     import argparse
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--na3-rows-dirs", default=None, help="comma-separated NA3-rows bundle directories (tests only; Figure 11 of the paper uses thesis_values.NA3_ROWS)")
+    ap.add_argument("--only-fig4-to", default=None, help="write only Figure 4, to this path without extension (for tests)")
     ap.add_argument("--only-fig11-to", default=None, help="write only Figure 11, to this path without extension (for tests)")
     args = ap.parse_args()
+    if args.only_fig4_to:
+        fig4_workflow(args.only_fig4_to)
+        return
     if args.only_fig11_to:
         fig11_beeswarm(args.only_fig11_to, args.na3_rows_dirs.split(","))
         return
     FIG.mkdir(parents=True, exist_ok=True)
     fig6_distributions(FIG / "fig6_property_distributions")
     fig7_parity(FIG / "fig7_predicted_vs_measured")
+    fig4_workflow(FIG / "fig4_workflow")
     fig9_estm(FIG / "fig9_estm_external")
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
     fig11_beeswarm(FIG / "fig11_shap_beeswarm", [REPO / d for d in tv.NA3_ROWS])
-    print("Figures 6, 7, 9, 10, 11 and 12 saved")
+    print("Figures 4, 6, 7, 9, 10, 11 and 12 saved")
 
 
 if __name__ == "__main__":

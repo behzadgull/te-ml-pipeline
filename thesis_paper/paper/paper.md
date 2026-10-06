@@ -148,9 +148,9 @@ Five gaps motivate this study. (1) *Validation bias is unquantified at scale*: t
 
 The research follows a four-phase pipeline (Fig. 4): (1) data acquisition and curation from Starrydata2; (2) feature engineering with two complementary compositional featurization schemes; (3) model development with chemistry-aware validation; and (4) virtual screening of lead-free perovskite candidates from the Materials Project. Each phase addresses a particular challenge: noise and inconsistency in experimental databases, translation of formulas into physically meaningful numerical representations, avoidance of temperature-series leakage, and identification of promising lead-free candidates.
 
-[[PENDING: NA11: Figure 4 is redrawn from the final numbers once the screening has been rerun; the original was machine-generated and is not reused]]
+![Figure 4](../figures/fig4_workflow.png){width=100%}
 
-**Figure 4:** Research workflow showing the four phases from data acquisition to virtual screening.
+**Figure 4:** Study workflow, from data acquisition to the outputs. Every count is read from a committed artifact and every section number from the headings of this manuscript; the screening yields hypotheses, not findings, and the stacking comparison is still to be completed.
 
 ## 3.2 Data acquisition and curation
 
