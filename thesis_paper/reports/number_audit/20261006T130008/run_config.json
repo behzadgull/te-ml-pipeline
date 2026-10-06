@@ -1,0 +1,20 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "66226cf86e82ae6d8bc7632d46c32f0729a12e1f4aa2ea28b09c6447e1ef06da",
+      "bytes": 115377
+    }
+  },
+  "git_head": "1f80b75dc43a90f52e49dab2f453985945ad58b3",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/SHARED_DEPENDENCIES.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/thesis_values.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "d1c0539439ab93bd51e6784800b5506607e3554621118ec9f59793931dc13662",
+  "python": "3.12.10",
+  "registry_rows": 41
+}

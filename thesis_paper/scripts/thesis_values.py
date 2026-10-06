@@ -215,6 +215,7 @@ NA3_ROWS = ("thesis_paper/results/na3_rows_a/20261005T102144", "thesis_paper/res
 NA2_TUNING = "thesis_paper/results/na2_random_forest_tuning/summary"
 NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
+TEMATDB_INVENTORY = "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json"
 NA2_CMP = "thesis_paper/results/na2_comparison/20261006T050153"
 NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
@@ -355,6 +356,7 @@ def na11_values():
 
 
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
+    TEMATDB_INVENTORY,
     f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
     f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json", f"{NA10_CLF}/analysis.json", f"{NA10_CLF}/run_config.json",
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
@@ -705,6 +707,10 @@ def noise_ceiling_values():
         allr += rs
     v["nc_head_lo"], v["nc_head_hi"] = f"{min(r['headroom_lower'] for r in allr):.3f}", f"{max(r['headroom_upper'] for r in allr):.3f}"
     v["nc_all_lo"], v["nc_all_hi"] = f"{min(r['r2_comb_lower'] for r in allr):.2f}", f"{max(r['r2_comb_upper'] for r in allr):.2f}"
+    assert n["item2_digitization_ceiling"]["source"].startswith(TEMATDB_INVENTORY)  # the digitisation term and its sample counts come from the same file
+    inv = pav._json(TEMATDB_INVENTORY)["C3_composition_matched_digitization_agreement"]
+    ns = [x["n_samples"] for x in inv["N3_label_agreement_300_800K"].values()]
+    v["nc_n_match"], v["nc_ns_lo"], v["nc_ns_hi"] = str(inv["n_samples_with_composition_match"]), str(min(ns)), str(max(ns))
     return v
 
 
