@@ -57,8 +57,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("analysis", choices=["na1", "na2"])
     ap.add_argument("--n-boot", type=int, default=2000)
+    ap.add_argument("--stacking-dir", default=None, help="na2 only: the output folder of scripts/na2_stacking_analysis.py (units of the nested stack's outer predictions)")
     args = ap.parse_args()
-    bundles = BUNDLES[args.analysis]
+    bundles = {m: dict(per) for m, per in BUNDLES[args.analysis].items()}
+    if args.stacking_dir:
+        assert args.analysis == "na2"
+        bundles["stacking"] = {t: args.stacking_dir for t in TARGETS}
     base = "xgboost_frozen"
     inputs = {"dataset": DATASET}
     for model, per in bundles.items():
@@ -107,6 +111,14 @@ def main():
             for m in models:
                 SSE[m][r] = np.bincount(cl[r], weights=(yy[r] - preds[m][r]) ** 2, minlength=nc)
 
+        if args.analysis == "na2":  # the unweighted mean of the three base models: no fitted meta-learner, so no leak to worry about
+            assert all(b in models for b in (base, "lightgbm", "random_forest"))
+            preds["mean_of_three"] = [np.mean([preds[b][r] for b in (base, "lightgbm", "random_forest")], axis=0) for r in range(N_REPEATS)]
+            models["mean_of_three"] = None
+            SSE["mean_of_three"] = np.zeros((N_REPEATS, nc))
+            for r in range(N_REPEATS):
+                SSE["mean_of_three"][r] = np.bincount(cl[r], weights=(yy[r] - preds["mean_of_three"][r]) ** 2, minlength=nc)
+
         def r2s(w):
             n, sy, syy = S["n"] @ w, S["sy"] @ w, S["syy"] @ w
             sst = syy - sy ** 2 / n
@@ -132,6 +144,16 @@ def main():
             t_out["differences_vs_reference"][m] = {"mean_diff": float(d_rep.mean()), "ci95_cluster_bootstrap": pct(d_boot), "per_repeat_diff": d_rep.tolist(),
                                                     "ci95_t_across_repeats": [float(d_rep.mean() - tq * d_rep.std(ddof=1) / np.sqrt(N_REPEATS)), float(d_rep.mean() + tq * d_rep.std(ddof=1) / np.sqrt(N_REPEATS))],
                                                     "share_of_bootstrap_draws_model_above_reference": float((d_boot > 0).mean())}
+        if args.analysis == "na2" and "stacking" in models:  # the stack against the best single model of the target (chosen on these same folds, which favours the single model), and against the plain mean
+            singles = [base, "lightgbm", "random_forest"]
+            best = max(singles, key=lambda m: float(full[m].mean()))
+            t_out["best_single"] = best
+            t_out["extra_pairs"] = {}
+            for a, b in (("stacking", best), ("mean_of_three", best), ("stacking", "mean_of_three")):
+                d_rep = full[a] - full[b]
+                d_boot = np.array(boots[a]) - np.array(boots[b])
+                t_out["extra_pairs"][f"{a}_minus_{b}"] = {"mean_diff": float(d_rep.mean()), "ci95_cluster_bootstrap": pct(d_boot), "per_repeat_diff": d_rep.tolist(),
+                                                          "share_of_bootstrap_draws_first_above_second": float((d_boot > 0).mean())}
         if args.analysis == "na1":  # fold level: how often the nested fold R2 is below the frozen one, and the inner-CV R2 of the best trials
             run = bundles["nested"][target]
             nested_fold, frozen_fold, inner = [], [], []

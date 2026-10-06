@@ -217,7 +217,7 @@ NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
 TEMATDB_INVENTORY = "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json"
 TEMATDB_INVENTORY_FILE_A = "results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json"
-NA2_CMP = "thesis_paper/results/na2_comparison/20261006T050153"
+NA2_CMP = "thesis_paper/results/na2_comparison/20261006T131403"
 NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
@@ -666,14 +666,18 @@ def na2_na1_values():
                 v[f"a2_{k}_{t}_d"], v[f"a2_{k}_{t}_lo"], v[f"a2_{k}_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
                 diffs.append((m, d["mean_diff"]))
                 excl += int(lo > 0 or hi < 0)
-                assert d["mean_diff"] < 0, f"{t} {m}: the prose says XGBoost is highest"
+                if d["mean_diff"] > 0:  # the one case the prose treats separately: a model nominally above XGBoost
+                    assert (t, m) == ("S", "random_forest") and lo < 0 < hi, f"{t} {m}: above XGBoost with an interval that excludes zero; the prose must change"
+    tops = [t for t in T4 if all(d < 0 for d in (c2["targets"][t]["differences_vs_reference"][m]["mean_diff"] for m in c2["targets"][t]["differences_vs_reference"] if m in ("lightgbm", "random_forest")))]
+    assert tops == ["sigma", "kappa", "zT"], tops  # XGBoost highest on these three; on S the forest is nominally higher (a tie within the interval)
+    v["a2_n_top"] = str(len(tops))
     for m, k in (("lightgbm", "lgbm"), ("random_forest", "rf")):
-        vals = [abs(d) for mm, d in diffs if mm == m]
+        vals = [abs(c2["targets"][t]["differences_vs_reference"][m]["mean_diff"]) for t in tops] if m == "random_forest" else [abs(d) for mm, d in diffs if mm == m]
         v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _r3(min(vals)), _r3(max(vals)), str(len(vals))
     v["a2_maxgap"] = _r3(max(abs(d) for _, d in diffs))
     v["a2_n_diffs"], v["a2_n_excl"] = str(len(diffs)), str(excl)
     v["n_repeats"], v["n_folds"] = str(len(c2["targets"]["S"]["models"]["xgboost_frozen"]["per_repeat_r2"])), str(pav._json(f"{NA2_CMP}/run_config.json")["n_folds"])
-    assert len([d for m, d in diffs if m == "random_forest"]) == 3 and "random_forest" not in c2["targets"]["S"]["models"]  # the S forest is still pending
+    assert len([d for m, d in diffs if m == "random_forest"]) == 4
     # NA1: frozen minus nested = the optimism of the non-nested result
     for t in T4:
         tt = c1["targets"][t]

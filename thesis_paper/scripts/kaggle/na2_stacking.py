@@ -1,7 +1,7 @@
 """
 NA2, stacking (local, CPU, minutes): a stacked model over the XGBoost, random forest and LightGBM out-of-fold predictions.
 
-The three base models were scored on identical chemistry-cluster 5 x 5 folds (checked here: y_true is bit-identical across the three for every fold).
+The three base models were scored on identical chemistry-cluster 5 x 5 folds (checked here: y_true agrees to 1e-6 across the three for every fold; the XGBoost ladder stored sigma and kappa targets with float rounding that differs from the other two at about 1e-8).
 For each target and repeat, a non-negative ridge meta-learner (sklearn Ridge, alpha 1, positive=True, intercept) is fitted on the base models'
 out-of-fold predictions of four folds and predicts the fifth (cross-fitted across the five outer folds of that repeat), so the stack's prediction for a
 row never comes from a meta-learner that saw that row's label. Also reported: the simple mean of the three, and each base model on its own.
@@ -102,7 +102,7 @@ def main():
                 x = np.load(LADDER_DIR / f"{target}_chemistry_full" / f"repeat{r}_fold{f}_predictions.npz")
                 a = np.load(rf[target] / f"rung_{target}_repeat{r}_fold{f}.npz")
                 b = np.load(lg[target] / f"rung_{target}_repeat{r}_fold{f}.npz")
-                assert np.array_equal(x["y_true"], a["y_true"]) and np.array_equal(x["y_true"], b["y_true"]), f"{target} r{r} f{f}: y_true differs between models"
+                assert np.allclose(x["y_true"], a["y_true"], rtol=0, atol=1e-6) and np.allclose(x["y_true"], b["y_true"], rtol=0, atol=1e-6), f"{target} r{r} f{f}: y_true differs between models"
                 Y.append(x["y_true"])
                 P.append(np.column_stack([x["y_pred"], a["y_pred"], b["y_pred"]]))
             stack_pred = []

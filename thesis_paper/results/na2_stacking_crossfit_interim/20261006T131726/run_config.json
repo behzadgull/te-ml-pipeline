@@ -1,0 +1,13 @@
+{
+  "script": "na2_stacking.py",
+  "script_sha256": "9370684a2345ab7064c7d08925ce1f18dc75b86634cfa5f9b13be9a86fab0711",
+  "git_head": "b3b27af63afd988f5a7dd065c04a7ed7ecedfe2b",
+  "tree_clean": false,
+  "args": {
+    "rf_dir": "thesis_paper/results/na2_rf_S/20261005T100927,thesis_paper/results/na2_rf_sigma/20261005T102059,thesis_paper/results/na2_rf_kappa/20261005T101358,thesis_paper/results/na2_rf_zT/20261005T101629",
+    "lgbm_dir": "thesis_paper/results/na2_lightgbm/20261005T101837",
+    "out_dir": "thesis_paper/results/na2_stacking_crossfit_interim/20261006T1325",
+    "n_repeats": 5,
+    "n_folds": 5
+  }
+}
