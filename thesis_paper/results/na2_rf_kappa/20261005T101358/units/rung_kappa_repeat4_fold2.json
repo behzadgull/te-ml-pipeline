@@ -1,0 +1,12 @@
+{
+ "unit": "rung_kappa_repeat4_fold2",
+ "meta": {
+  "repeat": 4,
+  "fold": 2,
+  "n_train": 96888,
+  "n_test": 24222,
+  "outer_r2": 0.8195854049991826,
+  "seconds": 752.4945041690007
+ },
+ "has_arrays": true
+}

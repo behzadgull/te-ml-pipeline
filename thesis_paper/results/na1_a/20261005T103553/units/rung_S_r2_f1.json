@@ -1,0 +1,26 @@
+{
+ "unit": "rung_S_r2_f1",
+ "meta": {
+  "target": "S",
+  "repeat": 2,
+  "fold": 1,
+  "n_train": 148051,
+  "n_test": 37013,
+  "outer_r2": 0.7660771108661817,
+  "best_inner_cv_r2": 0.7038481960795542,
+  "best_params": {
+   "n_estimators": 600,
+   "max_depth": 9,
+   "learning_rate": 0.02084940546286422,
+   "subsample": 0.5713830910156932,
+   "colsample_bytree": 0.5827192613030763,
+   "min_child_weight": 6,
+   "reg_lambda": 0.4566934692468188,
+   "reg_alpha": 3.4274216177643524
+  },
+  "committed_frozen_outer_r2": 0.7680991102153303,
+  "tuning_seconds": 620.8004393750025,
+  "fit_seconds": 19.834887343000446
+ },
+ "has_arrays": true
+}

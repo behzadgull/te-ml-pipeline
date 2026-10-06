@@ -1,0 +1,26 @@
+{
+ "unit": "rung_zT_r0_f0",
+ "meta": {
+  "target": "zT",
+  "repeat": 0,
+  "fold": 0,
+  "n_train": 103535,
+  "n_test": 25884,
+  "outer_r2": 0.7711894786303075,
+  "best_inner_cv_r2": 0.7229629524438016,
+  "best_params": {
+   "n_estimators": 550,
+   "max_depth": 10,
+   "learning_rate": 0.02669280098570686,
+   "subsample": 0.8676496872090056,
+   "colsample_bytree": 0.5166510752439176,
+   "min_child_weight": 4,
+   "reg_lambda": 0.8073661687820751,
+   "reg_alpha": 6.547909796510876
+  },
+  "committed_frozen_outer_r2": 0.7732267094886742,
+  "tuning_seconds": 525.3614198039977,
+  "fit_seconds": 24.05839680399913
+ },
+ "has_arrays": true
+}

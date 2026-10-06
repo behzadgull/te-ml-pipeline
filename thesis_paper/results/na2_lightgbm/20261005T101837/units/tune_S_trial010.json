@@ -1,0 +1,21 @@
+{
+ "unit": "tune_S_trial010",
+ "meta": {
+  "state": "pruned",
+  "value": null,
+  "params": {
+   "n_estimators": 100,
+   "max_depth": 12,
+   "num_leaves": 15,
+   "learning_rate": 0.23615194542589477,
+   "subsample": 0.8434624314393885,
+   "colsample_bytree": 0.9892935672888841,
+   "min_child_samples": 44,
+   "reg_lambda": 0.991004976421652,
+   "reg_alpha": 9.48289343913609
+  },
+  "seconds": 20.866673311000113,
+  "trial_number": 10
+ },
+ "has_arrays": false
+}

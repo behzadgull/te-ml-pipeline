@@ -1,0 +1,20 @@
+{
+ "unit": "tune_sigma_r1_f4_trial09",
+ "meta": {
+  "state": "pruned",
+  "value": null,
+  "params": {
+   "n_estimators": 450,
+   "max_depth": 3,
+   "learning_rate": 0.032413583760655555,
+   "subsample": 0.9890850829811446,
+   "colsample_bytree": 0.9249965939569398,
+   "min_child_weight": 2,
+   "reg_lambda": 0.015337560073582827,
+   "reg_alpha": 0.06094803407154551
+  },
+  "seconds": 10.121617568999682,
+  "trial_number": 9
+ },
+ "has_arrays": false
+}

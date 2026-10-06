@@ -1,0 +1,12 @@
+{
+ "unit": "rung_sigma_repeat0_fold1",
+ "meta": {
+  "repeat": 0,
+  "fold": 1,
+  "n_train": 146204,
+  "n_test": 36551,
+  "outer_r2": 0.7307070077883642,
+  "seconds": 1187.7345440519998
+ },
+ "has_arrays": true
+}

@@ -1,0 +1,23 @@
+{
+  "target": "sigma",
+  "target_scale": "log10",
+  "model_type": "lightgbm",
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "seed": 0,
+  "device": "cpu",
+  "n_rows": 182755,
+  "n_features": 397,
+  "inner_cv_r2": 0.6852523123449874,
+  "best_params": {
+    "n_estimators": 550,
+    "max_depth": 9,
+    "num_leaves": 126,
+    "learning_rate": 0.056775623112357364,
+    "subsample": 0.5916959986883081,
+    "colsample_bytree": 0.6383303853409925,
+    "min_child_samples": 35,
+    "reg_lambda": 3.2679706193958813,
+    "reg_alpha": 9.838893716224979
+  }
+}

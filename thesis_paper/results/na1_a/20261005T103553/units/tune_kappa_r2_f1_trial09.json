@@ -1,0 +1,20 @@
+{
+ "unit": "tune_kappa_r2_f1_trial09",
+ "meta": {
+  "state": "pruned",
+  "value": null,
+  "params": {
+   "n_estimators": 450,
+   "max_depth": 4,
+   "learning_rate": 0.11790922765024726,
+   "subsample": 0.6575948615171914,
+   "colsample_bytree": 0.8022899803485688,
+   "min_child_weight": 10,
+   "reg_lambda": 0.001485667172926624,
+   "reg_alpha": 0.0018567429704912201
+  },
+  "seconds": 12.383415993997914,
+  "trial_number": 9
+ },
+ "has_arrays": false
+}

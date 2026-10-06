@@ -1,0 +1,20 @@
+{
+ "unit": "tune_zT_r3_f2_trial13",
+ "meta": {
+  "state": "complete",
+  "value": 0.7547943489200896,
+  "params": {
+   "n_estimators": 400,
+   "max_depth": 10,
+   "learning_rate": 0.04944463697063667,
+   "subsample": 0.6818337479206436,
+   "colsample_bytree": 0.5771509017056229,
+   "min_child_weight": 5,
+   "reg_lambda": 0.759705779323956,
+   "reg_alpha": 0.14383496577446359
+  },
+  "seconds": 45.204609475000325,
+  "trial_number": 13
+ },
+ "has_arrays": false
+}

@@ -1,0 +1,26 @@
+{
+ "unit": "rung_kappa_r3_f2",
+ "meta": {
+  "target": "kappa",
+  "repeat": 3,
+  "fold": 2,
+  "n_train": 96888,
+  "n_test": 24222,
+  "outer_r2": 0.799510366303263,
+  "best_inner_cv_r2": 0.7850345570717154,
+  "best_params": {
+   "n_estimators": 450,
+   "max_depth": 10,
+   "learning_rate": 0.048574175627108265,
+   "subsample": 0.6642084384192268,
+   "colsample_bytree": 0.5020927961708679,
+   "min_child_weight": 6,
+   "reg_lambda": 0.0011920820919125818,
+   "reg_alpha": 0.1178831875476893
+  },
+  "committed_frozen_outer_r2": 0.7996145215098929,
+  "tuning_seconds": 495.02151660499294,
+  "fit_seconds": 17.49568417699993
+ },
+ "has_arrays": true
+}

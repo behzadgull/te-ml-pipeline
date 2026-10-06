@@ -1,0 +1,20 @@
+{
+ "unit": "tune_S_r3_f2_trial17",
+ "meta": {
+  "state": "complete",
+  "value": 0.7456691551389243,
+  "params": {
+   "n_estimators": 350,
+   "max_depth": 9,
+   "learning_rate": 0.03742192819696834,
+   "subsample": 0.7664458517780326,
+   "colsample_bytree": 0.6062964553236885,
+   "min_child_weight": 7,
+   "reg_lambda": 2.4021422105096994,
+   "reg_alpha": 0.04127797157172477
+  },
+  "seconds": 31.631012972000462,
+  "trial_number": 17
+ },
+ "has_arrays": false
+}

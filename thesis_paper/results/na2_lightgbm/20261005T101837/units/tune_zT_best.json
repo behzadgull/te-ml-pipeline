@@ -1,0 +1,27 @@
+{
+ "unit": "tune_zT_best",
+ "meta": {
+  "target": "zT",
+  "target_scale": "linear",
+  "model_type": "lightgbm",
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "seed": 0,
+  "device": "cpu",
+  "n_rows": 129419,
+  "n_features": 397,
+  "inner_cv_r2": 0.7391170825432708,
+  "best_params": {
+   "n_estimators": 500,
+   "max_depth": 12,
+   "num_leaves": 75,
+   "learning_rate": 0.044744280458945164,
+   "subsample": 0.5096061191414202,
+   "colsample_bytree": 0.6258451508320646,
+   "min_child_samples": 40,
+   "reg_lambda": 2.337682166150831,
+   "reg_alpha": 3.902628048801286
+  }
+ },
+ "has_arrays": false
+}

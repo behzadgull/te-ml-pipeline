@@ -1,0 +1,12 @@
+{
+ "unit": "rung_S_repeat3_fold4",
+ "meta": {
+  "repeat": 3,
+  "fold": 4,
+  "n_train": 148052,
+  "n_test": 37012,
+  "outer_r2": 0.765632939448327,
+  "seconds": 41.82438643200021
+ },
+ "has_arrays": true
+}

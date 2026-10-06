@@ -1,0 +1,21 @@
+{
+ "unit": "tune_zT_trial019",
+ "meta": {
+  "state": "complete",
+  "value": 0.7341619268005872,
+  "params": {
+   "n_estimators": 450,
+   "max_depth": 12,
+   "num_leaves": 55,
+   "learning_rate": 0.05937181859500851,
+   "subsample": 0.5770737814037364,
+   "colsample_bytree": 0.6243078933415583,
+   "min_child_samples": 44,
+   "reg_lambda": 0.09586610759282477,
+   "reg_alpha": 9.861391901031922
+  },
+  "seconds": 78.96470213900102,
+  "trial_number": 19
+ },
+ "has_arrays": false
+}

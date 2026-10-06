@@ -1,0 +1,23 @@
+{
+  "target": "kappa",
+  "target_scale": "log10",
+  "model_type": "lightgbm",
+  "n_trials": 20,
+  "n_inner_folds": 3,
+  "seed": 0,
+  "device": "cpu",
+  "n_rows": 121110,
+  "n_features": 397,
+  "inner_cv_r2": 0.7938195517824586,
+  "best_params": {
+    "n_estimators": 400,
+    "max_depth": 7,
+    "num_leaves": 241,
+    "learning_rate": 0.08765092683799933,
+    "subsample": 0.5516306085753169,
+    "colsample_bytree": 0.6774827744448386,
+    "min_child_samples": 38,
+    "reg_lambda": 0.026890348500439257,
+    "reg_alpha": 1.243900193974879
+  }
+}

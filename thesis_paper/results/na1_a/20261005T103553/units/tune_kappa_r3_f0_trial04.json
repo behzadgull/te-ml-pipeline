@@ -1,0 +1,20 @@
+{
+ "unit": "tune_kappa_r3_f0_trial04",
+ "meta": {
+  "state": "complete",
+  "value": 0.759291482641666,
+  "params": {
+   "n_estimators": 100,
+   "max_depth": 10,
+   "learning_rate": 0.12233200557644107,
+   "subsample": 0.5871621326573258,
+   "colsample_bytree": 0.6518849125264908,
+   "min_child_weight": 4,
+   "reg_lambda": 0.026271145730110523,
+   "reg_alpha": 0.4269276756731492
+  },
+  "seconds": 16.21450795099736,
+  "trial_number": 4
+ },
+ "has_arrays": false
+}
