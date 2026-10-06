@@ -1,0 +1,28 @@
+{
+  "inputs": {
+    "dataset": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "nested:thesis_paper/results/na1_a/20261005T103553/manifest": {
+      "path": "thesis_paper/results/na1_a/20261005T103553/manifest.json",
+      "sha256": "60f44926ea5e62a44e4e763b04fa0f52a598e682e63960b38ab6eee91eba351b",
+      "bytes": 117506
+    },
+    "nested:thesis_paper/results/na1_b/20261005T103553/manifest": {
+      "path": "thesis_paper/results/na1_b/20261005T103553/manifest.json",
+      "sha256": "a20508c2cb9949d73dc4e1256c577eb6422ce082ba62d0c6946ca1a65e3cf4fe",
+      "bytes": 118057
+    }
+  },
+  "git_head": "df0ada5cb051e6b4f35c6413405db710c6019747",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/model_comparison.py",
+  "script_sha256": "a3dc1a3d139692dff9b9150ec2769ce60966d6b6a69d46fba854264656bf8b93",
+  "python": "3.12.10",
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0
+}
