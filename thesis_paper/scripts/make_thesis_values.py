@@ -163,6 +163,27 @@ def table11b(v):
     return "\n".join(lines)
 
 
+def table7(v):
+    """Architecture comparison: R2 under chemistry-cluster CV (mean and SD over 5 repeats), and the paired difference from XGBoost with its cluster-bootstrap interval."""
+    names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
+    lines = [f"**Table 7:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM and a random forest on the same folds, with each model's difference from XGBoost "
+             f"(same folds, paired) and the chemistry-cluster bootstrap interval of that difference in brackets. XGBoost and LightGBM are tuned with the same {v['optuna_trials']}-trial search; the random forest uses one fixed, "
+             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. Stacking is pending.", "",
+             "| **Model** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
+    for k, nm in names.items():
+        cells = []
+        for t in T4:
+            if f"a2_{k}_{t}" not in v:
+                cells.append(_pend("NA2: random forest for S"))
+            elif k == "xgb":
+                cells.append(f"{v[f'a2_{k}_{t}']} ± {v[f'a2_{k}_{t}_sd']}")
+            else:
+                cells.append(f"{v[f'a2_{k}_{t}']} ± {v[f'a2_{k}_{t}_sd']} ({v[f'a2_{k}_{t}_d']} [{v[f'a2_{k}_{t}_lo']}, {v[f'a2_{k}_{t}_hi']}])")
+        lines.append(f"| {nm} | " + " | ".join(cells) + " |")
+    lines.append("| Stacking (XGBoost + LightGBM + random forest, ridge meta-learner) | " + " | ".join([_pend("NA2: stacking")] * 4) + " |")
+    return "\n".join(lines)
+
+
 LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation protocol); values as the studies report them, N/R = not reported
     ("Parse et al. [@parse2024predicting]", "XGBoost", "Starrydata2", "18.1K", "R^2^ (zT) 0.815", "5-fold CV"),
     ("Jia et al. [@jia2024dealing]", "GBDT", "Starrydata2", "92K", "R^2^ (zT) 0.89--0.90", "Composition-level CV"),
@@ -186,7 +207,7 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
 
 
 def render(text):

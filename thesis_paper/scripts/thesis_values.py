@@ -215,6 +215,8 @@ NA3_ROWS = ("thesis_paper/results/na3_rows_a/20261005T102144", "thesis_paper/res
 NA2_TUNING = "thesis_paper/results/na2_random_forest_tuning/summary"
 NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
+NA2_CMP = "thesis_paper/results/na2_comparison/20261006T050153"
+NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
 
@@ -359,6 +361,7 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA11_NOVELTY}/counts.json", f"{NA11_NOVELTY}/run_config.json",
     f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",
     f"{NA11_LIMITS}/shortlist_limits.csv", f"{NA11_LIMITS}/summary.json", f"{NA11_LIMITS}/run_config.json", NA11_LIMITS_CSV,
+    f"{NA2_CMP}/comparison.json", f"{NA2_CMP}/run_config.json", f"{NA1_CMP}/comparison.json", f"{NA1_CMP}/run_config.json",
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
     *[f"{r}/{f}" for r in NA3_ROWS for f in ("results.json", "status.json", "run_configs/session_01.json")],
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
@@ -636,6 +639,53 @@ def na3_rows_values():
     return {k: x for k, x in v.items() if not k.endswith("_sign")}
 
 
+def _sg(x, nd=3):
+    """A signed number with a true minus sign."""
+    return f"{x:+.{nd}f}".replace("-", "−").replace("+", "+")
+
+
+def na2_na1_values():
+    """NA2 (XGBoost against LightGBM and the fixed random forest) and NA1 (nested against frozen hyperparameters), from the committed paired comparisons."""
+    c2, c1 = pav._json(f"{NA2_CMP}/comparison.json"), pav._json(f"{NA1_CMP}/comparison.json")
+    assert pav._json(f"{NA2_CMP}/run_config.json")["tree_clean"] and pav._json(f"{NA1_CMP}/run_config.json")["tree_clean"]
+    v, diffs, excl = {}, [], 0
+    short = {"xgboost_frozen": "xgb", "lightgbm": "lgbm", "random_forest": "rf"}
+    for t in T4:
+        tt = c2["targets"][t]
+        for m, k in short.items():
+            if m not in tt["models"]:
+                continue
+            x = tt["models"][m]
+            v[f"a2_{k}_{t}"], v[f"a2_{k}_{t}_sd"] = _r3(x["mean"]), _r3(x["sd"])
+            if m != "xgboost_frozen":
+                d = tt["differences_vs_reference"][m]
+                lo, hi = d["ci95_cluster_bootstrap"]
+                v[f"a2_{k}_{t}_d"], v[f"a2_{k}_{t}_lo"], v[f"a2_{k}_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
+                diffs.append((m, d["mean_diff"]))
+                excl += int(lo > 0 or hi < 0)
+                assert d["mean_diff"] < 0, f"{t} {m}: the prose says XGBoost is highest"
+    for m, k in (("lightgbm", "lgbm"), ("random_forest", "rf")):
+        vals = [abs(d) for mm, d in diffs if mm == m]
+        v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _r3(min(vals)), _r3(max(vals)), str(len(vals))
+    v["a2_maxgap"] = _r3(max(abs(d) for _, d in diffs))
+    v["a2_n_diffs"], v["a2_n_excl"] = str(len(diffs)), str(excl)
+    v["n_repeats"], v["n_folds"] = str(len(c2["targets"]["S"]["models"]["xgboost_frozen"]["per_repeat_r2"])), str(pav._json(f"{NA2_CMP}/run_config.json")["n_folds"])
+    assert len([d for m, d in diffs if m == "random_forest"]) == 3 and "random_forest" not in c2["targets"]["S"]["models"]  # the S forest is still pending
+    # NA1: frozen minus nested = the optimism of the non-nested result
+    for t in T4:
+        tt = c1["targets"][t]
+        d = tt["differences_vs_reference"]["nested"]
+        lo, hi = -d["ci95_cluster_bootstrap"][1], -d["ci95_cluster_bootstrap"][0]  # interval of frozen minus nested
+        v[f"n1_{t}"], v[f"n1_{t}_lo"], v[f"n1_{t}_hi"] = _sg(-d["mean_diff"]), _sg(lo), _sg(hi)
+        v[f"n1_{t}_frozen"], v[f"n1_{t}_nested"] = _r3(tt["models"]["xgboost_frozen"]["mean"]), _r3(tt["models"]["nested"]["mean"])
+        v[f"n1_{t}_below"], v[f"n1_{t}_nf"] = str(tt["fold_level"]["folds_nested_below_frozen"]), str(tt["fold_level"]["n_folds"])
+        v[f"n1_{t}_excl"] = str(int(lo > 0 or hi < 0))
+    assert all(v[f"n1_{t}_excl"] == "1" for t in ("S", "sigma", "kappa")) and v["n1_zT_excl"] == "0"  # prose: lower for S, sigma, kappa; no measurable difference for zT
+    assert -c1["targets"]["zT"]["differences_vs_reference"]["nested"]["mean_diff"] < 0.001
+    v["n1_max"] = _r3(max(-c1["targets"][t]["differences_vs_reference"]["nested"]["mean_diff"] for t in T4))
+    return v
+
+
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
     followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
@@ -755,5 +805,6 @@ def new_analysis_values():
     v.update(na3_rows_values())
     v.update(na11_ranked_values())
     v.update(na11_limits_values())
+    v.update(na2_na1_values())
     v.update(na2_design_values())
     return v
