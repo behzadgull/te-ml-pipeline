@@ -1,0 +1,43 @@
+{
+  "inputs": {
+    "dataset": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "lightgbm:thesis_paper/results/na2_lightgbm/20261005T101837/manifest": {
+      "path": "thesis_paper/results/na2_lightgbm/20261005T101837/manifest.json",
+      "sha256": "e22fd8ee8292b987992d4e64ec3e09ed32aa7319951c8a5214be3642d1270eb2",
+      "bytes": 31048
+    },
+    "random_forest:thesis_paper/results/na2_rf_S/20261005T100927/manifest": {
+      "path": "thesis_paper/results/na2_rf_S/20261005T100927/manifest.json",
+      "sha256": "fce8e6bdf5a6488cf054ba2b8eff75e60dc325c8549bcc26a3d7afdfb418861f",
+      "bytes": 6199
+    },
+    "random_forest:thesis_paper/results/na2_rf_kappa/20261005T101358/manifest": {
+      "path": "thesis_paper/results/na2_rf_kappa/20261005T101358/manifest.json",
+      "sha256": "0604e857593c93e41f3be6b868f700c4221b96feb73fbeba4eaaf6d91a86e3df",
+      "bytes": 6407
+    },
+    "random_forest:thesis_paper/results/na2_rf_sigma/20261005T102059/manifest": {
+      "path": "thesis_paper/results/na2_rf_sigma/20261005T102059/manifest.json",
+      "sha256": "fee10db88fff1f9dc80ebf02741c3cc12524681820000f0a4027a325c03e5fa6",
+      "bytes": 6407
+    },
+    "random_forest:thesis_paper/results/na2_rf_zT/20261005T101629/manifest": {
+      "path": "thesis_paper/results/na2_rf_zT/20261005T101629/manifest.json",
+      "sha256": "c3c4d5a52dc221ec0609d8104b4ed873d8f283b3020cfed8577d484a3c445f2f",
+      "bytes": 6251
+    }
+  },
+  "git_head": "20a8cd7a937f2b638adb6f2232a1c510e69f048f",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/model_comparison.py",
+  "script_sha256": "a4f0eb820c79992438a58601260e5cac689a586e0b3c71732b822771e290675f",
+  "python": "3.12.10",
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0
+}
