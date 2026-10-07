@@ -478,6 +478,41 @@ Each finished outer fold prints its meta-learner weights, the intercept and the 
 letting the rest run). Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` texts. Afterwards, locally:
 `python thesis_paper/scripts/na2_stacking_analysis.py --stack-dirs <the ten bundles>` and `python thesis_paper/scripts/model_comparison.py na2 --stacking-dir <its output>`.
 
+## 3d. NA13 feature selection (CPU, one notebook)
+
+What it does (`na13_feature_selection.py`, header of the file): the thesis's three-step selection (Pearson filter at |r| > 0.95, LassoCV on the survivors with 3 inner chemistry-cluster folds and 20 alphas, mutual-information
+ranking on a 20,000-row subsample, keeping the top k) is performed INSIDE each outer training fold of the Paper A chemistry-cluster rung (same folds, 5 repeats x 5 folds, 100 units in all), then the target's frozen XGBoost
+is fitted on the selected columns only and scored on the outer test rows. k is the number of features the thesis reports per target (S 25, sigma 44, kappa 39, zT 32; thesis values, tested here, not endorsed). The result is
+the pooled per-repeat R2 of the selected-feature model against the committed 397-feature value, and how often each feature was selected.
+
+**Code commit: `13a0efd582fe9abae95a00d29c677b70eb8ff103`** (the script is byte-identical to the one at `7529e7c`, which passed the Linux smoke test S0, `git diff 7529e7c 13a0efd -- thesis_paper/scripts/kaggle/na13_feature_selection.py
+thesis_paper/scripts/kaggle/harness.py src` is empty). Cell 1 is the clone-and-install cell of section 1 with `COMMIT` set to it. **Accelerator: None (CPU, 4 cores). GPU is not used.** Internet on.
+**Attach: the snapfix dataset only. No previous output. Nothing else to download or upload.**
+
+**Estimate (measured, then scaled).** One real outer fold on the maintainer's 8-core PC, 4 threads, clean clone at `13a0efd`, the real data: kappa 115 s (39 features kept, fold R2 0.770), S 141 s (25 features, fold R2 0.755).
+Taking sigma at the S cost (same rows) and zT at 120 s (rows between kappa and S), 25 folds per target make 25 x (141 + 138 + 115 + 120) s = 3.6 h on that PC. Kaggle's 4 cores were 1.26 to 1.64 times slower
+than that PC in the two other measurements of this work, so **about 4.5 to 6 hours in one session** (budget 10.5 h; far from the limit). If `status.json` says `"complete": false`, rerun the same cell with
+`--restore-from <its tar.gz>`.
+Expect many `ConvergenceWarning` lines from LassoCV (about 13 to 15 per fold here: `max_iter` 2000 is not reached at the smallest alphas); the cell hides them from the console and keeps the raw log. The Lasso fits are the thesis
+pipeline as described, not tuned until they converge; I will say in the paper that some did not.
+
+Cell 2 (bash):
+
+```bash
+%%bash
+set -o pipefail
+cd /kaggle/working/te-ml-pipeline
+nproc; free -g | head -2
+/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na13_feature_selection.py --out-dir /kaggle/working/na13 \
+    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.5 2>&1 | tee /kaggle/working/logs/na13_raw.log | grep -v "ConvergenceWarning\|cd_fast\.enet" | tee /kaggle/working/logs/na13.log
+grep -c ConvergenceWarning /kaggle/working/logs/na13_raw.log
+cat /kaggle/working/na13/status.json; echo
+ls -la /kaggle/working/na13.tar.gz && sha256sum /kaggle/working/na13.tar.gz
+```
+
+Each finished fold prints the number of selected features and the fold R2 with its seconds (first fold of S: compare with about 140 s x 1.3 to 1.6 before letting it run). Download `na13.tar.gz` (right-click, "Save link as") and send me the printed SHA256 line,
+the `status.json` text and the warning count. Then I verify it, commit it under `results/na13`, and fill the paper (there is no NA13 marker yet; the thesis's Section 3.3 claim is C110).
+
 ## 4. Later sessions (the same Cell 1, then these)
 
 | Order | Session | Accelerator | Cell 2 | Attach |
@@ -485,7 +520,7 @@ letting the rest run). Download each `.tar.gz` and send me the printed SHA256 li
 | 2 | Final models, no classifier, plus NA6, concurrently | GPU T4 x2 | process A (GPU 0): `na6_classifier.py --out-dir /kaggle/working/na6 --device cuda`; process B (GPU 1): `na_final_models.py --out-dir /kaggle/working/final_a --device cuda --jarvis-csv $J --jarvis-sha256 3c23d550...9c49` (`J=$(find /kaggle/input -name jarvis_dft3d_seebeck_featurized.csv)`), both with `--expect-commit`, `&`, `wait` as in G1 | snapfix dataset, `thesis-jarvis-featurized` |
 | 3 | NA3 SHAP | GPU T4 x2 | A (GPU 0): `na3_shap.py --targets S,kappa --out-dir /kaggle/working/na3_a`; B (GPU 1): `--targets sigma,zT --out-dir /kaggle/working/na3_b` | snapfix dataset |
 | C2 | NA2 LightGBM | CPU | see section 3 (session L) | snapfix dataset |
-| C3 | NA13 feature selection | CPU | `na13_feature_selection.py --out-dir /kaggle/working/na13` | snapfix dataset |
+| C3 | NA13 feature selection | CPU | see section 3d (commit `13a0efd`, about 4.5 to 6 h) | snapfix dataset |
 | later | Final models again, with the classifier and the MP candidates | GPU | as the final-models command plus `--classifier-dir <na6 dir> --classifier-sha256 <sha of final_classifier.json> --mp-csv ... --mp-sha256 ...` | snapfix, JARVIS, the na6 output, the MP csv |
 | K | NA2 nested stacking | CPU, ten sessions | see section 3c (the earlier local `na2_stacking.py` is the interim cross-fitted version, not used in the paper) | snapfix dataset |
 | G5 | NA1 nested CV | GPU T4 x2 (or the department V100S) | see section 3b | snapfix dataset |
