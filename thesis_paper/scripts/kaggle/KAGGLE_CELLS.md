@@ -440,21 +440,39 @@ The ten sessions have disjoint units, so they are independent and can run at the
 asserts that together they cover every target, repeat and fold once. A session whose `status.json` says `"complete": false` is continued by rerunning its cell with `--restore-from <its tar.gz>`.
 A cheaper design is `--n-inner-folds 2` (about half the cost, about 40 CPU hours); it changes the design and I will not use it without your decision.
 
-Cell 2 (bash), for session K-S1; for the others change `--targets`, `--repeats`, the out-dir and the budget as in the table:
+Cell 2 (bash) is the same in all ten notebooks except its first line, which sets four shell variables: `T` (`--targets`), `R` (`--repeats`), `N` (the out-dir and log name) and `B` (`--time-budget-hours`).
+It is the per-row command of the table with those four values substituted, and nothing else, so it is equivalent to running the row's command by hand. It was written here as the template; the notebooks you
+saved were not read back by me, so if one of them differs from this text (other than in the first line), tell me which and how, because the bundle's `run_config.json` records the arguments that were actually used.
 
 ```bash
 %%bash
 set -o pipefail
+T=S; R=0,1; N=na2_stk_S_1; B=10.8      # <- the only line that differs between the notebooks (values below)
 cd /kaggle/working/te-ml-pipeline
 nproc; free -g | head -2
 PYV=/kaggle/working/venv/bin/python
 K=thesis_paper/scripts/kaggle
-$PYV $K/na2_stacking_nested.py --smoke --allow-dirty --targets S --out-dir /kaggle/working/smoke_stk 2>&1 | tail -n 3 || { echo "SMOKE FAILED"; exit 1; }
-$PYV $K/na2_stacking_nested.py --targets S --repeats 0,1 --out-dir /kaggle/working/na2_stk_S_1 \
-    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.8 2>&1 | tee /kaggle/working/logs/na2_stk_S_1.log
-cat /kaggle/working/na2_stk_S_1/status.json; echo
-ls -la /kaggle/working/na2_stk_S_1.tar.gz && sha256sum /kaggle/working/na2_stk_S_1.tar.gz
+$PYV $K/na2_stacking_nested.py --smoke --allow-dirty --targets $T --out-dir /kaggle/working/smoke_$N 2>&1 | tail -n 3 || { echo "SMOKE FAILED"; exit 1; }
+$PYV $K/na2_stacking_nested.py --targets $T --repeats $R --out-dir /kaggle/working/$N \
+    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours $B 2>&1 | tee /kaggle/working/logs/$N.log
+cat /kaggle/working/$N/status.json; echo
+ls -la /kaggle/working/$N.tar.gz && sha256sum /kaggle/working/$N.tar.gz
 ```
+
+The first line of each notebook (`T`, `R`, `N`, `B`; N is also the downloaded file's name, `N.tar.gz`):
+
+| Session | First line |
+|---|---|
+| K-S1 | `T=S; R=0,1; N=na2_stk_S_1; B=10.8` |
+| K-S2 | `T=S; R=2,3; N=na2_stk_S_2; B=10.8` |
+| K-S3 | `T=S; R=4; N=na2_stk_S_3; B=10.5` |
+| K-sigma1 | `T=sigma; R=0,1; N=na2_stk_sigma_1; B=10.5` |
+| K-sigma2 | `T=sigma; R=2,3; N=na2_stk_sigma_2; B=10.5` |
+| K-sigma3 | `T=sigma; R=4; N=na2_stk_sigma_3; B=10.5` |
+| K-kappa1 | `T=kappa; R=0,1,2; N=na2_stk_kappa_1; B=10.5` |
+| K-kappa2 | `T=kappa; R=3,4; N=na2_stk_kappa_2; B=10.5` |
+| K-zT1 | `T=zT; R=0,1,2; N=na2_stk_zT_1; B=10.8` |
+| K-zT2 | `T=zT; R=3,4; N=na2_stk_zT_2; B=10.8` |
 
 Each finished outer fold prints its meta-learner weights, the intercept and the inner out-of-fold R2 of each base model with the seconds; the first fold gives the real per-fold time (compare with 58 min for S before
 letting the rest run). Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` texts. Afterwards, locally:

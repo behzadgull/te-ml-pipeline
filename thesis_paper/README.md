@@ -5,20 +5,20 @@ This folder follows the conventions of `paper_b/`: everything lives under `thesi
 
 ## Status
 
-`paper/paper.md` is no longer a plain conversion. Phase 1 replaced every PAPER_A value with a generated marker (numbers read from committed
-artifacts, with assertions that tie the prose to them), steps 2 to 5 added the NA4, NA5, NA8, NA9 results and the pandoc citations, and every spot
-that depends on an analysis that has not run is marked `[[PENDING: NAx]]` (`python thesis_paper/scripts/make_thesis_values.py --list-pending`).
-Do not edit generated text by hand: change the script and rerun it.
+State of 2026-10-07 (decisions in `docs/decisions.md`, 2026-10-04 to 2026-10-06). `paper/paper.md` is generated: every number is a marker filled from a committed artifact (GENERATED), a verified citation with
+page or table (CITED, `docs/number_registry.csv`) or a registered design constant (DESIGN, `docs/design_constants.csv`); `scripts/audit_numbers.py` classifies every number and the build fails if the
+unclassified count rises (111 now, to fall as the source PDFs arrive). Do not edit generated text by hand: change the script and rerun `scripts/make_thesis_values.py`.
 
 | Analysis | State |
 |---|---|
-| NA4 dataset statistics, NA5 cleaning diagnostics, NA8 error metrics, NA9 ESTM counts | done, in the paper (`results/na4`, `na5`, `na8`, `na9`) |
-| NA10 JARVIS | data prepared and featurised, seen/unseen flagged (`results/na10`); no predictions |
-| NA11 Materials Project screening | code written and tested on a JARVIS stand-in; the perovskite connectivity test validated (`results/na11_validation`); the Materials Project query itself needs `MP_API_KEY` and has not run |
-| NA12 literature oxides | two values extracted, the rest need figure digitisation (`reports/na12_measured_values.csv`) |
-| NA7 direct versus derived under random validation | done on Kaggle T4 x2, in the paper (`results/na7`) |
-| NA2, NA3, NA6, NA13 | scripts ready and smoke-tested on Linux (`scripts/kaggle/`, cells in `KAGGLE_CELLS.md`); not yet run |
-| NA1 | needs the department V100S (`scripts/gpu/`) |
+| NA4 dataset statistics, NA5 cleaning diagnostics, NA8 error metrics, NA9 ESTM counts, NA7 direct vs derived under random validation | done, in the paper |
+| Final models, NA6 carrier-type classifier (and the same-folds sign comparison), NA10 JARVIS, NA3 SHAP (25 folds) and the per-row rerun for Figure 11 | done on Kaggle (`results/final_b`, `na6_*`, `na10_analysis`, `na3_a`, `na3_b`, `na3_rows_a`, `na3_rows_b`), in the paper |
+| NA11 Materials Project screening | done: query, filters, 30 candidates (9 seen, 21 unseen clusters), the pre-registered shortlist rule applied, the thermal-limits check and the literature labels committed before the predictions were looked at (`results/na11_*`, `docs/candidate_literature_labels.csv`) |
+| NA1 nested CV | done on Kaggle (`results/na1_a`, `na1_b`); the paired comparison with the frozen-hyperparameter rung is `results/na1_comparison`, in the paper |
+| NA2 algorithm comparison | XGBoost (frozen), LightGBM (tuned) and the fixed random forest for all four targets are done and paired on identical folds (`results/na2_lightgbm`, `na2_rf_*`, `na2_comparison/20261006T132724`); Table 7 is filled except the stack. The mean of the three is reported. **The nested stack is running**: ten Kaggle CPU notebooks at commit `13a0efd` (`KAGGLE_CELLS.md` section 3c); results go through `scripts/na2_stacking_analysis.py` into Table 7 and its 8 pending markers |
+| NA12 literature validation of the shortlist | the pre-registered design and `scripts/na12_literature_comparison.py` exist; `docs/na12_literature_values.csv` is empty until the source PDFs are in `source/pdfs/` (DOIs in its README); Table 12 and the Section 4.5.1 text are pending (2 markers) |
+| NA13 feature selection (the thesis's Table 3 pipeline, inside each outer fold) | script ready and smoke-tested on Linux; **not yet run**; cells in `KAGGLE_CELLS.md` section 3d; no pending marker in the paper yet |
+| Paper B | on hold (it resumes after the thesis paper); the department machine's scripts are in `scripts/dept/` and assume the 12-core V100S machine, which is not what the department VM currently shows (6 cores, no GPU visible) |
 
 Citations: all 62 references were checked against Crossref (and publisher pages for the four without a DOI): `reports/citation_verification.csv`;
 numbers claimed in the text were checked against abstracts: `reports/claim_citation_check.csv`; the judgements and the changes they caused are
@@ -34,7 +34,7 @@ in `reports/literature_verdicts.csv`.
 | `figures/source_media/` | The 12 images of the source, extracted unchanged. |
 | `reports/claim_inventory.csv` | One row per number or factual claim, and one per red note, each with a status. |
 | `reports/claim_inventory_summary.md` | Counts per status, the list of new analyses with inputs and effort, the drop candidates, the decisions that change the inventory. |
-| `scripts/` | Conversion and inventory (`convert_docx_to_md.py`, `build_claim_inventory.py`); values (`paper_a_values.py`, `thesis_values.py`, `make_thesis_values.py`); analyses (`na4_*`, `na5_*`, `na8_*`, `na9_*`, `na10_*`, `na11_*`); figures (`make_figures_thesis.py`, `import_paper_a_figures.py`); citations (`verify_citations.py`, `build_refs_thesis.py`); `check_shared_dependencies.py`; `build_paper.ps1` / `.sh`; `gpu/` (V100S setup and calibration). |
+| `scripts/` | Conversion and inventory (`convert_docx_to_md.py`, `build_claim_inventory.py`); values (`paper_a_values.py`, `thesis_values.py`, `make_thesis_values.py`); analyses (`na4_*`, `na5_*`, `na8_*`, `na9_*`, `na10_*`, `na11_*`); figures (`make_figures_thesis.py`, `import_paper_a_figures.py`); citations (`verify_citations.py`, `build_refs_thesis.py`); `check_shared_dependencies.py`; `build_paper.ps1` / `.sh`; `gpu/` (V100S setup and calibration), `kaggle/` (the Kaggle sessions and `KAGGLE_CELLS.md`), `dept/` (the department machine). |
 | `src/` | Empty: the analyses import the pinned top-level `src` modules listed in `SHARED_DEPENDENCIES.md`. |
 | `results/` | One timestamped UTC folder per run, each with `run_config.json` (input SHA256s, git head, dirty files, script SHA256). |
 | `SHARED_DEPENDENCIES.md` | The committed Paper A files this folder reads, pinned by SHA256; nothing is imported from the top-level `src/`. |
@@ -66,4 +66,4 @@ powershell thesis_paper/scripts/build_paper.ps1                 # draft docx wit
   `python thesis_paper/scripts/na11_mp_filter_featurize.py --query data/external/mp/mp_query_<stamp>.json`. mp-api 0.46.5 is installed outside the
   project environment because it needs newer numpy, pandas and pymatgen than the pinned ones.
 - JARVIS data preparation (already run): `PYTHONPATH=C:/Users/choha/py_extra/jarvis_2026.6.12 python thesis_paper/scripts/na10_jarvis_prep.py`.
-- V100S: `scripts/gpu/setup_v100s.sh`, then `scripts/gpu/calibrate_v100s.sh` (see their headers).
+- Kaggle sessions: `scripts/kaggle/KAGGLE_CELLS.md` (every cell pinned to a clean commit, the uv Python 3.12 venv with the exact pins). Department machine: `scripts/dept/README.md`.
