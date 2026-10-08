@@ -1,0 +1,56 @@
+{
+  "inputs": {
+    "20261008T093143/diagnostic.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093143/diagnostic.json",
+      "sha256": "8615bf88bfa9b18e515901c417a3b844c8bdab1c5d3f48f4ab00f143cf367a0f",
+      "bytes": 70572
+    },
+    "20261008T093143/run_config.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093143/run_config.json",
+      "sha256": "f18fb7812b23ca0733bccd068a3e522782559ba1e7eea6440e1a5297d47d3616",
+      "bytes": 617
+    },
+    "20261008T093146/diagnostic.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093146/diagnostic.json",
+      "sha256": "5cf1f49de6acdd68f1dd1d5b1714a55b0b73aaf9113b53c1c11a297feb76c9fa",
+      "bytes": 68253
+    },
+    "20261008T093146/run_config.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093146/run_config.json",
+      "sha256": "f4c742e759c2fea41e5173b4c75946055ec679e27467ec0f79d7c0855cd97374",
+      "bytes": 614
+    },
+    "20261008T093150/diagnostic.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093150/diagnostic.json",
+      "sha256": "9a91d2f6aec7865070fed275e2d4f67c3a1f54c3dcba062676638f72340804d1",
+      "bytes": 60005
+    },
+    "20261008T093150/run_config.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093150/run_config.json",
+      "sha256": "26cf26a3e432a4281b1689bf53438e34f01d590006bdece345fb4783396ca889",
+      "bytes": 613
+    },
+    "20261008T093154/diagnostic.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093154/diagnostic.json",
+      "sha256": "e8b2de286d64cfac876abb7afa574de63dd017b9d11ce78debd94f7769a8b321",
+      "bytes": 73681
+    },
+    "20261008T093154/run_config.json": {
+      "path": "thesis_paper/results/na13_convergence/20261008T093154/run_config.json",
+      "sha256": "b01b36dac290d9e4b9330f1ac38f1b8f64b7fb55da5b6371814bbb96a6001654",
+      "bytes": 617
+    }
+  },
+  "git_head": "2a6d5746e2f688f992e8028033acf60676ed91b3",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na13_convergence_report.py",
+  "script_sha256": "40840f668761fa0a7b4aad34b70c4dfaae5ab3b451b550bf8e8b30569f3b36d7",
+  "python": "3.12.10",
+  "runs": [
+    "thesis_paper/results/na13_convergence/20261008T093143",
+    "thesis_paper/results/na13_convergence/20261008T093146",
+    "thesis_paper/results/na13_convergence/20261008T093150",
+    "thesis_paper/results/na13_convergence/20261008T093154"
+  ]
+}

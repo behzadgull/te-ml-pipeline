@@ -1,0 +1,134 @@
+{
+  "n_folds": 20,
+  "targets": [
+    "S",
+    "kappa",
+    "sigma",
+    "zT"
+  ],
+  "alpha_grid_size": 20,
+  "alpha_position_identical_folds": 19,
+  "alpha_position_changed_folds": [
+    {
+      "target": "S",
+      "fold": 2,
+      "from": 16,
+      "to": 19
+    }
+  ],
+  "folds_at_grid_minimum_under_both_settings": [
+    {
+      "target": "S",
+      "fold": 1
+    },
+    {
+      "target": "kappa",
+      "fold": 0
+    },
+    {
+      "target": "kappa",
+      "fold": 1
+    },
+    {
+      "target": "kappa",
+      "fold": 2
+    },
+    {
+      "target": "kappa",
+      "fold": 4
+    },
+    {
+      "target": "zT",
+      "fold": 2
+    }
+  ],
+  "folds_breaking_C_jaccard_below_0.60": [
+    {
+      "target": "S",
+      "fold": 2,
+      "jaccard": 0.5625
+    }
+  ],
+  "folds_breaking_D_abs_delta_r2_above_0.005": [
+    {
+      "target": "S",
+      "fold": 0,
+      "delta_r2": -0.008502255649514567
+    },
+    {
+      "target": "S",
+      "fold": 3,
+      "delta_r2": 0.006206275102515368
+    },
+    {
+      "target": "kappa",
+      "fold": 2,
+      "delta_r2": 0.006317854544260371
+    },
+    {
+      "target": "zT",
+      "fold": 2,
+      "delta_r2": -0.005714097138949881
+    },
+    {
+      "target": "zT",
+      "fold": 3,
+      "delta_r2": 0.006785294105710271
+    },
+    {
+      "target": "zT",
+      "fold": 4,
+      "delta_r2": 0.005997444035338195
+    }
+  ],
+  "mean_abs_delta_r2": 0.0034339502190301463,
+  "max_abs_delta_r2": 0.008502255649514567,
+  "mean_signed_delta_r2": 0.0006636259632852414,
+  "folds_with_chosen_alpha_inside_the_nonconverged_range_at_2000": 19,
+  "run_configs": [
+    {
+      "dir": "thesis_paper/results/na13_convergence/20261008T093143",
+      "git_head": "8ac332f59259031a2e63ae02caf81315edf74fd4",
+      "tree_clean": true,
+      "targets": "kappa",
+      "max_iters": [
+        2000,
+        20000
+      ],
+      "script_sha256": "30f15aa79b2986b4ff3e4ac370173f6c432bc8919e98a2d03a4dfc7e233b994f"
+    },
+    {
+      "dir": "thesis_paper/results/na13_convergence/20261008T093146",
+      "git_head": "8ac332f59259031a2e63ae02caf81315edf74fd4",
+      "tree_clean": true,
+      "targets": "zT",
+      "max_iters": [
+        2000,
+        20000
+      ],
+      "script_sha256": "30f15aa79b2986b4ff3e4ac370173f6c432bc8919e98a2d03a4dfc7e233b994f"
+    },
+    {
+      "dir": "thesis_paper/results/na13_convergence/20261008T093150",
+      "git_head": "8ac332f59259031a2e63ae02caf81315edf74fd4",
+      "tree_clean": true,
+      "targets": "S",
+      "max_iters": [
+        2000,
+        20000
+      ],
+      "script_sha256": "30f15aa79b2986b4ff3e4ac370173f6c432bc8919e98a2d03a4dfc7e233b994f"
+    },
+    {
+      "dir": "thesis_paper/results/na13_convergence/20261008T093154",
+      "git_head": "8ac332f59259031a2e63ae02caf81315edf74fd4",
+      "tree_clean": true,
+      "targets": "sigma",
+      "max_iters": [
+        2000,
+        20000
+      ],
+      "script_sha256": "30f15aa79b2986b4ff3e4ac370173f6c432bc8919e98a2d03a4dfc7e233b994f"
+    }
+  ]
+}
