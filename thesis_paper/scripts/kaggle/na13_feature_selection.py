@@ -46,7 +46,7 @@ TARGET_ROWS = {"S": 185064, "sigma": 182755, "kappa": 121110, "zT": 129419}
 K_THESIS = {"S": 25, "sigma": 44, "kappa": 39, "zT": 32}  # features kept by the thesis's selection (its Table 3)
 PEARSON_MAX = 0.95
 MI_ROWS = 20000
-LASSO_MAX_ITER = 2000  # sklearn default; see docs/decisions.md 2026-10-07 for the pre-registered check of a larger value
+LASSO_MAX_ITER = 20000  # the smallest max_iter of the pre-registered ladder at which no fold warned (sklearn default 2000 did not converge); docs/decisions.md 2026-10-07, Result 2026-10-08
 
 
 def pearson_keep(Xtr):
