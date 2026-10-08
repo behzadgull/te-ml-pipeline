@@ -1,0 +1,48 @@
+{
+ "files": {
+  "results.json": "326bbe793d260fbf04a2ab08961a128d93e1a22deec62eea20d753eac941c091",
+  "run_configs/session_01.json": "fd9f18e7727fa5ebbad0882615f94a83efc33fcc6ae6679d23be8882418b0d56",
+  "status.json": "5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4",
+  "units/stack_S_repeat0_fold0.json": "69a0fc631d6a09c1e5f56a3853d84442bc3a0a688a8cd72959f51a9d4c6b279e",
+  "units/stack_S_repeat0_fold1.json": "adc75aaa5f093aad720643e4d08b8de7ad04be6e27ad46eca90b69fc9626fc7e",
+  "units/stack_S_repeat0_fold2.json": "7380d625c170b6412da528cd79bc11bc72ead1285b53402b93d9a4888b2ffb5b",
+  "units/stack_S_repeat0_fold3.json": "7bc86ebf7f4e59ce83145e05fd58e56c264c89dca44ea881372db18e96c968f6",
+  "units/stack_S_repeat0_fold4.json": "e881fa96a47cbec15f4bf6a9b394b62bae4d53ded54bde7e2a679e9ff234ae39",
+  "units/stack_S_repeat1_fold0.json": "f6bf2c4baf91265eced51179b3c02ff4aa8fcc8a8715b88e03d3654bf5b1d1bd",
+  "units/stack_S_repeat1_fold1.json": "84711bb74ad9437b2cb4ff750d90f7fb72a0419902d502c1576cac5ab9f89e93",
+  "units/stack_S_repeat1_fold2.json": "4156798d816a104450b27804fe2e5de7ed996391c7b8ba72b659fc1548b5147c",
+  "units/stack_S_repeat1_fold3.json": "1f8f0de5072395c18f84b6bc02b0006b7baaed4daa4a3b27ca9163f0bf542039",
+  "units/stack_S_repeat1_fold4.json": "022e79bea3e756d09b1852cb19ce2c113b19356b7434e547b594ae1b2081aef5"
+ },
+ "identity": {
+  "analysis": "na2_stacking_nested",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "params": {
+   "targets": [
+    "S"
+   ],
+   "repeats": [
+    0,
+    1
+   ],
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rf_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+   },
+   "meta": {
+    "alpha": 1.0,
+    "positive": true
+   }
+  }
+ }
+}

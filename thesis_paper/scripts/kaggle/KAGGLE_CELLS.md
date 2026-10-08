@@ -442,7 +442,7 @@ A cheaper design is `--n-inner-folds 2` (about half the cost, about 40 CPU hours
 
 Cell 2 (bash) is the same in all ten notebooks except its first line, which sets four shell variables: `T` (`--targets`), `R` (`--repeats`), `N` (the out-dir and log name) and `B` (`--time-budget-hours`).
 It is the per-row command of the table with those four values substituted, and nothing else, so it is equivalent to running the row's command by hand. It was written here as the template; the notebooks you
-saved were not read back by me, so if one of them differs from this text (other than in the first line), tell me which and how, because the bundle's `run_config.json` records the arguments that were actually used.
+saved were not read back by me, so if one of them differs from this text (other than in the first line), tell me which and how. The bundle's `run_config.json` does NOT record the command-line arguments: it records the identity parameters (`params`: targets, repeats, inner folds, outer folds, seed, the forest setting, the meta-learner), the code commit and tree state, the dataset SHA256, the script SHA256 and the package versions, but not the out-dir name, the log name or `--time-budget-hours`. Those are known only from the notebook, so a difference from this template is recorded in the list below, bundle by bundle, as it is found.
 
 ```bash
 %%bash
@@ -473,6 +473,11 @@ The first line of each notebook (`T`, `R`, `N`, `B`; N is also the downloaded fi
 | K-kappa2 | `T=kappa; R=3,4; N=na2_stk_kappa_2; B=10.5` |
 | K-zT1 | `T=zT; R=0,1,2; N=na2_stk_zT_1; B=10.8` |
 | K-zT2 | `T=zT; R=3,4; N=na2_stk_zT_2; B=10.8` |
+
+**Deviations from the template** (what the saved notebook did differently from the Cell 2 above, beyond its first line; each is known from the maintainer's notebook, not from the bundle, and none changes the real run's arguments):
+
+- **K-S1 (`na2_stk_S_1`)**: Cell 2 wrote its smoke bundle to `/kaggle/working/smoke_stk.tar.gz`, not to `/kaggle/working/smoke_$N` as the template does. The real run is the K-S1 row (checked against the bundle: targets S, repeats 0 and 1, 10 of 10 units, commit `13a0efd`, clean tree, no `allow_dirty`);
+  its time budget (10.8 h) is not recorded in the bundle and did not bind (the run took 8.06 h). The smoke bundle is not part of any result.
 
 Each finished outer fold prints its meta-learner weights, the intercept and the inner out-of-fold R2 of each base model with the seconds; the first fold gives the real per-fold time (compare with 58 min for S before
 letting the rest run). Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` texts. Afterwards, locally:

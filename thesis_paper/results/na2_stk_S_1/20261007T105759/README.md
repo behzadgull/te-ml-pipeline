@@ -1,0 +1,8 @@
+# NA2 nested stacking, notebook K-S1: target S, repeats 0 and 1
+
+- **What**: the meta-learner weights (non-negative ridge, alpha 1, intercept) of the nested stack of XGBoost, LightGBM and the fixed random forest, fitted on INNER chemistry-cluster out-of-fold predictions inside each outer training fold
+  (`scripts/kaggle/na2_stacking_nested.py`, design in `docs/decisions.md` 2026-10-06 item 2): 10 units, S repeats 0 and 1 x folds 0 to 4. The weights are applied to the committed outer predictions by `scripts/na2_stacking_analysis.py`, which waits until all ten bundles exist.
+- **Bundle**: `na2_stk_S_1.tar.gz`, SHA256 `95d8177893b906c38917b426998d544b614142d6f1ef79bbca5583271d71c743` (equal to the value Kaggle printed; verified 2026-10-08); unpacked here; the 13 manifest entries re-verified, no mismatch, no file outside the manifest. `status.json`: complete, 10 of 10 units, `accepted_as_result` true.
+- **Code** `13a0efd582fe9abae95a00d29c677b70eb8ff103` (clean tree, `allow_dirty` false, `--expect-commit` equal), script SHA256 `2de03899...80f2` (equal to the file at that commit), snapfix CSV `d9fc1e5d...e489`, Python 3.12.3, CPU, 8.06 h (2026-10-07T10:57:59Z to 19:01:41Z).
+- `run_config.json` records the identity parameters (targets, repeats, inner folds, forest setting, meta-learner) but not the command-line arguments (out-dir name, `--time-budget-hours`).
+- The saved notebook's Cell 2 differed from the committed template beyond its first line (its smoke bundle went to `/kaggle/working/smoke_stk.tar.gz`); see "Deviations from the template" in `scripts/kaggle/KAGGLE_CELLS.md` section 3c.
