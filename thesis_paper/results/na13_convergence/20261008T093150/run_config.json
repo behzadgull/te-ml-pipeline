@@ -1,0 +1,21 @@
+{
+  "inputs": {
+    "dataset": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    }
+  },
+  "git_head": "8ac332f59259031a2e63ae02caf81315edf74fd4",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na13_convergence_check.py",
+  "script_sha256": "30f15aa79b2986b4ff3e4ac370173f6c432bc8919e98a2d03a4dfc7e233b994f",
+  "python": "3.12.10",
+  "targets": "S",
+  "max_iters": [
+    2000,
+    20000
+  ],
+  "folds": []
+}

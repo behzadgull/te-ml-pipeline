@@ -1,0 +1,2324 @@
+{
+ "max_iters": [
+  2000,
+  20000
+ ],
+ "repeat": 0,
+ "targets": {
+  "zT": {
+   "collinearity_all_rows": {
+    "n_columns": 397,
+    "n_constant_columns": 9,
+    "exact_duplicate_pairs_abs_r_gt_0.9999": [
+     {
+      "a": "MagpieData minimum Number",
+      "b": "CBFV_min_Atomic_Number",
+      "abs_r": 0.9999999999999979
+     },
+     {
+      "a": "MagpieData maximum Number",
+      "b": "CBFV_max_Atomic_Number",
+      "abs_r": 1.0000000000000007
+     },
+     {
+      "a": "MagpieData range Number",
+      "b": "CBFV_range_Atomic_Number",
+      "abs_r": 1.0000000000000013
+     },
+     {
+      "a": "MagpieData mean Number",
+      "b": "CBFV_avg_Atomic_Number",
+      "abs_r": 1.0
+     },
+     {
+      "a": "MagpieData avg_dev Number",
+      "b": "CBFV_dev_Atomic_Number",
+      "abs_r": 1.0
+     },
+     {
+      "a": "MagpieData mode Number",
+      "b": "CBFV_mode_Atomic_Number",
+      "abs_r": 0.9999999999999979
+     },
+     {
+      "a": "MagpieData minimum MendeleevNumber",
+      "b": "CBFV_min_Mendeleev_Number",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData maximum MendeleevNumber",
+      "b": "CBFV_max_Mendeleev_Number",
+      "abs_r": 1.0000000000000002
+     },
+     {
+      "a": "MagpieData range MendeleevNumber",
+      "b": "CBFV_range_Mendeleev_Number",
+      "abs_r": 0.9999999999999987
+     },
+     {
+      "a": "MagpieData mean MendeleevNumber",
+      "b": "CBFV_avg_Mendeleev_Number",
+      "abs_r": 1.0000000000000009
+     },
+     {
+      "a": "MagpieData avg_dev MendeleevNumber",
+      "b": "CBFV_dev_Mendeleev_Number",
+      "abs_r": 0.9999999999999993
+     },
+     {
+      "a": "MagpieData mode MendeleevNumber",
+      "b": "CBFV_mode_Mendeleev_Number",
+      "abs_r": 1.0000000000000009
+     },
+     {
+      "a": "MagpieData minimum AtomicWeight",
+      "b": "CBFV_min_Atomic_Weight",
+      "abs_r": 0.99999996708534
+     },
+     {
+      "a": "MagpieData maximum AtomicWeight",
+      "b": "CBFV_max_Atomic_Weight",
+      "abs_r": 0.9999999954221755
+     },
+     {
+      "a": "MagpieData range AtomicWeight",
+      "b": "CBFV_range_Atomic_Weight",
+      "abs_r": 0.9999999823782576
+     },
+     {
+      "a": "MagpieData mean AtomicWeight",
+      "b": "CBFV_avg_Atomic_Weight",
+      "abs_r": 0.999999993027922
+     },
+     {
+      "a": "MagpieData avg_dev AtomicWeight",
+      "b": "CBFV_dev_Atomic_Weight",
+      "abs_r": 0.9999999730211906
+     },
+     {
+      "a": "MagpieData mode AtomicWeight",
+      "b": "CBFV_mode_Atomic_Weight",
+      "abs_r": 0.9999999937290401
+     },
+     {
+      "a": "MagpieData minimum MeltingT",
+      "b": "CBFV_min_Melting_point_(K)",
+      "abs_r": 0.9999881401245269
+     },
+     {
+      "a": "MagpieData mean MeltingT",
+      "b": "CBFV_avg_Melting_point_(K)",
+      "abs_r": 0.9999472845721621
+     },
+     {
+      "a": "MagpieData mode MeltingT",
+      "b": "CBFV_mode_Melting_point_(K)",
+      "abs_r": 0.999947989322156
+     },
+     {
+      "a": "MagpieData minimum Column",
+      "b": "CBFV_min_group",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData maximum Column",
+      "b": "CBFV_max_group",
+      "abs_r": 1.0000000000000033
+     },
+     {
+      "a": "MagpieData range Column",
+      "b": "CBFV_range_group",
+      "abs_r": 1.0000000000000007
+     },
+     {
+      "a": "MagpieData mean Column",
+      "b": "CBFV_avg_group",
+      "abs_r": 1.000000000000001
+     },
+     {
+      "a": "MagpieData avg_dev Column",
+      "b": "CBFV_dev_group",
+      "abs_r": 0.9999999999999992
+     },
+     {
+      "a": "MagpieData mode Column",
+      "b": "CBFV_mode_group",
+      "abs_r": 0.9999999999999978
+     },
+     {
+      "a": "MagpieData minimum Row",
+      "b": "CBFV_min_Period",
+      "abs_r": 0.9999999999999999
+     },
+     {
+      "a": "MagpieData maximum Row",
+      "b": "CBFV_max_Period",
+      "abs_r": 0.9999999999999997
+     },
+     {
+      "a": "MagpieData range Row",
+      "b": "CBFV_range_Period",
+      "abs_r": 1.0000000000000016
+     },
+     {
+      "a": "MagpieData mean Row",
+      "b": "CBFV_avg_Period",
+      "abs_r": 0.9999999999999997
+     },
+     {
+      "a": "MagpieData avg_dev Row",
+      "b": "CBFV_dev_Period",
+      "abs_r": 1.0000000000000013
+     },
+     {
+      "a": "MagpieData mode Row",
+      "b": "CBFV_mode_Period",
+      "abs_r": 1.0000000000000033
+     },
+     {
+      "a": "MagpieData minimum NsValence",
+      "b": "MagpieData range NsValence",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData minimum NsValence",
+      "b": "CBFV_range_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData minimum NsValence",
+      "b": "CBFV_range_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData minimum NsValence",
+      "b": "CBFV_max_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData minimum NsValence",
+      "b": "CBFV_min_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData range NsValence",
+      "b": "CBFV_range_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData range NsValence",
+      "b": "CBFV_range_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData range NsValence",
+      "b": "CBFV_max_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData range NsValence",
+      "b": "CBFV_min_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "MagpieData mean NsValence",
+      "b": "CBFV_avg_valence_s",
+      "abs_r": 1.0000000000000009
+     },
+     {
+      "a": "MagpieData mean NsValence",
+      "b": "CBFV_avg_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 1.0000000000000007
+     },
+     {
+      "a": "MagpieData avg_dev NsValence",
+      "b": "CBFV_dev_valence_s",
+      "abs_r": 0.9999999999999986
+     },
+     {
+      "a": "MagpieData avg_dev NsValence",
+      "b": "CBFV_dev_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999984
+     },
+     {
+      "a": "MagpieData mode NsValence",
+      "b": "CBFV_mode_valence_s",
+      "abs_r": 0.9999999999999976
+     },
+     {
+      "a": "MagpieData minimum NpValence",
+      "b": "CBFV_max_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999967
+     },
+     {
+      "a": "MagpieData minimum NpValence",
+      "b": "CBFV_min_valence_p",
+      "abs_r": 0.9999999999999967
+     },
+     {
+      "a": "MagpieData maximum NpValence",
+      "b": "CBFV_max_valence_p",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData maximum NpValence",
+      "b": "CBFV_min_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData range NpValence",
+      "b": "CBFV_range_valence_p",
+      "abs_r": 0.9999999999999996
+     },
+     {
+      "a": "MagpieData range NpValence",
+      "b": "CBFV_range_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999996
+     },
+     {
+      "a": "MagpieData mean NpValence",
+      "b": "CBFV_avg_valence_p",
+      "abs_r": 0.9999999999999993
+     },
+     {
+      "a": "MagpieData mean NpValence",
+      "b": "CBFV_avg_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999993
+     },
+     {
+      "a": "MagpieData avg_dev NpValence",
+      "b": "CBFV_dev_valence_p",
+      "abs_r": 0.9999999999999991
+     },
+     {
+      "a": "MagpieData avg_dev NpValence",
+      "b": "CBFV_dev_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999992
+     },
+     {
+      "a": "MagpieData mode NpValence",
+      "b": "CBFV_mode_valence_p",
+      "abs_r": 1.0000000000000027
+     },
+     {
+      "a": "MagpieData maximum NfValence",
+      "b": "MagpieData range NfValence",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData maximum NfValence",
+      "b": "CBFV_range_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData maximum NfValence",
+      "b": "CBFV_range_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData maximum NfValence",
+      "b": "CBFV_max_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData maximum NfValence",
+      "b": "CBFV_min_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData range NfValence",
+      "b": "CBFV_range_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData range NfValence",
+      "b": "CBFV_range_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData range NfValence",
+      "b": "CBFV_max_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData range NfValence",
+      "b": "CBFV_min_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "MagpieData mean NfValence",
+      "b": "CBFV_avg_valence_f",
+      "abs_r": 0.9999999999999984
+     },
+     {
+      "a": "MagpieData mean NfValence",
+      "b": "CBFV_avg_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999988
+     },
+     {
+      "a": "MagpieData avg_dev NfValence",
+      "b": "CBFV_dev_valence_f",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData avg_dev NfValence",
+      "b": "CBFV_dev_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "MagpieData mode NfValence",
+      "b": "CBFV_mode_valence_f",
+      "abs_r": 1.0000000000000084
+     },
+     {
+      "a": "MagpieData maximum NsUnfilled",
+      "b": "MagpieData range NsUnfilled",
+      "abs_r": 1.0000000000000056
+     },
+     {
+      "a": "MagpieData maximum NdUnfilled",
+      "b": "MagpieData range NdUnfilled",
+      "abs_r": 0.9999972269257705
+     },
+     {
+      "a": "MagpieData maximum NfUnfilled",
+      "b": "MagpieData range NfUnfilled",
+      "abs_r": 0.9999999999999936
+     },
+     {
+      "a": "MagpieData maximum GSmagmom",
+      "b": "MagpieData range GSmagmom",
+      "abs_r": 0.9999999999999998
+     },
+     {
+      "a": "CBFV_avg_valence_s",
+      "b": "CBFV_avg_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 1.0000000000000009
+     },
+     {
+      "a": "CBFV_avg_valence_p",
+      "b": "CBFV_avg_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999993
+     },
+     {
+      "a": "CBFV_avg_valence_d",
+      "b": "CBFV_avg_Number_of_unfilled_d_valence_electrons",
+      "abs_r": 0.9999999999999996
+     },
+     {
+      "a": "CBFV_avg_valence_f",
+      "b": "CBFV_avg_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999988
+     },
+     {
+      "a": "CBFV_dev_valence_s",
+      "b": "CBFV_dev_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999986
+     },
+     {
+      "a": "CBFV_dev_valence_p",
+      "b": "CBFV_dev_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999996
+     },
+     {
+      "a": "CBFV_dev_valence_d",
+      "b": "CBFV_dev_Number_of_unfilled_d_valence_electrons",
+      "abs_r": 0.9999999999999984
+     },
+     {
+      "a": "CBFV_dev_valence_f",
+      "b": "CBFV_dev_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "CBFV_range_valence_s",
+      "b": "CBFV_range_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_range_valence_s",
+      "b": "CBFV_max_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_range_valence_s",
+      "b": "CBFV_min_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_range_valence_p",
+      "b": "CBFV_range_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999996
+     },
+     {
+      "a": "CBFV_range_valence_d",
+      "b": "CBFV_range_Number_of_unfilled_d_valence_electrons",
+      "abs_r": 1.0000000000000002
+     },
+     {
+      "a": "CBFV_range_valence_f",
+      "b": "CBFV_range_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_range_valence_f",
+      "b": "CBFV_max_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_range_valence_f",
+      "b": "CBFV_min_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_range_Number_of_unfilled_s_valence_electrons",
+      "b": "CBFV_max_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_range_Number_of_unfilled_s_valence_electrons",
+      "b": "CBFV_min_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_range_Number_of_unfilled_f_valence_electrons",
+      "b": "CBFV_max_valence_f",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_range_Number_of_unfilled_f_valence_electrons",
+      "b": "CBFV_min_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_max_valence_p",
+      "b": "CBFV_min_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.999999999999999
+     },
+     {
+      "a": "CBFV_max_valence_d",
+      "b": "CBFV_min_Number_of_unfilled_d_valence_electrons",
+      "abs_r": 0.9999999999999999
+     },
+     {
+      "a": "CBFV_max_valence_f",
+      "b": "CBFV_min_Number_of_unfilled_f_valence_electrons",
+      "abs_r": 0.9999999999999971
+     },
+     {
+      "a": "CBFV_max_Number_of_unfilled_s_valence_electrons",
+      "b": "CBFV_min_valence_s",
+      "abs_r": 0.9999999999999973
+     },
+     {
+      "a": "CBFV_max_Number_of_unfilled_p_valence_electrons",
+      "b": "CBFV_min_valence_p",
+      "abs_r": 0.9999999999999967
+     },
+     {
+      "a": "CBFV_max_Number_of_unfilled_d_valence_electrons",
+      "b": "CBFV_min_valence_d",
+      "abs_r": 1.0000000000000016
+     }
+    ],
+    "avg_dev_to_dev_best_matches": [
+     {
+      "magpie": "MagpieData avg_dev Number",
+      "cbfv_best_match": "CBFV_dev_Atomic_Number",
+      "abs_r": 1.0,
+      "magpie_index": 4,
+      "cbfv_index": 176
+     },
+     {
+      "magpie": "MagpieData avg_dev MendeleevNumber",
+      "cbfv_best_match": "CBFV_dev_Mendeleev_Number",
+      "abs_r": 0.9999999999999993,
+      "magpie_index": 10,
+      "cbfv_index": 184
+     },
+     {
+      "magpie": "MagpieData avg_dev AtomicWeight",
+      "cbfv_best_match": "CBFV_dev_Atomic_Weight",
+      "abs_r": 0.9999999730211906,
+      "magpie_index": 16,
+      "cbfv_index": 177
+     },
+     {
+      "magpie": "MagpieData avg_dev MeltingT",
+      "cbfv_best_match": "CBFV_dev_Melting_point_(K)",
+      "abs_r": 0.9998412177366877,
+      "magpie_index": 22,
+      "cbfv_index": 211
+     },
+     {
+      "magpie": "MagpieData avg_dev Column",
+      "cbfv_best_match": "CBFV_dev_group",
+      "abs_r": 0.9999999999999992,
+      "magpie_index": 28,
+      "cbfv_index": 179
+     },
+     {
+      "magpie": "MagpieData avg_dev Row",
+      "cbfv_best_match": "CBFV_dev_Period",
+      "abs_r": 1.0000000000000013,
+      "magpie_index": 34,
+      "cbfv_index": 178
+     },
+     {
+      "magpie": "MagpieData avg_dev CovalentRadius",
+      "cbfv_best_match": "CBFV_dev_Covalent_Radius",
+      "abs_r": 0.9424717262215517,
+      "magpie_index": 40,
+      "cbfv_index": 188
+     },
+     {
+      "magpie": "MagpieData avg_dev Electronegativity",
+      "cbfv_best_match": "CBFV_dev_Pauling_Electronegativity",
+      "abs_r": 0.986230220494418,
+      "magpie_index": 46,
+      "cbfv_index": 192
+     },
+     {
+      "magpie": "MagpieData avg_dev NsValence",
+      "cbfv_best_match": "CBFV_dev_valence_s",
+      "abs_r": 0.9999999999999986,
+      "magpie_index": 52,
+      "cbfv_index": 200
+     },
+     {
+      "magpie": "MagpieData avg_dev NpValence",
+      "cbfv_best_match": "CBFV_dev_Number_of_unfilled_p_valence_electrons",
+      "abs_r": 0.9999999999999992,
+      "magpie_index": 58,
+      "cbfv_index": 205
+     },
+     {
+      "magpie": "MagpieData avg_dev NdValence",
+      "cbfv_best_match": "CBFV_dev_l_quantum_number",
+      "abs_r": 0.5177219155156597,
+      "magpie_index": 64,
+      "cbfv_index": 185
+     },
+     {
+      "magpie": "MagpieData avg_dev NfValence",
+      "cbfv_best_match": "CBFV_dev_valence_f",
+      "abs_r": 0.999999999999999,
+      "magpie_index": 70,
+      "cbfv_index": 203
+     },
+     {
+      "magpie": "MagpieData avg_dev NValence",
+      "cbfv_best_match": "CBFV_dev_Atomic_Weight",
+      "abs_r": 0.8368172433078546,
+      "magpie_index": 76,
+      "cbfv_index": 177
+     },
+     {
+      "magpie": "MagpieData avg_dev NsUnfilled",
+      "cbfv_best_match": "CBFV_dev_Number_of_unfilled_s_valence_electrons",
+      "abs_r": 0.979526578303946,
+      "magpie_index": 82,
+      "cbfv_index": 204
+     },
+     {
+      "magpie": "MagpieData avg_dev NpUnfilled",
+      "cbfv_best_match": "CBFV_dev_l_quantum_number",
+      "abs_r": 0.5525570463015627,
+      "magpie_index": 88,
+      "cbfv_index": 185
+     },
+     {
+      "magpie": "MagpieData avg_dev NdUnfilled",
+      "cbfv_best_match": "CBFV_dev_Melting_point_(K)",
+      "abs_r": 0.6926358740991848,
+      "magpie_index": 94,
+      "cbfv_index": 211
+     },
+     {
+      "magpie": "MagpieData avg_dev NfUnfilled",
+      "cbfv_best_match": "CBFV_dev_l_quantum_number",
+      "abs_r": 0.32500538713972804,
+      "magpie_index": 100,
+      "cbfv_index": 185
+     },
+     {
+      "magpie": "MagpieData avg_dev NUnfilled",
+      "cbfv_best_match": "CBFV_dev_group",
+      "abs_r": 0.5642980970534428,
+      "magpie_index": 106,
+      "cbfv_index": 179
+     },
+     {
+      "magpie": "MagpieData avg_dev GSvolume_pa",
+      "cbfv_best_match": "CBFV_dev_Mendeleev_Number",
+      "abs_r": 0.6397609035255939,
+      "magpie_index": 112,
+      "cbfv_index": 184
+     },
+     {
+      "magpie": "MagpieData avg_dev GSbandgap",
+      "cbfv_best_match": "CBFV_dev_outer_shell_electrons",
+      "abs_r": 0.43853534670004934,
+      "magpie_index": 118,
+      "cbfv_index": 208
+     },
+     {
+      "magpie": "MagpieData avg_dev GSmagmom",
+      "cbfv_best_match": "CBFV_dev_gilmor_number_of_valence_electron",
+      "abs_r": 0.3847045853600058,
+      "magpie_index": 124,
+      "cbfv_index": 199
+     },
+     {
+      "magpie": "MagpieData avg_dev SpaceGroupNumber",
+      "cbfv_best_match": "CBFV_dev_outer_shell_electrons",
+      "abs_r": 0.8348705711927012,
+      "magpie_index": 130,
+      "cbfv_index": 208
+     }
+    ]
+   },
+   "folds": {
+    "0": {
+     "n_train": 103535,
+     "n_after_pearson": 251,
+     "max_abs_r_among_survivors": 0.9492155949375435,
+     "condition_number_of_survivors": 7.195378558986736e+150,
+     "min_eigenvalue": -5.422788187955606e-15,
+     "dropped_by_pearson_avg_dev_dev_pairs": [
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999993
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999730211906
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9998412177366877
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0000000000000013
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.9424717262215517
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.986230220494418
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999986
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5177219155156597
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.999999999999999
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.8368172433078546
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.979526578303946
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5525570463015627
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6926358740991848
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.32500538713972804
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.5642980970534428
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6397609035255939
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.43853534670004934
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.3847045853600058
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.8348705711927012
+      }
+     ],
+     "settings": {
+      "2000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 147,
+       "lasso_alpha": 0.00044748975172333286,
+       "lasso_alpha_index": 16,
+       "lasso_alphas": [
+        0.15034842507646434,
+        0.10452114202979972,
+        0.07266234498736841,
+        0.050514338788587194,
+        0.035117204429498554,
+        0.024413227541282116,
+        0.016971899918142946,
+        0.011798742560539505,
+        0.008202400832040649,
+        0.005702249969795487,
+        0.003964163101005534,
+        0.0027558576306919496,
+        0.0019158523721480036,
+        0.001331886767656983,
+        0.0009259180861993508,
+        0.0006436915833763022,
+        0.00044748975172333286,
+        0.0003110916517613461,
+        0.0002162686752554661,
+        0.00015034842507646433
+       ],
+       "n_convergence_warnings": 7,
+       "n_convergence_warnings_inner_paths": 7,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.5399192174481868,
+       "final_refit_tolerance": 1.5597646566522085,
+       "final_refit_n_iter": 1446,
+       "lasso_max_iter": 2000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_ionic_radius",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData avg_dev NpValence",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_dev_Boiling_Point_(K)",
+        "MagpieData avg_dev GSvolume_pa",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData range MeltingT",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "MagpieData avg_dev Column",
+        "CBFV_dev_families",
+        "MagpieData mode MendeleevNumber",
+        "CBFV_dev_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_dev_outer_shell_electrons",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_dev_number_of_valence_electrons",
+        "MagpieData mean NdValence",
+        "CBFV_range_Boiling_Point_(K)",
+        "CBFV_mode_MB_electonegativity"
+       ],
+       "outer_r2": 0.4981408259783928,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 3,
+         "n_warnings_of_the_path_call": 3
+        },
+        {
+         "nonconverged_alpha_positions": [
+          16,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        },
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        }
+       ],
+       "n_nonconverged_by_gap_total": 7,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.5399192174481868,
+        "tolerance": 1.5597646566522085,
+        "n_iter": 1446
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 242.84602219983935
+      },
+      "20000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 147,
+       "lasso_alpha": 0.00044748975172333286,
+       "lasso_alpha_index": 16,
+       "lasso_alphas": [
+        0.15034842507646434,
+        0.10452114202979972,
+        0.07266234498736841,
+        0.050514338788587194,
+        0.035117204429498554,
+        0.024413227541282116,
+        0.016971899918142946,
+        0.011798742560539505,
+        0.008202400832040649,
+        0.005702249969795487,
+        0.003964163101005534,
+        0.0027558576306919496,
+        0.0019158523721480036,
+        0.001331886767656983,
+        0.0009259180861993508,
+        0.0006436915833763022,
+        0.00044748975172333286,
+        0.0003110916517613461,
+        0.0002162686752554661,
+        0.00015034842507646433
+       ],
+       "n_convergence_warnings": 0,
+       "n_convergence_warnings_inner_paths": 0,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.5399192174481868,
+       "final_refit_tolerance": 1.5597646566522085,
+       "final_refit_n_iter": 1446,
+       "lasso_max_iter": 20000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_ionic_radius",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData avg_dev NpValence",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_dev_Boiling_Point_(K)",
+        "MagpieData avg_dev GSvolume_pa",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData range MeltingT",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "MagpieData avg_dev Column",
+        "CBFV_dev_families",
+        "MagpieData mode MendeleevNumber",
+        "CBFV_dev_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_dev_outer_shell_electrons",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_dev_number_of_valence_electrons",
+        "MagpieData mean NdValence",
+        "CBFV_range_Boiling_Point_(K)",
+        "CBFV_mode_MB_electonegativity"
+       ],
+       "outer_r2": 0.4981408259783928,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        }
+       ],
+       "n_nonconverged_by_gap_total": 0,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.5399192174481868,
+        "tolerance": 1.5597646566522085,
+        "n_iter": 1446
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 266.50049570016563
+      }
+     }
+    },
+    "1": {
+     "n_train": 103535,
+     "n_after_pearson": 251,
+     "max_abs_r_among_survivors": 0.9488768691727745,
+     "condition_number_of_survivors": 7.276315725281343e+150,
+     "min_eigenvalue": -4.5198845732589575e-15,
+     "dropped_by_pearson_avg_dev_dev_pairs": [
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999993
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999730211906
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9998412177366877
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0000000000000013
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.9424717262215517
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.986230220494418
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999986
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5177219155156597
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.999999999999999
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.8368172433078546
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.979526578303946
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5525570463015627
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6926358740991848
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.32500538713972804
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.5642980970534428
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6397609035255939
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.43853534670004934
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.3847045853600058
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.8348705711927012
+      }
+     ],
+     "settings": {
+      "2000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 171,
+       "lasso_alpha": 0.00021178506250737802,
+       "lasso_alpha_index": 18,
+       "lasso_alphas": [
+        0.14723144979314354,
+        0.10235424326697158,
+        0.07115593257740423,
+        0.049467091733107614,
+        0.03438916582071097,
+        0.02390710034511385,
+        0.01662004393741723,
+        0.011554134817447003,
+        0.00803235129115349,
+        0.0055840327539774335,
+        0.0038819793441846554,
+        0.0026987240749872634,
+        0.0018761335358020961,
+        0.001304274518756754,
+        0.0009067222496776499,
+        0.0006303467761098136,
+        0.000438212537845292,
+        0.00030464219950473363,
+        0.00021178506250737802,
+        0.00014723144979314354
+       ],
+       "n_convergence_warnings": 11,
+       "n_convergence_warnings_inner_paths": 10,
+       "final_refit_converged": false,
+       "final_refit_dual_gap": 43.8755572060827,
+       "final_refit_tolerance": 1.4883906187392026,
+       "final_refit_n_iter": 2000,
+       "lasso_max_iter": 2000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "MagpieData mean GSvolume_pa",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Atomic_Radius",
+        "CBFV_dev_Gordy_electonegativity",
+        "MagpieData mean CovalentRadius",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_metallic_valence",
+        "MagpieData avg_dev NpValence",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_avg_polarizability(A^3)",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "MagpieData mean MeltingT",
+        "CBFV_dev_Boiling_Point_(K)",
+        "MagpieData mean NValence",
+        "MagpieData range MeltingT",
+        "MagpieData avg_dev Column",
+        "MagpieData mean NpUnfilled",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData mean NdValence",
+        "MagpieData avg_dev NpUnfilled",
+        "CBFV_range_1st_ionization_potential_(kJ/mol)"
+       ],
+       "outer_r2": 0.40258241302480646,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [
+          16,
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 4,
+         "n_warnings_of_the_path_call": 4
+        },
+        {
+         "nonconverged_alpha_positions": [
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 3,
+         "n_warnings_of_the_path_call": 3
+        },
+        {
+         "nonconverged_alpha_positions": [
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 3,
+         "n_warnings_of_the_path_call": 3
+        }
+       ],
+       "n_nonconverged_by_gap_total": 10,
+       "final_refit_independent_check": {
+        "n_warnings": 1,
+        "dual_gap": 43.8755572060827,
+        "tolerance": 1.4883906187392026,
+        "n_iter": 2000
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 378.07917319983244
+      },
+      "20000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 170,
+       "lasso_alpha": 0.00021178506250737802,
+       "lasso_alpha_index": 18,
+       "lasso_alphas": [
+        0.14723144979314354,
+        0.10235424326697158,
+        0.07115593257740423,
+        0.049467091733107614,
+        0.03438916582071097,
+        0.02390710034511385,
+        0.01662004393741723,
+        0.011554134817447003,
+        0.00803235129115349,
+        0.0055840327539774335,
+        0.0038819793441846554,
+        0.0026987240749872634,
+        0.0018761335358020961,
+        0.001304274518756754,
+        0.0009067222496776499,
+        0.0006303467761098136,
+        0.000438212537845292,
+        0.00030464219950473363,
+        0.00021178506250737802,
+        0.00014723144979314354
+       ],
+       "n_convergence_warnings": 0,
+       "n_convergence_warnings_inner_paths": 0,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.4770295975440604,
+       "final_refit_tolerance": 1.4883906187392026,
+       "final_refit_n_iter": 2588,
+       "lasso_max_iter": 20000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "MagpieData mean GSvolume_pa",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Atomic_Radius",
+        "CBFV_dev_Gordy_electonegativity",
+        "MagpieData mean CovalentRadius",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_metallic_valence",
+        "MagpieData avg_dev NpValence",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_avg_polarizability(A^3)",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "MagpieData mean MeltingT",
+        "CBFV_dev_Boiling_Point_(K)",
+        "MagpieData mean NValence",
+        "MagpieData range MeltingT",
+        "MagpieData avg_dev Column",
+        "MagpieData mean NpUnfilled",
+        "MagpieData mean NdValence",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData mode MendeleevNumber",
+        "MagpieData avg_dev NpUnfilled"
+       ],
+       "outer_r2": 0.40382430269245073,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        }
+       ],
+       "n_nonconverged_by_gap_total": 0,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.4770295975440604,
+        "tolerance": 1.4883906187392026,
+        "n_iter": 2588
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 480.606409
+      }
+     }
+    },
+    "2": {
+     "n_train": 103535,
+     "n_after_pearson": 252,
+     "max_abs_r_among_survivors": 0.9499511971955369,
+     "condition_number_of_survivors": 7.371714562728073e+150,
+     "min_eigenvalue": -4.766519872664846e-15,
+     "dropped_by_pearson_avg_dev_dev_pairs": [
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999993
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999730211906
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9998412177366877
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0000000000000013
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.9424717262215517
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.986230220494418
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999986
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5177219155156597
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.999999999999999
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.8368172433078546
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.979526578303946
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5525570463015627
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6926358740991848
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.32500538713972804
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.5642980970534428
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6397609035255939
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.43853534670004934
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.3847045853600058
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.8348705711927012
+      }
+     ],
+     "settings": {
+      "2000": {
+       "n_after_pearson": 252,
+       "n_after_lasso": 176,
+       "lasso_alpha": 0.00015109990025365062,
+       "lasso_alpha_index": 19,
+       "lasso_alphas": [
+        0.1510999002536506,
+        0.10504356215948588,
+        0.07302552769810437,
+        0.050766820792787076,
+        0.03529272809998278,
+        0.024535250332561393,
+        0.017056729283609778,
+        0.01185771532431636,
+        0.008243398272588999,
+        0.005730751095126419,
+        0.003983976878018552,
+        0.0027696320257364682,
+        0.0019254282323546564,
+        0.0013385438366898513,
+        0.0009305460326346578,
+        0.0006469088983992231,
+        0.0004497264059503014,
+        0.00031264655766747473,
+        0.00021734963464014066,
+        0.00015109990025365062
+       ],
+       "n_convergence_warnings": 8,
+       "n_convergence_warnings_inner_paths": 7,
+       "final_refit_converged": false,
+       "final_refit_dual_gap": 549.666825526464,
+       "final_refit_tolerance": 1.5538412734857465,
+       "final_refit_n_iter": 2000,
+       "lasso_max_iter": 2000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_MB_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_avg_ionic_radius",
+        "MagpieData mean CovalentRadius",
+        "MagpieData mean Electronegativity",
+        "CBFV_avg_Atomic_Radius",
+        "CBFV_avg_Miracle_Radius_[pm]",
+        "CBFV_avg_Covalent_Radius",
+        "CBFV_dev_MB_electonegativity",
+        "MagpieData avg_dev CovalentRadius",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_avg_specific_heat_(J/g_K)_",
+        "MagpieData avg_dev Electronegativity",
+        "MagpieData mean MendeleevNumber",
+        "MagpieData mean NValence",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev Column",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_range_MB_electonegativity",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "MagpieData mean MeltingT"
+       ],
+       "outer_r2": 0.4397584270290562,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [
+          19
+         ],
+         "n_nonconverged_by_gap": 1,
+         "n_warnings_of_the_path_call": 1
+        },
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        },
+        {
+         "nonconverged_alpha_positions": [
+          16,
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 4,
+         "n_warnings_of_the_path_call": 4
+        }
+       ],
+       "n_nonconverged_by_gap_total": 7,
+       "final_refit_independent_check": {
+        "n_warnings": 1,
+        "dual_gap": 549.666825526464,
+        "tolerance": 1.5538412734857465,
+        "n_iter": 2000
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 400.51286809984595
+      },
+      "20000": {
+       "n_after_pearson": 252,
+       "n_after_lasso": 173,
+       "lasso_alpha": 0.00015109990025365062,
+       "lasso_alpha_index": 19,
+       "lasso_alphas": [
+        0.1510999002536506,
+        0.10504356215948588,
+        0.07302552769810437,
+        0.050766820792787076,
+        0.03529272809998278,
+        0.024535250332561393,
+        0.017056729283609778,
+        0.01185771532431636,
+        0.008243398272588999,
+        0.005730751095126419,
+        0.003983976878018552,
+        0.0027696320257364682,
+        0.0019254282323546564,
+        0.0013385438366898513,
+        0.0009305460326346578,
+        0.0006469088983992231,
+        0.0004497264059503014,
+        0.00031264655766747473,
+        0.00021734963464014066,
+        0.00015109990025365062
+       ],
+       "n_convergence_warnings": 0,
+       "n_convergence_warnings_inner_paths": 0,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.5519872198647136,
+       "final_refit_tolerance": 1.5538412734857465,
+       "final_refit_n_iter": 5752,
+       "lasso_max_iter": 20000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_MB_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_Covalent_Radius",
+        "MagpieData mean CovalentRadius",
+        "MagpieData mean Electronegativity",
+        "CBFV_avg_Atomic_Radius",
+        "CBFV_avg_Miracle_Radius_[pm]",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_avg_Covalent_Radius",
+        "MagpieData avg_dev CovalentRadius",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_avg_specific_heat_(J/g_K)_",
+        "MagpieData avg_dev Electronegativity",
+        "MagpieData mean MendeleevNumber",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_dev_metallic_valence",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev Column",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_range_MB_electonegativity",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "MagpieData avg_dev SpaceGroupNumber"
+       ],
+       "outer_r2": 0.43404432989010633,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        }
+       ],
+       "n_nonconverged_by_gap_total": 0,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.5519872198647136,
+        "tolerance": 1.5538412734857465,
+        "n_iter": 5752
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 1003.6282212000806
+      }
+     }
+    },
+    "3": {
+     "n_train": 103535,
+     "n_after_pearson": 251,
+     "max_abs_r_among_survivors": 0.949366400110245,
+     "condition_number_of_survivors": 7.342671834865862e+150,
+     "min_eigenvalue": -5.75995332298436e-15,
+     "dropped_by_pearson_avg_dev_dev_pairs": [
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999993
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999730211906
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9998412177366877
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0000000000000013
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.9424717262215517
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.986230220494418
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999986
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5177219155156597
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.999999999999999
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.8368172433078546
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.979526578303946
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5525570463015627
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6926358740991848
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.32500538713972804
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.5642980970534428
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6397609035255939
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.43853534670004934
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.3847045853600058
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.8348705711927012
+      }
+     ],
+     "settings": {
+      "2000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 171,
+       "lasso_alpha": 0.00022353324069162897,
+       "lasso_alpha_index": 18,
+       "lasso_alphas": [
+        0.15539869863504524,
+        0.10803205582645117,
+        0.07510310696680092,
+        0.052211138933872754,
+        0.036296807667054114,
+        0.025233279214378467,
+        0.017541993933772884,
+        0.012195067813349376,
+        0.008477923292737322,
+        0.00589379119965693,
+        0.0040973211841762,
+        0.002848428170865009,
+        0.0019802067448145793,
+        0.0013766254639373126,
+        0.0009570201055638119,
+        0.0006653134831850505,
+        0.00046252114071004764,
+        0.000321541365101453,
+        0.00022353324069162897,
+        0.00015539869863504525
+       ],
+       "n_convergence_warnings": 8,
+       "n_convergence_warnings_inner_paths": 7,
+       "final_refit_converged": false,
+       "final_refit_dual_gap": 461.77792387609225,
+       "final_refit_tolerance": 1.6251885817204432,
+       "final_refit_n_iter": 2000,
+       "lasso_max_iter": 2000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_MB_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_Gordy_electonegativity",
+        "MagpieData mean MendeleevNumber",
+        "CBFV_avg_Atomic_Radius",
+        "MagpieData mean NpValence",
+        "MagpieData mean CovalentRadius",
+        "CBFV_dev_metallic_valence",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_dev_ionic_radius",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "MagpieData mean NValence",
+        "CBFV_dev_families",
+        "MagpieData range MeltingT",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev MeltingT",
+        "MagpieData avg_dev NpValence",
+        "MagpieData avg_dev Column",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "CBFV_range_Density_(g/mL)",
+        "CBFV_range_Gordy_electonegativity",
+        "MagpieData mode MendeleevNumber",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_range_Zunger_radii_sum"
+       ],
+       "outer_r2": 0.37049975843028826,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        },
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        },
+        {
+         "nonconverged_alpha_positions": [
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 3,
+         "n_warnings_of_the_path_call": 3
+        }
+       ],
+       "n_nonconverged_by_gap_total": 7,
+       "final_refit_independent_check": {
+        "n_warnings": 1,
+        "dual_gap": 461.77792387609225,
+        "tolerance": 1.6251885817204432,
+        "n_iter": 2000
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 381.05832710000686
+      },
+      "20000": {
+       "n_after_pearson": 251,
+       "n_after_lasso": 169,
+       "lasso_alpha": 0.00022353324069162897,
+       "lasso_alpha_index": 18,
+       "lasso_alphas": [
+        0.15539869863504524,
+        0.10803205582645117,
+        0.07510310696680092,
+        0.052211138933872754,
+        0.036296807667054114,
+        0.025233279214378467,
+        0.017541993933772884,
+        0.012195067813349376,
+        0.008477923292737322,
+        0.00589379119965693,
+        0.0040973211841762,
+        0.002848428170865009,
+        0.0019802067448145793,
+        0.0013766254639373126,
+        0.0009570201055638119,
+        0.0006653134831850505,
+        0.00046252114071004764,
+        0.000321541365101453,
+        0.00022353324069162897,
+        0.00015539869863504525
+       ],
+       "n_convergence_warnings": 0,
+       "n_convergence_warnings_inner_paths": 0,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.6173094112546098,
+       "final_refit_tolerance": 1.6251885817204432,
+       "final_refit_n_iter": 4905,
+       "lasso_max_iter": 20000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_MB_electonegativity",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_Gordy_electonegativity",
+        "MagpieData mean MendeleevNumber",
+        "CBFV_avg_Atomic_Radius",
+        "MagpieData mean CovalentRadius",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_metallic_valence",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_dev_ionic_radius",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "CBFV_dev_families",
+        "MagpieData range MeltingT",
+        "MagpieData avg_dev MeltingT",
+        "CBFV_dev_Mulliken_EN",
+        "MagpieData avg_dev NpValence",
+        "MagpieData avg_dev Column",
+        "CBFV_avg_heat_of_fusion_(kJ/mol)_",
+        "CBFV_range_Density_(g/mL)",
+        "MagpieData mode MendeleevNumber",
+        "CBFV_range_Gordy_electonegativity",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "CBFV_dev_outer_shell_electrons",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_range_Zunger_radii_sum"
+       ],
+       "outer_r2": 0.37728505253599853,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        }
+       ],
+       "n_nonconverged_by_gap_total": 0,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.6173094112546098,
+        "tolerance": 1.6251885817204432,
+        "n_iter": 4905
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 814.9257654000539
+      }
+     }
+    },
+    "4": {
+     "n_train": 103536,
+     "n_after_pearson": 253,
+     "max_abs_r_among_survivors": 0.9496286276404348,
+     "condition_number_of_survivors": 7.458378299700258e+150,
+     "min_eigenvalue": -9.893030257996675e-15,
+     "dropped_by_pearson_avg_dev_dev_pairs": [
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999993
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999730211906
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9998412177366877
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 1.0000000000000013
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.9424717262215517
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.986230220494418
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999986
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.9999999999999992
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5177219155156597
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.999999999999999
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.8368172433078546
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": false,
+       "abs_r": 0.979526578303946
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.5525570463015627
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6926358740991848
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.32500538713972804
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.5642980970534428
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": false,
+       "abs_r": 0.6397609035255939
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.43853534670004934
+      },
+      {
+       "magpie_kept": false,
+       "cbfv_kept": true,
+       "abs_r": 0.3847045853600058
+      },
+      {
+       "magpie_kept": true,
+       "cbfv_kept": true,
+       "abs_r": 0.8348705711927012
+      }
+     ],
+     "settings": {
+      "2000": {
+       "n_after_pearson": 253,
+       "n_after_lasso": 157,
+       "lasso_alpha": 0.0003172982647837692,
+       "lasso_alpha_index": 17,
+       "lasso_alphas": [
+        0.1533480378519824,
+        0.10660645122266203,
+        0.07411203691604917,
+        0.05152215417408282,
+        0.035817830425372,
+        0.024900297686428065,
+        0.01731050757428157,
+        0.012034140163817651,
+        0.008366047550077074,
+        0.005816015989292511,
+        0.004043252418209662,
+        0.0028108399542668607,
+        0.0019540756874143854,
+        0.0013584593410761966,
+        0.0009443911478162876,
+        0.0006565339227357408,
+        0.00045641765353208216,
+        0.0003172982647837692,
+        0.00022058346791731652,
+        0.0001533480378519824
+       ],
+       "n_convergence_warnings": 9,
+       "n_convergence_warnings_inner_paths": 8,
+       "final_refit_converged": false,
+       "final_refit_dual_gap": 39.390259278809026,
+       "final_refit_tolerance": 1.5737295285074073,
+       "final_refit_n_iter": 2000,
+       "lasso_max_iter": 2000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "MagpieData mean CovalentRadius",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_avg_Miracle_Radius_[pm]",
+        "CBFV_dev_Covalent_Radius",
+        "MagpieData mean GSvolume_pa",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_dev_MB_electonegativity",
+        "MagpieData avg_dev NpValence",
+        "MagpieData avg_dev Electronegativity",
+        "CBFV_dev_metallic_valence",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_polarizability(A^3)",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData avg_dev MeltingT",
+        "MagpieData avg_dev Column",
+        "MagpieData range MeltingT",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_range_Gordy_electonegativity",
+        "CBFV_mode_MB_electonegativity",
+        "CBFV_dev_families",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData avg_dev GSvolume_pa"
+       ],
+       "outer_r2": 0.5001294687059754,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        },
+        {
+         "nonconverged_alpha_positions": [
+          16,
+          17,
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 4,
+         "n_warnings_of_the_path_call": 4
+        },
+        {
+         "nonconverged_alpha_positions": [
+          18,
+          19
+         ],
+         "n_nonconverged_by_gap": 2,
+         "n_warnings_of_the_path_call": 2
+        }
+       ],
+       "n_nonconverged_by_gap_total": 8,
+       "final_refit_independent_check": {
+        "n_warnings": 1,
+        "dual_gap": 39.390259278809026,
+        "tolerance": 1.5737295285074073,
+        "n_iter": 2000
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 373.0655730001163
+      },
+      "20000": {
+       "n_after_pearson": 253,
+       "n_after_lasso": 155,
+       "lasso_alpha": 0.0003172982647837692,
+       "lasso_alpha_index": 17,
+       "lasso_alphas": [
+        0.1533480378519824,
+        0.10660645122266203,
+        0.07411203691604917,
+        0.05152215417408282,
+        0.035817830425372,
+        0.024900297686428065,
+        0.01731050757428157,
+        0.012034140163817651,
+        0.008366047550077074,
+        0.005816015989292511,
+        0.004043252418209662,
+        0.0028108399542668607,
+        0.0019540756874143854,
+        0.0013584593410761966,
+        0.0009443911478162876,
+        0.0006565339227357408,
+        0.00045641765353208216,
+        0.0003172982647837692,
+        0.00022058346791731652,
+        0.0001533480378519824
+       ],
+       "n_convergence_warnings": 0,
+       "n_convergence_warnings_inner_paths": 0,
+       "final_refit_converged": true,
+       "final_refit_dual_gap": 1.5704065806767176,
+       "final_refit_tolerance": 1.5737295285074073,
+       "final_refit_n_iter": 3126,
+       "lasso_max_iter": 20000,
+       "selected": [
+        "CBFV_avg_Gordy_electonegativity",
+        "MagpieData mean CovalentRadius",
+        "CBFV_avg_metallic_valence",
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_Covalent_Radius",
+        "MagpieData mean GSvolume_pa",
+        "MagpieData avg_dev MendeleevNumber",
+        "CBFV_dev_MB_electonegativity",
+        "MagpieData avg_dev NpValence",
+        "MagpieData avg_dev Electronegativity",
+        "CBFV_dev_metallic_valence",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_dev_Miracle_Radius_[pm]",
+        "CBFV_avg_crystal_radius",
+        "CBFV_dev_polarizability(A^3)",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData avg_dev MeltingT",
+        "MagpieData avg_dev Column",
+        "MagpieData range MeltingT",
+        "MagpieData mean SpaceGroupNumber",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_mode_1st_ionization_potential_(kJ/mol)",
+        "CBFV_range_heat_atomization(kJ/mol)",
+        "CBFV_range_Gordy_electonegativity",
+        "CBFV_mode_MB_electonegativity",
+        "CBFV_dev_families",
+        "CBFV_dev_specific_heat_(J/g_K)_",
+        "MagpieData avg_dev GSvolume_pa",
+        "MagpieData avg_dev NUnfilled"
+       ],
+       "outer_r2": 0.5061269127413136,
+       "inner_path_checks": [
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        },
+        {
+         "nonconverged_alpha_positions": [],
+         "n_nonconverged_by_gap": 0,
+         "n_warnings_of_the_path_call": 0
+        }
+       ],
+       "n_nonconverged_by_gap_total": 0,
+       "final_refit_independent_check": {
+        "n_warnings": 0,
+        "dual_gap": 1.5704065806767176,
+        "tolerance": 1.5737295285074073,
+        "n_iter": 3126
+       },
+       "final_refit_agrees_with_select": true,
+       "warnings_equal_inner_gap_plus_final_refit": true,
+       "criterion_matches_path_warnings": true,
+       "seconds": 753.4674725998193
+      }
+     }
+    }
+   }
+  }
+ }
+}
