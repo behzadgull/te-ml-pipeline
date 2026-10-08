@@ -23,3 +23,8 @@ thesis_paper/source/*.docx -text
 thesis_paper/**/*.json text eol=lf
 thesis_paper/**/*.csv text eol=lf
 thesis_paper/**/*.py text eol=lf
+
+# 2026-10-08: thesis_paper/results/** is stored byte-for-byte (-text), so that the SHA256 values recorded in manifests and run_config.json match the committed bytes on every OS.
+# Those hashes are of the exact bytes a run read or wrote; converting line endings on commit (a CRLF working copy stored as LF) had made the committed bytes differ from the hashed ones.
+# This replaces the 2026-10-03 LF rule (thesis_paper/**/*.json, *.csv, *.py text eol=lf above) for results/ only; this line comes after those rules and overrides them there.
+thesis_paper/results/** -text
