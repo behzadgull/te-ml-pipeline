@@ -89,9 +89,13 @@ def main():
     if device == "cuda":
         try:
             import xgboost as xgb
-            xgb.XGBRegressor(n_estimators=5, device="cuda", tree_method="hist").fit(np.random.rand(500, 8), np.random.rand(500))
+            probe = xgb.XGBRegressor(n_estimators=5, device="cuda", tree_method="hist").fit(np.random.rand(500, 8), np.random.rand(500))
+            # xgboost 2.0.3 does not raise without a GPU: it warns and fits on the CPU. The booster's own config says which device ran.
+            used = json.loads(probe.get_booster().save_config())["learner"]["generic_param"].get("device")
         except Exception as e:  # noqa: BLE001
             refuse(f"a tiny xgboost device='cuda' fit failed: {type(e).__name__}: {e}")
+        if not str(used).startswith("cuda"):
+            refuse(f"xgboost fell back from device='cuda' to device={used!r} (no visible GPU): not a cuda run")
     tmp = Path(tempfile.mkdtemp())
     bundles, idents = {}, {}
     for t in TARGETS:
