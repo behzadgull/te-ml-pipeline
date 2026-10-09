@@ -80,6 +80,7 @@ def open_bundle(path, tmp):
         if not (p / rel).exists() or H.sha256_file(p / rel) != sha:
             refuse(f"{path}: {rel} does not match its manifest SHA256")
     extra = {f.relative_to(p).as_posix() for f in p.rglob("*") if f.is_file()} - set(man["files"]) - {"manifest.json"}
+    extra.discard("README.md")  # exactly one file may lie outside the manifest, the top-level README.md written when a bundle is committed (docs/decisions.md 2026-10-09, after the results were seen; input handling only)
     if extra:
         refuse(f"{path}: files outside the manifest: {sorted(extra)[:3]}")
     return p, ident or H.sha256_file(p / "manifest.json")
@@ -243,7 +244,9 @@ def main():
             "lasso_alpha": spread([m["lasso_alpha"] for m in metas]),
             "alpha_grid_position": {**spread([m["lasso_alpha_index"] for m in metas]), "grid_size": grid[0] + 1, "units_at_grid_minimum": int(sum(at_min)), "share_at_grid_minimum": float(np.mean(at_min))},
             "convergence": {"warnings_total": int(sum(m["n_convergence_warnings"] for m in metas)), "warnings_inner_paths_total": int(sum(m["n_convergence_warnings_inner_paths"] for m in metas)),
-                            "folds_with_warnings": int(sum(m["n_convergence_warnings"] > 0 for m in metas)), "folds_final_refit_not_converged": int(sum(not m["final_refit_converged"] for m in metas))},
+                            "folds_with_warnings": int(sum(m["n_convergence_warnings"] > 0 for m in metas)), "folds_final_refit_not_converged": int(sum(not m["final_refit_converged"] for m in metas)),
+                            "units_with_warnings": [{"repeat": m["repeat"], "fold": m["fold"], "warnings": m["n_convergence_warnings"], "in_inner_paths": m["n_convergence_warnings_inner_paths"],
+                                                    "final_refit_converged": bool(m["final_refit_converged"])} for m in metas if m["n_convergence_warnings"]]},
             "selected_in_every_fold": sorted(n for n, c in counts.items() if c == len(metas)),
             "n_distinct_features_ever_selected": len(counts)}
         for (r, f), m, cf in zip([(r, f) for r in range(N_REPEATS) for f in range(N_FOLDS)], metas, c_fold):
@@ -280,6 +283,8 @@ def main():
     ov = out["overall_100_units"]
     lines += ["", f"- Chosen alpha at the grid minimum in {ov['units_with_chosen_alpha_at_grid_minimum']} of 100 units; convergence warnings in total {ov['warnings_total']}, folds with a warning {ov['folds_with_warnings']}, folds whose final refit did not converge {ov['folds_final_refit_not_converged']}.",
               "- The committed rung values, the per-fold differences, the counts with spread and the selection frequencies are in `analysis.json`, `per_fold.csv` and `selection_frequency.csv`; they are not used for the claim."]
+    wl = [f"{t} repeat {u['repeat']} fold {u['fold']} ({u['warnings']} warning, {u['in_inner_paths']} in the inner paths, final refit converged: {u['final_refit_converged']})" for t in TARGETS for u in out["targets"][t]["convergence"]["units_with_warnings"]]
+    lines += ["- Units with a ConvergenceWarning: " + ("; ".join(wl) if wl else "none") + ". (Warnings are captured by `select()`, not printed, so a log shows none; the units' `n_convergence_warnings` are the record.)"]
     (d / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("wrote", d)
     shutil.rmtree(tmp, ignore_errors=True)

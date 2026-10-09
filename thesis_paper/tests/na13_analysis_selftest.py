@@ -4,7 +4,7 @@ Self-test of scripts/na13_analysis.py on SYNTHETIC input. Every number it prints
 `make` builds four fake NA13 bundles (one per target, 25 units each) in a scratch folder: the real folds and chemistry clusters are rebuilt from the snapfix CSV, so the analysis' fold check passes, but the predictions are the
 true values plus random noise (the all-397 "fit" less noisy than the "selected" fit, so the paired difference is negative by construction) and the bundle metadata is written to satisfy the pre-registered conditions
 (pinned commit, cuda, tree_clean, complete, 25 units, manifest). `test` runs the analysis on them (positive case, rerun determinism) and then on mutated copies that each break one of the refusal conditions
-(missing or extra unit, other commit, device cpu, smoke, dirty tree, incomplete status, wrong dataset, lasso_max_iter 2000, predictions altered after the manifest, three bundles, a target twice, n_boot other than 2000
+(missing or extra unit, a file other than the top-level README.md outside the manifest, other commit, device cpu, smoke, dirty tree, incomplete status, wrong dataset, lasso_max_iter 2000, predictions altered after the manifest, three bundles, a target twice, n_boot other than 2000
 without --out-dir). `all` (the default) does both and then removes the scratch folder.
 
 Usage (repository root; needs data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv; about ten minutes):
@@ -36,7 +36,7 @@ def sha(p):
 
 
 def write_manifest(d):
-    files = {f.relative_to(d).as_posix(): sha(f) for f in sorted(d.rglob('*')) if f.is_file() and f.name != 'manifest.json'}
+    files = {f.relative_to(d).as_posix(): sha(f) for f in sorted(d.rglob('*')) if f.is_file() and f.name != 'manifest.json' and f.relative_to(d).as_posix() != 'README.md'}  # a top-level README.md lies outside the manifest, as in the committed bundles
     (d / 'manifest.json').write_text(json.dumps({'files': files}), encoding='utf-8')
 
 
@@ -73,6 +73,7 @@ def make(target, df_head, df):
     (d / 'status.json').write_text(json.dumps({'complete': True, 'units_total': 25, 'units_done': 25, 'accepted_as_result': True}), encoding='utf-8')
     (d / 'results.json').write_text('{}', encoding='utf-8')
     write_manifest(d)
+    (d / 'README.md').write_text('synthetic bundle README (outside the manifest, as in the committed bundles)', encoding='utf-8')
     return d
 
 
@@ -87,6 +88,14 @@ def mutated(src, name, fn):
     shutil.copytree(src, d)
     fn(d)
     write_manifest(d)
+    return d
+
+
+def mutated_after_manifest(src, name, fn):
+    d = ROOT / name
+    shutil.rmtree(d, ignore_errors=True)
+    shutil.copytree(src, d)
+    fn(d)  # the manifest is NOT rewritten
     return d
 
 
@@ -151,6 +160,8 @@ def do_test():
         'status incomplete': mutated(S, 't7', incomplete),
         'wrong dataset sha': mutated(S, 't8', lambda d: edit_cfg(d, dataset_sha256='0' * 64)),
         'lasso_max_iter 2000': mutated(S, 't9', lambda d: edit_cfg(d, **{'params.lasso_max_iter': 2000})),
+        'a file other than README.md outside the manifest': mutated_after_manifest(S, 't11', lambda d: (d / 'notes.txt').write_text('x', encoding='utf-8')),
+        'a README.md inside units/ (only the top-level README.md is allowed)': mutated_after_manifest(S, 't12', lambda d: (d / 'units' / 'README.md').write_text('x', encoding='utf-8')),
         'predictions altered after the manifest (no rewrite)': None,
     }
     for name, d in tests.items():
