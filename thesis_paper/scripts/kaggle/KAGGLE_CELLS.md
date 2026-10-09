@@ -483,40 +483,100 @@ Each finished outer fold prints its meta-learner weights, the intercept and the 
 letting the rest run). Download each `.tar.gz` and send me the printed SHA256 lines and the `status.json` texts. Afterwards, locally:
 `python thesis_paper/scripts/na2_stacking_analysis.py --stack-dirs <the ten bundles>` and `python thesis_paper/scripts/model_comparison.py na2 --stacking-dir <its output>`.
 
-## 3d. NA13 feature selection (CPU, one notebook)
+## 3d. NA13 feature selection on the department machine spcai3 (Ubuntu, 12 cores, V100S; not Kaggle)
 
 What it does (`na13_feature_selection.py`, header of the file): the thesis's three-step selection (Pearson filter at |r| > 0.95, LassoCV on the survivors with 3 inner chemistry-cluster folds and 20 alphas, mutual-information
-ranking on a 20,000-row subsample, keeping the top k) is performed INSIDE each outer training fold of the Paper A chemistry-cluster rung (same folds, 5 repeats x 5 folds, 100 units in all), then the target's frozen XGBoost
-is fitted on the selected columns only and scored on the outer test rows. k is the number of features the thesis reports per target (S 25, sigma 44, kappa 39, zT 32; thesis values, tested here, not endorsed). The result is
-the pooled per-repeat R2 of the selected-feature model against the committed 397-feature value, and how often each feature was selected.
+ranking on a 20,000-row subsample, keeping the top k) is performed INSIDE each outer training fold of the Paper A chemistry-cluster rung (same folds, 5 repeats x 5 folds, 100 units in all). k is the number of features the thesis reports per target
+(S 25, sigma 44, kappa 39, zT 32; thesis values, tested here, not endorsed). The Lasso runs with `max_iter` 20,000 (`LASSO_MAX_ITER`, commit `bede8fa`): the pre-registered 20-fold diagnostic (`docs/decisions.md`, 2026-10-07 entry, Result 2026-10-08)
+found that 2000 iterations did not converge in any fold and 20,000 did in all.
 
-**Code commit: `13a0efd582fe9abae95a00d29c677b70eb8ff103`** (the script is byte-identical to the one at `7529e7c`, which passed the Linux smoke test S0, `git diff 7529e7c 13a0efd -- thesis_paper/scripts/kaggle/na13_feature_selection.py
-thesis_paper/scripts/kaggle/harness.py src` is empty). Cell 1 is the clone-and-install cell of section 1 with `COMMIT` set to it. **Accelerator: None (CPU, 4 cores). GPU is not used.** Internet on.
-**Attach: the snapfix dataset only. No previous output. Nothing else to download or upload.**
+**Paired design and device (pre-registered 2026-10-09, `docs/decisions.md`).** In every unit the target's frozen XGBoost is fitted twice on the same outer training rows, on all 397 features and on the selected features, both on `cuda` (`--device cuda`; the Pearson filter,
+LassoCV and the MI ranking stay on the CPU) and both scored on the same outer test rows. Each unit records `r2_all397`, `r2_selected` and their difference, the device, and both sets of predictions. The NA13 claim rests only on the paired difference selected minus all 397, per fold and pooled per repeat;
+the committed 397-feature rung values (which ran on cuda on Kaggle) are reported alongside and are not used for the claim, because the same fit differs between platforms (kappa fold 0: R2 0.7743 on Windows, 0.7681 on Linux, with an identical selection).
 
-**Estimate (measured, then scaled).** One real outer fold on the maintainer's 8-core PC, 4 threads, clean clone at `13a0efd`, the real data: kappa 115 s (39 features kept, fold R2 0.770), S 141 s (25 features, fold R2 0.755).
-Taking sigma at the S cost (same rows) and zT at 120 s (rows between kappa and S), 25 folds per target make 25 x (141 + 138 + 115 + 120) s = 3.6 h on that PC. Kaggle's 4 cores were 1.26 to 1.64 times slower
-than that PC in the two other measurements of this work, so **about 4.5 to 6 hours in one session** (budget 10.5 h; far from the limit). If `status.json` says `"complete": false`, rerun the same cell with
-`--restore-from <its tar.gz>`.
-Expect many `ConvergenceWarning` lines from LassoCV (about 13 to 15 per fold here: `max_iter` 2000 is not reached at the smallest alphas); the cell hides them from the console and keeps the raw log. The Lasso fits are the thesis
-pipeline as described, not tuned until they converge; I will say in the paper that some did not.
+**Code commit: `aad78f175952cc3d3e2bfd6d14eef94eec98b0f7`** (the commit that contains the paired design and the `--device` change; `47339cf`, which timed the CPU-only selected fit, is NOT the pin). The clone must be at exactly that commit with a clean tree; the harness refuses to start otherwise.
 
-Cell 2 (bash):
+**Machine and files (as reported for spcai3):**
+- the repository clone `~/Desktop/te-ml-pipeline` at the commit above, outputs OUTSIDE it, under `~/runs/`, because a file inside the clone makes the tree dirty;
+- Python: the venv `~/venv-te`, built as in section 1 (uv, Python 3.12, numpy 1.26.4, pandas 2.2.2, scipy, scikit-learn 1.4.2, xgboost 2.0.3, optuna 3.6.1, lightgbm 4.3.0), always called by its full path, never a bare `python`;
+- the snapfix CSV `~/data/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv` (974,854,507 bytes, SHA256 `d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489`; the script checks it itself before it reads a row);
+- the V100S visible to xgboost 2.0.3 (`nvidia-smi`, and a tiny `device="cuda"` fit, both in the first cell below);
+- **a Linux smoke of THIS version of the script is required before the real run** (first cell). The smoke at `47339cf` (`~/runs/na13_smoke`) tested the old script and does not count. The smoke runs on the CPU (it forces `device="cpu"`), so the `cuda` path of the new script is exercised for the first time by the real run's first fold;
+  the first cell therefore also times one real fold per target on `cuda` (`--max-units 1`) before the long run, and its output is checked against the expectations below.
+
+**Timing so far, measured on spcai3 at `47339cf`** (the four targets at the same time with 3 threads each, `--max-units 1`, outer fold 0 of repeat 0, 20,000 iterations; final XGBoost on the CPU, selected features only; bundles `~/runs/na13_timing_<target>.tar.gz`, not results and not committed):
+
+| Target | Seconds for fold 0 | Fold R2 | Non-zero Lasso coefficients | Warnings | Final refit |
+|---|---|---|---|---|---|
+| S | 1035 | 0.7495 | 190 | 0 | converged |
+| sigma | 465 | 0.6498 | 157 | 0 | converged |
+| kappa | 467 | 0.7681 | 188 | 0 | converged |
+| zT | 135 | 0.5000 | 147 | 0 | converged |
+
+**Estimate: about 10 hours of wall time (range 7 to 15 h) for all 100 folds, four processes in parallel; the longest is S; to be confirmed by the one-fold timing at the new pin.** Derivation (a model, not a measurement of the run): 25 folds of S at the fold-0 time are 25 x 1035 s = 7.2 h, the lower end. Fold times
+differ a lot within a target, because the Lasso paths take longer in some folds; in the 20-fold diagnostic at 20,000 iterations (Windows PC, four processes sharing 8 cores) the mean fold time over five folds was 1.43 (S), 1.30 (sigma), 1.17 (kappa) and 2.5 (zT) times the fold-0 time, which gives
+S 25 x 1035 x 1.43 s = 10.3 h (sigma 4.2 h, kappa 3.8 h, zT 2.3 h), the central value; the upper end of 15 h allows a mean fold time of 2.1 times fold 0 for S (the slowest S folds of the diagnostic were 2.6 times fold 0). The new design adds one 397-feature XGBoost fit per fold and moves both fits to the GPU:
+a fit of the S model on 148,000 rows took about 19 s on a T4 in the NA6 run, so the extra is of the order of 100 folds x 20 s = 35 min spread over the four processes, which share one GPU; the Lasso, not XGBoost, dominates. This is an expectation, not a measurement, and the first cell measures it.
+
+Cell 1 (bash), checks and the smoke of this version, then one real fold per target on the GPU (about 20 to 30 minutes; stop if anything differs from what is stated):
 
 ```bash
-%%bash
-set -o pipefail
-cd /kaggle/working/te-ml-pipeline
-nproc; free -g | head -2
-/kaggle/working/venv/bin/python thesis_paper/scripts/kaggle/na13_feature_selection.py --out-dir /kaggle/working/na13 \
-    --expect-commit "$(git rev-parse HEAD)" --time-budget-hours 10.5 2>&1 | tee /kaggle/working/logs/na13_raw.log | grep -v "ConvergenceWarning\|cd_fast\.enet" | tee /kaggle/working/logs/na13.log
-grep -c ConvergenceWarning /kaggle/working/logs/na13_raw.log
-cat /kaggle/working/na13/status.json; echo
-ls -la /kaggle/working/na13.tar.gz && sha256sum /kaggle/working/na13.tar.gz
+REPO=~/Desktop/te-ml-pipeline; PYV=~/venv-te/bin/python
+DS=~/data/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv
+COMMIT=aad78f175952cc3d3e2bfd6d14eef94eec98b0f7
+cd $REPO && [ "$(git rev-parse HEAD)" = "$COMMIT" ] && [ -z "$(git status --porcelain)" ] && echo "commit and tree OK" || { echo "WRONG COMMIT OR DIRTY TREE: stop"; exit 1; }
+echo "$(sha256sum $DS | cut -d' ' -f1)  (expected d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489)"
+nvidia-smi --query-gpu=index,name,memory.total --format=csv
+$PYV -c "import numpy as n, xgboost as x; x.XGBRegressor(n_estimators=5, device='cuda', tree_method='hist').fit(n.random.rand(500, 8), n.random.rand(500)); print('xgboost', x.__version__, 'cuda fit ok')" || { echo "cuda fit FAILED"; exit 1; }
+mkdir -p ~/runs && rm -rf ~/runs/na13_smoke2
+$PYV thesis_paper/scripts/kaggle/na13_feature_selection.py --smoke --allow-dirty --targets zT --dataset "$DS" --out-dir ~/runs/na13_smoke2 2>&1 | grep -v "Warning\|cd_fast" | tail -n 4
+cat ~/runs/na13_smoke2/status.json
+for T in S sigma kappa zT; do
+  OMP_NUM_THREADS=3 OPENBLAS_NUM_THREADS=3 MKL_NUM_THREADS=3 LOKY_MAX_CPU_COUNT=3 PYTHONUNBUFFERED=1 \
+  $PYV -u thesis_paper/scripts/kaggle/na13_feature_selection.py --targets $T --device cuda --max-units 1 --dataset "$DS" \
+      --out-dir ~/runs/na13_timing2_$T --expect-commit $COMMIT > ~/runs/na13_timing2_$T.log 2>&1 &
+done; wait
+for T in S sigma kappa zT; do echo "== $T"; grep -v "Warning\|cd_fast" ~/runs/na13_timing2_$T.log | tail -n 2; done
+# determinism of a cuda fit (pre-registration 2026-10-09, item 2): kappa fold 0 a second time, then both R2 of both fits side by side
+OMP_NUM_THREADS=3 OPENBLAS_NUM_THREADS=3 MKL_NUM_THREADS=3 LOKY_MAX_CPU_COUNT=3 PYTHONUNBUFFERED=1 \
+  $PYV -u thesis_paper/scripts/kaggle/na13_feature_selection.py --targets kappa --device cuda --max-units 1 --dataset "$DS" \
+      --out-dir ~/runs/na13_det_kappa --expect-commit $COMMIT > ~/runs/na13_det_kappa.log 2>&1
+$PYV - <<'EOF'
+import json, os
+u = [json.load(open(os.path.expanduser(f'~/runs/{d}/units/kappa_repeat0_fold0.json')))['meta'] for d in ('na13_timing2_kappa', 'na13_det_kappa')]
+for k in ('r2_selected', 'r2_all397'):
+    print(k, repr(u[0][k]), repr(u[1][k]), 'IDENTICAL' if u[0][k] == u[1][k] else f'DIFFERENT by {abs(u[0][k] - u[1][k]):.2e}')
+print('same selected set and order:', u[0]['selected'] == u[1]['selected'])
+EOF
 ```
 
-Each finished fold prints the number of selected features and the fold R2 with its seconds (first fold of S: compare with about 140 s x 1.3 to 1.6 before letting it run). Download `na13.tar.gz` (right-click, "Save link as") and send me the printed SHA256 line,
-the `status.json` text and the warning count. Then I verify it, commit it under `results/na13`, and fill the paper (there is no NA13 marker yet; the thesis's Section 3.3 claim is C110).
+**Determinism check, and what follows.** The two `kappa` fold-0 runs (`na13_timing2_kappa` and `na13_det_kappa`) must have the same selected set and order (the selection runs on the CPU and was identical across machines for this fold). Their `r2_selected` and `r2_all397` are then printed side by side. **If both are IDENTICAL**, a `cuda` fit is reproducible on this machine at this precision, and nothing else follows.
+**If either DIFFERS**, a `cuda` fit is not bit-reproducible here: the size of the difference is the run-to-run noise of a `cuda` fit; it is reported next to the paired interval (pre-registration 2026-10-09, items 2 and 5), no per-fold dR2 smaller than it is interpreted on its own, and the long run and its pre-registered paired interval are unchanged (it does not stop the run). Send me both printed lines.
+
+Expected from Cell 1: the smoke is complete (3 of 3 units); each timing line shows `[cuda]`, 0 convergence warnings, the final refit converged, the same selected counts and `n_after_lasso` as the table above (S 190, sigma 157, kappa 188, zT 147), a paired difference, and the seconds. Send me those four lines. The timing folders are not results and use `--max-units 1`, so they do not complete.
+
+Cell 2 (bash), the real run: four processes, each with its own out-dir and log, no time budget, 3 threads each (`OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS` and `LOKY_MAX_CPU_COUNT`, which joblib reads for LassoCV's `n_jobs=-1`), all four sharing GPU 0:
+
+```bash
+REPO=~/Desktop/te-ml-pipeline; PYV=~/venv-te/bin/python
+DS=~/data/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv
+COMMIT=aad78f175952cc3d3e2bfd6d14eef94eec98b0f7
+cd $REPO && [ "$(git rev-parse HEAD)" = "$COMMIT" ] && [ -z "$(git status --porcelain)" ] && echo "commit and tree OK" || { echo "WRONG COMMIT OR DIRTY TREE: stop"; exit 1; }
+for T in S sigma kappa zT; do
+  CUDA_VISIBLE_DEVICES=0 OMP_NUM_THREADS=3 OPENBLAS_NUM_THREADS=3 MKL_NUM_THREADS=3 LOKY_MAX_CPU_COUNT=3 PYTHONUNBUFFERED=1 \
+  nohup $PYV -u thesis_paper/scripts/kaggle/na13_feature_selection.py --targets $T --device cuda --dataset "$DS" \
+      --out-dir ~/runs/na13_$T --expect-commit $COMMIT > ~/runs/na13_$T.log 2>&1 &
+  sleep 5
+done
+echo started; sleep 60; for T in S sigma kappa zT; do echo "== $T"; grep -v "Warning\|cd_fast" ~/runs/na13_$T.log | tail -n 2; done
+```
+
+Watching it: `for T in S sigma kappa zT; do echo "== $T: $(grep -c repeat ~/runs/na13_$T.log) of 25 units"; done`; each finished fold prints the selected count, the counts after Pearson and after Lasso, the chosen alpha, the number of convergence warnings, whether the final refit converged, R2 selected, R2 all 397, their difference, the device and the seconds. `nohup` keeps the processes alive when the terminal closes.
+If a process stops (reboot, kill), start its line again with the same arguments: the harness skips every unit already on disk and continues in the same out-dir (the out-dir must not be deleted; the identity includes the device, so a restart must use `--device cuda` again).
+When a `status.json` in `~/runs/na13_<T>/` says `"complete": true` (25 of 25 units), the process has written `~/runs/na13_<T>.tar.gz` next to it.
+
+When all four are complete, send me (or copy to the PC with `scp`): the four `na13_<T>.tar.gz`, their SHA256 (`sha256sum ~/runs/na13_*.tar.gz`), the four `status.json` texts and `grep -c ConvergenceWarning ~/runs/na13_<T>.log` for each (expected 0). I verify and commit them under `results/na13_<T>`. The four bundles are four
+analyses with disjoint targets and are combined at analysis time; the `_overall` share of units with the chosen alpha at the grid minimum in each `results.json` covers only that bundle's 25 units and is recomputed over the 100 units.
 
 ## 4. Later sessions (the same Cell 1, then these)
 
@@ -525,7 +585,7 @@ the `status.json` text and the warning count. Then I verify it, commit it under 
 | 2 | Final models, no classifier, plus NA6, concurrently | GPU T4 x2 | process A (GPU 0): `na6_classifier.py --out-dir /kaggle/working/na6 --device cuda`; process B (GPU 1): `na_final_models.py --out-dir /kaggle/working/final_a --device cuda --jarvis-csv $J --jarvis-sha256 3c23d550...9c49` (`J=$(find /kaggle/input -name jarvis_dft3d_seebeck_featurized.csv)`), both with `--expect-commit`, `&`, `wait` as in G1 | snapfix dataset, `thesis-jarvis-featurized` |
 | 3 | NA3 SHAP | GPU T4 x2 | A (GPU 0): `na3_shap.py --targets S,kappa --out-dir /kaggle/working/na3_a`; B (GPU 1): `--targets sigma,zT --out-dir /kaggle/working/na3_b` | snapfix dataset |
 | C2 | NA2 LightGBM | CPU | see section 3 (session L) | snapfix dataset |
-| C3 | NA13 feature selection | CPU | see section 3d (commit `13a0efd`, about 4.5 to 6 h) | snapfix dataset |
+| C3 | NA13 feature selection | spcai3 (not Kaggle): CPU selection, V100S XGBoost | see section 3d (pinned commit `aad78f175952cc3d3e2bfd6d14eef94eec98b0f7`, four processes, about 10 h) | snapfix dataset in `~/data` |
 | later | Final models again, with the classifier and the MP candidates | GPU | as the final-models command plus `--classifier-dir <na6 dir> --classifier-sha256 <sha of final_classifier.json> --mp-csv ... --mp-sha256 ...` | snapfix, JARVIS, the na6 output, the MP csv |
 | K | NA2 nested stacking | CPU, ten sessions | see section 3c (the earlier local `na2_stacking.py` is the interim cross-fitted version, not used in the paper) | snapfix dataset |
 | G5 | NA1 nested CV | GPU T4 x2 (or the department V100S) | see section 3b | snapfix dataset |
