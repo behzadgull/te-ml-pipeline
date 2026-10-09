@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--stack-dirs", required=True, help="the na2_stacking_nested.py bundles (directories or .tar.gz), comma-separated; together they must cover every target, repeat and fold once")
     ap.add_argument("--out-dir", default=None)
     args = ap.parse_args()
+    state = H.git_state()  # recorded at the start, before anything is written (docs/decisions.md 2026-10-09, after the results were seen; provenance only)
     tmp = Path(tempfile.mkdtemp())
     parts = [st.open_bundle(x, tmp) for x in args.stack_dirs.split(",") if x]
     cfgs = [c for _, c in parts]
@@ -70,7 +71,6 @@ def main():
                 meta_sha[uid] = H.sha256_file(where[uid])
     files = {str(p.relative_to(out)).replace("\\", "/"): H.sha256_file(p) for p in sorted((out / "units").glob("*.npz"))}
     (out / "manifest.json").write_text(json.dumps({"files": files}, indent=1), encoding="utf-8")
-    state = H.git_state()
     (out / "run_config.json").write_text(json.dumps({"script": Path(__file__).name, "script_sha256": H.sha256_file(Path(__file__)), "git_head": state[0], "tree_clean": state[1],
                                                      "stack_bundles": [str(p) for p, _ in parts], "stack_dataset_sha256": cfgs[0]["dataset_sha256"], "stack_code_commit": cfgs[0]["git_head"],
                                                      "weight_unit_sha256": meta_sha}, indent=1), encoding="utf-8")
