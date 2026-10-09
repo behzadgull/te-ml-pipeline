@@ -1,0 +1,34 @@
+{
+  "inputs": {
+    "dataset": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "ladder_metrics": {
+      "path": "reports/regen_snapfix/20260917T150000/ladder_metrics.json",
+      "sha256": "23d8b4419b5037c70544da4ef9448f091fd7a638a2eadfe171c4ad70a66fd8bf",
+      "bytes": 14200
+    },
+    "bundle:S": {
+      "sha256": "e41d2dfb6a59954aebf893a8ca4a969545b53cee0d737c3c836becd9a525e5e3"
+    },
+    "bundle:sigma": {
+      "sha256": "8675f11241d4fa3083722f0514dcf095417c9f5427df9a667f721a350c915952"
+    },
+    "bundle:kappa": {
+      "sha256": "11dca8936177e863633d1085d02f203418d5453f85161b6aafc84dfc9dfda38a"
+    },
+    "bundle:zT": {
+      "sha256": "85a249b73eb8ff4fae1b9baba18fd38e4cfc79d7234de069e1f37899a8c0fd7f"
+    }
+  },
+  "git_head": "c20a3cfedc47cd91cbc528e70bd6d153ec72c1af",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na13_analysis.py",
+  "script_sha256": "9d4bd164285359410ee491bb0e51aa3055c37f887fdd3070a17a80468e0f8a80",
+  "python": "3.12.10",
+  "bundles": "thesis_paper/results/na13_S/20261009T101641,thesis_paper/results/na13_sigma/20261009T101646,thesis_paper/results/na13_kappa/20261009T101651,thesis_paper/results/na13_zT/20261009T101656",
+  "n_boot": 2000
+}

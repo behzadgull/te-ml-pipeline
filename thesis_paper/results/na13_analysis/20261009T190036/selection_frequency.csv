@@ -1,0 +1,293 @@
+target,feature,folds_selected,share
+S,CBFV_dev_gilmor_number_of_valence_electron,25,1.0
+S,MagpieData mean Electronegativity,25,1.0
+S,MagpieData mean MendeleevNumber,25,1.0
+S,CBFV_avg_heat_of_vaporization_(kJ/mol)_,23,0.92
+S,CBFV_avg_thermal_conductivity_(W/(m_K))_,23,0.92
+S,CBFV_dev_metallic_valence,22,0.88
+S,MagpieData avg_dev CovalentRadius,22,0.88
+S,CBFV_avg_Boiling_Point_(K),21,0.84
+S,CBFV_avg_MB_electonegativity,21,0.84
+S,CBFV_avg_Gordy_electonegativity,20,0.8
+S,CBFV_avg_crystal_radius,19,0.76
+S,MagpieData mean SpaceGroupNumber,19,0.76
+S,CBFV_range_heat_atomization(kJ/mol),18,0.72
+S,CBFV_range_thermal_conductivity_(W/(m_K))_,18,0.72
+S,CBFV_avg_1st_ionization_potential_(kJ/mol),16,0.64
+S,MagpieData mean NValence,16,0.64
+S,CBFV_range_heat_of_vaporization_(kJ/mol)_,14,0.56
+S,MagpieData mean MeltingT,14,0.56
+S,CBFV_avg_polarizability(A^3),13,0.52
+S,MagpieData avg_dev SpaceGroupNumber,13,0.52
+S,CBFV_avg_metallic_valence,12,0.48
+S,MagpieData avg_dev Column,12,0.48
+S,MagpieData mean NpValence,12,0.48
+S,CBFV_avg_specific_heat_(J/g_K)_,11,0.44
+S,CBFV_range_polarizability(A^3),11,0.44
+S,MagpieData avg_dev NpValence,11,0.44
+S,MagpieData mean CovalentRadius,11,0.44
+S,CBFV_dev_Mulliken_EN,10,0.4
+S,CBFV_range_Boiling_Point_(K),10,0.4
+S,MagpieData mean NpUnfilled,10,0.4
+S,CBFV_range_MB_electonegativity,9,0.36
+S,CBFV_dev_Miracle_Radius_[pm],8,0.32
+S,CBFV_range_heat_of_fusion_(kJ/mol)_,8,0.32
+S,MagpieData avg_dev MendeleevNumber,8,0.32
+S,CBFV_avg_families,7,0.28
+S,CBFV_avg_heat_of_fusion_(kJ/mol)_,7,0.28
+S,CBFV_dev_thermal_conductivity_(W/(m_K))_,7,0.28
+S,CBFV_dev_families,6,0.24
+S,MagpieData range MeltingT,6,0.24
+S,CBFV_avg_Density_(g/mL),5,0.2
+S,CBFV_dev_Gordy_electonegativity,5,0.2
+S,CBFV_dev_Zunger_radii_sum,5,0.2
+S,MagpieData mean GSvolume_pa,5,0.2
+S,CBFV_avg_Mulliken_EN,4,0.16
+S,CBFV_dev_heat_of_vaporization_(kJ/mol)_,4,0.16
+S,CBFV_range_Gordy_electonegativity,4,0.16
+S,CBFV_avg_Atomic_Radius,3,0.12
+S,CBFV_avg_Miracle_Radius_[pm],3,0.12
+S,CBFV_dev_Atomic_Radius,3,0.12
+S,CBFV_dev_ionic_radius,3,0.12
+S,MagpieData range GSvolume_pa,3,0.12
+S,CBFV_avg_Metal,2,0.08
+S,CBFV_dev_MB_electonegativity,2,0.08
+S,CBFV_dev_number_of_valence_electrons,2,0.08
+S,CBFV_range_Density_(g/mL),2,0.08
+S,MagpieData avg_dev Electronegativity,2,0.08
+S,CBFV_dev_polarizability(A^3),1,0.04
+S,CBFV_range_Mulliken_EN,1,0.04
+S,MagpieData avg_dev GSvolume_pa,1,0.04
+S,MagpieData avg_dev NUnfilled,1,0.04
+S,MagpieData mean Number,1,0.04
+sigma,CBFV_avg_Miracle_Radius_[pm],25,1.0
+sigma,CBFV_avg_Mulliken_EN,25,1.0
+sigma,CBFV_avg_metallic_valence,25,1.0
+sigma,CBFV_dev_Boiling_Point_(K),25,1.0
+sigma,CBFV_dev_Density_(g/mL),25,1.0
+sigma,CBFV_dev_MB_electonegativity,25,1.0
+sigma,CBFV_dev_Mulliken_EN,25,1.0
+sigma,CBFV_dev_polarizability(A^3),25,1.0
+sigma,MagpieData avg_dev Column,25,1.0
+sigma,MagpieData avg_dev Electronegativity,25,1.0
+sigma,MagpieData avg_dev GSvolume_pa,25,1.0
+sigma,MagpieData avg_dev NpUnfilled,25,1.0
+sigma,MagpieData avg_dev NpValence,25,1.0
+sigma,MagpieData mean Electronegativity,25,1.0
+sigma,CBFV_avg_Boiling_Point_(K),24,0.96
+sigma,CBFV_avg_crystal_radius,24,0.96
+sigma,CBFV_avg_valence_d,24,0.96
+sigma,CBFV_dev_specific_heat_(J/g_K)_,24,0.96
+sigma,MagpieData avg_dev MeltingT,24,0.96
+sigma,MagpieData avg_dev MendeleevNumber,24,0.96
+sigma,MagpieData mean GSvolume_pa,24,0.96
+sigma,MagpieData mean SpaceGroupNumber,24,0.96
+sigma,MagpieData range GSvolume_pa,24,0.96
+sigma,CBFV_avg_families,22,0.88
+sigma,CBFV_dev_families,22,0.88
+sigma,MagpieData avg_dev SpaceGroupNumber,20,0.8
+sigma,CBFV_dev_heat_atomization(kJ/mol),19,0.76
+sigma,CBFV_dev_metallic_valence,18,0.72
+sigma,CBFV_avg_Gordy_electonegativity,17,0.68
+sigma,MagpieData mean Number,17,0.68
+sigma,CBFV_dev_Miracle_Radius_[pm],16,0.64
+sigma,MagpieData range MeltingT,16,0.64
+sigma,MagpieData avg_dev Row,15,0.6
+sigma,CBFV_dev_thermal_conductivity_(W/(m_K))_,14,0.56
+sigma,CBFV_range_polarizability(A^3),14,0.56
+sigma,MagpieData mean MeltingT,14,0.56
+sigma,CBFV_dev_gilmor_number_of_valence_electron,13,0.52
+sigma,CBFV_dev_heat_of_vaporization_(kJ/mol)_,13,0.52
+sigma,CBFV_dev_outer_shell_electrons,13,0.52
+sigma,CBFV_range_Zunger_radii_sum,12,0.48
+sigma,MagpieData avg_dev CovalentRadius,12,0.48
+sigma,MagpieData mean NpUnfilled,12,0.48
+sigma,CBFV_avg_MB_electonegativity,11,0.44
+sigma,MagpieData avg_dev NUnfilled,11,0.44
+sigma,MagpieData mean CovalentRadius,11,0.44
+sigma,CBFV_avg_Atomic_Radius,10,0.4
+sigma,CBFV_avg_Metal,10,0.4
+sigma,CBFV_avg_Density_(g/mL),9,0.36
+sigma,CBFV_range_Boiling_Point_(K),9,0.36
+sigma,CBFV_range_heat_atomization(kJ/mol),9,0.36
+sigma,CBFV_dev_heat_of_fusion_(kJ/mol)_,8,0.32
+sigma,CBFV_range_Density_(g/mL),8,0.32
+sigma,CBFV_range_thermal_conductivity_(W/(m_K))_,8,0.32
+sigma,CBFV_avg_Nonmetal,7,0.28
+sigma,CBFV_avg_heat_of_fusion_(kJ/mol)_,7,0.28
+sigma,CBFV_avg_outer_shell_electrons,7,0.28
+sigma,CBFV_dev_crystal_radius,7,0.28
+sigma,CBFV_dev_number_of_valence_electrons,7,0.28
+sigma,CBFV_mode_Boiling_Point_(K),6,0.24
+sigma,CBFV_range_MB_electonegativity,6,0.24
+sigma,MagpieData avg_dev Number,6,0.24
+sigma,MagpieData mean NUnfilled,6,0.24
+sigma,MagpieData mean NdValence,6,0.24
+sigma,MagpieData mean NpValence,6,0.24
+sigma,MagpieData mode MendeleevNumber,6,0.24
+sigma,CBFV_avg_specific_heat_(J/g_K)_,5,0.2
+sigma,CBFV_avg_thermal_conductivity_(W/(m_K))_,5,0.2
+sigma,CBFV_range_Gordy_electonegativity,5,0.2
+sigma,CBFV_range_Miracle_Radius_[pm],4,0.16
+sigma,CBFV_avg_number_of_valence_electrons,3,0.12
+sigma,CBFV_mode_heat_of_vaporization_(kJ/mol)_,3,0.12
+sigma,CBFV_range_Mulliken_EN,3,0.12
+sigma,MagpieData avg_dev NdValence,3,0.12
+sigma,CBFV_avg_heat_of_vaporization_(kJ/mol)_,2,0.08
+sigma,CBFV_avg_l_quantum_number,2,0.08
+sigma,CBFV_mode_heat_atomization(kJ/mol),2,0.08
+sigma,MagpieData avg_dev NValence,2,0.08
+sigma,MagpieData mode MeltingT,2,0.08
+sigma,MagpieData mode Number,2,0.08
+sigma,MagpieData range Electronegativity,2,0.08
+sigma,CBFV_avg_1st_ionization_potential_(kJ/mol),1,0.04
+sigma,CBFV_avg_polarizability(A^3),1,0.04
+sigma,CBFV_dev_ionic_radius,1,0.04
+sigma,CBFV_mode_Gordy_electonegativity,1,0.04
+sigma,CBFV_mode_polarizability(A^3),1,0.04
+sigma,CBFV_range_heat_of_fusion_(kJ/mol)_,1,0.04
+sigma,CBFV_range_heat_of_vaporization_(kJ/mol)_,1,0.04
+sigma,MagpieData mean Column,1,0.04
+sigma,MagpieData mode GSvolume_pa,1,0.04
+kappa,CBFV_avg_1st_ionization_potential_(kJ/mol),25,1.0
+kappa,CBFV_avg_Gordy_electonegativity,25,1.0
+kappa,CBFV_avg_crystal_radius,25,1.0
+kappa,CBFV_avg_heat_of_vaporization_(kJ/mol)_,25,1.0
+kappa,CBFV_avg_polarizability(A^3),25,1.0
+kappa,CBFV_avg_specific_heat_(J/g_K)_,25,1.0
+kappa,CBFV_dev_MB_electonegativity,25,1.0
+kappa,CBFV_dev_Mulliken_EN,25,1.0
+kappa,CBFV_dev_heat_atomization(kJ/mol),25,1.0
+kappa,MagpieData avg_dev Column,25,1.0
+kappa,MagpieData avg_dev MeltingT,25,1.0
+kappa,MagpieData avg_dev NUnfilled,25,1.0
+kappa,MagpieData avg_dev NpUnfilled,25,1.0
+kappa,MagpieData avg_dev SpaceGroupNumber,25,1.0
+kappa,MagpieData mean GSvolume_pa,25,1.0
+kappa,CBFV_avg_Atomic_Radius,24,0.96
+kappa,CBFV_avg_MB_electonegativity,24,0.96
+kappa,CBFV_avg_Miracle_Radius_[pm],24,0.96
+kappa,CBFV_dev_metallic_valence,24,0.96
+kappa,MagpieData mean Number,24,0.96
+kappa,CBFV_range_Density_(g/mL),23,0.92
+kappa,CBFV_avg_families,22,0.88
+kappa,MagpieData mean SpaceGroupNumber,22,0.88
+kappa,CBFV_avg_ionic_radius,21,0.84
+kappa,CBFV_avg_number_of_valence_electrons,21,0.84
+kappa,CBFV_dev_heat_of_vaporization_(kJ/mol)_,20,0.8
+kappa,MagpieData avg_dev NpValence,20,0.8
+kappa,MagpieData mean MendeleevNumber,20,0.8
+kappa,CBFV_dev_ionic_radius,19,0.76
+kappa,CBFV_avg_heat_atomization(kJ/mol),18,0.72
+kappa,MagpieData mode MendeleevNumber,18,0.72
+kappa,CBFV_range_MB_electonegativity,17,0.68
+kappa,MagpieData range GSvolume_pa,16,0.64
+kappa,MagpieData avg_dev MendeleevNumber,15,0.6
+kappa,MagpieData mean Electronegativity,15,0.6
+kappa,MagpieData mean CovalentRadius,14,0.56
+kappa,CBFV_avg_l_quantum_number,13,0.52
+kappa,CBFV_avg_metallic_valence,12,0.48
+kappa,CBFV_avg_thermal_conductivity_(W/(m_K))_,12,0.48
+kappa,MagpieData mean MeltingT,12,0.48
+kappa,CBFV_range_Boiling_Point_(K),11,0.44
+kappa,MagpieData mean NdValence,11,0.44
+kappa,CBFV_range_heat_atomization(kJ/mol),10,0.4
+kappa,CBFV_dev_families,9,0.36
+kappa,MagpieData avg_dev GSvolume_pa,9,0.36
+kappa,CBFV_range_Gordy_electonegativity,8,0.32
+kappa,CBFV_avg_Boiling_Point_(K),7,0.28
+kappa,CBFV_avg_Mulliken_EN,7,0.28
+kappa,CBFV_avg_heat_of_fusion_(kJ/mol)_,7,0.28
+kappa,MagpieData mean NUnfilled,7,0.28
+kappa,MagpieData avg_dev NValence,6,0.24
+kappa,MagpieData range MeltingT,6,0.24
+kappa,MagpieData mean Column,5,0.2
+kappa,MagpieData mean NpValence,5,0.2
+kappa,MagpieData avg_dev Electronegativity,4,0.16
+kappa,CBFV_avg_gilmor_number_of_valence_electron,3,0.12
+kappa,MagpieData avg_dev CovalentRadius,3,0.12
+kappa,CBFV_dev_gilmor_number_of_valence_electron,2,0.08
+kappa,CBFV_range_heat_of_vaporization_(kJ/mol)_,2,0.08
+kappa,CBFV_dev_Atomic_Radius,1,0.04
+kappa,CBFV_dev_Gordy_electonegativity,1,0.04
+kappa,CBFV_dev_crystal_radius,1,0.04
+kappa,CBFV_dev_number_of_valence_electrons,1,0.04
+kappa,CBFV_dev_thermal_conductivity_(W/(m_K))_,1,0.04
+kappa,CBFV_mode_Gordy_electonegativity,1,0.04
+kappa,CBFV_range_1st_ionization_potential_(kJ/mol),1,0.04
+kappa,CBFV_range_thermal_conductivity_(W/(m_K))_,1,0.04
+zT,CBFV_avg_Boiling_Point_(K),25,1.0
+zT,CBFV_avg_Gordy_electonegativity,25,1.0
+zT,CBFV_avg_crystal_radius,25,1.0
+zT,CBFV_avg_metallic_valence,25,1.0
+zT,CBFV_dev_Covalent_Radius,25,1.0
+zT,CBFV_dev_Gordy_electonegativity,25,1.0
+zT,CBFV_dev_Mulliken_EN,25,1.0
+zT,CBFV_dev_polarizability(A^3),25,1.0
+zT,CBFV_range_heat_of_fusion_(kJ/mol)_,25,1.0
+zT,MagpieData avg_dev MeltingT,25,1.0
+zT,CBFV_dev_MB_electonegativity,24,0.96
+zT,CBFV_dev_Miracle_Radius_[pm],24,0.96
+zT,MagpieData avg_dev Column,24,0.96
+zT,MagpieData avg_dev SpaceGroupNumber,24,0.96
+zT,CBFV_dev_Boiling_Point_(K),23,0.92
+zT,CBFV_avg_heat_of_vaporization_(kJ/mol)_,22,0.88
+zT,MagpieData mean CovalentRadius,20,0.8
+zT,MagpieData range MeltingT,20,0.8
+zT,MagpieData mean SpaceGroupNumber,19,0.76
+zT,MagpieData avg_dev NpValence,18,0.72
+zT,CBFV_dev_metallic_valence,16,0.64
+zT,MagpieData mean GSvolume_pa,16,0.64
+zT,MagpieData mean MendeleevNumber,13,0.52
+zT,CBFV_avg_heat_of_fusion_(kJ/mol)_,12,0.48
+zT,CBFV_dev_families,12,0.48
+zT,CBFV_range_heat_atomization(kJ/mol),12,0.48
+zT,MagpieData mean NdValence,12,0.48
+zT,CBFV_avg_polarizability(A^3),11,0.44
+zT,CBFV_dev_specific_heat_(J/g_K)_,11,0.44
+zT,MagpieData avg_dev GSvolume_pa,11,0.44
+zT,MagpieData avg_dev MendeleevNumber,11,0.44
+zT,MagpieData mean MeltingT,11,0.44
+zT,CBFV_dev_ionic_radius,10,0.4
+zT,MagpieData avg_dev Electronegativity,10,0.4
+zT,MagpieData mean NValence,10,0.4
+zT,MagpieData mean NpUnfilled,10,0.4
+zT,CBFV_avg_MB_electonegativity,8,0.32
+zT,MagpieData mode MendeleevNumber,8,0.32
+zT,CBFV_avg_Atomic_Radius,7,0.28
+zT,CBFV_dev_outer_shell_electrons,7,0.28
+zT,CBFV_range_Boiling_Point_(K),7,0.28
+zT,CBFV_range_Gordy_electonegativity,7,0.28
+zT,MagpieData mean Electronegativity,7,0.28
+zT,CBFV_avg_valence_d,6,0.24
+zT,CBFV_dev_Atomic_Radius,6,0.24
+zT,CBFV_mode_1st_ionization_potential_(kJ/mol),6,0.24
+zT,CBFV_avg_Miracle_Radius_[pm],5,0.2
+zT,CBFV_avg_gilmor_number_of_valence_electron,5,0.2
+zT,CBFV_avg_outer_shell_electrons,5,0.2
+zT,CBFV_mode_MB_electonegativity,5,0.2
+zT,CBFV_range_1st_ionization_potential_(kJ/mol),5,0.2
+zT,CBFV_range_Mulliken_EN,5,0.2
+zT,CBFV_avg_heat_atomization(kJ/mol),4,0.16
+zT,CBFV_range_Zunger_radii_sum,4,0.16
+zT,MagpieData avg_dev CovalentRadius,4,0.16
+zT,MagpieData avg_dev NUnfilled,4,0.16
+zT,CBFV_range_MB_electonegativity,3,0.12
+zT,MagpieData avg_dev NpUnfilled,3,0.12
+zT,CBFV_avg_Covalent_Radius,2,0.08
+zT,CBFV_avg_specific_heat_(J/g_K)_,2,0.08
+zT,CBFV_avg_thermal_conductivity_(W/(m_K))_,2,0.08
+zT,CBFV_dev_heat_of_vaporization_(kJ/mol)_,2,0.08
+zT,CBFV_dev_number_of_valence_electrons,2,0.08
+zT,CBFV_range_heat_of_vaporization_(kJ/mol)_,2,0.08
+zT,CBFV_avg_1st_ionization_potential_(kJ/mol),1,0.04
+zT,CBFV_avg_Density_(g/mL),1,0.04
+zT,CBFV_avg_Mulliken_EN,1,0.04
+zT,CBFV_dev_heat_of_fusion_(kJ/mol)_,1,0.04
+zT,CBFV_mode_Gordy_electonegativity,1,0.04
+zT,CBFV_mode_Mulliken_EN,1,0.04
+zT,CBFV_range_Covalent_Radius,1,0.04
+zT,CBFV_range_Density_(g/mL),1,0.04
+zT,CBFV_range_Miracle_Radius_[pm],1,0.04
+zT,MagpieData mean Column,1,0.04
+zT,MagpieData mean NpValence,1,0.04

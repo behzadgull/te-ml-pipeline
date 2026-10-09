@@ -1,0 +1,579 @@
+{
+  "analysis": "na13",
+  "pin": "aad78f175952cc3d3e2bfd6d14eef94eec98b0f7",
+  "device": "cuda",
+  "n_boot": 2000,
+  "seed": 0,
+  "targets": {
+    "S": {
+      "n_rows": 185064,
+      "n_clusters": 7810,
+      "bundle_identity_sha256": "e41d2dfb6a59954aebf893a8ca4a969545b53cee0d737c3c836becd9a525e5e3",
+      "device": "cuda",
+      "pooled_per_repeat_r2": {
+        "selected": [
+          0.7113422513445173,
+          0.7082396142300992,
+          0.7014133162527435,
+          0.6993177497553329,
+          0.6920982085727017
+        ],
+        "all397": [
+          0.7581324613981718,
+          0.7559298343813364,
+          0.7549408628956219,
+          0.7463581661076502,
+          0.7487772232533692
+        ],
+        "selected_mean": 0.702482228031079,
+        "selected_sd": 0.007593284273271211,
+        "all397_mean": 0.7528277096072299,
+        "all397_sd": 0.005012245487145344
+      },
+      "paired_difference_selected_minus_all397": {
+        "per_repeat": [
+          -0.04679021005365447,
+          -0.04769022015123725,
+          -0.0535275466428784,
+          -0.04704041635231726,
+          -0.056679014680667494
+        ],
+        "mean": -0.05034548157615097,
+        "sd": 0.004495914941421772,
+        "ci95_cluster_bootstrap": [
+          -0.06004190641869447,
+          -0.042032883804372916
+        ],
+        "share_of_bootstrap_draws_selected_above_all397": 0.0,
+        "ci95_t_across_repeats_secondary": [
+          -0.05592789729790077,
+          -0.04476306585440117
+        ],
+        "ci95_cluster_bootstrap_of_selected_mean": [
+          0.6704911141521352,
+          0.7329786604495703
+        ],
+        "ci95_cluster_bootstrap_of_all397_mean": [
+          0.7237379613113909,
+          0.7811744077412267
+        ],
+        "verdict": "the interval excludes zero, selected features LOWER than all 397"
+      },
+      "per_fold_delta_r2": {
+        "mean": -0.050716188350509374,
+        "sd": 0.01443223393507034,
+        "min": -0.08320503453068795,
+        "max": -0.020414621814086598,
+        "n_folds": 25,
+        "n_folds_selected_above_all397": 0
+      },
+      "committed_rung_alongside_not_used_for_the_claim": {
+        "per_repeat_r2": [
+          0.7581324613981718,
+          0.7559298343813363,
+          0.7549408628956218,
+          0.7463581661076502,
+          0.7487772232533693
+        ],
+        "mean": 0.7528277096072298,
+        "sd": 0.005012245487145292,
+        "all397_this_machine_minus_committed_per_fold": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "max_abs": 0.0
+        },
+        "committed_minus_selected_cross_device_pooled_mean": 0.05034548157615082
+      },
+      "counts_over_the_25_folds": {
+        "n_after_pearson": {
+          "mean": 253.48,
+          "sd": 1.004987562112089,
+          "min": 251.0,
+          "max": 255.0
+        },
+        "n_after_lasso": {
+          "mean": 182.36,
+          "sd": 22.022488506070335,
+          "min": 129.0,
+          "max": 206.0
+        },
+        "n_selected": {
+          "mean": 25.0,
+          "sd": 0.0,
+          "min": 25.0,
+          "max": 25.0
+        },
+        "k_thesis": 25
+      },
+      "lasso_alpha": {
+        "mean": 0.1270702655856064,
+        "sd": 0.10438442865767071,
+        "min": 0.04445975197509817,
+        "max": 0.44533227248036145
+      },
+      "alpha_grid_position": {
+        "mean": 17.0,
+        "sd": 1.7320508075688772,
+        "min": 13.0,
+        "max": 19.0,
+        "grid_size": 20,
+        "units_at_grid_minimum": 4,
+        "share_at_grid_minimum": 0.16
+      },
+      "convergence": {
+        "warnings_total": 1,
+        "warnings_inner_paths_total": 1,
+        "folds_with_warnings": 1,
+        "folds_final_refit_not_converged": 0,
+        "units_with_warnings": [
+          {
+            "repeat": 2,
+            "fold": 0,
+            "warnings": 1,
+            "in_inner_paths": 1,
+            "final_refit_converged": true
+          }
+        ]
+      },
+      "selected_in_every_fold": [
+        "CBFV_dev_gilmor_number_of_valence_electron",
+        "MagpieData mean Electronegativity",
+        "MagpieData mean MendeleevNumber"
+      ],
+      "n_distinct_features_ever_selected": 61
+    },
+    "sigma": {
+      "n_rows": 182755,
+      "n_clusters": 7317,
+      "bundle_identity_sha256": "8675f11241d4fa3083722f0514dcf095417c9f5427df9a667f721a350c915952",
+      "device": "cuda",
+      "pooled_per_repeat_r2": {
+        "selected": [
+          0.661157045255063,
+          0.6679446009701326,
+          0.6655428944543349,
+          0.6620282207926713,
+          0.662126273178596
+        ],
+        "all397": [
+          0.7017906439739179,
+          0.7027671259301563,
+          0.7043689236593306,
+          0.6987842059737466,
+          0.7024709634601312
+        ],
+        "selected_mean": 0.6637598069301596,
+        "selected_sd": 0.0028780676539239907,
+        "all397_mean": 0.7020363725994565,
+        "all397_sd": 0.00204942884800992
+      },
+      "paired_difference_selected_minus_all397": {
+        "per_repeat": [
+          -0.04063359871885486,
+          -0.03482252496002369,
+          -0.03882602920499567,
+          -0.03675598518107526,
+          -0.0403446902815352
+        ],
+        "mean": -0.038276565669296936,
+        "sd": 0.002468664448036318,
+        "ci95_cluster_bootstrap": [
+          -0.04510514878877437,
+          -0.03239223850900283
+        ],
+        "share_of_bootstrap_draws_selected_above_all397": 0.0,
+        "ci95_t_across_repeats_secondary": [
+          -0.0413418174380692,
+          -0.03521131390052467
+        ],
+        "ci95_cluster_bootstrap_of_selected_mean": [
+          0.62532936827358,
+          0.6971298527287555
+        ],
+        "ci95_cluster_bootstrap_of_all397_mean": [
+          0.6685538254847481,
+          0.7322249630674423
+        ],
+        "verdict": "the interval excludes zero, selected features LOWER than all 397"
+      },
+      "per_fold_delta_r2": {
+        "mean": -0.038662194933204753,
+        "sd": 0.008589127838844818,
+        "min": -0.06251414871280936,
+        "max": -0.02450886916120154,
+        "n_folds": 25,
+        "n_folds_selected_above_all397": 0
+      },
+      "committed_rung_alongside_not_used_for_the_claim": {
+        "per_repeat_r2": [
+          0.7017906439738968,
+          0.7027671259301354,
+          0.7043689236593097,
+          0.6987842059737253,
+          0.7024709634601101
+        ],
+        "mean": 0.7020363725994354,
+        "sd": 0.002049428848010081,
+        "all397_this_machine_minus_committed_per_fold": {
+          "mean": -8.881784197001253e-18,
+          "sd": 6.345453125715753e-17,
+          "min": -1.1102230246251565e-16,
+          "max": 1.1102230246251565e-16,
+          "max_abs": 1.1102230246251565e-16
+        },
+        "committed_minus_selected_cross_device_pooled_mean": 0.03827656566927584
+      },
+      "counts_over_the_25_folds": {
+        "n_after_pearson": {
+          "mean": 242.56,
+          "sd": 1.4742229591663987,
+          "min": 241.0,
+          "max": 247.0
+        },
+        "n_after_lasso": {
+          "mean": 156.44,
+          "sd": 16.137637166987407,
+          "min": 119.0,
+          "max": 184.0
+        },
+        "n_selected": {
+          "mean": 44.0,
+          "sd": 0.0,
+          "min": 44.0,
+          "max": 44.0
+        },
+        "k_thesis": 44
+      },
+      "lasso_alpha": {
+        "mean": 0.000624301133369966,
+        "sd": 0.0002550180487893808,
+        "min": 0.00029313682538861357,
+        "max": 0.0012197629564696657
+      },
+      "alpha_grid_position": {
+        "mean": 17.08,
+        "sd": 1.1150485789118487,
+        "min": 15.0,
+        "max": 19.0,
+        "grid_size": 20,
+        "units_at_grid_minimum": 2,
+        "share_at_grid_minimum": 0.08
+      },
+      "convergence": {
+        "warnings_total": 0,
+        "warnings_inner_paths_total": 0,
+        "folds_with_warnings": 0,
+        "folds_final_refit_not_converged": 0,
+        "units_with_warnings": []
+      },
+      "selected_in_every_fold": [
+        "CBFV_avg_Miracle_Radius_[pm]",
+        "CBFV_avg_Mulliken_EN",
+        "CBFV_avg_metallic_valence",
+        "CBFV_dev_Boiling_Point_(K)",
+        "CBFV_dev_Density_(g/mL)",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_dev_polarizability(A^3)",
+        "MagpieData avg_dev Column",
+        "MagpieData avg_dev Electronegativity",
+        "MagpieData avg_dev GSvolume_pa",
+        "MagpieData avg_dev NpUnfilled",
+        "MagpieData avg_dev NpValence",
+        "MagpieData mean Electronegativity"
+      ],
+      "n_distinct_features_ever_selected": 89
+    },
+    "kappa": {
+      "n_rows": 121110,
+      "n_clusters": 5908,
+      "bundle_identity_sha256": "11dca8936177e863633d1085d02f203418d5453f85161b6aafc84dfc9dfda38a",
+      "device": "cuda",
+      "pooled_per_repeat_r2": {
+        "selected": [
+          0.7656243307241865,
+          0.764209200228433,
+          0.7611809720649847,
+          0.7619516814726925,
+          0.7580864061422592
+        ],
+        "all397": [
+          0.812758564793831,
+          0.8088396506477276,
+          0.8071309251762896,
+          0.8085073587815764,
+          0.8087025488695556
+        ],
+        "selected_mean": 0.7622105181265111,
+        "selected_sd": 0.0029062049033664367,
+        "all397_mean": 0.8091878096537961,
+        "all397_sd": 0.002109548063900527
+      },
+      "paired_difference_selected_minus_all397": {
+        "per_repeat": [
+          -0.047134234069644565,
+          -0.04463045041929459,
+          -0.0459499531113049,
+          -0.04655567730888388,
+          -0.05061614272729642
+        ],
+        "mean": -0.04697729152728487,
+        "sd": 0.002236443324437655,
+        "ci95_cluster_bootstrap": [
+          -0.05746911045338417,
+          -0.03821608825360132
+        ],
+        "share_of_bootstrap_draws_selected_above_all397": 0.0,
+        "ci95_t_across_repeats_secondary": [
+          -0.04975420268726225,
+          -0.044200380367307494
+        ],
+        "ci95_cluster_bootstrap_of_selected_mean": [
+          0.7373149981476237,
+          0.783671152876686
+        ],
+        "ci95_cluster_bootstrap_of_all397_mean": [
+          0.7907638968827366,
+          0.8256434055505998
+        ],
+        "verdict": "the interval excludes zero, selected features LOWER than all 397"
+      },
+      "per_fold_delta_r2": {
+        "mean": -0.047861202003269876,
+        "sd": 0.01190575270100957,
+        "min": -0.07488605284619199,
+        "max": -0.028062900707394367,
+        "n_folds": 25,
+        "n_folds_selected_above_all397": 0
+      },
+      "committed_rung_alongside_not_used_for_the_claim": {
+        "per_repeat_r2": [
+          0.8127585647938309,
+          0.8088396506477274,
+          0.8071309251762894,
+          0.8085073587815763,
+          0.8087025488695554
+        ],
+        "mean": 0.8091878096537959,
+        "sd": 0.0021095480639005603,
+        "all397_this_machine_minus_committed_per_fold": {
+          "mean": -4.440892098500626e-18,
+          "sd": 2.2204460492503132e-17,
+          "min": -1.1102230246251565e-16,
+          "max": 0.0,
+          "max_abs": 1.1102230246251565e-16
+        },
+        "committed_minus_selected_cross_device_pooled_mean": 0.046977291527284804
+      },
+      "counts_over_the_25_folds": {
+        "n_after_pearson": {
+          "mean": 252.4,
+          "sd": 1.4142135623730951,
+          "min": 250.0,
+          "max": 255.0
+        },
+        "n_after_lasso": {
+          "mean": 184.16,
+          "sd": 4.624932431938871,
+          "min": 176.0,
+          "max": 195.0
+        },
+        "n_selected": {
+          "mean": 39.0,
+          "sd": 0.0,
+          "min": 39.0,
+          "max": 39.0
+        },
+        "k_thesis": 39
+      },
+      "lasso_alpha": {
+        "mean": 0.0001657515139466644,
+        "sd": 1.2181828180738605e-05,
+        "min": 0.00015369208826972083,
+        "max": 0.00022063067892905022
+      },
+      "alpha_grid_position": {
+        "mean": 18.96,
+        "sd": 0.2,
+        "min": 18.0,
+        "max": 19.0,
+        "grid_size": 20,
+        "units_at_grid_minimum": 24,
+        "share_at_grid_minimum": 0.96
+      },
+      "convergence": {
+        "warnings_total": 0,
+        "warnings_inner_paths_total": 0,
+        "folds_with_warnings": 0,
+        "folds_final_refit_not_converged": 0,
+        "units_with_warnings": []
+      },
+      "selected_in_every_fold": [
+        "CBFV_avg_1st_ionization_potential_(kJ/mol)",
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_crystal_radius",
+        "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+        "CBFV_avg_polarizability(A^3)",
+        "CBFV_avg_specific_heat_(J/g_K)_",
+        "CBFV_dev_MB_electonegativity",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_dev_heat_atomization(kJ/mol)",
+        "MagpieData avg_dev Column",
+        "MagpieData avg_dev MeltingT",
+        "MagpieData avg_dev NUnfilled",
+        "MagpieData avg_dev NpUnfilled",
+        "MagpieData avg_dev SpaceGroupNumber",
+        "MagpieData mean GSvolume_pa"
+      ],
+      "n_distinct_features_ever_selected": 67
+    },
+    "zT": {
+      "n_rows": 129419,
+      "n_clusters": 5632,
+      "bundle_identity_sha256": "85a249b73eb8ff4fae1b9baba18fd38e4cfc79d7234de069e1f37899a8c0fd7f",
+      "device": "cuda",
+      "pooled_per_repeat_r2": {
+        "selected": [
+          0.4419764981030142,
+          0.4534721296265404,
+          0.4466453674889995,
+          0.4561332921182274,
+          0.4552947387584916
+        ],
+        "all397": [
+          0.7433376064794381,
+          0.748116208288843,
+          0.7391599323866178,
+          0.7509378774871683,
+          0.7463280806473281
+        ],
+        "selected_mean": 0.4507044052190546,
+        "selected_sd": 0.006141181142160721,
+        "all397_mean": 0.745575941057879,
+        "all397_sd": 0.004526155730672799
+      },
+      "paired_difference_selected_minus_all397": {
+        "per_repeat": [
+          -0.30136110837642394,
+          -0.2946440786623026,
+          -0.2925145648976183,
+          -0.29480458536894094,
+          -0.29103334188883656
+        ],
+        "mean": -0.2948715358388244,
+        "sd": 0.003951512864358037,
+        "ci95_cluster_bootstrap": [
+          -0.3279792607295772,
+          -0.2615465357388006
+        ],
+        "share_of_bootstrap_draws_selected_above_all397": 0.0,
+        "ci95_t_across_repeats_secondary": [
+          -0.29977798710093684,
+          -0.289965084576712
+        ],
+        "ci95_cluster_bootstrap_of_selected_mean": [
+          0.405809536402837,
+          0.49336853348734155
+        ],
+        "ci95_cluster_bootstrap_of_all397_mean": [
+          0.7064261197641043,
+          0.7776350573722357
+        ],
+        "verdict": "the interval excludes zero, selected features LOWER than all 397"
+      },
+      "per_fold_delta_r2": {
+        "mean": -0.29547782914128107,
+        "sd": 0.033113262984507785,
+        "min": -0.36187766775665564,
+        "max": -0.2399340435970393,
+        "n_folds": 25,
+        "n_folds_selected_above_all397": 0
+      },
+      "committed_rung_alongside_not_used_for_the_claim": {
+        "per_repeat_r2": [
+          0.7433376064794383,
+          0.7481162082888431,
+          0.7391599323866178,
+          0.7509378774871683,
+          0.7463280806473281
+        ],
+        "mean": 0.745575941057879,
+        "sd": 0.0045261557306728,
+        "all397_this_machine_minus_committed_per_fold": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "max_abs": 0.0
+        },
+        "committed_minus_selected_cross_device_pooled_mean": 0.2948715358388245
+      },
+      "counts_over_the_25_folds": {
+        "n_after_pearson": {
+          "mean": 252.0,
+          "sd": 1.5545631755148024,
+          "min": 249.0,
+          "max": 254.0
+        },
+        "n_after_lasso": {
+          "mean": 161.48,
+          "sd": 14.227672566750565,
+          "min": 138.0,
+          "max": 183.0
+        },
+        "n_selected": {
+          "mean": 32.0,
+          "sd": 0.0,
+          "min": 32.0,
+          "max": 32.0
+        },
+        "k_thesis": 32
+      },
+      "lasso_alpha": {
+        "mean": 0.0002860113612880237,
+        "sd": 0.00011759915915929708,
+        "min": 0.0001464429391854831,
+        "max": 0.00045930038463212243
+      },
+      "alpha_grid_position": {
+        "mean": 17.48,
+        "sd": 1.1590225767142475,
+        "min": 16.0,
+        "max": 19.0,
+        "grid_size": 20,
+        "units_at_grid_minimum": 6,
+        "share_at_grid_minimum": 0.24
+      },
+      "convergence": {
+        "warnings_total": 0,
+        "warnings_inner_paths_total": 0,
+        "folds_with_warnings": 0,
+        "folds_final_refit_not_converged": 0,
+        "units_with_warnings": []
+      },
+      "selected_in_every_fold": [
+        "CBFV_avg_Boiling_Point_(K)",
+        "CBFV_avg_Gordy_electonegativity",
+        "CBFV_avg_crystal_radius",
+        "CBFV_avg_metallic_valence",
+        "CBFV_dev_Covalent_Radius",
+        "CBFV_dev_Gordy_electonegativity",
+        "CBFV_dev_Mulliken_EN",
+        "CBFV_dev_polarizability(A^3)",
+        "CBFV_range_heat_of_fusion_(kJ/mol)_",
+        "MagpieData avg_dev MeltingT"
+      ],
+      "n_distinct_features_ever_selected": 75
+    }
+  },
+  "overall_100_units": {
+    "units": 100,
+    "units_with_chosen_alpha_at_grid_minimum": 36,
+    "share": 0.36,
+    "warnings_total": 1,
+    "folds_with_warnings": 1,
+    "folds_final_refit_not_converged": 0
+  }
+}
