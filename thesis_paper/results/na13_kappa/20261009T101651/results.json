@@ -1,0 +1,193 @@
+{
+ "kappa": {
+  "device": "cuda",
+  "selected_per_repeat_r2": [
+   0.7656243307241862,
+   0.7642092002284328,
+   0.7611809720649844,
+   0.7619516814726922,
+   0.758086406142259
+  ],
+  "selected_mean": 0.7622105181265109,
+  "selected_sd": 0.0029062049033664493,
+  "all397_same_machine_per_repeat_r2": [
+   0.8127585647938309,
+   0.8088396506477274,
+   0.8071309251762894,
+   0.8085073587815763,
+   0.8087025488695554
+  ],
+  "all397_same_machine_mean": 0.8091878096537959,
+  "all397_same_machine_sd": 0.0021095480639005603,
+  "paired_difference_selected_minus_all397_per_repeat": [
+   -0.047134234069644676,
+   -0.0446304504192947,
+   -0.04594995311130501,
+   -0.0465556773088841,
+   -0.05061614272729642
+  ],
+  "paired_difference_mean": -0.046977291527284984,
+  "paired_difference_sd": 0.0022364433244376042,
+  "delta_r2_per_fold": {
+   "mean": -0.047861202003269876,
+   "sd": 0.01190575270100957,
+   "min": -0.07488605284619199,
+   "max": -0.028062900707394367
+  },
+  "n_folds_selected_above_all397": 0,
+  "seconds_selected_fit": {
+   "mean": 3.1942446206795285,
+   "sd": 1.0149619207651757,
+   "min": 2.537373448998551,
+   "max": 7.31985826100572
+  },
+  "seconds_all397_fit": {
+   "mean": 5.556587649880676,
+   "sd": 1.6232528391187868,
+   "min": 4.757332902008784,
+   "max": 10.911826183000812
+  },
+  "committed_397_rung_mean_reported_alongside_not_used_for_the_claim": 0.8091878096537959,
+  "committed_minus_selected_cross_device_not_the_claim": 0.046977291527285026,
+  "k_thesis": 39,
+  "n_folds": 25,
+  "n_after_pearson": {
+   "mean": 252.4,
+   "sd": 1.4142135623730951,
+   "min": 250.0,
+   "max": 255.0
+  },
+  "n_after_lasso": {
+   "mean": 184.16,
+   "sd": 4.624932431938871,
+   "min": 176.0,
+   "max": 195.0
+  },
+  "n_selected": {
+   "mean": 39.0,
+   "sd": 0.0,
+   "min": 39.0,
+   "max": 39.0
+  },
+  "lasso_alpha": {
+   "mean": 0.0001657515139466644,
+   "sd": 1.2181828180738605e-05,
+   "min": 0.00015369208826972083,
+   "max": 0.00022063067892905022
+  },
+  "n_convergence_warnings": {
+   "mean": 0.0,
+   "sd": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  "n_convergence_warnings_inner_paths": {
+   "mean": 0.0,
+   "sd": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  "n_folds_with_warnings": 0,
+  "n_folds_final_refit_not_converged": 0,
+  "lasso_alpha_grid_position": {
+   "mean": 18.96,
+   "sd": 0.2,
+   "min": 18.0,
+   "max": 19.0
+  },
+  "alpha_grid_size": 20,
+  "n_folds_alpha_at_grid_minimum": 24,
+  "share_folds_alpha_at_grid_minimum": 0.96,
+  "selection_frequency": {
+   "CBFV_avg_1st_ionization_potential_(kJ/mol)": 1.0,
+   "CBFV_avg_Gordy_electonegativity": 1.0,
+   "CBFV_avg_crystal_radius": 1.0,
+   "CBFV_avg_heat_of_vaporization_(kJ/mol)_": 1.0,
+   "CBFV_avg_polarizability(A^3)": 1.0,
+   "CBFV_avg_specific_heat_(J/g_K)_": 1.0,
+   "CBFV_dev_MB_electonegativity": 1.0,
+   "CBFV_dev_Mulliken_EN": 1.0,
+   "CBFV_dev_heat_atomization(kJ/mol)": 1.0,
+   "MagpieData avg_dev Column": 1.0,
+   "MagpieData avg_dev MeltingT": 1.0,
+   "MagpieData avg_dev NUnfilled": 1.0,
+   "MagpieData avg_dev NpUnfilled": 1.0,
+   "MagpieData avg_dev SpaceGroupNumber": 1.0,
+   "MagpieData mean GSvolume_pa": 1.0,
+   "CBFV_avg_Atomic_Radius": 0.96,
+   "CBFV_avg_MB_electonegativity": 0.96,
+   "CBFV_avg_Miracle_Radius_[pm]": 0.96,
+   "CBFV_dev_metallic_valence": 0.96,
+   "MagpieData mean Number": 0.96,
+   "CBFV_range_Density_(g/mL)": 0.92,
+   "CBFV_avg_families": 0.88,
+   "MagpieData mean SpaceGroupNumber": 0.88,
+   "CBFV_avg_ionic_radius": 0.84,
+   "CBFV_avg_number_of_valence_electrons": 0.84,
+   "CBFV_dev_heat_of_vaporization_(kJ/mol)_": 0.8,
+   "MagpieData avg_dev NpValence": 0.8,
+   "MagpieData mean MendeleevNumber": 0.8,
+   "CBFV_dev_ionic_radius": 0.76,
+   "CBFV_avg_heat_atomization(kJ/mol)": 0.72,
+   "MagpieData mode MendeleevNumber": 0.72,
+   "CBFV_range_MB_electonegativity": 0.68,
+   "MagpieData range GSvolume_pa": 0.64,
+   "MagpieData avg_dev MendeleevNumber": 0.6,
+   "MagpieData mean Electronegativity": 0.6,
+   "MagpieData mean CovalentRadius": 0.56,
+   "CBFV_avg_l_quantum_number": 0.52,
+   "CBFV_avg_metallic_valence": 0.48,
+   "CBFV_avg_thermal_conductivity_(W/(m_K))_": 0.48,
+   "MagpieData mean MeltingT": 0.48,
+   "CBFV_range_Boiling_Point_(K)": 0.44,
+   "MagpieData mean NdValence": 0.44,
+   "CBFV_range_heat_atomization(kJ/mol)": 0.4,
+   "CBFV_dev_families": 0.36,
+   "MagpieData avg_dev GSvolume_pa": 0.36,
+   "CBFV_range_Gordy_electonegativity": 0.32,
+   "CBFV_avg_Boiling_Point_(K)": 0.28,
+   "CBFV_avg_Mulliken_EN": 0.28,
+   "CBFV_avg_heat_of_fusion_(kJ/mol)_": 0.28,
+   "MagpieData mean NUnfilled": 0.28,
+   "MagpieData avg_dev NValence": 0.24,
+   "MagpieData range MeltingT": 0.24,
+   "MagpieData mean Column": 0.2,
+   "MagpieData mean NpValence": 0.2,
+   "MagpieData avg_dev Electronegativity": 0.16,
+   "CBFV_avg_gilmor_number_of_valence_electron": 0.12,
+   "MagpieData avg_dev CovalentRadius": 0.12,
+   "CBFV_dev_gilmor_number_of_valence_electron": 0.08,
+   "CBFV_range_heat_of_vaporization_(kJ/mol)_": 0.08,
+   "CBFV_dev_Atomic_Radius": 0.04,
+   "CBFV_dev_Gordy_electonegativity": 0.04,
+   "CBFV_dev_crystal_radius": 0.04,
+   "CBFV_dev_number_of_valence_electrons": 0.04,
+   "CBFV_dev_thermal_conductivity_(W/(m_K))_": 0.04,
+   "CBFV_mode_Gordy_electonegativity": 0.04,
+   "CBFV_range_1st_ionization_potential_(kJ/mol)": 0.04,
+   "CBFV_range_thermal_conductivity_(W/(m_K))_": 0.04
+  },
+  "selected_in_every_fold": [
+   "CBFV_avg_1st_ionization_potential_(kJ/mol)",
+   "CBFV_avg_Gordy_electonegativity",
+   "CBFV_avg_crystal_radius",
+   "CBFV_avg_heat_of_vaporization_(kJ/mol)_",
+   "CBFV_avg_polarizability(A^3)",
+   "CBFV_avg_specific_heat_(J/g_K)_",
+   "CBFV_dev_MB_electonegativity",
+   "CBFV_dev_Mulliken_EN",
+   "CBFV_dev_heat_atomization(kJ/mol)",
+   "MagpieData avg_dev Column",
+   "MagpieData avg_dev MeltingT",
+   "MagpieData avg_dev NUnfilled",
+   "MagpieData avg_dev NpUnfilled",
+   "MagpieData avg_dev SpaceGroupNumber",
+   "MagpieData mean GSvolume_pa"
+  ]
+ },
+ "_overall": {
+  "units": 25,
+  "units_with_chosen_alpha_at_grid_minimum": 24,
+  "share": 0.96
+ }
+}

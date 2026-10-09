@@ -1,0 +1,59 @@
+{
+ "analysis": "na13_feature_selection",
+ "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+ "git_head": "aad78f175952cc3d3e2bfd6d14eef94eec98b0f7",
+ "params": {
+  "targets": [
+   "S"
+  ],
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0,
+  "smoke": false,
+  "k": {
+   "S": 25,
+   "sigma": 44,
+   "kappa": 39,
+   "zT": 32
+  },
+  "pearson_max": 0.95,
+  "n_alphas": 20,
+  "mi_rows": 20000,
+  "lasso_max_iter": 20000,
+  "device": "cuda",
+  "paired_all397": true,
+  "hyperparams": {
+   "S": {
+    "n_estimators": 500,
+    "max_depth": 10,
+    "learning_rate": 0.03183308682237681,
+    "subsample": 0.8969010059780653,
+    "colsample_bytree": 0.5061521655432422,
+    "min_child_weight": 4,
+    "reg_lambda": 0.6494186419907995,
+    "reg_alpha": 8.79300330033791
+   }
+  }
+ },
+ "dataset_path": "/home/spcai/data/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+ "dataset_bytes": 974854507,
+ "tree_clean": true,
+ "dirty_files": [],
+ "allow_dirty": false,
+ "expect_commit": "aad78f175952cc3d3e2bfd6d14eef94eec98b0f7",
+ "smoke": false,
+ "device": "cuda",
+ "script": "thesis_paper/scripts/kaggle/na13_feature_selection.py",
+ "script_sha256": "f0c3487fd5696d87177e91197577b99bdc594966b927f1797aee732abe6b32d1",
+ "python": "3.12.15",
+ "started_utc": "2026-10-09T10:16:41Z",
+ "numpy": "1.26.4",
+ "pandas": "2.2.2",
+ "xgboost": "2.0.3",
+ "sklearn": "1.4.2",
+ "lightgbm": "4.3.0",
+ "optuna": "3.6.1",
+ "gpu": "Tesla V100S-PCIE-32GB, 580.178.04, 32768 MiB",
+ "finished_utc": "2026-10-09T17:06:10Z",
+ "elapsed_hours": 6.825352867686945
+}

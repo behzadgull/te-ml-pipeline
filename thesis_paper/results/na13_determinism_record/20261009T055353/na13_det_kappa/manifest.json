@@ -1,0 +1,46 @@
+{
+ "files": {
+  "run_configs/session_01.json": "2ea3f77371347a070d08e1f16ffec3b8b94c7ac307764a12d8b8a3de0e3935fd",
+  "status.json": "92aca7f40fd445fd413f17cf88a657ba2ceb88a3aed94d5d1debef19140220b5",
+  "units/kappa_repeat0_fold0.json": "3e40ed3eae959d33f26424e1f540500417e0a4576a3562bb5f0c608d6bc3fd24",
+  "units/kappa_repeat0_fold0.npz": "4d8c13b217861e121e4dc2a0d50676d9eff181ffd6f11b1f788d264d85fa7819"
+ },
+ "identity": {
+  "analysis": "na13_feature_selection",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "aad78f175952cc3d3e2bfd6d14eef94eec98b0f7",
+  "params": {
+   "targets": [
+    "kappa"
+   ],
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "k": {
+    "S": 25,
+    "sigma": 44,
+    "kappa": 39,
+    "zT": 32
+   },
+   "pearson_max": 0.95,
+   "n_alphas": 20,
+   "mi_rows": 20000,
+   "lasso_max_iter": 20000,
+   "device": "cuda",
+   "paired_all397": true,
+   "hyperparams": {
+    "kappa": {
+     "n_estimators": 350,
+     "max_depth": 9,
+     "learning_rate": 0.05741815501967946,
+     "subsample": 0.9052182073106718,
+     "colsample_bytree": 0.7081730343531392,
+     "min_child_weight": 6,
+     "reg_lambda": 0.05444122226792827,
+     "reg_alpha": 3.3513428043937066
+    }
+   }
+  }
+ }
+}
