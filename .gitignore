@@ -73,3 +73,8 @@ thesis_paper/paper/build/
 !thesis_paper/reports/**/*.csv
 !thesis_paper/results/**/*.csv
 !thesis_paper/docs/*.csv
+
+# thesis_paper/source/pdfs: the publisher PDFs (and page scans) read for the number audit and NA12 stay on the maintainer's machine; the repository is public and they must not be committed.
+# Only the README of that folder is tracked. (Not a blanket *.pdf: the tracked figures/*.pdf are our own figures.)
+thesis_paper/source/pdfs/*
+!thesis_paper/source/pdfs/README.md

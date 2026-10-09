@@ -1,8 +1,8 @@
 # Source PDFs for the number audit
 
-Please download the PDFs below into this folder, named `<key>.pdf` (the key is the BibTeX key in `paper/refs.bib`). They are needed because
+Please download the PDFs below into this folder, named `<key>.pdf` (the key is the BibTeX key in `paper/refs.bib`); the two papers that appear in both lists, Flahaut 2006 and Ohta 2005, are one file each, `flahaut2006.pdf` and `ohta2005.pdf`. The `pdf_file` column of `reports/literature_value_verification.csv` gives the file of each audit row. **The PDFs are not committed**: `.gitignore` excludes everything in this folder except this README (the repository is public and these are publisher files). They are needed because
 the tool used for the audit could not read these publishers; each is listed with the numbers that must be checked against it
-(`reports/literature_value_verification.csv`, rows L01 to L23). The text will be rephrased without the number, or the number removed, for any value
+(`reports/literature_value_verification.csv`, rows L01 to L25 (L24 and L25 need no PDF)). The text will be rephrased without the number, or the number removed, for any value
 the paper does not support.
 
 | File name | DOI | Numbers to check |
@@ -14,9 +14,9 @@ the paper does not support.
 | `lee2017ultralow.pdf` | 10.1073/pnas.1711744114 | halide perovskite thermal conductivity below 0.5 W/mK |
 | `xie2020all.pdf` | 10.1021/jacs.0c03427 | same |
 | `stoumpos2013semiconducting.pdf` | 10.1021/ic401215x | same; Sn2+ oxidation |
-| `flahaut2006effect.pdf` | 10.1109/ict.2006.331291 | CaMnO3: zT 0.2 at 1000 K, S about -350 uV/K, zT below 0.1 |
+| `flahaut2006.pdf` | 10.1109/ict.2006.331291 | CaMnO3: zT 0.2 at 1000 K, S about -350 uV/K, zT below 0.1 |
 | `androulakis2004coo.pdf` | 10.1063/1.1647686 | published letter: zT 0.18 (read in the preprint); S 200 to 600 uV/K |
-| `ohta2005temperature.pdf` | 10.1063/1.1847723 | SrTiO3: S about -700 uV/K at 300 K, kappa 10 to 12 W/mK, zT below 0.01 |
+| `ohta2005.pdf` | 10.1063/1.1847723 | SrTiO3: S about -700 uV/K at 300 K, kappa 10 to 12 W/mK, zT below 0.01 |
 | `parse2024predicting.pdf` | 10.1002/adts.202400308 | 18,126 instances; 2,761 compounds; R2 0.815; 5-fold CV |
 | `jia2024dealing.pdf` | 10.1007/s40843-023-2777-2 | R2 0.89 to 0.90; 92,000 entries |
 | `sun2025rationally.pdf` | 10.1002/aelm.202500210 | R2 0.95 (training) and 0.90 (test) |
@@ -47,9 +47,9 @@ filled and committed. Name each file `<first author><year>.pdf`.
 | `singh2016.pdf` | 10.1080/14786435.2016.1263404 | LaCoO3 | open version arXiv:1606.01539 |
 | `shibasaki2009.pdf` | 10.1007/s11664-009-0666-x | LaRhO3 (undoped member of the B-site series) | related open preprint arXiv:0712.1626 (LaRh1-xNixO3); read the undoped member only if the paper tabulates it |
 | `rajasekaran2020.pdf` | 10.1039/d0ce00702a | La-doped BaSnO3 (undoped BaSnO3 if reported) | the BaSnO3 literature found is for La-doped samples; compositions as written in the paper |
-| `ohta2005.pdf` | 10.1063/1.1847723 | La- and Nb-doped SrTiO3 single crystals | S, sigma (and kappa if given) against temperature |
+| `ohta2005.pdf` | 10.1063/1.1847723 | La- and Nb-doped SrTiO3 single crystals | S, sigma (and kappa if given) against temperature; the same single file as in the first table (audit row L07); download it once |
 | `ohtaki1995.pdf` | 10.1006/jssc.1995.1384 | (Ca0.9M0.1)MnO3, M = Y, La, Ce, Sm, In, Sn, Sb, Pb, Bi | doped CaMnO3; all listed M are in the candidate set, see the rule below |
-| `flahaut2006.pdf` | 10.1109/ict.2006.331291 | Yb-substituted CaMnO3 | already listed above as `flahaut2006effect.pdf` |
+| `flahaut2006.pdf` | 10.1109/ict.2006.331291 | Yb-substituted CaMnO3 | the same single file as in the first table (audit row L05); download it once |
 
 Selection rule for the values (set now, before any prediction was looked at): every value of S, sigma (or resistivity), kappa and zT that a paper tabulates or states in the text at a temperature
 from 300 K up to but not including 800 K, for every composition of the paper that matches one of the compounds above (dopants included); where a property is only plotted, it is digitised at
