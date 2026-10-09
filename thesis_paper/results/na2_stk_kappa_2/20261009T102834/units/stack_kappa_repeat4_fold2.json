@@ -1,0 +1,31 @@
+{
+ "unit": "stack_kappa_repeat4_fold2",
+ "meta": {
+  "target": "kappa",
+  "repeat": 4,
+  "fold": 2,
+  "n_train": 96888,
+  "n_test": 24222,
+  "coef_xgboost_lightgbm_random_forest": [
+   0.35535973866998094,
+   0.33953709842039476,
+   0.32248503883796764
+  ],
+  "intercept": 0.006342060481096312,
+  "inner_oof_r2": {
+   "xgboost": 0.7818116064268198,
+   "lightgbm": 0.7793212212851005,
+   "random_forest": 0.7770776185002563
+  },
+  "meta_in_sample_r2": 0.7872070371616795,
+  "mean3_inner_oof_r2": 0.7857044752657963,
+  "base_seconds": {
+   "xgboost": 128.27914721300112,
+   "lightgbm": 54.25737821999974,
+   "random_forest": 1375.8896298210002
+  },
+  "seconds": 1561.1648437519998,
+  "nested_assertions": "passed"
+ },
+ "has_arrays": false
+}

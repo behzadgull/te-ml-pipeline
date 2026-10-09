@@ -1,0 +1,9 @@
+{
+ "kappa": {
+  "mean_weights_xgboost_lightgbm_random_forest": [
+   0.39917163509993864,
+   0.3234522562198265,
+   0.29939256734493397
+  ]
+ }
+}

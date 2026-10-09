@@ -1,0 +1,52 @@
+{
+ "analysis": "na2_stacking_nested",
+ "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+ "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+ "params": {
+  "targets": [
+   "kappa"
+  ],
+  "repeats": [
+   3,
+   4
+  ],
+  "n_inner_folds": 3,
+  "n_repeats": 5,
+  "n_folds": 5,
+  "seed": 0,
+  "smoke": false,
+  "rf_params": {
+   "n_estimators": 500,
+   "max_features": 0.3333333333333333,
+   "min_samples_leaf": 5,
+   "max_depth": null,
+   "min_samples_split": 2,
+   "bootstrap": true
+  },
+  "meta": {
+   "alpha": 1.0,
+   "positive": true
+  }
+ },
+ "dataset_path": "/kaggle/input/datasets/muhammadbehzadgull/te-ml-pipeline-canonical-dataset-a-snapfix/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+ "dataset_bytes": 974854507,
+ "tree_clean": true,
+ "dirty_files": [],
+ "allow_dirty": false,
+ "expect_commit": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+ "smoke": false,
+ "device": "cpu",
+ "script": "thesis_paper/scripts/kaggle/na2_stacking_nested.py",
+ "script_sha256": "2de03899e15b65a3c56cbc526cad758b3ef2ef0f7260d286db1bef7b673e80f2",
+ "python": "3.12.3",
+ "started_utc": "2026-10-09T10:28:34Z",
+ "numpy": "1.26.4",
+ "pandas": "2.2.2",
+ "xgboost": "2.0.3",
+ "sklearn": "1.4.2",
+ "lightgbm": "4.3.0",
+ "optuna": "3.6.1",
+ "gpu": null,
+ "finished_utc": "2026-10-09T14:43:35Z",
+ "elapsed_hours": 4.251051122525833
+}
