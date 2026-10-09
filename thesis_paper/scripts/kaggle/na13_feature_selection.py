@@ -1,5 +1,5 @@
 """
-NA13: the thesis's explicit feature-selection pipeline against the full 397-feature set, under chemistry-cluster CV (CPU).
+NA13: the thesis's explicit feature-selection pipeline against the full 397-feature set, under chemistry-cluster CV (selection on the CPU, the XGBoost fits on --device).
 
 The thesis describes a three-step selection (Pearson filtering, LassoCV, mutual-information ranking) that "reduced the features to 25-44 per target"
 and reports it as worse than using all features (Table 3). Its code is not in the repository, and its selection was probably made on all data. Here
@@ -8,15 +8,17 @@ the selection is performed INSIDE each outer training fold, so that the comparis
   2. LassoCV on the surviving, standardised features (3-fold chemistry-cluster inner folds, 20 alphas), keep the non-zero coefficients;
   3. mutual-information ranking (sklearn mutual_info_regression, 20,000-row subsample, seed 0) of the survivors; keep the top k, where k is the
      number of features the thesis reports for the target (S 25, sigma 44, kappa 39, zT 32) or all survivors if fewer.
-The model is the target's frozen XGBoost (unchanged hyperparameters, as in the ablation), fitted on the selected columns. The same 5 x 5 folds as the
-rest of the work, one unit per (target, repeat, fold), with the selected feature names stored. Results: pooled per-repeat R2 mean and SD against the committed
-397-feature value, the difference, and how often each feature was selected.
+The model is the target's frozen XGBoost (unchanged hyperparameters, as in the ablation). Paired design (docs/decisions.md, pre-registration 2026-10-09): in every unit the SAME
+frozen XGBoost is fitted twice on the same outer training rows, on all 397 features and on the selected columns, on the same machine and the same --device, and both are scored on the same
+outer test rows; the unit records r2_all397, r2_selected and their difference, and both sets of predictions. The same 5 x 5 folds as the rest of the work, one unit per (target, repeat, fold),
+with the selected feature names stored. Results: pooled per-repeat R2 of both fits and their paired difference (mean and SD over the repeats), the per-fold difference with its spread, the
+committed 397-feature rung value reported alongside (it ran on cuda on Kaggle; it is not used for the claim), and how often each feature was selected.
 The k per target are the thesis's own counts (from its Table 3); they are constants here, recorded in the run's parameters.
 
-Smoke mode: ~3,000 rows, 1 repeat x 3 folds, 20 trees, 3 alphas.
+Smoke mode: ~3,000 rows, 1 repeat x 3 folds, 20 trees, 3 alphas, device forced to cpu.
 
 Usage:
-    python thesis_paper/scripts/kaggle/na13_feature_selection.py --out-dir /kaggle/working/na13 --expect-commit <sha> --time-budget-hours 10.5
+    python thesis_paper/scripts/kaggle/na13_feature_selection.py --targets S --device cuda --out-dir ~/runs/na13_S --expect-commit <sha>
 """
 
 import argparse
@@ -114,7 +116,8 @@ def main():
     if args.smoke:
         hp = {t: {**p, "n_estimators": 20, "max_depth": min(p["max_depth"], 4)} for t, p in hp.items()}
     sess = H.Session("na13_feature_selection", args, {"targets": targets, "n_repeats": args.n_repeats, "n_folds": args.n_folds, "seed": args.seed, "smoke": args.smoke,
-                                                      "k": K_THESIS, "pearson_max": PEARSON_MAX, "n_alphas": n_alphas, "mi_rows": MI_ROWS, "lasso_max_iter": args.lasso_max_iter, "hyperparams": hp})
+                                                      "k": K_THESIS, "pearson_max": PEARSON_MAX, "n_alphas": n_alphas, "mi_rows": MI_ROWS, "lasso_max_iter": args.lasso_max_iter, "device": args.device,
+                                                      "paired_all397": True, "hyperparams": hp})
     df_all = H.load_frame(sess)
     units_total = len(targets) * args.n_repeats * args.n_folds
     stop = False
@@ -142,13 +145,24 @@ def main():
                 t0 = time.perf_counter()
                 sel, info = select(X[tr], y[tr], groups[tr], K_THESIS[target], n_alphas, args.seed, args.lasso_max_iter)
                 assert len(sel) > 0, f"{uid}: the selection kept no feature (LassoCV set every coefficient to zero)"
-                model = ncv._build_xgb_model(hp[target], "cpu")
+                t1 = time.perf_counter()
+                model = ncv._build_xgb_model(hp[target], args.device)
                 model.fit(X[tr][:, sel], y[tr])
                 pred = np.asarray(model.predict(X[te][:, sel]), dtype=float)
-                sess.save(uid, {"target": target, "repeat": r, "fold": f, "n_train": int(len(tr)), "n_test": int(len(te)), **info,
-                                "n_selected": int(len(sel)), "selected": [cols[i] for i in sel], "outer_r2": H.r2(y[te], pred), "seconds": time.perf_counter() - t0},
-                          {"y_true": y[te], "y_pred": pred})
-                print(f"{uid}: {len(sel)} selected ({info['n_after_pearson']} after Pearson, {info['n_after_lasso']} after Lasso, alpha {info['lasso_alpha']:.3g}, {info['n_convergence_warnings']} convergence warnings, final refit {'converged' if info['final_refit_converged'] else 'NOT converged'}), R2 {H.r2(y[te], pred):.4f} ({time.perf_counter() - t0:.0f}s)", flush=True)
+                sec_selected = time.perf_counter() - t1
+                t2 = time.perf_counter()
+                model_all = ncv._build_xgb_model(hp[target], args.device)  # the paired reference: the same frozen model on all 397 features, same rows, same device
+                model_all.fit(X[tr], y[tr])
+                pred_all = np.asarray(model_all.predict(X[te]), dtype=float)
+                sec_all = time.perf_counter() - t2
+                r2_selected, r2_all397 = H.r2(y[te], pred), H.r2(y[te], pred_all)
+                sess.save(uid, {"target": target, "repeat": r, "fold": f, "n_train": int(len(tr)), "n_test": int(len(te)), **info, "device": args.device,
+                                "n_selected": int(len(sel)), "selected": [cols[i] for i in sel], "outer_r2": r2_selected, "r2_selected": r2_selected, "r2_all397": r2_all397,
+                                "delta_r2_selected_minus_all397": r2_selected - r2_all397, "seconds_selected_fit": sec_selected, "seconds_all397_fit": sec_all,
+                                "seconds": time.perf_counter() - t0},
+                          {"y_true": y[te], "y_pred": pred, "y_pred_all397": pred_all})
+                print(f"{uid}: {len(sel)} selected ({info['n_after_pearson']} after Pearson, {info['n_after_lasso']} after Lasso, alpha {info['lasso_alpha']:.3g}, {info['n_convergence_warnings']} convergence warnings, final refit {'converged' if info['final_refit_converged'] else 'NOT converged'}), "
+                      f"R2 selected {r2_selected:.4f}, all 397 {r2_all397:.4f}, difference {r2_selected - r2_all397:+.4f} [{args.device}] ({time.perf_counter() - t0:.0f}s)", flush=True)
             if stop:
                 break
         if stop:
@@ -159,16 +173,18 @@ def main():
         committed = json.loads(LADDER.read_text(encoding="utf-8"))["runs"] if not args.smoke else {}
         results = {}
         for target in targets:
-            per_repeat, counts, metas = [], {}, []
+            per_repeat, per_repeat_all, counts, metas = [], [], {}, []
             for r in range(args.n_repeats):
-                ys, ps = [], []
+                ys, ps, pa = [], [], []
                 for f in range(args.n_folds):
                     meta, a = sess.load(f"{target}_repeat{r}_fold{f}")
-                    ys.append(a["y_true"]); ps.append(a["y_pred"])
+                    ys.append(a["y_true"]); ps.append(a["y_pred"]); pa.append(a["y_pred_all397"])
                     metas.append(meta)
                     for name in meta["selected"]:
                         counts[name] = counts.get(name, 0) + 1
                 per_repeat.append(H.r2(np.concatenate(ys), np.concatenate(ps)))
+                per_repeat_all.append(H.r2(np.concatenate(ys), np.concatenate(pa)))
+            paired = [a - b for a, b in zip(per_repeat, per_repeat_all)]
             full = committed.get(f"{target}_chemistry_full", {})
             n_folds_total = len(metas)
 
@@ -176,9 +192,17 @@ def main():
                 v = np.array([m[key] for m in metas], dtype=float)
                 return {"mean": float(v.mean()), "sd": float(v.std(ddof=1)) if len(v) > 1 else None, "min": float(v.min()), "max": float(v.max())}
 
-            results[target] = {"selected_per_repeat_r2": per_repeat, "selected_mean": float(np.mean(per_repeat)),
+            results[target] = {"device": args.device,
+                               "selected_per_repeat_r2": per_repeat, "selected_mean": float(np.mean(per_repeat)),
                                "selected_sd": float(np.std(per_repeat, ddof=1)) if len(per_repeat) > 1 else None,
-                               "full_397_mean": full.get("per_repeat_r2_mean"), "difference_full_minus_selected": (full["per_repeat_r2_mean"] - float(np.mean(per_repeat))) if full else None,
+                               "all397_same_machine_per_repeat_r2": per_repeat_all, "all397_same_machine_mean": float(np.mean(per_repeat_all)),
+                               "all397_same_machine_sd": float(np.std(per_repeat_all, ddof=1)) if len(per_repeat_all) > 1 else None,
+                               "paired_difference_selected_minus_all397_per_repeat": paired, "paired_difference_mean": float(np.mean(paired)),
+                               "paired_difference_sd": float(np.std(paired, ddof=1)) if len(paired) > 1 else None,
+                               "delta_r2_per_fold": spread("delta_r2_selected_minus_all397"), "n_folds_selected_above_all397": int(sum(m["delta_r2_selected_minus_all397"] > 0 for m in metas)),
+                               "seconds_selected_fit": spread("seconds_selected_fit"), "seconds_all397_fit": spread("seconds_all397_fit"),
+                               "committed_397_rung_mean_reported_alongside_not_used_for_the_claim": full.get("per_repeat_r2_mean"),
+                               "committed_minus_selected_cross_device_not_the_claim": (full["per_repeat_r2_mean"] - float(np.mean(per_repeat))) if full else None,
                                "k_thesis": K_THESIS[target], "n_folds": n_folds_total,
                                "n_after_pearson": spread("n_after_pearson"), "n_after_lasso": spread("n_after_lasso"), "n_selected": spread("n_selected"),
                                "lasso_alpha": spread("lasso_alpha"), "n_convergence_warnings": spread("n_convergence_warnings"),
