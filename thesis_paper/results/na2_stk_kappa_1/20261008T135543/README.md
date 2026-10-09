@@ -1,0 +1,7 @@
+# NA2 nested stacking, notebook K-kappa_1: target kappa, repeats 0, 1, 2
+
+- **What**: the meta-learner weights (non-negative ridge, alpha 1, intercept) of the nested stack of XGBoost, LightGBM and the fixed random forest, fitted on INNER chemistry-cluster out-of-fold predictions inside each outer training fold
+  (`scripts/kaggle/na2_stacking_nested.py`, design in `docs/decisions.md` 2026-10-06 item 2): 15 units, kappa repeats 0, 1, 2 x folds 0 to 4. The weights are applied to the committed outer predictions by `scripts/na2_stacking_analysis.py`, which waits until all ten bundles exist.
+- **Bundle**: `na2_stk_kappa_1.tar.gz`, SHA256 `a31b0c9830c0d923f819c76e01254be84269667f34d77b472944ba8c36087b1a` (equal to the value Kaggle printed; verified 2026-10-09); unpacked here; the 18 manifest entries re-verified, no mismatch, no file outside the manifest. `status.json`: complete, 15 of 15 units, `accepted_as_result` true.
+- **Code** `13a0efd582fe9abae95a00d29c677b70eb8ff103` (clean tree, `allow_dirty` false, `--expect-commit` equal), script SHA256 `2de03899...80f2`, snapfix CSV `d9fc1e5d...e489`, Python 3.12.3, CPU, 6.74 h (2026-10-08T13:55:43Z to 2026-10-08T20:39:57Z).
+- The saved notebook's Cell 2 matched the committed template of `scripts/kaggle/KAGGLE_CELLS.md` section 3c apart from its first line (the Kaggle log printed the smoke bundle as `smoke_na2_stk_kappa_1.tar.gz`, which only the committed section 3c template (`smoke_$N`) produces; the command line itself is not recorded in `run_config.json`).

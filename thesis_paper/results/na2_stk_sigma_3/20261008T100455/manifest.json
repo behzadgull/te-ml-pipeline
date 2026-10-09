@@ -1,0 +1,42 @@
+{
+ "files": {
+  "results.json": "f99c51c04145cdd2e188591da9ed713c58c1cc97d6ea58e050843bef367d8420",
+  "run_configs/session_01.json": "7009b451c0b42215e7319050eb5bca9b482a5e957e4918a5d8ff8691a74880f6",
+  "status.json": "d32d9c5da062c2e5e7d67a1db11c97acf5629204bee544c0e929ddba776228ff",
+  "units/stack_sigma_repeat4_fold0.json": "bf18427aa25bb0c36aceef8debe59a53dc438b6940b77f2356f4b57db65ba2fe",
+  "units/stack_sigma_repeat4_fold1.json": "6395cd64de6b136352c22aedd834b8a91e71c1e29f9d66300790cd912eb3e31b",
+  "units/stack_sigma_repeat4_fold2.json": "39eab4dcf6ab2f86a90a2741a0e280eac241cfc78ef10458842ce932ef91dee5",
+  "units/stack_sigma_repeat4_fold3.json": "bc3af65ce5952c7d1ab19cc7a5b9d94304a08a7180f0672128fb008c3a3ff576",
+  "units/stack_sigma_repeat4_fold4.json": "d8b90c25d2ecf23c254f84609904582b6d1d8edec13bbf95e2c67ee39aca2085"
+ },
+ "identity": {
+  "analysis": "na2_stacking_nested",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "params": {
+   "targets": [
+    "sigma"
+   ],
+   "repeats": [
+    4
+   ],
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rf_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+   },
+   "meta": {
+    "alpha": 1.0,
+    "positive": true
+   }
+  }
+ }
+}

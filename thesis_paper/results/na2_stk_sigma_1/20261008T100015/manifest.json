@@ -1,0 +1,48 @@
+{
+ "files": {
+  "results.json": "1c1913ec9c3d5f0c5804a109a804fcea6ce16b1051dc9a0408b7ddc80b7b25f7",
+  "run_configs/session_01.json": "3c937d99affb2c04f73ea74c7a59f4b300997f2f0a227038d948a28fb73454cc",
+  "status.json": "5d891efa676a17484c36dbfba0b4c5a05af3d150ecdaaf3536fea2f5ae227df4",
+  "units/stack_sigma_repeat0_fold0.json": "2e9d99e8b9d4959ee4b6b836ee986bcdbe5ec23b78aa054b4a355376deb4cab7",
+  "units/stack_sigma_repeat0_fold1.json": "bc4431e5c3065a4f55d440d623464191bdf4a1ad182691285bbc41a252ab230d",
+  "units/stack_sigma_repeat0_fold2.json": "49eb3cec58d4310309d1ceeac84a6df0998569bf11a8b27aa2a9a729b37fa926",
+  "units/stack_sigma_repeat0_fold3.json": "c32b25c4c951ce2f31de1fb9c105898be3fc428b3841d6e4f8e24019e561b509",
+  "units/stack_sigma_repeat0_fold4.json": "3b9a16a153bf999f2bd8db2150036aeed0a1d385a06ed22cb3ffd4e7ed2898b6",
+  "units/stack_sigma_repeat1_fold0.json": "d7e766654999edb4cc0b5bf0de6090159e7a63f2d3484c8e8368e4a96d83706c",
+  "units/stack_sigma_repeat1_fold1.json": "12a3730a5e1fa8a75b1e3001664b940d16740a7673ed859d3902043cd9f9adc6",
+  "units/stack_sigma_repeat1_fold2.json": "cb05651e1ac7f3196347cec4a51fc110f30bebec2d09f724a505bb6043f88c45",
+  "units/stack_sigma_repeat1_fold3.json": "815108602401f2ba2e11e5b8d8a886bdded15ea04ea54eb42f96ff7552c7b123",
+  "units/stack_sigma_repeat1_fold4.json": "ae3c14d1f9cffe431c370ae79aa756e7a883432e43183e23e317ca7e001f9c28"
+ },
+ "identity": {
+  "analysis": "na2_stacking_nested",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "params": {
+   "targets": [
+    "sigma"
+   ],
+   "repeats": [
+    0,
+    1
+   ],
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rf_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+   },
+   "meta": {
+    "alpha": 1.0,
+    "positive": true
+   }
+  }
+ }
+}

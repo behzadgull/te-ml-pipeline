@@ -1,0 +1,54 @@
+{
+ "files": {
+  "results.json": "a4eb9033e82427b7611cb53d95343f43256466b52bd38bbccd597bb43c17384e",
+  "run_configs/session_01.json": "9ad1ba0976ca8e95bfa3037b60fa0b064508940e0de3c895e5e418915800b90d",
+  "status.json": "08f7bbfb86ddea3114d7d87ec8cd5254df30f3f0fbb708a3e7a7e6bf42e85138",
+  "units/stack_zT_repeat0_fold0.json": "9084510d89265ee044e1a9d3edad971628854fee6e91ed4c80cf8f49940e6e68",
+  "units/stack_zT_repeat0_fold1.json": "ec42e9fb66c54161f07c605089e8fbfad17bbb6370b77e6ec642be594f38cf91",
+  "units/stack_zT_repeat0_fold2.json": "00c1ef2e5ac1e70baba928639233fec374826fee3200fcd917eaf6862c3ab5b2",
+  "units/stack_zT_repeat0_fold3.json": "e68088e8856e9e93eb7d17c784545033c56a1655a59245d5c558b7458fd3dd32",
+  "units/stack_zT_repeat0_fold4.json": "df636735db7c5cf5e3378c57a57bea5af9850ddb67420f073cd8369a9fe7b699",
+  "units/stack_zT_repeat1_fold0.json": "d5427caa0794f600551dc3d4dfb8a8da380a972b8be9bc3c0d9d7167a55baf29",
+  "units/stack_zT_repeat1_fold1.json": "8300e8e44c88a7b54e0ead8d3ae9cfaaf0450440e6ba241120ecf7e8be921116",
+  "units/stack_zT_repeat1_fold2.json": "192b4d1b0ff0d7506fc4b7e26d7279396dd478c3d501297862be94f5d1ce0208",
+  "units/stack_zT_repeat1_fold3.json": "6102c6bc4440b208cefcaa4b18c1f062a162b23b45059be0aa0e9899ebcf31ce",
+  "units/stack_zT_repeat1_fold4.json": "173827ba223064d934c66a6c94f25a34e839a2086676333d498d43a9af75c98a",
+  "units/stack_zT_repeat2_fold0.json": "fa751bff1e2d4498700044490b10537d3d95b712a6030278b095021682c10f5b",
+  "units/stack_zT_repeat2_fold1.json": "dafb864a9da45c5b9a6c6f71e77cf1e59f34b44452edbb62445889046b97de19",
+  "units/stack_zT_repeat2_fold2.json": "a12410b08ecd7f145233ee40dcce27d53daae56d8b80025a762293243032cfa6",
+  "units/stack_zT_repeat2_fold3.json": "3b3cb0527afe206aac1ea3fd66eca0bfdcabae41e6123389748a1747fd1243af",
+  "units/stack_zT_repeat2_fold4.json": "874da0e8b67906a8e3f062f4949153f08ff691c8b5f6cd2bf1ad1bde344f8a03"
+ },
+ "identity": {
+  "analysis": "na2_stacking_nested",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "params": {
+   "targets": [
+    "zT"
+   ],
+   "repeats": [
+    0,
+    1,
+    2
+   ],
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rf_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+   },
+   "meta": {
+    "alpha": 1.0,
+    "positive": true
+   }
+  }
+ }
+}

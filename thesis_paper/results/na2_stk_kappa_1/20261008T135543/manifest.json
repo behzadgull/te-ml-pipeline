@@ -1,0 +1,54 @@
+{
+ "files": {
+  "results.json": "dad04dd7b3d616d6fb0f43d252280f629f5707705ccf28807f0bbbe3158e629e",
+  "run_configs/session_01.json": "cbfcd20df31ce02dc9feab3ec7f3540f61f74a4223adb53b4c00a1fb65c0695c",
+  "status.json": "08f7bbfb86ddea3114d7d87ec8cd5254df30f3f0fbb708a3e7a7e6bf42e85138",
+  "units/stack_kappa_repeat0_fold0.json": "0b3a1fef6b5e49882e6532570d48ed366950baa94f447735205f6197c3e6408e",
+  "units/stack_kappa_repeat0_fold1.json": "ccb325aa94a1a965b13aecdb58009ef5b4845152ef38ff9c717469a3ebb68a2b",
+  "units/stack_kappa_repeat0_fold2.json": "e01a56dc27f08d8e8f739585da1703b8da264c4bbd35609b57fc6e328555e961",
+  "units/stack_kappa_repeat0_fold3.json": "24af0650eab5a38bb53a206df00c0596fd59d3b915b72bdb2b4c92525d8ebbb8",
+  "units/stack_kappa_repeat0_fold4.json": "9b1d90e689c05dda65bd09c706afa111b1c0a95719608760b3093b2082c7839c",
+  "units/stack_kappa_repeat1_fold0.json": "057f6430c1202b182284f6ae9ac8a0cad6c9a93c04e177a5f225c06557f6b4b1",
+  "units/stack_kappa_repeat1_fold1.json": "53d40488038ba1dcaa4d2f6340cb5744fd54e74f4f82108d7309055cc5642b43",
+  "units/stack_kappa_repeat1_fold2.json": "c6ee4f21d8b946fc78fb07772ab364ab02a2afeac48486e94ba44258d1deb3b9",
+  "units/stack_kappa_repeat1_fold3.json": "e89c637e09c210ea2ae07f4aebddb414c73ae32cfb6b272e8567711a20ee9d46",
+  "units/stack_kappa_repeat1_fold4.json": "4f13261025b7d80eaad9deb1542aaea1c2cf72efe7912b1368fa1063e2dd74e7",
+  "units/stack_kappa_repeat2_fold0.json": "d6af71defa7527c0569bdded8ca02234f28f09d45aacc7191df55b741026f963",
+  "units/stack_kappa_repeat2_fold1.json": "40172e6592785119b4b89683d63ffeade31664af705f1e7d8a7d2f5c438a4ea9",
+  "units/stack_kappa_repeat2_fold2.json": "2f975c9ae5bae126da57679852ca91bbdd6b17dd1ebf3f42afe3bb77d53a1d8c",
+  "units/stack_kappa_repeat2_fold3.json": "1142ab44b267f2fe10e9287195fc3c1854080628c843df1407f3bd4d90ab3328",
+  "units/stack_kappa_repeat2_fold4.json": "f1c4f0131d8400b0021ee27694926d84b29975604f4a53c6462b261b8e67e401"
+ },
+ "identity": {
+  "analysis": "na2_stacking_nested",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "13a0efd582fe9abae95a00d29c677b70eb8ff103",
+  "params": {
+   "targets": [
+    "kappa"
+   ],
+   "repeats": [
+    0,
+    1,
+    2
+   ],
+   "n_inner_folds": 3,
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "rf_params": {
+    "n_estimators": 500,
+    "max_features": 0.3333333333333333,
+    "min_samples_leaf": 5,
+    "max_depth": null,
+    "min_samples_split": 2,
+    "bootstrap": true
+   },
+   "meta": {
+    "alpha": 1.0,
+    "positive": true
+   }
+  }
+ }
+}

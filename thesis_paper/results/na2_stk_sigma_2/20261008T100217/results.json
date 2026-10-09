@@ -1,0 +1,9 @@
+{
+ "sigma": {
+  "mean_weights_xgboost_lightgbm_random_forest": [
+   0.47064500076407445,
+   0.20181386609144622,
+   0.3390512227633002
+  ]
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "unit": "stack_sigma_repeat2_fold4",
+ "meta": {
+  "target": "sigma",
+  "repeat": 2,
+  "fold": 4,
+  "n_train": 146204,
+  "n_test": 36551,
+  "coef_xgboost_lightgbm_random_forest": [
+   0.540400710260377,
+   0.2231654021265658,
+   0.24035207791070784
+  ],
+  "intercept": -0.005021172406681984,
+  "inner_oof_r2": {
+   "xgboost": 0.6605635216685843,
+   "lightgbm": 0.6548432723745432,
+   "random_forest": 0.6511460515847984
+  },
+  "meta_in_sample_r2": 0.6627760841086003,
+  "mean3_inner_oof_r2": 0.661848605010938,
+  "base_seconds": {
+   "xgboost": 299.5431262050006,
+   "lightgbm": 156.19247257699863,
+   "random_forest": 2422.4369419979994
+  },
+  "seconds": 2881.717146084,
+  "nested_assertions": "passed"
+ },
+ "has_arrays": false
+}
