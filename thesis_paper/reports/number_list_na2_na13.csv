@@ -1,0 +1,266 @@
+where,key,value,source_file,field
+Introduction/contributions bullet,a2_stkmean_amax,0.0004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,max over targets of |extra_pairs.stacking_minus_mean_of_three.mean_diff| (four decimals)
+Introduction/contributions bullet,a2_m3_dmax,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+Introduction/contributions bullet,a2_maxgap,0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+3.4,a2_maxgap,0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+3.4,a2_m3_dmax,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+4.1.3 text,a2_stk_dmin,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,min over targets of differences_vs_reference.stacking.mean_diff
+4.1.3 text,a2_stk_dmax,0.005,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,max over targets of differences_vs_reference.stacking.mean_diff
+4.1.3 text,a2_stkmean_amax,0.0004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,max over targets of |extra_pairs.stacking_minus_mean_of_three.mean_diff| (four decimals)
+4.1.3 text,a2_w_corr_min,0.976,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,overall.min_pairwise_prediction_correlation (three decimals)
+4.1.3 text,a2_w_min,0.01,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,overall.weight_min
+4.1.3 text,a2_w_max,0.70,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,overall.weight_max
+4.1.3 text,a2_nfits,100,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,n_folds_per_target x 4 targets
+4.1.3 text,a2_nfolds,25,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,n_folds_per_target
+4.1.3 text,a2_w_range_min,0.35,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,min over targets of (max over models of targets.<t>.weights.<m>.range_over_folds)
+4.1.3 text,a2_w_range_max,0.60,thesis_paper/results/na2_stack_weights/20261010T103738/summary.json,max over targets of (max over models of targets.<t>.weights.<m>.range_over_folds)
+4.1.5 text,na13_S_k,25,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.k_thesis
+4.1.5 text,na13_sigma_k,44,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.k_thesis
+4.1.5 text,na13_kappa_k,39,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.k_thesis
+4.1.5 text,na13_zT_k,32,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.k_thesis
+4.1.5 text,n_repeats,5,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,len(targets.S.models.xgboost_frozen.per_repeat_r2)
+4.1.5 text,n_folds,5,thesis_paper/results/na2_comparison/20261009T190259/run_config.json,n_folds
+4.1.5 text,na13_pearson,0.95,"thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.pearson_max
+4.1.5 text,na13_alphas,20,"thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.n_alphas
+4.1.5 text,na13_mi_rows,"20,000","thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.mi_rows
+4.1.5 text,n_feat,397,paper_a_values.py (Paper A frozen hyperparameters / ladder metrics),"pre-existing key, value unchanged"
+4.1.5 text,na13_S_d,−0.050,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.mean
+4.1.5 text,na13_S_lo,−0.060,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+4.1.5 text,na13_S_hi,−0.042,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+4.1.5 text,na13_sigma_d,−0.038,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.mean
+4.1.5 text,na13_sigma_lo,−0.045,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+4.1.5 text,na13_sigma_hi,−0.032,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+4.1.5 text,na13_kappa_d,−0.047,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.mean
+4.1.5 text,na13_kappa_lo,−0.057,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+4.1.5 text,na13_kappa_hi,−0.038,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+4.1.5 text,na13_zT_d,−0.295,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.mean
+4.1.5 text,na13_zT_lo,−0.328,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+4.1.5 text,na13_zT_hi,−0.262,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+4.1.5 text,na13_nfolds,25,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.per_fold_delta_r2.n_folds
+4.1.5 text,na13_S_nl,182,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.n_after_lasso.mean
+4.1.5 text,na13_sigma_nl,156,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.n_after_lasso.mean
+4.1.5 text,na13_kappa_nl,184,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.n_after_lasso.mean
+4.1.5 text,na13_zT_nl,161,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.n_after_lasso.mean
+4.1.5 text,na13_np_min,243,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,min / max over targets of counts_over_the_25_folds.n_after_pearson.mean
+4.1.5 text,na13_np_max,253,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,min / max over targets of counts_over_the_25_folds.n_after_pearson.mean
+4.1.5 text,na13_ratio_min,3.6,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,min / max over targets of counts_over_the_25_folds.n_after_lasso.mean / k_thesis
+4.1.5 text,na13_ratio_max,7.3,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,min / max over targets of counts_over_the_25_folds.n_after_lasso.mean / k_thesis
+4.1.5 text,na13_gridmin_units,36,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,overall_100_units.units_with_chosen_alpha_at_grid_minimum
+4.1.5 text,na13_units,100,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,overall_100_units.units
+4.1.5 text,na13_kappa_gridmin,24,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.alpha_grid_position.units_at_grid_minimum
+4.1.5 text,na13_conv_lo,2000,thesis_paper/results/na13_convergence/20261008T171143/summary.json,min(ladder)
+4.1.5 text,na13_conv_folds,20,thesis_paper/results/na13_convergence/20261008T171143/summary.json,n_folds
+4.1.5 text,na13_conv_warn_2000,258,thesis_paper/results/na13_convergence/20261008T171143/summary.json,A.2000.total_warnings
+4.1.5 text,na13_maxiter,"20,000","thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.lasso_max_iter
+4.1.5 text,na13_conv_jac_med,0.93,thesis_paper/results/na13_convergence/20261008T171143/summary.json,B_C_D.20000.C_jaccard_median
+4.1.5 text,na13_conv_jac_min,0.56,thesis_paper/results/na13_convergence/20261008T171143/summary.json,B_C_D.20000.C_jaccard_min
+4.1.5 text,na13_conv_d_thr,0.005,thesis_paper/results/na13_convergence/20261008T171143/report.json,the threshold in the key name folds_breaking_D_abs_delta_r2_above_<thr>
+4.1.5 text,na13_conv_d_n,6,thesis_paper/results/na13_convergence/20261008T171143/report.json,len(folds_breaking_D_abs_delta_r2_above_0.005)
+4.1.5 text,na13_conv_d_mean,0.003,thesis_paper/results/na13_convergence/20261008T171143/summary.json,B_C_D.20000.D_mean_abs_r2_difference
+4.1.5 text,na13_warn_n,1,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
+4.1.5 text,na13_warn_target,S,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
+4.1.5 text,na13_warn_repeat,2,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
+4.1.5 text,na13_warn_fold,0,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
+4.1.5 text,na13_maxdiff,1.1 × 10^−16^,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,max over targets of committed_rung_alongside_not_used_for_the_claim.all397_this_machine_minus_committed_per_fold.max_abs
+4.1.5 text,na13_S_temp,0.720,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.pooled_per_repeat_r2.selected_plus_temperature_mean
+4.1.5 text,na13_sigma_temp,0.687,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.pooled_per_repeat_r2.selected_plus_temperature_mean
+4.1.5 text,na13_kappa_temp,0.795,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.pooled_per_repeat_r2.selected_plus_temperature_mean
+4.1.5 text,na13_zT_temp,0.736,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.pooled_per_repeat_r2.selected_plus_temperature_mean
+4.1.5 text,na13_S_temp_share,34,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.S.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+4.1.5 text,na13_sigma_temp_share,61,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.sigma.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+4.1.5 text,na13_kappa_temp_share,70,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.kappa.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+4.1.5 text,na13_zT_temp_share,97,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.zT.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+4.1.5 text,na13_S_temp_below,25,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+4.1.5 text,na13_sigma_temp_below,24,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+4.1.5 text,na13_kappa_temp_below,24,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+4.1.5 text,na13_zT_temp_below,20,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+Conclusions (RQ1),a2_stkmean_amax,0.0004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,max over targets of |extra_pairs.stacking_minus_mean_of_three.mean_diff| (four decimals)
+Conclusions (RQ1),a2_m3_dmax,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+Conclusions (RQ1),a2_maxgap,0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
+4.1.5 text,na13_platform_delta,0.0062,"docs/decisions.md (2026-10-09 pre-registration, item 3); registry row na13_platform_delta, class CITED",internal record; run output not committed
+Table 7,n_repeats,5,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,len(targets.S.models.xgboost_frozen.per_repeat_r2)
+Table 7,n_folds,5,thesis_paper/results/na2_comparison/20261009T190259/run_config.json,n_folds
+Table 7,optuna_trials,20,paper_a_values.py (Paper A frozen hyperparameters / ladder metrics),"pre-existing key, value unchanged"
+Table 7,a2_xgb_S,0.753,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.xgboost_frozen.mean
+Table 7,a2_xgb_S_sd,0.005,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.xgboost_frozen.sd
+Table 7,a2_xgb_sigma,0.702,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.xgboost_frozen.mean
+Table 7,a2_xgb_sigma_sd,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.xgboost_frozen.sd
+Table 7,a2_xgb_kappa,0.809,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.xgboost_frozen.mean
+Table 7,a2_xgb_kappa_sd,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.xgboost_frozen.sd
+Table 7,a2_xgb_zT,0.746,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.xgboost_frozen.mean
+Table 7,a2_xgb_zT_sd,0.005,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.xgboost_frozen.sd
+Table 7,a2_lgbm_S,0.746,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.lightgbm.mean
+Table 7,a2_lgbm_S_sd,0.006,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.lightgbm.sd
+Table 7,a2_lgbm_S_d,−0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.lightgbm.mean_diff
+Table 7,a2_lgbm_S_lo,−0.011,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[0]
+Table 7,a2_lgbm_S_hi,−0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[1]
+Table 7,a2_lgbm_sigma,0.696,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.lightgbm.mean
+Table 7,a2_lgbm_sigma_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.lightgbm.sd
+Table 7,a2_lgbm_sigma_d,−0.006,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.lightgbm.mean_diff
+Table 7,a2_lgbm_sigma_lo,−0.008,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[0]
+Table 7,a2_lgbm_sigma_hi,−0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[1]
+Table 7,a2_lgbm_kappa,0.803,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.lightgbm.mean
+Table 7,a2_lgbm_kappa_sd,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.lightgbm.sd
+Table 7,a2_lgbm_kappa_d,−0.006,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.lightgbm.mean_diff
+Table 7,a2_lgbm_kappa_lo,−0.009,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[0]
+Table 7,a2_lgbm_kappa_hi,−0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[1]
+Table 7,a2_lgbm_zT,0.743,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.lightgbm.mean
+Table 7,a2_lgbm_zT_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.lightgbm.sd
+Table 7,a2_lgbm_zT_d,−0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.lightgbm.mean_diff
+Table 7,a2_lgbm_zT_lo,−0.008,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[0]
+Table 7,a2_lgbm_zT_hi,+0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.lightgbm.ci95_cluster_bootstrap[1]
+Table 7,a2_rf_S,0.753,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.random_forest.mean
+Table 7,a2_rf_S_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.random_forest.sd
+Table 7,a2_rf_S_d,+0.000,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.random_forest.mean_diff
+Table 7,a2_rf_S_lo,−0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.random_forest.ci95_cluster_bootstrap[0]
+Table 7,a2_rf_S_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.random_forest.ci95_cluster_bootstrap[1]
+Table 7,a2_rf_sigma,0.697,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.random_forest.mean
+Table 7,a2_rf_sigma_sd,0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.random_forest.sd
+Table 7,a2_rf_sigma_d,−0.005,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.random_forest.mean_diff
+Table 7,a2_rf_sigma_lo,−0.009,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.random_forest.ci95_cluster_bootstrap[0]
+Table 7,a2_rf_sigma_hi,−0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.random_forest.ci95_cluster_bootstrap[1]
+Table 7,a2_rf_kappa,0.805,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.random_forest.mean
+Table 7,a2_rf_kappa_sd,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.random_forest.sd
+Table 7,a2_rf_kappa_d,−0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.random_forest.mean_diff
+Table 7,a2_rf_kappa_lo,−0.008,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.random_forest.ci95_cluster_bootstrap[0]
+Table 7,a2_rf_kappa_hi,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.random_forest.ci95_cluster_bootstrap[1]
+Table 7,a2_rf_zT,0.742,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.random_forest.mean
+Table 7,a2_rf_zT_sd,0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.random_forest.sd
+Table 7,a2_rf_zT_d,−0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.random_forest.mean_diff
+Table 7,a2_rf_zT_lo,−0.009,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.random_forest.ci95_cluster_bootstrap[0]
+Table 7,a2_rf_zT_hi,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.random_forest.ci95_cluster_bootstrap[1]
+Table 7,a2_m3_S,0.757,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.mean_of_three.mean
+Table 7,a2_m3_S_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.mean_of_three.sd
+Table 7,a2_m3_S_d,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.mean_of_three.mean_diff
+Table 7,a2_m3_S_lo,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[0]
+Table 7,a2_m3_S_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[1]
+Table 7,a2_m3_sigma,0.705,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.mean_of_three.mean
+Table 7,a2_m3_sigma_sd,0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.mean_of_three.sd
+Table 7,a2_m3_sigma_d,+0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.mean_of_three.mean_diff
+Table 7,a2_m3_sigma_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[0]
+Table 7,a2_m3_sigma_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[1]
+Table 7,a2_m3_kappa,0.812,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.mean_of_three.mean
+Table 7,a2_m3_kappa_sd,0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.mean_of_three.sd
+Table 7,a2_m3_kappa_d,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.mean_of_three.mean_diff
+Table 7,a2_m3_kappa_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[0]
+Table 7,a2_m3_kappa_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[1]
+Table 7,a2_m3_zT,0.750,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.mean_of_three.mean
+Table 7,a2_m3_zT_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.mean_of_three.sd
+Table 7,a2_m3_zT_d,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.mean_of_three.mean_diff
+Table 7,a2_m3_zT_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[0]
+Table 7,a2_m3_zT_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.mean_of_three.ci95_cluster_bootstrap[1]
+Table 7,a2_stk_S,0.758,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.stacking.mean
+Table 7,a2_stk_S_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.models.stacking.sd
+Table 7,a2_stk_sigma,0.704,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.stacking.mean
+Table 7,a2_stk_sigma_sd,0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.models.stacking.sd
+Table 7,a2_stk_kappa,0.812,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.stacking.mean
+Table 7,a2_stk_kappa_sd,0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.models.stacking.sd
+Table 7,a2_stk_zT,0.750,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.stacking.mean
+Table 7,a2_stk_zT_sd,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.models.stacking.sd
+Table 7,a2_stk_S_d,+0.005,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.stacking.mean_diff
+Table 7,a2_stk_S_lo,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.stacking.ci95_cluster_bootstrap[0]
+Table 7,a2_stk_S_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.differences_vs_reference.stacking.ci95_cluster_bootstrap[1]
+Table 7,a2_stk_sigma_d,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.stacking.mean_diff
+Table 7,a2_stk_sigma_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.stacking.ci95_cluster_bootstrap[0]
+Table 7,a2_stk_sigma_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.differences_vs_reference.stacking.ci95_cluster_bootstrap[1]
+Table 7,a2_stk_kappa_d,+0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.stacking.mean_diff
+Table 7,a2_stk_kappa_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.stacking.ci95_cluster_bootstrap[0]
+Table 7,a2_stk_kappa_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.differences_vs_reference.stacking.ci95_cluster_bootstrap[1]
+Table 7,a2_stk_zT_d,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.stacking.mean_diff
+Table 7,a2_stk_zT_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.stacking.ci95_cluster_bootstrap[0]
+Table 7,a2_stk_zT_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.differences_vs_reference.stacking.ci95_cluster_bootstrap[1]
+Table 7,a2_stkbest_S_d,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_<targets.S.best_single>.mean_diff
+Table 7,a2_stkbest_S_lo,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_<targets.S.best_single>.ci95_cluster_bootstrap[0]
+Table 7,a2_stkbest_S_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_<targets.S.best_single>.ci95_cluster_bootstrap[1]
+Table 7,a2_stkbest_sigma_d,+0.002,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_<targets.sigma.best_single>.mean_diff
+Table 7,a2_stkbest_sigma_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_<targets.sigma.best_single>.ci95_cluster_bootstrap[0]
+Table 7,a2_stkbest_sigma_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_<targets.sigma.best_single>.ci95_cluster_bootstrap[1]
+Table 7,a2_stkbest_kappa_d,+0.003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_<targets.kappa.best_single>.mean_diff
+Table 7,a2_stkbest_kappa_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_<targets.kappa.best_single>.ci95_cluster_bootstrap[0]
+Table 7,a2_stkbest_kappa_hi,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_<targets.kappa.best_single>.ci95_cluster_bootstrap[1]
+Table 7,a2_stkbest_zT_d,+0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_<targets.zT.best_single>.mean_diff
+Table 7,a2_stkbest_zT_lo,+0.001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_<targets.zT.best_single>.ci95_cluster_bootstrap[0]
+Table 7,a2_stkbest_zT_hi,+0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_<targets.zT.best_single>.ci95_cluster_bootstrap[1]
+Table 7,a2_stkmean_S_d,+0.0004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_mean_of_three.mean_diff (four decimals)
+Table 7,a2_stkmean_S_lo,−0.0010,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[0] (four decimals)
+Table 7,a2_stkmean_S_hi,+0.0016,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.S.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[1] (four decimals)
+Table 7,a2_stkmean_sigma_d,−0.0001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_mean_of_three.mean_diff (four decimals)
+Table 7,a2_stkmean_sigma_lo,−0.0011,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[0] (four decimals)
+Table 7,a2_stkmean_sigma_hi,+0.0009,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.sigma.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[1] (four decimals)
+Table 7,a2_stkmean_kappa_d,+0.0003,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_mean_of_three.mean_diff (four decimals)
+Table 7,a2_stkmean_kappa_lo,−0.0008,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[0] (four decimals)
+Table 7,a2_stkmean_kappa_hi,+0.0014,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.kappa.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[1] (four decimals)
+Table 7,a2_stkmean_zT_d,−0.0001,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_mean_of_three.mean_diff (four decimals)
+Table 7,a2_stkmean_zT_lo,−0.0022,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[0] (four decimals)
+Table 7,a2_stkmean_zT_hi,+0.0019,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,targets.zT.extra_pairs.stacking_minus_mean_of_three.ci95_cluster_bootstrap[1] (four decimals)
+Table 7b,n_repeats,5,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,len(targets.S.models.xgboost_frozen.per_repeat_r2)
+Table 7b,n_folds,5,thesis_paper/results/na2_comparison/20261009T190259/run_config.json,n_folds
+Table 7b,n_feat,397,paper_a_values.py (Paper A frozen hyperparameters / ladder metrics),"pre-existing key, value unchanged"
+Table 7b,na13_pearson,0.95,"thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.pearson_max
+Table 7b,na13_alphas,20,"thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.n_alphas
+Table 7b,na13_mi_rows,"20,000","thesis_paper/results/na13_{S,sigma,kappa,zT}/<stamp>/run_configs/session_01.json",params.mi_rows
+Table 7b,na13_S_k,25,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.k_thesis
+Table 7b,na13_sigma_k,44,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.k_thesis
+Table 7b,na13_kappa_k,39,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.k_thesis
+Table 7b,na13_zT_k,32,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.k_thesis
+Table 7b,na13_S_all,0.753,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.pooled_per_repeat_r2.all397_mean
+Table 7b,na13_S_all_sd,0.005,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.pooled_per_repeat_r2.all397_sd
+Table 7b,na13_sigma_all,0.702,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.pooled_per_repeat_r2.all397_mean
+Table 7b,na13_sigma_all_sd,0.002,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.pooled_per_repeat_r2.all397_sd
+Table 7b,na13_kappa_all,0.809,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.pooled_per_repeat_r2.all397_mean
+Table 7b,na13_kappa_all_sd,0.002,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.pooled_per_repeat_r2.all397_sd
+Table 7b,na13_zT_all,0.746,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.pooled_per_repeat_r2.all397_mean
+Table 7b,na13_zT_all_sd,0.005,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.pooled_per_repeat_r2.all397_sd
+Table 7b,na13_S_sel,0.702,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.pooled_per_repeat_r2.selected_mean
+Table 7b,na13_S_sel_sd,0.008,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.pooled_per_repeat_r2.selected_sd
+Table 7b,na13_sigma_sel,0.664,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.pooled_per_repeat_r2.selected_mean
+Table 7b,na13_sigma_sel_sd,0.003,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.pooled_per_repeat_r2.selected_sd
+Table 7b,na13_kappa_sel,0.762,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.pooled_per_repeat_r2.selected_mean
+Table 7b,na13_kappa_sel_sd,0.003,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.pooled_per_repeat_r2.selected_sd
+Table 7b,na13_zT_sel,0.451,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.pooled_per_repeat_r2.selected_mean
+Table 7b,na13_zT_sel_sd,0.006,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.pooled_per_repeat_r2.selected_sd
+Table 7b,na13_S_d,−0.050,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.mean
+Table 7b,na13_S_lo,−0.060,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+Table 7b,na13_S_hi,−0.042,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+Table 7b,na13_sigma_d,−0.038,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.mean
+Table 7b,na13_sigma_lo,−0.045,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+Table 7b,na13_sigma_hi,−0.032,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+Table 7b,na13_kappa_d,−0.047,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.mean
+Table 7b,na13_kappa_lo,−0.057,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+Table 7b,na13_kappa_hi,−0.038,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+Table 7b,na13_zT_d,−0.295,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.mean
+Table 7b,na13_zT_lo,−0.328,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[0]
+Table 7b,na13_zT_hi,−0.262,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.paired_difference_selected_minus_all397.ci95_cluster_bootstrap[1]
+Table 7b,na13_nfolds,25,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.per_fold_delta_r2.n_folds
+Table 7b,na13_S_nl,182,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.n_after_lasso.mean
+Table 7b,na13_S_nl_min,129,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.n_after_lasso.min
+Table 7b,na13_S_nl_max,206,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.S.counts_over_the_25_folds.n_after_lasso.max
+Table 7b,na13_sigma_nl,156,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.n_after_lasso.mean
+Table 7b,na13_sigma_nl_min,119,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.n_after_lasso.min
+Table 7b,na13_sigma_nl_max,184,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.sigma.counts_over_the_25_folds.n_after_lasso.max
+Table 7b,na13_kappa_nl,184,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.n_after_lasso.mean
+Table 7b,na13_kappa_nl_min,176,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.n_after_lasso.min
+Table 7b,na13_kappa_nl_max,195,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.kappa.counts_over_the_25_folds.n_after_lasso.max
+Table 7b,na13_zT_nl,161,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.n_after_lasso.mean
+Table 7b,na13_zT_nl_min,138,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.n_after_lasso.min
+Table 7b,na13_zT_nl_max,183,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.zT.counts_over_the_25_folds.n_after_lasso.max
+Table 7b,na13_S_temp,0.720,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.pooled_per_repeat_r2.selected_plus_temperature_mean
+Table 7b,na13_S_temp_sd,0.010,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.pooled_per_repeat_r2.selected_plus_temperature (sample SD of the 5 per-repeat values)
+Table 7b,na13_sigma_temp,0.687,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.pooled_per_repeat_r2.selected_plus_temperature_mean
+Table 7b,na13_sigma_temp_sd,0.003,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.pooled_per_repeat_r2.selected_plus_temperature (sample SD of the 5 per-repeat values)
+Table 7b,na13_kappa_temp,0.795,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.pooled_per_repeat_r2.selected_plus_temperature_mean
+Table 7b,na13_kappa_temp_sd,0.003,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.pooled_per_repeat_r2.selected_plus_temperature (sample SD of the 5 per-repeat values)
+Table 7b,na13_zT_temp,0.736,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.pooled_per_repeat_r2.selected_plus_temperature_mean
+Table 7b,na13_zT_temp_sd,0.005,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.pooled_per_repeat_r2.selected_plus_temperature (sample SD of the 5 per-repeat values)
+Table 7b,na13_S_temp_d,−0.033,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.pooled_per_repeat_r2.selected_plus_temperature_mean minus analysis.json all397_mean
+Table 7b,na13_sigma_temp_d,−0.015,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.pooled_per_repeat_r2.selected_plus_temperature_mean minus analysis.json all397_mean
+Table 7b,na13_kappa_temp_d,−0.014,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.pooled_per_repeat_r2.selected_plus_temperature_mean minus analysis.json all397_mean
+Table 7b,na13_zT_temp_d,−0.009,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.pooled_per_repeat_r2.selected_plus_temperature_mean minus analysis.json all397_mean
+Table 7b,na13_S_temp_share,34,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.S.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+Table 7b,na13_sigma_temp_share,61,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.sigma.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+Table 7b,na13_kappa_temp_share,70,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.kappa.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+Table 7b,na13_zT_temp_share,97,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,"targets.zT.(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis"
+Table 7b,na13_S_temp_below,25,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.S.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+Table 7b,na13_sigma_temp_below,24,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.sigma.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+Table 7b,na13_kappa_temp_below,24,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.kappa.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
+Table 7b,na13_zT_temp_below,20,thesis_paper/results/na13_temperature/20261009T194925Z/summary.json,targets.zT.n_folds (25) minus n_folds_selected_plus_temperature_above_all397
