@@ -215,7 +215,7 @@ NA_RUNS = {
     "na4": "thesis_paper/results/na4/20261003T131903",
     "na5": "thesis_paper/results/na5/20261003T131813",
     "na8": "thesis_paper/results/na8/20261003T131938",
-    "na9": "thesis_paper/results/na9/20261003T132121",
+    "na9": "thesis_paper/results/na9/20261010T173322",
 }
 
 
