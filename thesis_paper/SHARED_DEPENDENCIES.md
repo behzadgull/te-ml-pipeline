@@ -43,6 +43,8 @@ regenerate the table with `--write` in the same commit and say why.
 | `results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json` | `83ec3e83b5dc1922cd3a7821c973f997ef1480a73095aa0dc2e025ca40f343cd` | <!-- Paper A artifact / source -->
 | `results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json` | `54b47a52fd959bce9f8856e3e87708c7722d5ae7fc040770b4851278fb39a11d` | <!-- Paper A artifact / source -->
 | `results/external_snapfix/20260917T160553/estm_results.json` | `fd75cbb6e5a4289277ac440f3771324d2335396c6f81bee1ba96ff03aa0a9016` | <!-- Paper A artifact / source -->
+| `thesis_paper/results/external_rescore/20261010T124804/tematdb_scoring.json` | `a654c9486b8584a6996472ebd8b3ef95f3c99d858ee39d978cd31cd483362de1` | <!-- thesis analysis result -->
+| `thesis_paper/results/external_rescore/20261010T124804/run_config.json` | `13426681e39ae282fccb6bf834929a7af9e405909bad40e4d948d24d0797028f` | <!-- thesis analysis result -->
 | `thesis_paper/results/na6_metrics/20261004T135638/metrics.json` | `c7a89dd286a0c6964447f096ea5976e2d675df79ac543058c8b13631798d89f6` | <!-- thesis analysis result -->
 | `thesis_paper/results/na6_metrics/20261004T135638/run_config.json` | `b1b2cf751723d920f738d957a2dac26740823622885a032b52d7e57b62f9aa8f` | <!-- thesis analysis result -->
 | `thesis_paper/results/na6_sign_override/20261004T194811_same_folds/sign_comparison_same_folds.json` | `8ec43a028ed7c4035c748b6e940d29602a8e6020e447aba7347e540a38f6b9df` | <!-- thesis analysis result -->

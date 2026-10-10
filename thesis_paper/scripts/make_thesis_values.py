@@ -98,7 +98,7 @@ def table6(v):
 
 def table8(v):
     """ESTM external validation."""
-    head = (f"**Table 8:** ESTM external validation (R^2^). The {v['estm_scope']} ESTM rows within 300--800 K are scored in two strata that are never pooled: "
+    head = (f"**Table 8:** ESTM external validation (R^2^). The {v['estm_scope']} ESTM rows within {v['t_min']}--{v['t_max']} K are scored in two strata that are never pooled: "
             f"rows sharing no source DOI with the training data (a, n = {v['estm_a_n']}) and rows whose chemistry cluster is absent from training "
             f"(b, n = {v['estm_b_n']}). The in-support column restricts (b) to rows inside the training range of S, *σ*, *κ* and temperature "
             f"(n = {v['estm_b_insup_n']}). The drop is stratum (b) minus the internal chemistry-cluster value.")
@@ -107,6 +107,20 @@ def table8(v):
     names = {"S": "S", "sigma": "*σ*", "kappa": "*κ*", "zT": "zT (direct)"}
     for t in T4:
         lines.append(f"| {names[t]} | {v[f'chem_{t}']} | {v[f'estm_a_{t}']} | {v[f'estm_b_{t}']} | {v[f'estm_b_insup_{t}']} | {v[f'estm_b_drop_{t}']} |")
+    return "\n".join(lines)
+
+
+def table8b(v):
+    """teMatDb scoring with the saved final models: R2 per target and stratum with the sample-level bootstrap interval."""
+    head = (f"**Table 8b:** teMatDb scoring with the same final models (R^2^ with the {v['tm_ci_level']}% interval of a bootstrap over whole samples, {v['tm_nboot']} draws, in brackets). "
+            "Strata are never pooled: a0, the sample's source DOI is in the training data (not an external test); a, the DOI is not in the training data; "
+            "b, the chemistry cluster is absent from training. zT (direct) is scored against the declared zT; *σ* and *κ* in log~10~ units. "
+            "An ordering is stated only where the difference exceeds the fit-to-fit difference of the ESTM scoring (Section 4.2) and the intervals do not overlap; this is a descriptive rule, not a test.")
+    lines = [head, "", "| **Stratum** | **Rows** | **Samples** | **S** | ***σ*** | ***κ*** | **zT (direct)** |", "|-------|-----|-----|---------|---------|---------|---------|"]
+    names = {"a0": "a0, DOI in training", "a": "a, DOI not in training", "b": "b, cluster absent from training"}
+    for s in ("a0", "a", "b"):
+        cells = [f"{v[f'tm_{s}_{t}']} [{v[f'tm_{s}_{t}_lo']}, {v[f'tm_{s}_{t}_hi']}]" for t in T4]
+        lines.append(f"| {names[s]} | {v[f'tm_{s}_rows']} | {v[f'tm_{s}_samples']} | " + " | ".join(cells) + " |")
     return "\n".join(lines)
 
 
@@ -236,7 +250,7 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
 
 
 def render(text):

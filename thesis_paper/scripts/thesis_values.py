@@ -25,6 +25,18 @@ def _r3(x):
     return f"{x:.3f}"
 
 
+def _up(x, nd=3):
+    """A value used in an "at most", "up to", "within" or "no more than" claim, or as the upper end of a range: rounded UP, so that the stated bound holds."""
+    f = 10 ** nd
+    return f"{math.ceil(round(x * f, 9)) / f:.{nd}f}"
+
+
+def _down(x, nd=3):
+    """A value used in an "at least" or "no less than" claim, or as the lower end of a range: rounded DOWN, so that the stated bound holds."""
+    f = 10 ** nd
+    return f"{math.floor(round(x * f, 9)) / f:.{nd}f}"
+
+
 def _n(x):
     return f"{int(x):,}"
 
@@ -107,7 +119,7 @@ def values():
     lo, hi = min(gaps, key=gaps.get), max(gaps, key=gaps.get)
     v["gap_lo"], v["gap_lo_name"] = f"{gaps[lo]:.3f}", NAME[lo]
     v["gap_hi"], v["gap_hi_name"] = f"{gaps[hi]:.3f}", NAME[hi]
-    v["spread_max"] = f"{max(float(v[f'spread_{t}']) for t in T4):.3f}"
+    v["spread_max"] = _up(max(max(p) - min(p) for p in ([ung["per_run"][t][k]["pooled_r2"] for k in ("random", "kfold5", "kfold10")] for t in T4)))  # "at most": rounded up
     v["foldsd_min"] = f"{min(float(v[f'foldsd_{t}']) for t in T4):.3f}"
     v["foldsd_max"] = f"{max(float(v[f'foldsd_{t}']) for t in T4):.3f}"
     ab = abl
@@ -118,7 +130,7 @@ def values():
         assert abs(ab[t]["full"]["per_repeat_r2_mean"] - ladder["runs"][f"{t}_chemistry_full"]["per_repeat_r2_mean"]) < 1e-9
     dmax = max(T4, key=lambda t: ab["deltas_full_minus_magpie"][t])
     assert dmax == "sigma"  # prose: the largest descriptor-ablation gain is for sigma
-    v["abl_delta_max"] = f"{ab['deltas_full_minus_magpie'][dmax]:.3f}"
+    v["abl_delta_max"] = _up(ab["deltas_full_minus_magpie"][dmax], 3)
     v["n_magpie_t"] = str(int(v["n_magpie"]) + 1)
     order = sorted(T4, key=lambda t: -float(v[f"chem_{t}"]))
     v["rank_order"] = ", ".join(NAME[t] for t in order)
@@ -161,7 +173,8 @@ def values():
     diffs = {(lab, t): abs(d["results"]["zT_direct" if t == "zT" else t]["r2"] - o["results"]["zT_direct" if t == "zT" else t]["r2"])
              for lab, d, o in (("a", a, old["dedup_a_source_doi"]), ("b", bb, old["dedup_b_chemistry_cluster"])) for t in T4}
     (wl, wt), wmax = max(diffs.items(), key=lambda kv: kv[1])
-    v["estm_fit_diff_max"], v["estm_fit_diff_what"] = _r3(wmax), f"{NAME[wt]} in stratum ({wl})"
+    v["estm_fit_diff_max"], v["estm_fit_diff_what"] = _up(wmax), f"{NAME[wt]} in stratum ({wl})"
+    v["estm_fit_diff_max_raw"] = repr(wmax)  # unrounded, the margin of the ordering claims
     dd = [abs(d["results"]["zT_derived"]["r2"] - o["results"]["zT_derived"]["r2"]) for d, o in ((a, old["dedup_a_source_doi"]), (bb, old["dedup_b_chemistry_cluster"]))]
     v["estm_fit_diff_derived_min"], v["estm_fit_diff_derived_max"] = _r3(min(dd)), _r3(max(dd))
     # ordering claims between targets on ESTM must exceed the fit-to-fit difference wmax; otherwise the prose calls the targets tied (decisions 2026-10-10)
@@ -388,6 +401,7 @@ def na11_values():
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
     TEMATDB_INVENTORY, TEMATDB_INVENTORY_FILE_A,
     pav.ESTM_OLD,  # the earlier in-process refit, read for the fit-to-fit sentence of Section 4.2
+    pav.ESTM.rsplit("/", 1)[0] + "/tematdb_scoring.json", pav.ESTM.rsplit("/", 1)[0] + "/run_config.json",
     f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
     f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json", f"{NA10_CLF}/analysis.json", f"{NA10_CLF}/run_config.json",
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
@@ -719,11 +733,11 @@ def na2_na1_values():
         v[f"a2_m3_{t}_d"], v[f"a2_m3_{t}_lo"], v[f"a2_m3_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
         assert d["mean_diff"] > 0 and lo > 0, f"{t}: the prose says the mean of the three is above XGBoost with an interval that excludes zero"
         gains.append(d["mean_diff"])
-    v["a2_m3_dmin"], v["a2_m3_dmax"] = _r3(min(gains)), _r3(max(gains))
+    v["a2_m3_dmin"], v["a2_m3_dmax"] = _down(min(gains)), _up(max(gains))
     for m, k in (("lightgbm", "lgbm"), ("random_forest", "rf")):
         vals = [abs(c2["targets"][t]["differences_vs_reference"][m]["mean_diff"]) for t in tops] if m == "random_forest" else [abs(d) for mm, d in diffs if mm == m]
-        v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _r3(min(vals)), _r3(max(vals)), str(len(vals))
-    v["a2_maxgap"] = _r3(max(abs(d) for _, d in diffs))
+        v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _down(min(vals)), _up(max(vals)), str(len(vals))
+    v["a2_maxgap"] = _up(max(abs(d) for _, d in diffs))
     v["a2_n_diffs"], v["a2_n_excl"] = str(len(diffs)), str(excl)
     v["n_repeats"], v["n_folds"] = str(len(c2["targets"]["S"]["models"]["xgboost_frozen"]["per_repeat_r2"])), str(pav._json(f"{NA2_CMP}/run_config.json")["n_folds"])
     assert len([d for m, d in diffs if m == "random_forest"]) == 4
@@ -738,7 +752,7 @@ def na2_na1_values():
         v[f"n1_{t}_excl"] = str(int(lo > 0 or hi < 0))
     assert all(v[f"n1_{t}_excl"] == "1" for t in ("S", "sigma", "kappa")) and v["n1_zT_excl"] == "0"  # prose: lower for S, sigma, kappa; no measurable difference for zT
     assert -c1["targets"]["zT"]["differences_vs_reference"]["nested"]["mean_diff"] < 0.001
-    v["n1_max"] = _r3(max(-c1["targets"][t]["differences_vs_reference"]["nested"]["mean_diff"] for t in T4))
+    v["n1_max"] = _up(max(-c1["targets"][t]["differences_vs_reference"]["nested"]["mean_diff"] for t in T4))
     return v
 
 
@@ -747,7 +761,10 @@ def _pw10(x):
     if x == 0:
         return "0"
     e = math.floor(math.log10(abs(x)))
-    return f"{x / 10 ** e:.1f} × 10^{'−' if e < 0 else ''}{abs(e)}^"
+    mant = math.ceil(round(abs(x) / 10 ** e * 10, 9)) / 10  # rounded up: the value is used in a "within" claim
+    if mant >= 10:
+        mant, e = mant / 10, e + 1
+    return f"{mant:.1f} × 10^{'−' if e < 0 else ''}{abs(e)}^"
 
 
 def na2_stack_values():
@@ -779,11 +796,11 @@ def na2_stack_values():
         v[f"a2_stkmean_{t}_d"], v[f"a2_stkmean_{t}_lo"], v[f"a2_stkmean_{t}_hi"] = _sg(m["mean_diff"], 4), _sg(lo3, 4), _sg(hi3, 4)  # four decimals: below the third
         assert lo3 < 0 < hi3, f"{t}: the prose says the stack and the unweighted mean do not differ (the interval contains zero)"
         abs_vs_mean.append(abs(m["mean_diff"]))
-    v["a2_stk_dmin"], v["a2_stk_dmax"] = _r3(min(d_all)), _r3(max(d_all))
-    v["a2_stkmean_amax"] = f"{max(abs_vs_mean):.4f}"
+    v["a2_stk_dmin"], v["a2_stk_dmax"] = _down(min(d_all)), _up(max(d_all))
+    v["a2_stkmean_amax"] = _up(max(abs_vs_mean), 4)
     assert w["n_folds_per_target"] == 25 and w["overall"]["n_weights"] == 300
     v["a2_w_min"], v["a2_w_max"] = f"{w['overall']['weight_min']:.2f}", f"{w['overall']['weight_max']:.2f}"
-    v["a2_w_corr_min"] = f"{w['overall']['min_pairwise_prediction_correlation']:.3f}"
+    v["a2_w_corr_min"] = _down(w["overall"]["min_pairwise_prediction_correlation"])
     rng = {t: max(w["targets"][t]["weights"][m]["range_over_folds"] for m in ("xgboost", "lightgbm", "random_forest")) for t in T4}
     v["a2_w_range_max"], v["a2_w_range_min"] = f"{max(rng.values()):.2f}", f"{min(rng.values()):.2f}"
     v["a2_nfolds"], v["a2_nfits"] = str(w["n_folds_per_target"]), str(w["n_folds_per_target"] * len(T4))
@@ -884,6 +901,62 @@ def na13_values():
     return v
 
 
+def tematdb_values(margin):
+    """teMatDb scoring with the saved final models (results/external_rescore): rows, samples, R2 and the sample-level bootstrap interval of each target per
+    stratum, and the ordering statements of Section 4.2. An ordering between two targets or two strata is stated only if the R2 difference exceeds `margin`
+    (the fit-to-fit difference of the ESTM scoring) AND the two sample-level intervals do not overlap; the asserts stop the build if a statement stops being true."""
+    folder = pav.ESTM.rsplit("/", 1)[0]
+    d = pav._json(f"{folder}/tematdb_scoring.json")
+    cfg = pav._json(f"{folder}/run_config.json")
+    assert cfg["tree_clean"] and cfg["accepted_as_result"] and d["n_boot"] == 2000 and d["bootstrap_unit"] == "sample_id"
+    key = {"S": "S", "sigma": "sigma_log10", "kappa": "kappa_log10", "zT": "zT_direct_vs_declared"}
+    st = d["strata"]
+    v, r2, ci = {}, {}, {}
+    for s in ("a0", "a", "b"):
+        v[f"tm_{s}_rows"], v[f"tm_{s}_samples"] = _n(st[s]["n_rows"]), _n(st[s]["n_samples"])
+        for t in T4:
+            m = st[s]["metrics"][key[t]]
+            r2[(s, t)], ci[(s, t)] = m["r2"], tuple(m["r2_ci95"])
+            v[f"tm_{s}_{t}"], v[f"tm_{s}_{t}_lo"], v[f"tm_{s}_{t}_hi"] = _r3(m["r2"]), _sg(m["r2_ci95"][0]), _sg(m["r2_ci95"][1])
+            v[f"tm_{s}_{t}_lo"], v[f"tm_{s}_{t}_hi"] = v[f"tm_{s}_{t}_lo"].lstrip("+"), v[f"tm_{s}_{t}_hi"].lstrip("+")
+
+    def clear(x, y):
+        """x is above y: the difference exceeds the margin and the intervals do not overlap."""
+        return r2[x] - r2[y] > margin and ci[x][0] > ci[y][1]
+
+    def pairs(s):
+        return [(t, u) for i, t in enumerate(T4) for u in T4[i + 1:] if clear((s, t), (s, u)) or clear((s, u), (s, t))]
+
+    # stratum a0: S and kappa clearly above sigma; every other pair of targets tied
+    assert clear(("a0", "S"), ("a0", "sigma")) and clear(("a0", "kappa"), ("a0", "sigma"))
+    assert sorted(map(sorted, pairs("a0"))) == sorted([sorted(("S", "sigma")), sorted(("kappa", "sigma"))]), f"a0 orderings: {pairs('a0')}"
+    # strata a and b: no target is distinguishable from another; sigma cannot be told from zero
+    assert pairs("a") == [] and pairs("b") == [], f"orderings in a or b: {pairs('a')} {pairs('b')}"
+    assert ci[("a", "sigma")][0] < 0 < ci[("a", "sigma")][1] and ci[("b", "sigma")][0] < 0 < ci[("b", "sigma")][1]
+    # a0 against a: kappa and zT clearly lower in a; S and sigma not distinguishable
+    assert clear(("a0", "kappa"), ("a", "kappa")) and clear(("a0", "zT"), ("a", "zT"))
+    assert not clear(("a0", "S"), ("a", "S")) and not clear(("a0", "sigma"), ("a", "sigma"))
+    # a against b: no target differs
+    assert not any(clear(("a", t), ("b", t)) or clear(("b", t), ("a", t)) for t in T4)
+    # the recomputed zT instead of the declared zT: within the margin in every stratum
+    zd = max(abs(st[s]["metrics"]["zT_direct_vs_declared"]["r2"] - st[s]["metrics"]["zT_direct_vs_tep"]["r2"]) for s in st)
+    assert zd < margin
+    v["tm_zT_tep_diff_max"] = _up(zd)
+    wb = [ci[("b", t)][1] - ci[("b", t)][0] for t in ("S", "kappa", "zT")]
+    v["tm_b_width_min"] = _down(min(wb), 2)
+    v["tm_margin"] = _r3(margin)
+    v["tm_nboot"] = str(d["n_boot"])
+    inv = pav._json(TEMATDB_INVENTORY)
+    v["tm_total"] = _n(inv["C1_doi_overlap"]["n_a0"] + inv["C1_doi_overlap"]["n_a"])
+    v["tm_parsed"] = _n(inv["C2_cluster_overlap"]["n_parsed"])
+    assert inv["C2_cluster_overlap"]["n_parsed"] + inv["C2_cluster_overlap"]["n_failed"] == inv["C1_doi_overlap"]["n_a0"] + inv["C1_doi_overlap"]["n_a"]
+    lvl = {k[len("r2_ci"):] for m_ in st["a0"]["metrics"].values() for k in m_ if k.startswith("r2_ci")}
+    assert lvl == {"95"}, lvl  # the confidence level is the one in the key name of the stored intervals
+    v["tm_ci_level"] = "95"
+    return v
+
+
+
 def base_chem(t):
     """The chemistry-cluster R2 of the paper for a target (the ladder run)."""
     return pav._json(pav.LADDER)["runs"][f"{t}_chemistry_full"]["per_repeat_r2_mean"]
@@ -913,7 +986,7 @@ def noise_ceiling_values():
     for key, sk in (("S", "S_300_800K"), ("sigma", "sigma_300_800K"), ("kappa", "kappa_300_800K"), ("zT_declared", "zT_300_800K"), ("zT_tep", "zT_tep_300_800K")):
         assert abs(cmp_ab[key]["fileA"] - snap[sk]["r2"]) < 1e-9, key  # the grouping fix leaves the term unchanged, so the File A value is the one of the paper
     shifts = [abs(x["fileA"] - x["fileB"]) for x in cmp_ab.values()]
-    v["nc_snap_shift"] = f"{max(shifts):.2f}"
+    v["nc_snap_shift"] = _up(max(shifts), 3)
     return v
 
 
@@ -1039,6 +1112,7 @@ def new_analysis_values():
     v.update(na2_na1_values())
     v.update(na2_stack_values())
     v.update(na13_values())
+    v.update(tematdb_values(float(base["estm_fit_diff_max_raw"])))
     v.update(noise_ceiling_values())
     v.update(na2_design_values())
     return v
