@@ -57,6 +57,7 @@ Introduction/contributions bullet,a2_maxgap,0.007,thesis_paper/results/na2_compa
 4.1.5 text,na13_conv_d_thr,0.005,thesis_paper/results/na13_convergence/20261008T171143/report.json,the threshold in the key name folds_breaking_D_abs_delta_r2_above_<thr>
 4.1.5 text,na13_conv_d_n,6,thesis_paper/results/na13_convergence/20261008T171143/report.json,len(folds_breaking_D_abs_delta_r2_above_0.005)
 4.1.5 text,na13_conv_d_mean,0.003,thesis_paper/results/na13_convergence/20261008T171143/summary.json,B_C_D.20000.D_mean_abs_r2_difference
+4.1.5 text,na13_platform_delta,0.0062,thesis_paper/results/na13_convergence/20261008T093143/diagnostic.json and thesis_paper/results/na13_platform_record/20261008T174804Z/units/kappa_repeat0_fold0.json,|targets.kappa.folds.0.settings.20000.outer_r2 (Windows CPU) - units/kappa_repeat0_fold0.json outer_r2 (spcai3 CPU)|
 4.1.5 text,na13_warn_n,1,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
 4.1.5 text,na13_warn_target,S,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
 4.1.5 text,na13_warn_repeat,2,thesis_paper/results/na13_analysis/20261009T190036/analysis.json,targets.*.convergence.units_with_warnings[0] (warnings / target / repeat / fold)
@@ -77,7 +78,6 @@ Introduction/contributions bullet,a2_maxgap,0.007,thesis_paper/results/na2_compa
 Conclusions (RQ1),a2_stkmean_amax,0.0004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,max over targets of |extra_pairs.stacking_minus_mean_of_three.mean_diff| (four decimals)
 Conclusions (RQ1),a2_m3_dmax,0.004,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
 Conclusions (RQ1),a2_maxgap,0.007,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,counts or extremes over targets of differences_vs_reference.*.mean_diff and ci95_cluster_bootstrap (thesis_values.na2_na1_values; unchanged value)
-4.1.5 text,na13_platform_delta,0.0062,"docs/decisions.md (2026-10-09 pre-registration, item 3); registry row na13_platform_delta, class CITED",internal record; run output not committed
 Table 7,n_repeats,5,thesis_paper/results/na2_comparison/20261009T190259/comparison.json,len(targets.S.models.xgboost_frozen.per_repeat_r2)
 Table 7,n_folds,5,thesis_paper/results/na2_comparison/20261009T190259/run_config.json,n_folds
 Table 7,optuna_trials,20,paper_a_values.py (Paper A frozen hyperparameters / ladder metrics),"pre-existing key, value unchanged"

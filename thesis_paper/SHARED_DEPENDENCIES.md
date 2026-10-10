@@ -79,6 +79,10 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na13_sigma/20261009T101646/run_configs/session_01.json` | `07c2daa2bcaf0561c54d0e33dafac9b489e7e221c71224b4d20a61e065c16485` | <!-- thesis analysis result -->
 | `thesis_paper/results/na13_kappa/20261009T101651/run_configs/session_01.json` | `c5f566b9105404b122d7caa3c7a7383a27e0d29b7a7dc046f56e9738d247f5e8` | <!-- thesis analysis result -->
 | `thesis_paper/results/na13_zT/20261009T101656/run_configs/session_01.json` | `9c6ce718ca84b5b95528e0820d511c272f366417f4340359782931a19a43d155` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_platform_record/20261008T174804Z/units/kappa_repeat0_fold0.json` | `da2ab2d6bacea9a9a6b408c0ebf55742dbe29574b1dfb1fb4a049db0e78e00f8` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_platform_record/20261008T174804Z/run_configs/session_01.json` | `1e6ffbf1ddb4920e19474faae67ef098c3f8412caa863504e6a5631d4d3bb33c` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_convergence/20261008T093143/diagnostic.json` | `26f5ebc01b110ed1562f2f1028a466296169013c9a728d5915dc7a205698e7cf` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_convergence/20261008T093143/run_config.json` | `2a2b456b0de6fba3523ff7c386314388dc65b2973055ad5de4e6bb8e27358522` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/summary.json` | `c6e5a0cdc996b5035183edc6dbfddeb6ea6e0c71f8f50dc521f0a116407c90dd` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv` | `9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv` | `501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff` | <!-- thesis analysis result -->

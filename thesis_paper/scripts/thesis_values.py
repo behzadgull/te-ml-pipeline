@@ -222,6 +222,8 @@ NA2_STACK_WEIGHTS = "thesis_paper/results/na2_stack_weights/20261010T103738"
 NA13_ANALYSIS = "thesis_paper/results/na13_analysis/20261009T190036"
 NA13_TEMP = "thesis_paper/results/na13_temperature/20261009T194925Z"
 NA13_CONV = "thesis_paper/results/na13_convergence/20261008T171143"
+NA13_PLATFORM = "thesis_paper/results/na13_platform_record/20261008T174804Z"  # one spcai3 CPU fit (kappa, repeat 0, fold 0), a record, not a result
+NA13_WIN_DIAG = "thesis_paper/results/na13_convergence/20261008T093143"  # the Windows diagnostic of the same fold (kappa)
 NA13_BUNDLES = {"S": "thesis_paper/results/na13_S/20261009T101641", "sigma": "thesis_paper/results/na13_sigma/20261009T101646",
                 "kappa": "thesis_paper/results/na13_kappa/20261009T101651", "zT": "thesis_paper/results/na13_zT/20261009T101656"}
 NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
@@ -375,6 +377,7 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA13_ANALYSIS}/analysis.json", f"{NA13_ANALYSIS}/run_config.json", f"{NA13_ANALYSIS}/selection_frequency.csv",
     f"{NA13_TEMP}/summary.json", f"{NA13_TEMP}/run_config.json", f"{NA13_CONV}/summary.json", f"{NA13_CONV}/report.json",
     *[f"{d}/run_configs/session_01.json" for d in NA13_BUNDLES.values()],
+    f"{NA13_PLATFORM}/units/kappa_repeat0_fold0.json", f"{NA13_PLATFORM}/run_configs/session_01.json", f"{NA13_WIN_DIAG}/diagnostic.json", f"{NA13_WIN_DIAG}/run_config.json",
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
     *[f"{r}/{f}" for r in NA3_ROWS for f in ("results.json", "status.json", "run_configs/session_01.json")],
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
@@ -816,6 +819,17 @@ def na13_values():
         v[f"na13_{t}_temp_share"] = f"{100 * (st - p['selected_mean']) / (p['all397_mean'] - p['selected_mean']):.0f}"
         v[f"na13_{t}_temp_below"] = str(25 - s["n_folds_selected_plus_temperature_above_all397"])
         assert all(c_["equal"] for c_ in s["control_selected_only_refit_equals_committed"]), f"{t}: the control refit differs from the committed r2_selected"
+    # the cross-platform variation of one fit: the Windows diagnostic against the spcai3 CPU record (same fold, same selected set, same CSV and max_iter)
+    wd = pav._json(f"{NA13_WIN_DIAG}/diagnostic.json")["targets"]["kappa"]["folds"]["0"]["settings"]["20000"]
+    wrc = pav._json(f"{NA13_WIN_DIAG}/run_config.json")
+    pu = pav._json(f"{NA13_PLATFORM}/units/kappa_repeat0_fold0.json")
+    pu = pu.get("meta", pu)
+    prc = pav._json(f"{NA13_PLATFORM}/run_configs/session_01.json")
+    assert prc["device"] == "cpu" and prc["tree_clean"] and not prc["smoke"] and prc["git_head"] == "47339cfafaa3efc53caafa69133710bb466a4782" and wrc["tree_clean"]
+    assert prc["dataset_sha256"] == wrc["inputs"]["dataset"]["sha256"], "the two runs read different CSVs"
+    assert (pu["target"], pu["repeat"], pu["fold"]) == ("kappa", 0, 0) and pu["lasso_max_iter"] == wd["lasso_max_iter"] == 20000
+    assert pu["selected"] == wd["selected"], "the two runs selected different features; the prose says the same selected set"
+    v["na13_platform_delta"] = f"{abs(wd['outer_r2'] - pu['outer_r2']):.4f}"
     v["na13_ratio_min"], v["na13_ratio_max"] = f"{min(ratios):.1f}", f"{max(ratios):.1f}"
     npv = [a["targets"][t]["counts_over_the_25_folds"]["n_after_pearson"]["mean"] for t in T4]
     v["na13_np_min"], v["na13_np_max"] = f"{min(npv):.0f}", f"{max(npv):.0f}"

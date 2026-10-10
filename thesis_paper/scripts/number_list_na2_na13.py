@@ -96,6 +96,8 @@ def source(k):  # noqa: C901
              "_d": "pooled_per_repeat_r2.selected_plus_temperature_mean minus analysis.json all397_mean", "_share": "(selected_plus_temperature_mean - selected_mean) / (all397_mean - selected_mean) x 100, means from summary and analysis",
              "_below": "n_folds (25) minus n_folds_selected_plus_temperature_above_all397"}[m[2]]
         return T, f"targets.{m[1]}.{f}"
+    if k == "na13_platform_delta":
+        return f"{tv.NA13_WIN_DIAG}/diagnostic.json and {tv.NA13_PLATFORM}/units/kappa_repeat0_fold0.json", "|targets.kappa.folds.0.settings.20000.outer_r2 (Windows CPU) - units/kappa_repeat0_fold0.json outer_r2 (spcai3 CPU)|"
     if k == "na13_conv_lo": return CV, "min(ladder)"
     if k == "na13_conv_folds": return CV, "n_folds"
     if k == "na13_conv_warn_2000": return CV, "A.2000.total_warnings"
@@ -126,9 +128,6 @@ rows, seen = [], set()
 for where, txt in text_sections.items():
     for k in dict.fromkeys(re.findall(r"<!--v:(\w+)-->", txt)):
         rows.append((where, k, v[k], *source(k)))
-for where, txt in text_sections.items():
-    for k in dict.fromkeys(re.findall(r"<!--c:(\w+)-->", txt)):
-        rows.append((where, k, "0.0062", "docs/decisions.md (2026-10-09 pre-registration, item 3); registry row na13_platform_delta, class CITED", "internal record; run output not committed"))
 tr = an.block_traces(paper)
 for n, label in (("7", "Table 7"), ("7b", "Table 7b")):
     for k in dict.fromkeys(key for (_, _, key) in tr[n]):
