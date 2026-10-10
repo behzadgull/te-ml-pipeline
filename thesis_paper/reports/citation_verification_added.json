@@ -1,0 +1,311 @@
+[
+  {
+    "position": 63,
+    "key": "katsura2025starrydata",
+    "doi": "10.1080/27660400.2025.2506976",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Starrydata: from published plots to shared materials data",
+      "author": "Katsura, Yukari and Kumagai, Masaya and Mato, Tomoya and Takada, Yu and Ando, Yuki and Fujita, Erina and Hosono, Fumikazu and Koyama, Eiji and Mudasar, Farhan and Phuong, Ton Nu Thanh and Saito, Naoto and Sakamoto, Yoshihiro and Tanaka, Atsumi and Yana, Dewi and Kimura, Kaoru and Tsuda, Koji and Demura, Masahiko",
+      "year": "2025",
+      "journal": "Science and Technology of Advanced Materials: Methods",
+      "volume": "5",
+      "pages": ""
+    },
+    "record": {
+      "title": "Starrydata: from published plots to shared materials data",
+      "first_author": "Katsura",
+      "year": 2025,
+      "container": "Science and Technology of Advanced Materials: Methods",
+      "volume": "5",
+      "page": "2506976"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": [
+      "the bib entry has no pages; the record gives 2506976"
+    ]
+  },
+  {
+    "position": 64,
+    "key": "ho2026physicsinspired",
+    "doi": "10.1016/j.matdes.2026.116533",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Physics-inspired feature engineering and interpretable machine learning for thermoelectric properties of multicomponent materials",
+      "author": "Ho, Thi H. and Hoang, Nguyen-Hieu and Trinh, Thuat T.",
+      "year": "2026",
+      "journal": "Materials \\& Design",
+      "volume": "268",
+      "pages": "116533"
+    },
+    "record": {
+      "title": "Physics-inspired feature engineering and interpretable machine learning for thermoelectric properties of multicomponent materials",
+      "first_author": "Ho",
+      "year": 2026,
+      "container": "Materials &amp; Design",
+      "volume": "268",
+      "page": "116533"
+    },
+    "journal_similarity": 0.67,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 65,
+    "key": "probst2019hyperparameters",
+    "doi": "10.1002/widm.1301",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Hyperparameters and tuning strategies for random forest",
+      "author": "Probst, Philipp and Wright, Marvin N. and Boulesteix, Anne-Laure",
+      "year": "2019",
+      "journal": "WIREs Data Mining and Knowledge Discovery",
+      "volume": "9",
+      "pages": "e1301"
+    },
+    "record": {
+      "title": "Hyperparameters and tuning strategies for random forest",
+      "first_author": "Probst",
+      "year": 2019,
+      "container": "WIREs Data Mining and Knowledge Discovery",
+      "volume": "9",
+      "page": "e1301"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 66,
+    "key": "gao2022defect",
+    "doi": "10.1007/s40820-022-00964-9",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Defect Passivation on Lead-Free CsSnI3 Perovskite Nanowires Enables High-Performance Photodetectors with Ultra-high Stability",
+      "author": "Gao, Z. and Zhou, H. and Dong, K. and Wang, C. and Wei, J. and Li, Z. and Li, J. and Liu, Y. and Zhao, J. and Fang, G.",
+      "year": "2022",
+      "journal": "Nano-Micro Letters",
+      "volume": "14",
+      "pages": ""
+    },
+    "record": {
+      "title": "Defect Passivation on Lead-Free CsSnI3 Perovskite Nanowires Enables High-Performance Photodetectors with Ultra-High Stability",
+      "first_author": "Gao",
+      "year": 2022,
+      "container": "Nano-Micro Letters",
+      "volume": "14",
+      "page": "215"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": [
+      "the bib entry has no pages; the record gives 215"
+    ]
+  },
+  {
+    "position": 67,
+    "key": "lin2021inorganic",
+    "doi": "10.1021/acsomega.1c04096",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Inorganic Lead-Free B-$\\gamma$-CsSnI3 Perovskite Solar Cells Using Diverse Electron-Transporting Materials",
+      "author": "Lin, S. and Zhang, B. and Lu, T.-Y. and Zheng, J.-C. and Pan, H. and Chen, H. and Lin, C. and Li, X. and Zhou, J.",
+      "year": "2021",
+      "journal": "ACS Omega",
+      "volume": "6",
+      "pages": ""
+    },
+    "record": {
+      "title": "Inorganic Lead-Free B-γ-CsSnI3 Perovskite Solar Cells Using Diverse Electron-Transporting Materials: A Simulation Study",
+      "first_author": "Lin",
+      "year": 2021,
+      "container": "ACS Omega",
+      "volume": "6",
+      "page": "26689-26698"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": [
+      "the record's title has words the bib title lacks: simulation study",
+      "the bib entry has no pages; the record gives 26689-26698"
+    ]
+  },
+  {
+    "position": 68,
+    "key": "monacelli2023first",
+    "doi": "10.1021/acs.chemmater.2c03475",
+    "agency": "Crossref",
+    "bib": {
+      "title": "First-Principles Thermodynamics of CsSnI3",
+      "author": "Monacelli, Lorenzo and Marzari, Nicola",
+      "year": "2023",
+      "journal": "Chemistry of Materials",
+      "volume": "35",
+      "pages": "1702--1709"
+    },
+    "record": {
+      "title": "First-Principles Thermodynamics of CsSnI3",
+      "first_author": "Monacelli",
+      "year": 2023,
+      "container": "Chemistry of Materials",
+      "volume": "35",
+      "page": "1702-1709"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 69,
+    "key": "lee2017transparent",
+    "doi": "10.1146/annurev-matsci-070616-124109",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Transparent Perovskite Barium Stannate with High Electron Mobility and Thermal Stability",
+      "author": "Lee, Woong-Jhae and Kim, Hyung Joon and Kang, Jeonghun and Jang, Dong Hyun and Kim, Tai Hoon and Lee, Jeong Hyuk and Kim, Kee Hoon",
+      "year": "2017",
+      "journal": "Annual Review of Materials Research",
+      "volume": "47",
+      "pages": "391--423"
+    },
+    "record": {
+      "title": "Transparent Perovskite Barium Stannate with High Electron Mobility and Thermal Stability",
+      "first_author": "Lee",
+      "year": 2017,
+      "container": "Annual Review of Materials Research",
+      "volume": "47",
+      "page": "391-423"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 70,
+    "key": "jacob1995phase",
+    "doi": "10.1111/j.1151-2916.1995.tb08821.x",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Phase Relations in the System La-Rh-O and Thermodynamic Properties of LaRhO3",
+      "author": "Jacob, K. T. and Waseda, Y.",
+      "year": "1995",
+      "journal": "Journal of the American Ceramic Society",
+      "volume": "78",
+      "pages": "440--444"
+    },
+    "record": {
+      "title": "Phase Relations in the System La‐Rh‐O and Thermodynamic Properties of LaRhO 3",
+      "first_author": "Jacob",
+      "year": 1995,
+      "container": "Journal of the American Ceramic Society",
+      "volume": "78",
+      "page": "440-444"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": [
+      "the record's title has words the bib title lacks: larho"
+    ]
+  },
+  {
+    "position": 71,
+    "key": "radovic2008thermal",
+    "doi": "10.1016/j.jpowsour.2008.05.063",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Thermal, mechanical and phase stability of LaCoO3 in reducing and oxidizing environments",
+      "author": "Radovic, Miladin and Speakman, Scott A. and Allard, Lawrence F. and Payzant, E. Andrew and Lara-Curzio, Edgar and Kriven, Waltraud M. and Lloyd, John and Fegely, Laura and Orlovskaya, Nina",
+      "year": "2008",
+      "journal": "Journal of Power Sources",
+      "volume": "184",
+      "pages": "77--83"
+    },
+    "record": {
+      "title": "Thermal, mechanical and phase stability of LaCoO3 in reducing and oxidizing environments",
+      "first_author": "Radovic",
+      "year": 2008,
+      "container": "Journal of Power Sources",
+      "volume": "184",
+      "page": "77-83"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 72,
+    "key": "alleno2015invited",
+    "doi": "10.1063/1.4905250",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Invited Article: A round robin test of the uncertainty on the measurement of the thermoelectric dimensionless figure of merit of Co0.97Ni0.03Sb3",
+      "author": "Alleno, E. and Berardan, D. and Byl, C. and Candolfi, C. and Daou, R. and Decourt, R. and Guilmeau, E. and Hebert, S. and Hejtmanek, J. and Lenoir, B. and Masschelein, P. and Ohorodnichuk, V. and Pollet, M. and Populoh, S. and Ravot, D. and Rouleau, O. and Soulier, M.",
+      "year": "2015",
+      "journal": "Review of Scientific Instruments",
+      "volume": "86",
+      "pages": "011301"
+    },
+    "record": {
+      "title": "Invited Article: A round robin test of the uncertainty on the measurement of the thermoelectric dimensionless figure of merit of Co0.97Ni0.03Sb3",
+      "first_author": "Alleno",
+      "year": 2015,
+      "container": "Review of Scientific Instruments",
+      "volume": "86",
+      "page": "011301"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 73,
+    "key": "ryu2025tematdb",
+    "doi": "10.48550/arxiv.2505.19150",
+    "agency": "DataCite",
+    "bib": {
+      "title": "A High-Quality Thermoelectric Material Database with Self-Consistent ZT Filtering",
+      "author": "Ryu, Byungki and Son, Ji Hui and Park, Sungjin and Chung, Jaywan and Lim, Hye-Jin and Park, SuJi and Do, Yujeong and Park, SuDong",
+      "year": "2025",
+      "journal": "",
+      "volume": "",
+      "pages": ""
+    },
+    "record": {
+      "title": "A High-Quality Thermoelectric Material Database with Self-Consistent ZT Filtering",
+      "first_author": "Ryu",
+      "year": 2025,
+      "container": "arXiv",
+      "volume": "",
+      "page": ""
+    },
+    "journal_similarity": null,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 74,
+    "key": "ryu2025tematdbv116",
+    "doi": "10.5281/zenodo.15518036",
+    "agency": "DataCite",
+    "bib": {
+      "title": "teMatDb v1.1.6: Thermoelectric Material Database",
+      "author": "Ryu, Byungki",
+      "year": "2025",
+      "journal": "",
+      "volume": "",
+      "pages": ""
+    },
+    "record": {
+      "title": "teMatDb v1.1.6: Thermoelectric Material Database",
+      "first_author": "Byungki Ryu",
+      "year": 2025,
+      "container": "Zenodo",
+      "volume": "",
+      "page": ""
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  }
+]

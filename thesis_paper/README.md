@@ -23,7 +23,10 @@ unclassified, all of them literature values (Sections 1 to 3.2.2) that wait for 
 | NA12 literature validation of the shortlist | **pending**: the pre-registered design (decisions 2026-10-05, B) and `scripts/na12_literature_comparison.py` exist; `docs/na12_literature_values.csv` is empty until the source PDFs are in `source/pdfs/` (DOIs in its README); Table 12 and Section 4.5.1 are placeholders (2 markers) |
 | Paper B | on hold (it resumes after the thesis paper); the department machine's scripts are in `scripts/dept/` and assume the 12-core V100S machine (spcai3), which is not what the department VM currently shows (6 cores, no GPU visible) |
 
-Citations: all 62 references were checked against Crossref (and publisher pages for the four without a DOI): `reports/citation_verification.csv`;
+Citations: all 72 references were checked against Crossref (DataCite for the arXiv and Zenodo DOIs; publisher pages for the four without a DOI): `reports/citation_verification.csv`
+(rows 1 to 62 by `scripts/verify_citations.py`, rows 63 to 74 by `scripts/verify_added_citations.py` on 2026-10-10, detail in `reports/citation_verification_added.json`; the row
+numbers are positions in `refs.bib` before `hira2018temperature` and `kanas2022tuning`, which are uncited, were removed on 2026-10-10, so rows 59 and 60 describe those two and
+the file's positions are two lower from there on);
 numbers claimed in the text were checked against abstracts: `reports/claim_citation_check.csv`; the judgements and the changes they caused are
 in `reports/literature_verdicts.csv`.
 
@@ -33,7 +36,7 @@ in `reports/literature_verdicts.csv`.
 |---|---|
 | `source/Perovskite_Thermoelectric_Manuscript.docx` | The supervisor's annotated manuscript, byte-identical to the file received (SHA256 in `SHARED_DEPENDENCIES.md`). Black = thesis, blue = rewritten, red = issue notes, yellow highlight = text under revision. Never edited. |
 | `paper/paper.md` | The manuscript: converted from the source, then rewritten, with generated values and table blocks (`make_thesis_values.py`). One red note (the AI-use declaration) and one TODO (an e-mail address the author supplies) remain as HTML comments; no yellow highlight (`<mark>`) remains. |
-| `paper/refs.bib` | 74 entries, of which 72 are cited in `paper.md` as `[@key]` (`hira2018temperature` and `kanas2022tuning` are not). The first 62 are the manuscript's references, built from DOIs by `scripts/build_refs_thesis.py` and checked in `reports/citation_verification.csv`; the entries added since (Ho et al. 2026, the thermal-limit and teMatDb references and others) are entered by hand and are not in that report. |
+| `paper/refs.bib` | 72 entries, all cited in `paper.md` as `[@key]` (checked 2026-10-10). The first 60 are the manuscript's references that are cited, built from DOIs by `scripts/build_refs_thesis.py`; the 12 added since (Ho et al. 2026, the thermal-limit and teMatDb references and others) are entered by hand. All 72 are checked in `reports/citation_verification.csv`. |
 | `figures/source_media/` | The 12 images of the source, extracted unchanged. |
 | `reports/claim_inventory.csv` | One row per number or factual claim, and one per red note, each with a status. |
 | `reports/claim_inventory_summary.md` | Counts per status, the list of new analyses with inputs and effort, the drop candidates, the decisions that change the inventory. |
@@ -75,3 +78,7 @@ powershell thesis_paper/scripts/build_paper.ps1                 # draft docx wit
   `python thesis_paper/scripts/external_rescore.py --models-tar <path>/final_a.tar.gz`; output in `results/external_rescore/<UTC stamp>/`.
 - NA12 (pending): `python thesis_paper/scripts/na12_literature_comparison.py` stops with exit code 3 while `docs/na12_literature_values.csv` is empty. It compares the out-of-fold
   predictions of the committed chemistry-cluster CV (not the final models of Table 11), at the exact-composition and cluster levels (decisions 2026-10-05, B).
+  Run once on 2026-10-10 against the empty values file at HEAD `e307afe` (the working tree held only the uncommitted reference edits of the same change, which the script does
+  not read): exit code 3, message "the values file has no rows yet", and nothing written (the file list, sizes and modification times of `thesis_paper/`, and `git status`, were identical before and after). Notes for the write-up: NA12 checks the CV model, not Table 11; Flahaut et al. is a
+  training source, so its row is labelled as restating the CV error and is not an independent check; Ohtaki's cluster level is the mean over all Ca0.9-substituted rows, as
+  B.2(b) defines it.
