@@ -1,0 +1,16 @@
+{
+ "target": "kappa",
+ "repeat": 0,
+ "fold": 0,
+ "device": "cuda",
+ "n_features_fitted": 40,
+ "r2_selected_plus_temperature": 0.793623700925489,
+ "r2_selected_committed": 0.7682163607797026,
+ "r2_all397_committed": 0.8120420292255622,
+ "delta_vs_selected": 0.025407340145786383,
+ "delta_vs_all397": -0.018418328300073283,
+ "seconds_fit": 2.5520473569922615,
+ "control_selected_only_refit_r2": 0.7682163607797026,
+ "control_equals_committed_r2_selected": true,
+ "control_abs_difference": 0.0
+}

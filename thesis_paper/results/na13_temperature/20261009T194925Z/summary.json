@@ -1,0 +1,208 @@
+{
+ "exploratory": true,
+ "device": "cuda",
+ "units": 100,
+ "complete": true,
+ "targets": {
+  "S": {
+   "pooled_per_repeat_r2": {
+    "committed_selected": [
+     0.7113422513445172,
+     0.7082396142300991,
+     0.7014133162527434,
+     0.6993177497553327,
+     0.6920982085727014
+    ],
+    "selected_plus_temperature": [
+     0.7301516599194937,
+     0.725480866612371,
+     0.7221800855895533,
+     0.7185573875162976,
+     0.7026448532002851
+    ],
+    "committed_all397": [
+     0.7581324613981718,
+     0.7559298343813363,
+     0.7549408628956218,
+     0.7463581661076502,
+     0.7487772232533693
+    ],
+    "committed_selected_mean": 0.7024822280310788,
+    "selected_plus_temperature_mean": 0.7198029705676001,
+    "committed_all397_mean": 0.7528277096072298
+   },
+   "per_fold_delta_selected_plus_temperature_minus_committed_selected": {
+    "mean": 0.017494335302296767,
+    "sd": 0.006978290043177645,
+    "min": -0.0005779666135097283,
+    "max": 0.02910759452675382
+   },
+   "per_fold_delta_selected_plus_temperature_minus_all397": {
+    "mean": -0.03322185304821261,
+    "sd": 0.013411571079316781,
+    "min": -0.07361103473423047,
+    "max": -0.008301110052178373
+   },
+   "n_folds_selected_plus_temperature_above_selected": 24,
+   "n_folds_selected_plus_temperature_above_all397": 0,
+   "control_selected_only_refit_equals_committed": [
+    {
+     "repeat": 0,
+     "fold": 0,
+     "equal": true,
+     "abs_difference": 0.0
+    }
+   ]
+  },
+  "sigma": {
+   "pooled_per_repeat_r2": {
+    "committed_selected": [
+     0.661157045255039,
+     0.6679446009701091,
+     0.6655428944543111,
+     0.6620282207926476,
+     0.662126273178572
+    ],
+    "selected_plus_temperature": [
+     0.6844149507940187,
+     0.6907039195773197,
+     0.6906883881174137,
+     0.6846656071968074,
+     0.6851756185971796
+    ],
+    "committed_all397": [
+     0.7017906439738968,
+     0.7027671259301352,
+     0.7043689236593097,
+     0.6987842059737253,
+     0.7024709634601101
+    ],
+    "committed_selected_mean": 0.6637598069301358,
+    "selected_plus_temperature_mean": 0.6871296968565478,
+    "committed_all397_mean": 0.7020363725994354
+   },
+   "per_fold_delta_selected_plus_temperature_minus_committed_selected": {
+    "mean": 0.023564153573800036,
+    "sd": 0.005483914224626489,
+    "min": 0.014944667081788654,
+    "max": 0.03293268002586436
+   },
+   "per_fold_delta_selected_plus_temperature_minus_all397": {
+    "mean": -0.015098041359404717,
+    "sd": 0.007404724823307924,
+    "min": -0.034018451570162256,
+    "max": 0.0007959008679996327
+   },
+   "n_folds_selected_plus_temperature_above_selected": 25,
+   "n_folds_selected_plus_temperature_above_all397": 1,
+   "control_selected_only_refit_equals_committed": [
+    {
+     "repeat": 0,
+     "fold": 0,
+     "equal": true,
+     "abs_difference": 0.0
+    }
+   ]
+  },
+  "kappa": {
+   "pooled_per_repeat_r2": {
+    "committed_selected": [
+     0.7656243307241862,
+     0.7642092002284328,
+     0.7611809720649844,
+     0.7619516814726922,
+     0.758086406142259
+    ],
+    "selected_plus_temperature": [
+     0.7991476563021961,
+     0.7980716084644011,
+     0.7931974855698171,
+     0.793124679532028,
+     0.7920558144678027
+    ],
+    "committed_all397": [
+     0.8127585647938309,
+     0.8088396506477274,
+     0.8071309251762894,
+     0.8085073587815763,
+     0.8087025488695554
+    ],
+    "committed_selected_mean": 0.7622105181265109,
+    "selected_plus_temperature_mean": 0.7951194488672491,
+    "committed_all397_mean": 0.8091878096537959
+   },
+   "per_fold_delta_selected_plus_temperature_minus_committed_selected": {
+    "mean": 0.03364591452799477,
+    "sd": 0.01043007659777194,
+    "min": 0.020842754586273493,
+    "max": 0.057431643312313985
+   },
+   "per_fold_delta_selected_plus_temperature_minus_all397": {
+    "mean": -0.014215287475275113,
+    "sd": 0.0069764997901608965,
+    "min": -0.026742729890282924,
+    "max": 0.001603277114959445
+   },
+   "n_folds_selected_plus_temperature_above_selected": 25,
+   "n_folds_selected_plus_temperature_above_all397": 1,
+   "control_selected_only_refit_equals_committed": [
+    {
+     "repeat": 0,
+     "fold": 0,
+     "equal": true,
+     "abs_difference": 0.0
+    }
+   ]
+  },
+  "zT": {
+   "pooled_per_repeat_r2": {
+    "committed_selected": [
+     0.4419764981030143,
+     0.4534721296265404,
+     0.4466453674890001,
+     0.45613329211822706,
+     0.4552947387584917
+    ],
+    "selected_plus_temperature": [
+     0.7287541297734783,
+     0.7376257262230133,
+     0.7359453598961133,
+     0.7396117294302234,
+     0.7404766678220978
+    ],
+    "committed_all397": [
+     0.7433376064794383,
+     0.7481162082888431,
+     0.7391599323866178,
+     0.7509378774871683,
+     0.7463280806473281
+    ],
+    "committed_selected_mean": 0.45070440521905475,
+    "selected_plus_temperature_mean": 0.7364827226289852,
+    "committed_all397_mean": 0.745575941057879
+   },
+   "per_fold_delta_selected_plus_temperature_minus_committed_selected": {
+    "mean": 0.2862971038186526,
+    "sd": 0.02754984034797293,
+    "min": 0.2487627150686883,
+    "max": 0.3478101398447305
+   },
+   "per_fold_delta_selected_plus_temperature_minus_all397": {
+    "mean": -0.009180725322628485,
+    "sd": 0.01213671845147805,
+    "min": -0.02970232395704009,
+    "max": 0.01576024378879992
+   },
+   "n_folds_selected_plus_temperature_above_selected": 25,
+   "n_folds_selected_plus_temperature_above_all397": 5,
+   "control_selected_only_refit_equals_committed": [
+    {
+     "repeat": 0,
+     "fold": 0,
+     "equal": true,
+     "abs_difference": 0.0
+    }
+   ]
+  }
+ }
+}

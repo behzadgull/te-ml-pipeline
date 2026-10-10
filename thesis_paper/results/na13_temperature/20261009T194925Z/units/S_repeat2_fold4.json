@@ -1,0 +1,13 @@
+{
+ "target": "S",
+ "repeat": 2,
+ "fold": 4,
+ "device": "cuda",
+ "n_features_fitted": 26,
+ "r2_selected_plus_temperature": 0.659552389380186,
+ "r2_selected_committed": 0.6304447948534322,
+ "r2_all397_committed": 0.6836295600579275,
+ "delta_vs_selected": 0.02910759452675382,
+ "delta_vs_all397": -0.02407717067774151,
+ "seconds_fit": 4.676956957002403
+}
