@@ -62,10 +62,23 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na11_shortlist_limits/20261005T060020/summary.json` | `735cf1d68435bcd78cbce37ee27a025f62443723f8673f31b064a76c3e2ffd77` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_shortlist_limits/20261005T060020/run_config.json` | `81ddbff5dc19ba1c52872ff4c227f22f0ef4396f9c0e09c19bca968ac840c486` | <!-- thesis analysis result -->
 | `thesis_paper/docs/shortlist_thermal_limits.csv` | `c8b9927a8f17ed4cd38f5aae53cde43e8259e7810b50f92781275d5fb2e204d1` | <!-- Paper A artifact / source -->
-| `thesis_paper/results/na2_comparison/20261006T132724/comparison.json` | `a9089cd2ffed78c0a5c7bf7f751641cbe073e2d279c6bfe089dae46ea7f5f936` | <!-- thesis analysis result -->
-| `thesis_paper/results/na2_comparison/20261006T132724/run_config.json` | `be0fb88cdaa9d124db1bde5a460a0ccd338add84ed62f1b513960fe2100ee660` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_comparison/20261009T190259/comparison.json` | `5d7f967285f62b32840420f0c675c4e15987bf69a51c5e27c3521b9b3454b65f` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_comparison/20261009T190259/run_config.json` | `025ed1d6d4874ebb5a10b9260a914939b96e40e754310d330bc08ad000031602` | <!-- thesis analysis result -->
 | `thesis_paper/results/na1_comparison/20261006T050237/comparison.json` | `44fd28b348a5c88d65cf2e60af66c3a3c33e7a127d9ec9c06df55d8c2b458f60` | <!-- thesis analysis result -->
 | `thesis_paper/results/na1_comparison/20261006T050237/run_config.json` | `17c43a38a39e8a7774834a0a9622882571c5417a86b18c7a378b9630ca2f4752` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_stack_weights/20261010T103738/summary.json` | `37c470426a03cd83150479b5072c2b760ef4246822676e118791ae2d2ddd7405` | <!-- thesis analysis result -->
+| `thesis_paper/results/na2_stack_weights/20261010T103738/run_config.json` | `26aa25100c1ad70ae3c951abd61f5629d3f8a3b86b0bc4690105213945ada5c6` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_analysis/20261009T190036/analysis.json` | `db082881be1205df9172672b3ae37365531327ec67bd4b3f6ed432731f792955` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_analysis/20261009T190036/run_config.json` | `9f94ef6bc7a3e213e7a07f06f348f506130ab0462974d9587e8090f6634d945c` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_analysis/20261009T190036/selection_frequency.csv` | `056a11265c3b4ed5a5637946aaf320d2503f53377adf7097c506ebaa6845709f` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_temperature/20261009T194925Z/summary.json` | `ac9c5fe9b4a621b921311ed428ee4eee3abf8b40489bbabf5a278544391322a9` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_temperature/20261009T194925Z/run_config.json` | `d4b3a09865c154ce3efbebb930e72ab6d140cd435ceabacb54b76124a7d3c6dd` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_convergence/20261008T171143/summary.json` | `2ed2a8f1171c86e0138e4a7163c6d7a0f80b1e7b65d9f27859a8557678599dcf` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_convergence/20261008T171143/report.json` | `da3bd5290f6d6a2697710c3d9596500feb08ea32cae74be12740a3b7e29636d9` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_S/20261009T101641/run_configs/session_01.json` | `ffe4627be5429b5ac83d0556cb3fe713c4bc2cd745262ae21c298629d1bfb0e2` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_sigma/20261009T101646/run_configs/session_01.json` | `07c2daa2bcaf0561c54d0e33dafac9b489e7e221c71224b4d20a61e065c16485` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_kappa/20261009T101651/run_configs/session_01.json` | `c5f566b9105404b122d7caa3c7a7383a27e0d29b7a7dc046f56e9738d247f5e8` | <!-- thesis analysis result -->
+| `thesis_paper/results/na13_zT/20261009T101656/run_configs/session_01.json` | `9c6ce718ca84b5b95528e0820d511c272f366417f4340359782931a19a43d155` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/summary.json` | `c6e5a0cdc996b5035183edc6dbfddeb6ea6e0c71f8f50dc521f0a116407c90dd` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv` | `9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474` | <!-- thesis analysis result -->
 | `thesis_paper/results/na11_ranked/20261005T053426/shortlist.csv` | `501586df2768e175c2ea513244c9e5aef4d6482e089e74422fb76b9c3fcc71ff` | <!-- thesis analysis result -->

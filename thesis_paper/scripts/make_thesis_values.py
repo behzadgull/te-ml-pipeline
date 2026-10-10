@@ -166,9 +166,12 @@ def table11b(v):
 def table7(v):
     """Architecture comparison: R2 under chemistry-cluster CV (mean and SD over 5 repeats), and the paired difference from XGBoost with its cluster-bootstrap interval."""
     names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
-    lines = [f"**Table 7:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM and a random forest on the same folds, with each model's difference from XGBoost "
+    lines = [f"**Table 7:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM, a random forest, the mean of the three and their stack on the same folds, with each model's difference from XGBoost "
              f"(same folds, paired) and the chemistry-cluster bootstrap interval of that difference in brackets. XGBoost and LightGBM are tuned with the same {v['optuna_trials']}-trial search; the random forest uses one fixed, "
-             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. The mean of the three models has no fitted weights; the stack with a fitted meta-learner is pending.", "",
+             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. The mean of the three models has no fitted weights. The stack is a non-negative ridge meta-learner over the three models whose weights are fitted on inner out-of-fold predictions inside each "
+             "outer training fold, never on the outer test rows (Section 4.1.3). The last three rows are the paired comparisons fixed before the stack was run (difference of the pooled R^2^ on the same folds, "
+             "chemistry-cluster bootstrap interval in brackets); the best single model is chosen on the same folds, which favours the single model, and the last row is given to four decimals because it is "
+             "below the third.", "",
              "| **Model** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
     for k, nm in names.items():
         cells = []
@@ -181,7 +184,32 @@ def table7(v):
                 cells.append(f"{v[f'a2_{k}_{t}']} ± {v[f'a2_{k}_{t}_sd']} ({v[f'a2_{k}_{t}_d']} [{v[f'a2_{k}_{t}_lo']}, {v[f'a2_{k}_{t}_hi']}])")
         lines.append(f"| {nm} | " + " | ".join(cells) + " |")
     lines.append("| Mean of the three (no fitted weights) | " + " | ".join(f"{v[f'a2_m3_{t}']} ± {v[f'a2_m3_{t}_sd']} ({v[f'a2_m3_{t}_d']} [{v[f'a2_m3_{t}_lo']}, {v[f'a2_m3_{t}_hi']}])" for t in T4) + " |")
-    lines.append("| Stacking (XGBoost + LightGBM + random forest, ridge meta-learner) | " + " | ".join([_pend("NA2: nested stacking")] * 4) + " |")
+    lines.append("| Stacking (XGBoost + LightGBM + random forest, ridge meta-learner, nested) | " + " | ".join(f"{v[f'a2_stk_{t}']} ± {v[f'a2_stk_{t}_sd']}" for t in T4) + " |")
+    lines.append("| Stack minus XGBoost | " + " | ".join(f"{v[f'a2_stk_{t}_d']} [{v[f'a2_stk_{t}_lo']}, {v[f'a2_stk_{t}_hi']}]" for t in T4) + " |")
+    lines.append("| Stack minus the best single model (S: random forest; the other targets: XGBoost) | " + " | ".join(
+        f"{v[f'a2_stkbest_{t}_d']} [{v[f'a2_stkbest_{t}_lo']}, {v[f'a2_stkbest_{t}_hi']}]" for t in T4) + " |")
+    lines.append("| Stack minus the mean of the three | " + " | ".join(f"{v[f'a2_stkmean_{t}_d']} [{v[f'a2_stkmean_{t}_lo']}, {v[f'a2_stkmean_{t}_hi']}]" for t in T4) + " |")
+    return "\n".join(lines)
+
+
+def table7b(v):
+    """Explicit feature selection (NA13): the frozen XGBoost on all 397 features and on the features the thesis's selection keeps, paired on the same folds; and the post hoc refit with temperature_bin added."""
+    lines = [f"**Table 7b:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of each target's frozen XGBoost on all {v['n_feat']} features and on the features kept by the selection of the "
+             f"earlier work, applied inside every outer training fold (Pearson filter at |r| = {v['na13_pearson']}, a LassoCV over {v['na13_alphas']} penalties, then the top k by mutual information on a {v['na13_mi_rows']}-row subsample; "
+             f"k = {v['na13_S_k']}, {v['na13_sigma_k']}, {v['na13_kappa_k']}, {v['na13_zT_k']} for S, *σ*, *κ*, zT). Both fits of a fold use the same rows, machine and device. The paired difference is the comparison fixed before the run "
+             "(difference of the pooled R^2^, chemistry-cluster bootstrap interval in brackets). The last three rows are post hoc and exploratory: the same selected features plus temperature_bin, added after the result above was seen; "
+             "no interval or test is attached to them.", "",
+             "| **Quantity** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
+    row = lambda name, f: lines.append(f"| {name} | " + " | ".join(f(t) for t in T4) + " |")  # noqa: E731
+    row(f"All {v['n_feat']} features", lambda t: f"{v[f'na13_{t}_all']} ± {v[f'na13_{t}_all_sd']}")
+    row("Selected features (k imposed)", lambda t: f"{v[f'na13_{t}_sel']} ± {v[f'na13_{t}_sel_sd']}")
+    row(f"Selected minus all {v['n_feat']} (paired, fixed before the run)", lambda t: f"{v[f'na13_{t}_d']} [{v[f'na13_{t}_lo']}, {v[f'na13_{t}_hi']}]")
+    row(f"Features kept by the Lasso, mean (range over {v['na13_nfolds']} folds)", lambda t: f"{v[f'na13_{t}_nl']} ({v[f'na13_{t}_nl_min']}–{v[f'na13_{t}_nl_max']})")
+    row("k (earlier work)", lambda t: f"{v[f'na13_{t}_k']}")
+    row("Post hoc: selected + temperature_bin", lambda t: f"{v[f'na13_{t}_temp']} ± {v[f'na13_{t}_temp_sd']}")
+    row(f"Post hoc: (selected + temperature_bin) minus all {v['n_feat']}", lambda t: f"{v[f'na13_{t}_temp_d']}")
+    row(f"Post hoc: share of the selected-to-all-{v['n_feat']} gap recovered (%)", lambda t: f"{v[f'na13_{t}_temp_share']}")
+    row(f"Post hoc: folds of {v['na13_nfolds']} with selected + temperature_bin below all {v['n_feat']}", lambda t: f"{v[f'na13_{t}_temp_below']}")
     return "\n".join(lines)
 
 
@@ -208,7 +236,7 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
 
 
 def render(text):

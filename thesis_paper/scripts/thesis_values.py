@@ -217,7 +217,13 @@ NA11_LIMITS = "thesis_paper/results/na11_shortlist_limits/20261005T060020"
 NA11_LIMITS_CSV = "thesis_paper/docs/shortlist_thermal_limits.csv"
 TEMATDB_INVENTORY = "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json"
 TEMATDB_INVENTORY_FILE_A = "results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json"
-NA2_CMP = "thesis_paper/results/na2_comparison/20261006T132724"
+NA2_CMP = "thesis_paper/results/na2_comparison/20261009T190259"  # XGBoost, LightGBM, forest, the mean of three and the nested stack (the 20261006T132724 run has the same numbers for the first four, bit for bit)
+NA2_STACK_WEIGHTS = "thesis_paper/results/na2_stack_weights/20261010T103738"
+NA13_ANALYSIS = "thesis_paper/results/na13_analysis/20261009T190036"
+NA13_TEMP = "thesis_paper/results/na13_temperature/20261009T194925Z"
+NA13_CONV = "thesis_paper/results/na13_convergence/20261008T171143"
+NA13_BUNDLES = {"S": "thesis_paper/results/na13_S/20261009T101641", "sigma": "thesis_paper/results/na13_sigma/20261009T101646",
+                "kappa": "thesis_paper/results/na13_kappa/20261009T101651", "zT": "thesis_paper/results/na13_zT/20261009T101656"}
 NA1_CMP = "thesis_paper/results/na1_comparison/20261006T050237"
 NA11_RANKED = "thesis_paper/results/na11_ranked/20261005T053426"
 GROUPED_DVD = "results/direct_vs_derived_snapfix/20260924T124138_per_target_cuda/results.json"
@@ -365,6 +371,10 @@ EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later ana
     f"{NA2_TUNING}/tuning_summary.json", f"{NA2_TUNING}/run_config.json",
     f"{NA11_LIMITS}/shortlist_limits.csv", f"{NA11_LIMITS}/summary.json", f"{NA11_LIMITS}/run_config.json", NA11_LIMITS_CSV,
     f"{NA2_CMP}/comparison.json", f"{NA2_CMP}/run_config.json", f"{NA1_CMP}/comparison.json", f"{NA1_CMP}/run_config.json",
+    f"{NA2_STACK_WEIGHTS}/summary.json", f"{NA2_STACK_WEIGHTS}/run_config.json",
+    f"{NA13_ANALYSIS}/analysis.json", f"{NA13_ANALYSIS}/run_config.json", f"{NA13_ANALYSIS}/selection_frequency.csv",
+    f"{NA13_TEMP}/summary.json", f"{NA13_TEMP}/run_config.json", f"{NA13_CONV}/summary.json", f"{NA13_CONV}/report.json",
+    *[f"{d}/run_configs/session_01.json" for d in NA13_BUNDLES.values()],
     f"{NA11_RANKED}/summary.json", f"{NA11_RANKED}/ranked_main_30.csv", f"{NA11_RANKED}/shortlist.csv", f"{NA11_RANKED}/run_config.json",
     *[f"{r}/{f}" for r in NA3_ROWS for f in ("results.json", "status.json", "run_configs/session_01.json")],
     *[f"{r}/{f}" for r in (NA3_A, NA3_B) for f in ("results.json", "status.json", "run_configs/session_01.json")],
@@ -702,6 +712,137 @@ def na2_na1_values():
     return v
 
 
+def _pw10(x):
+    """A small number as 'a.b × 10^−n^' (Pandoc superscript), one decimal in the mantissa."""
+    if x == 0:
+        return "0"
+    e = math.floor(math.log10(abs(x)))
+    return f"{x / 10 ** e:.1f} × 10^{'−' if e < 0 else ''}{abs(e)}^"
+
+
+def na2_stack_values():
+    """NA2, nested stacking: the stack's pooled R2 and its three pre-registered paired comparisons (decisions 2026-10-06, items 2 and 4), and the facts behind
+    'the weights are not interpreted'. Everything is read from the committed comparison and weight summary; the asserts stop the build if the prose stops being true."""
+    c2 = pav._json(f"{NA2_CMP}/comparison.json")
+    w = pav._json(f"{NA2_STACK_WEIGHTS}/summary.json")
+    v, d_all, abs_vs_mean = {}, [], []
+    best_name = {"xgboost_frozen": "XGBoost", "random_forest": "the random forest", "lightgbm": "LightGBM"}
+    assert pav._json(f"{NA2_STACK_WEIGHTS}/run_config.json")["n_units_read"] == 100 + 3 * 100  # 100 weight units + 3 x 100 base-model prediction units
+    assert pav._json(f"{NA2_CMP}/run_config.json")["tree_clean"]
+    for t in T4:
+        tt = c2["targets"][t]
+        x = tt["models"]["stacking"]
+        v[f"a2_stk_{t}"], v[f"a2_stk_{t}_sd"] = _r3(x["mean"]), _r3(x["sd"])
+        d = tt["differences_vs_reference"]["stacking"]
+        lo, hi = d["ci95_cluster_bootstrap"]
+        v[f"a2_stk_{t}_d"], v[f"a2_stk_{t}_lo"], v[f"a2_stk_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
+        assert d["mean_diff"] > 0 and lo > 0, f"{t}: the prose says the stack is above XGBoost with an interval that excludes zero"
+        d_all.append(d["mean_diff"])
+        best = tt["best_single"]
+        assert best == ("random_forest" if t == "S" else "xgboost_frozen"), f"{t}: the best single model is {best}; the prose names the forest for S and XGBoost elsewhere"
+        e = tt["extra_pairs"][f"stacking_minus_{best}"]
+        lo2, hi2 = e["ci95_cluster_bootstrap"]
+        v[f"a2_stkbest_{t}_d"], v[f"a2_stkbest_{t}_lo"], v[f"a2_stkbest_{t}_hi"], v[f"a2_stkbest_{t}_name"] = _sg(e["mean_diff"]), _sg(lo2), _sg(hi2), best_name[best]
+        assert lo2 > 0, f"{t}: the prose says the stack is above the best single model with an interval that excludes zero"
+        m = tt["extra_pairs"]["stacking_minus_mean_of_three"]
+        lo3, hi3 = m["ci95_cluster_bootstrap"]
+        v[f"a2_stkmean_{t}_d"], v[f"a2_stkmean_{t}_lo"], v[f"a2_stkmean_{t}_hi"] = _sg(m["mean_diff"], 4), _sg(lo3, 4), _sg(hi3, 4)  # four decimals: below the third
+        assert lo3 < 0 < hi3, f"{t}: the prose says the stack and the unweighted mean do not differ (the interval contains zero)"
+        abs_vs_mean.append(abs(m["mean_diff"]))
+    v["a2_stk_dmin"], v["a2_stk_dmax"] = _r3(min(d_all)), _r3(max(d_all))
+    v["a2_stkmean_amax"] = f"{max(abs_vs_mean):.4f}"
+    assert w["n_folds_per_target"] == 25 and w["overall"]["n_weights"] == 300
+    v["a2_w_min"], v["a2_w_max"] = f"{w['overall']['weight_min']:.2f}", f"{w['overall']['weight_max']:.2f}"
+    v["a2_w_corr_min"] = f"{w['overall']['min_pairwise_prediction_correlation']:.3f}"
+    rng = {t: max(w["targets"][t]["weights"][m]["range_over_folds"] for m in ("xgboost", "lightgbm", "random_forest")) for t in T4}
+    v["a2_w_range_max"], v["a2_w_range_min"] = f"{max(rng.values()):.2f}", f"{min(rng.values()):.2f}"
+    v["a2_nfolds"], v["a2_nfits"] = str(w["n_folds_per_target"]), str(w["n_folds_per_target"] * len(T4))
+    return v
+
+
+def na13_values():
+    """NA13: the thesis's explicit feature selection against all 397 features (the pre-registered paired comparison, `na13_analysis`), the convergence diagnostic that fixed
+    LassoCV's max_iter, and the post hoc temperature_bin refit (`na13_temperature`). Read from the committed artifacts; the asserts tie the prose to them."""
+    import csv
+    import statistics
+
+    a = pav._json(f"{NA13_ANALYSIS}/analysis.json")
+    rc = pav._json(f"{NA13_ANALYSIS}/run_config.json")
+    tmp, tmp_rc = pav._json(f"{NA13_TEMP}/summary.json"), pav._json(f"{NA13_TEMP}/run_config.json")
+    conv = pav._json(f"{NA13_CONV}/summary.json")
+    rep = pav._json(f"{NA13_CONV}/report.json")
+    assert rc["tree_clean"] and a["device"] == "cuda" and a["n_boot"] == 2000 and a["seed"] == 0 and a["pin"] == "aad78f175952cc3d3e2bfd6d14eef94eec98b0f7"
+    assert tmp["exploratory"] and tmp["complete"] and tmp["units"] == 100 and tmp_rc["tree_clean"] and tmp_rc["accepted_as_result"] and tmp_rc["device"] == "cuda"
+    assert tmp_rc["git_head"] == "39e5b26e3e9997bf1b7b3e833c81cfffec08137e"
+    v = {}
+    prm = [pav._json(f"{d}/run_configs/session_01.json")["params"] for d in NA13_BUNDLES.values()]  # the settings every bundle ran with (identical across the four)
+    assert all({k: q[k] for k in ("pearson_max", "n_alphas", "mi_rows", "lasso_max_iter", "device", "k")} == {k: prm[0][k] for k in ("pearson_max", "n_alphas", "mi_rows", "lasso_max_iter", "device", "k")} for q in prm)
+    v["na13_pearson"], v["na13_alphas"] = f"{prm[0]['pearson_max']:g}", str(prm[0]["n_alphas"])
+    v["na13_mi_rows"], v["na13_maxiter"] = _n(prm[0]["mi_rows"]), _n(prm[0]["lasso_max_iter"])
+    sel_freq = {}
+    for r in csv.DictReader(open(REPO_ROOT / NA13_ANALYSIS / "selection_frequency.csv", encoding="utf-8")):
+        sel_freq.setdefault(r["target"], {})[r["feature"]] = int(r["folds_selected"])
+    max_diff, ratios = 0.0, []
+    for t in T4:
+        x = a["targets"][t]
+        p = x["pooled_per_repeat_r2"]
+        d = x["paired_difference_selected_minus_all397"]
+        lo, hi = d["ci95_cluster_bootstrap"]
+        assert hi < 0, f"{t}: the prose says the selected features are lower than all 397 with an interval that excludes zero"
+        assert x["per_fold_delta_r2"]["n_folds_selected_above_all397"] == 0 and x["per_fold_delta_r2"]["n_folds"] == 25
+        v[f"na13_{t}_all"], v[f"na13_{t}_all_sd"] = _r3(p["all397_mean"]), _r3(p["all397_sd"])
+        v[f"na13_{t}_sel"], v[f"na13_{t}_sel_sd"] = _r3(p["selected_mean"]), _r3(p["selected_sd"])
+        v[f"na13_{t}_d"], v[f"na13_{t}_lo"], v[f"na13_{t}_hi"] = _sg(d["mean"]), _sg(lo), _sg(hi)
+        c = x["counts_over_the_25_folds"]
+        k = c["k_thesis"]
+        v[f"na13_{t}_k"] = str(k)
+        assert c["n_selected"]["min"] == c["n_selected"]["max"] == k, f"{t}: n_selected is not constant at k"
+        v[f"na13_{t}_nl"], v[f"na13_{t}_nl_min"], v[f"na13_{t}_nl_max"] = f"{c['n_after_lasso']['mean']:.0f}", f"{c['n_after_lasso']['min']:.0f}", f"{c['n_after_lasso']['max']:.0f}"
+        ratios.append(c["n_after_lasso"]["mean"] / k)
+        v[f"na13_{t}_np"] = f"{c['n_after_pearson']['mean']:.0f}"
+        v[f"na13_{t}_gridmin"] = str(x["alpha_grid_position"]["units_at_grid_minimum"])
+        v[f"na13_{t}_ever"] = str(x["n_distinct_features_ever_selected"])
+        v[f"na13_{t}_always"] = str(len(x["selected_in_every_fold"]))
+        max_diff = max(max_diff, x["committed_rung_alongside_not_used_for_the_claim"]["all397_this_machine_minus_committed_per_fold"]["max_abs"])
+        assert "temperature_bin" not in sel_freq[t] and len(sel_freq[t]) == x["n_distinct_features_ever_selected"], f"{t}: temperature_bin was selected in some fold, or the frequency list is incomplete"
+        # exploratory, post hoc: the selected features plus temperature_bin
+        s = tmp["targets"][t]
+        q = s["pooled_per_repeat_r2"]
+        assert abs(q["committed_selected_mean"] - p["selected_mean"]) < 1e-12 and abs(q["committed_all397_mean"] - p["all397_mean"]) < 1e-12, f"{t}: the temperature run's committed values differ from the analysis"
+        st = q["selected_plus_temperature_mean"]
+        v[f"na13_{t}_temp"] = _r3(st)
+        v[f"na13_{t}_temp_sd"] = _r3(statistics.stdev(q["selected_plus_temperature"]))
+        v[f"na13_{t}_temp_d"] = _sg(st - p["all397_mean"])
+        v[f"na13_{t}_temp_share"] = f"{100 * (st - p['selected_mean']) / (p['all397_mean'] - p['selected_mean']):.0f}"
+        v[f"na13_{t}_temp_below"] = str(25 - s["n_folds_selected_plus_temperature_above_all397"])
+        assert all(c_["equal"] for c_ in s["control_selected_only_refit_equals_committed"]), f"{t}: the control refit differs from the committed r2_selected"
+    v["na13_ratio_min"], v["na13_ratio_max"] = f"{min(ratios):.1f}", f"{max(ratios):.1f}"
+    npv = [a["targets"][t]["counts_over_the_25_folds"]["n_after_pearson"]["mean"] for t in T4]
+    v["na13_np_min"], v["na13_np_max"] = f"{min(npv):.0f}", f"{max(npv):.0f}"
+    v["na13_nfolds"] = str(a["targets"]["S"]["per_fold_delta_r2"]["n_folds"])
+    assert max_diff < 2e-16
+    v["na13_maxdiff"] = _pw10(max_diff)
+    ov = a["overall_100_units"]
+    v["na13_gridmin_units"], v["na13_units"], v["na13_gridmin_pct"] = str(ov["units_with_chosen_alpha_at_grid_minimum"]), str(ov["units"]), f"{100 * ov['share']:.0f}"
+    assert ov["warnings_total"] == 1 and ov["folds_with_warnings"] == 1 and ov["folds_final_refit_not_converged"] == 0
+    uw = [(t, u) for t in T4 for u in a["targets"][t]["convergence"]["units_with_warnings"]]
+    assert len(uw) == 1 and uw[0][1]["final_refit_converged"] and uw[0][1]["in_inner_paths"] == uw[0][1]["warnings"] == 1
+    v["na13_warn_n"], v["na13_warn_target"], v["na13_warn_repeat"], v["na13_warn_fold"] = str(uw[0][1]["warnings"]), NAME[uw[0][0]], str(uw[0][1]["repeat"]), str(uw[0][1]["fold"])
+    # the convergence diagnostic (20 folds, 2000 against 20,000 iterations)
+    A, bcd = conv["A"], conv["B_C_D"]["20000"]
+    assert int(A["adopted_max_iter"]) == 20000 and A["20000"]["holds"] and not A["2000"]["holds"] and not bcd["C_holds"] and not bcd["D_holds"]
+    v["na13_conv_folds"] = str(conv["n_folds"])
+    v["na13_conv_lo"] = str(min(int(i) for i in conv["ladder"]))
+    v["na13_conv_warn_2000"], v["na13_conv_warn_folds_2000"] = str(A["2000"]["total_warnings"]), str(A["2000"]["folds_with_warnings"])
+    v["na13_conv_warn_20000"] = str(A["20000"]["total_warnings"])
+    v["na13_conv_jac_med"], v["na13_conv_jac_min"] = f"{bcd['C_jaccard_median']:.2f}", f"{bcd['C_jaccard_min']:.2f}"
+    thr = [k.rsplit("above_", 1)[1] for k in rep if k.startswith("folds_breaking_D_abs_delta_r2_above_")]
+    assert thr == ["0.005"]
+    v["na13_conv_d_thr"] = thr[0]
+    v["na13_conv_d_n"], v["na13_conv_d_mean"] = str(len(rep["folds_breaking_D_abs_delta_r2_above_0.005"])), _r3(bcd["D_mean_abs_r2_difference"])
+    return v
+
+
 def base_chem(t):
     """The chemistry-cluster R2 of the paper for a target (the ladder run)."""
     return pav._json(pav.LADDER)["runs"][f"{t}_chemistry_full"]["per_repeat_r2_mean"]
@@ -855,6 +996,8 @@ def new_analysis_values():
     v.update(na11_ranked_values())
     v.update(na11_limits_values())
     v.update(na2_na1_values())
+    v.update(na2_stack_values())
+    v.update(na13_values())
     v.update(noise_ceiling_values())
     v.update(na2_design_values())
     return v
