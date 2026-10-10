@@ -42,6 +42,9 @@ regenerate the table with `--write` in the same commit and say why.
 | `thesis_paper/results/na7/20261004T093502/manifest.json` | `0dbd8948b59c8bdce1508c83a7bdee5a795b006a7077c4d938bbd964b28646fc` | <!-- thesis analysis result -->
 | `results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json` | `83ec3e83b5dc1922cd3a7821c973f997ef1480a73095aa0dc2e025ca40f343cd` | <!-- Paper A artifact / source -->
 | `results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json` | `54b47a52fd959bce9f8856e3e87708c7722d5ae7fc040770b4851278fb39a11d` | <!-- Paper A artifact / source -->
+| `thesis_paper/scripts/na4_dataset_statistics.py` | `f2e6a53628abd6cdada216a5e00e0097ab050de09223a054c80492e24cc8b4fb` | <!-- Paper A artifact / source -->
+| `thesis_paper/scripts/na8_error_metrics.py` | `75667b42aae0f2c3310b6c68468003acf3b0f2d4709564e2e7cb9c5129d6ead9` | <!-- Paper A artifact / source -->
+| `thesis_paper/scripts/na11_ranked_list.py` | `950ae49add4227d0df561855f45d414511575baf7b687ef27875243b5c101ebc` | <!-- Paper A artifact / source -->
 | `results/external_snapfix/20260917T160553/estm_results.json` | `fd75cbb6e5a4289277ac440f3771324d2335396c6f81bee1ba96ff03aa0a9016` | <!-- Paper A artifact / source -->
 | `results/ungrouped_snapfix/20260922T093243/S_random_f20/run_config.json` | `a41a4afe6c115b4ed1f1706b2054c0aaeef9a6d27e132afd380d5a15c2663ea7` | <!-- Paper A artifact / source -->
 | `results/ungrouped_snapfix/20260922T093243/S_kfold_f5/run_config.json` | `c0480db0b697a4254927b20045de9ce06c395d3d49dbd35d85d204adcd88d898` | <!-- Paper A artifact / source -->

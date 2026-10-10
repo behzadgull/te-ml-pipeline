@@ -481,6 +481,7 @@ def na11_values():
 
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
     TEMATDB_INVENTORY, TEMATDB_INVENTORY_FILE_A,
+    "thesis_paper/scripts/na4_dataset_statistics.py", "thesis_paper/scripts/na8_error_metrics.py", "thesis_paper/scripts/na11_ranked_list.py",  # read as code (AST) for thresholds and the screening grid
     pav.ESTM_OLD,  # the earlier in-process refit, read for the fit-to-fit sentence of Section 4.2
     *[f"{UNGROUPED_RUNS}/{t}_{s}/run_config.json" for t in ("S", "sigma", "kappa", "zT") for s in ("random_f20", "kfold_f5", "kfold_f10")],
     pav.ESTM.rsplit("/", 1)[0] + "/tematdb_scoring.json", pav.ESTM.rsplit("/", 1)[0] + "/run_config.json",
