@@ -1,0 +1,44 @@
+{
+ "files": {
+  "run_configs/session_01.json": "1e6ffbf1ddb4920e19474faae67ef098c3f8412caa863504e6a5631d4d3bb33c",
+  "status.json": "92aca7f40fd445fd413f17cf88a657ba2ceb88a3aed94d5d1debef19140220b5",
+  "units/kappa_repeat0_fold0.json": "da2ab2d6bacea9a9a6b408c0ebf55742dbe29574b1dfb1fb4a049db0e78e00f8",
+  "units/kappa_repeat0_fold0.npz": "0799deec5dd6125a55dbfce6267cfaa367b8acc641190db8156af53084049ac3"
+ },
+ "identity": {
+  "analysis": "na13_feature_selection",
+  "dataset_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+  "git_head": "47339cfafaa3efc53caafa69133710bb466a4782",
+  "params": {
+   "targets": [
+    "kappa"
+   ],
+   "n_repeats": 5,
+   "n_folds": 5,
+   "seed": 0,
+   "smoke": false,
+   "k": {
+    "S": 25,
+    "sigma": 44,
+    "kappa": 39,
+    "zT": 32
+   },
+   "pearson_max": 0.95,
+   "n_alphas": 20,
+   "mi_rows": 20000,
+   "lasso_max_iter": 20000,
+   "hyperparams": {
+    "kappa": {
+     "n_estimators": 350,
+     "max_depth": 9,
+     "learning_rate": 0.05741815501967946,
+     "subsample": 0.9052182073106718,
+     "colsample_bytree": 0.7081730343531392,
+     "min_child_weight": 6,
+     "reg_lambda": 0.05444122226792827,
+     "reg_alpha": 3.3513428043937066
+    }
+   }
+  }
+ }
+}
