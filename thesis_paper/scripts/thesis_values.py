@@ -548,6 +548,11 @@ def na11_ranked_values():
         v[f"sl_{i}_ehull"] = f"{r.ehull:.3f}"
     assert list(sl["formula"]) == summ["shortlist_order"]
     v["sl_n"] = _n(len(sl))
+    # the prose says that every shortlist compound has a published thermoelectric measurement (the literature check) and a chemistry cluster present in the training data
+    lit_yes = sl["previously_studied_as_thermoelectric"] == "yes"
+    assert lit_yes.all(), f"shortlist compounds without a literature label of yes: {list(sl.loc[~lit_yes, 'formula'])}; the abstract and conclusion must change"
+    assert sl["cluster_seen_any"].astype(bool).all(), "a shortlist compound is in a cluster absent from training"
+    v["sl_lit_yes"], v["sl_seen"] = _n(lit_yes.sum()), _n(sl["cluster_seen_any"].astype(bool).sum())
     assert all(v[f"sl_{i}_T"] == v["sl_1_T"] for i in range(1, 5)) and set(summ["main_30"]["T_at_max_counts"]) == {"800"}
     v["mp_tmax_main"] = str(max(int(k) for k in summ["main_30"]["T_at_max_counts"]))
     v["mp_tmax_all_800"] = _n(summ["all_409"]["T_at_max_counts"]["800"])
