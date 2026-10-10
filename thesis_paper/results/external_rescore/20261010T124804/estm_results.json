@@ -1,0 +1,109 @@
+{
+  "provenance": {
+    "training_csv": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+    "training_csv_sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+    "estm_file": "data/external/estm.xlsx",
+    "estm_file_sha256": "f3853d4e25cc471e8e07734fd520ce27402d3a3da16fb5917a412d3cdf28b850",
+    "models": "the four saved boosters of thesis_paper/results/final_a (no refit)",
+    "model_sha256": {
+      "S": "f94d4052ede66930592982d1c6f9762457508acf2723741f0597594d1cb5661c",
+      "sigma": "b76f65aca7a90184d2e34c747f449ea38aa454e3680dd28ea67c516cb1f76684",
+      "kappa": "026b6e6b6080826246bb39bad27e0fabfc5b14f8b5cb8f61f619d8abf4234967",
+      "zT": "cca78dd976a399e055f072ce47d15a36c6a45dabadc7e9b5cf0d0dfebe7fd426"
+    },
+    "date": "2026-10-10"
+  },
+  "smear_factors": {
+    "sigma": 1.371673615420708,
+    "kappa": 1.068277261869191
+  },
+  "smear_source": "mean over the 5 repeats of the Duan factor of the out-of-fold predictions of results/ladder_regen_snapfix/20260917T150000/{sigma,kappa}_chemistry_full",
+  "smear_per_repeat": {
+    "sigma": [
+      1.3639414531674035,
+      1.375472318650279,
+      1.381578174819206,
+      1.3519485455666924,
+      1.3854275848999593
+    ],
+    "kappa": [
+      1.0671907487932548,
+      1.0721719519821542,
+      1.0659437614952294,
+      1.0673596854103133,
+      1.0687201616650035
+    ]
+  },
+  "smear_training_oof_r2": {
+    "sigma": 0.7020363725994354,
+    "kappa": 0.8091878096537959
+  },
+  "inventory": {
+    "estm_raw_rows": 5205,
+    "n_dropped_temperature_filter": 666,
+    "n_survive_temperature_filter": 4539,
+    "n_parse_failures": 0,
+    "n_featurize_failures_unique_formulas": 0,
+    "n_rows_after_featurization": 4539,
+    "feature_columns_match": true,
+    "n_feature_columns": 397,
+    "unique_estm_dois_overlapping_training": 69,
+    "n_would_drop_doi_dedup": 1416,
+    "unique_estm_clusters_overlapping_training": 300,
+    "n_would_drop_cluster_dedup": 3091
+  },
+  "dedup_a_source_doi": {
+    "n_dropped": 1416,
+    "n_surviving": 3123,
+    "unique_estm_dois_overlapping_training": 69,
+    "results": {
+      "S": {
+        "r2": 0.5604499819755195,
+        "n": 3123
+      },
+      "sigma": {
+        "r2": 0.4040019333495741,
+        "n": 3123
+      },
+      "kappa": {
+        "r2": 0.67210280667671,
+        "n": 3123
+      },
+      "zT_direct": {
+        "r2": 0.6661519382993306,
+        "n": 3123
+      },
+      "zT_derived": {
+        "r2": -0.07837657807436127,
+        "n": 3123
+      }
+    }
+  },
+  "dedup_b_chemistry_cluster": {
+    "n_dropped": 3091,
+    "n_surviving": 1448,
+    "unique_estm_clusters_overlapping_training": 300,
+    "results": {
+      "S": {
+        "r2": 0.33665882794688984,
+        "n": 1448
+      },
+      "sigma": {
+        "r2": 0.2827245960432583,
+        "n": 1448
+      },
+      "kappa": {
+        "r2": 0.5900460759622722,
+        "n": 1448
+      },
+      "zT_direct": {
+        "r2": 0.5132176872935763,
+        "n": 1448
+      },
+      "zT_derived": {
+        "r2": -0.706884877518777,
+        "n": 1448
+      }
+    }
+  }
+}

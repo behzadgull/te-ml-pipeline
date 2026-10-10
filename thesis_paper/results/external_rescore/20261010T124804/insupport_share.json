@@ -1,0 +1,82 @@
+{
+  "a": {
+    "stratum": "DOI-disjoint",
+    "n": 3123,
+    "n_in_support": 2709,
+    "ood_row_fraction": 0.13256484149855907,
+    "properties": {
+      "S": {
+        "r2_full": 0.5604499819755195,
+        "r2_in_support": 0.7449728364583671,
+        "r2_internal_chemistry": 0.7528277096072298,
+        "drop_from_internal": 0.19237772763171024,
+        "recovered_share": 0.9591695294171468,
+        "ood_sse_share": 0.6489688499294842
+      },
+      "sigma": {
+        "r2_full": 0.4040019333495741,
+        "r2_in_support": 0.6090912466294843,
+        "r2_internal_chemistry": 0.7020363725994354,
+        "drop_from_internal": 0.2980344392498613,
+        "recovered_share": 0.6881396451903693,
+        "ood_sse_share": 0.7864835750730662
+      },
+      "kappa": {
+        "r2_full": 0.67210280667671,
+        "r2_in_support": 0.7191490083163667,
+        "r2_internal_chemistry": 0.8091878096537959,
+        "drop_from_internal": 0.13708500297708592,
+        "recovered_share": 0.3431899961188363,
+        "ood_sse_share": 0.36088357998598947
+      },
+      "zT": {
+        "r2_full": 0.6661519382993306,
+        "r2_in_support": 0.6750610143028276,
+        "r2_internal_chemistry": 0.745575941057879,
+        "drop_from_internal": 0.07942400275854844,
+        "recovered_share": 0.1121710779369919,
+        "ood_sse_share": 0.13324408301198598
+      }
+    }
+  },
+  "b": {
+    "stratum": "cluster-disjoint",
+    "n": 1448,
+    "n_in_support": 1196,
+    "ood_row_fraction": 0.17403314917127072,
+    "properties": {
+      "S": {
+        "r2_full": 0.33665882794688984,
+        "r2_in_support": 0.5058484259713791,
+        "r2_internal_chemistry": 0.7528277096072298,
+        "drop_from_internal": 0.41616888166033994,
+        "recovered_share": 0.40654072296201843,
+        "ood_sse_share": 0.6137578428899944
+      },
+      "sigma": {
+        "r2_full": 0.2827245960432583,
+        "r2_in_support": 0.40023327184997604,
+        "r2_internal_chemistry": 0.7020363725994354,
+        "drop_from_internal": 0.41931177655617713,
+        "recovered_share": 0.2802417732500164,
+        "ood_sse_share": 0.7782879818295908
+      },
+      "kappa": {
+        "r2_full": 0.5900460759622722,
+        "r2_in_support": 0.6362414719668716,
+        "r2_internal_chemistry": 0.8091878096537959,
+        "drop_from_internal": 0.21914173369152368,
+        "recovered_share": 0.2108014535908833,
+        "ood_sse_share": 0.3940556824030369
+      },
+      "zT": {
+        "r2_full": 0.5132176872935763,
+        "r2_in_support": 0.5515663863190692,
+        "r2_internal_chemistry": 0.745575941057879,
+        "drop_from_internal": 0.23235825376430275,
+        "recovered_share": 0.1650412602273756,
+        "ood_sse_share": 0.20324143752332058
+      }
+    }
+  }
+}

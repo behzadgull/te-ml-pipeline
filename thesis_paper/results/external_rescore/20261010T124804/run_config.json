@@ -1,0 +1,112 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "estm_xlsx": {
+      "path": "data/external/estm.xlsx",
+      "sha256": "f3853d4e25cc471e8e07734fd520ce27402d3a3da16fb5917a412d3cdf28b850",
+      "bytes": 680110
+    },
+    "tematdb_scoring_frame": {
+      "path": "data/external/tematdb/_scoring_df.csv",
+      "sha256": "d9968f965cd3c17836eef8526f6100c8dc0a01c2cba26648ed0abae79b454789",
+      "bytes": 10274816
+    },
+    "tematdb_inventory": {
+      "path": "results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json",
+      "sha256": "518e75554a4c3da1a01aff4387d780e658cb92f4228d21264c14b7b4da94ee0a",
+      "bytes": 3260
+    },
+    "final_a_manifest": {
+      "path": "thesis_paper/results/final_a/20261004T102855/manifest.json",
+      "sha256": "ab1c8e091f4c762f7ab2e6625bc73818421c95c247bfdbb5f917f4d0880a45d0",
+      "bytes": 2896
+    },
+    "ladder_metrics": {
+      "path": "reports/regen_snapfix/20260917T150000/ladder_metrics.json",
+      "sha256": "23d8b4419b5037c70544da4ef9448f091fd7a638a2eadfe171c4ad70a66fd8bf",
+      "bytes": 14200
+    },
+    "na9_run_config": {
+      "path": "thesis_paper/results/na9/20261003T132121/run_config.json",
+      "sha256": "a18339c95711caeecf6764a1bc847b8f46edcde44a65d5433816569eafb5eda7",
+      "bytes": 1990
+    }
+  },
+  "git_head": "ac3f62679b51537a7d38be597f09785e295b100b",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/external_rescore.py",
+  "script_sha256": "8e3e750b920f8a73a035e27962fff7356d90bb5146ecd12a779c1e5dcb25da42",
+  "python": "3.12.10",
+  "script_args": {
+    "models_tar_sha256": "91719958320c4a3c9b387ae670d15e7295a4624c8fe2ab6d42728b374eb63874"
+  },
+  "model_sha256": {
+    "S": "f94d4052ede66930592982d1c6f9762457508acf2723741f0597594d1cb5661c",
+    "sigma": "b76f65aca7a90184d2e34c747f449ea38aa454e3680dd28ea67c516cb1f76684",
+    "kappa": "026b6e6b6080826246bb39bad27e0fabfc5b14f8b5cb8f61f619d8abf4234967",
+    "zT": "cca78dd976a399e055f072ce47d15a36c6a45dabadc7e9b5cf0d0dfebe7fd426"
+  },
+  "rung_prediction_sha256": {
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat0_fold0_predictions.npz": "a15615f3c201343363bdd7f45a31c8e54c3c6dafa0130a1e0e8736dd8c16d19e",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat0_fold1_predictions.npz": "7b8633416e334016e4e0608811c821cd76bf068417e7127136fc1550b2605fe2",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat0_fold2_predictions.npz": "67e51c881e537143b19ca09e040c51688a61f1a34752d62b974876af640ba3ab",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat0_fold3_predictions.npz": "6f2b4156eff1440122fb82354962faa573b9bc3ad691032987f26c3a4d6f40d2",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat0_fold4_predictions.npz": "6b3b1389c0f01d36e83bed2e07b782a1c7b96f9b64d9754353335975fa78e1d2",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat1_fold0_predictions.npz": "1e50bef1b900e3e72554968a92ccaa4998747a05289ded65e9e45b20887ed6c8",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat1_fold1_predictions.npz": "c1840742f619d22f1e17ef367c52c83556e7f3e76ca94f1576aae29e22234308",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat1_fold2_predictions.npz": "83b0f80cb26f06adfe3765d625ef4d596ade99a349fe046264795f7f15c85c13",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat1_fold3_predictions.npz": "a241d6a43bfe6c5b32d57a31b5a137c220462c511a1bc2453b90db4393926592",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat1_fold4_predictions.npz": "25384690296a9b2d6078368606bfb1a3b21e8d9e56f651b79c70a76f9eda423c",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat2_fold0_predictions.npz": "e7bc701a4ee41286c6772bd25c29e3ad2eab122b877c204b557097d8a70e6cbc",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat2_fold1_predictions.npz": "0bfea9a39c890e3d7c9e31cc22ec173097ac21c23a120a795b2e81ea180af64d",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat2_fold2_predictions.npz": "cf9873dbec05be75074140f3974c9a204a77687b60d1c07554b2b73198508daa",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat2_fold3_predictions.npz": "3ce08a2eda3301283e28fc7a8d7649dd52d5eba59a263d2f169963dd7afa60df",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat2_fold4_predictions.npz": "eb3ac311d4760d32c6d2d066d4a9f24a018e7011ea6fcb10f69865db5d197d78",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat3_fold0_predictions.npz": "21c8b7fdb90b581bb7a2c641fc23a82eff80a0c65d8414b2581c6907c7b156d9",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat3_fold1_predictions.npz": "77881c8f9b9576b1768474244fae923996f1ab20c705a34d32f1be55e908c709",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat3_fold2_predictions.npz": "b25d3111f684a6018f91104af3cd8a27813924d755d10f1138b699a937c7ae39",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat3_fold3_predictions.npz": "0ff3122e00f557cdd3b99f6a1070ba2b63a9607bff541644c598fa28eb99c520",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat3_fold4_predictions.npz": "dc5f7828356f85e0a0b16e93e335c20319ca2a68aa889fab72613e257ba29759",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat4_fold0_predictions.npz": "ddbdaf7a8047e5b67d50e41d3d14a53d0fb5445c6ac65177fbc3beed6b04ad6f",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat4_fold1_predictions.npz": "08160c5389d8b3afd40f1af5f7ca20f01e6b61e6c78587c132f91373607e764c",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat4_fold2_predictions.npz": "8bcc7a52dfb938c1e3b71e4f14384e7aa743ac33f8c8bc9e55c82eda393cdcc8",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat4_fold3_predictions.npz": "9f6a05c11fa3413584992d138c198dc6163f83cb0a18a52d848f6f98eb990e83",
+    "results/ladder_regen_snapfix/20260917T150000/sigma_chemistry_full/repeat4_fold4_predictions.npz": "c1208ed28c53cca0ab3593475397b741a834d9c5b2b461e195803458e9298d8f",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat0_fold0_predictions.npz": "45b666577575c9ecccfc88df1d113afbe7c743c51c221c2bff7f2da8b860f83a",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat0_fold1_predictions.npz": "0a3c55558bf33d457842ed1b14d37f33bb76e32562824393ce2682cd41afd0aa",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat0_fold2_predictions.npz": "c650397af23e06caf189f963e2a613317fedf39c4ce2284ea6494a1e672913a4",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat0_fold3_predictions.npz": "f2845660145daeed99c199e9d2e18b57537937d16e415a9edce7fdd8931eb2b6",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat0_fold4_predictions.npz": "ffb49b2a97f3c4b7d992af2dd4acec18acb0a37b97659cd60e36a7437049e406",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat1_fold0_predictions.npz": "56db726d457cfc9af1322e4a65b5bf6e81e35d20dca7db0cf621900aa84e271a",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat1_fold1_predictions.npz": "97e740d10c1f17953f6937de4ad55055904514ca2c67f70238277ea0e15d3ccb",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat1_fold2_predictions.npz": "c51644d85ecae32ba644d7423389c2f7cbbbb50a335c9c443a7cdf4e398ad5f5",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat1_fold3_predictions.npz": "dc70f1329b1a2699ba2a6691f3df7f0d8288f3baad15a785e836b4f2a7975614",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat1_fold4_predictions.npz": "776156dc8aa4924d7e833e6b363cfe979f07dc4b5f81526c57d5592f9a5c6664",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat2_fold0_predictions.npz": "1210779df83906103f7ee40a89cec0df77074a52ce7f7f3285f94db285232437",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat2_fold1_predictions.npz": "beb67b9f9ab86aa38020996a13e8e22a872637069bd7c998c882472f9632e700",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat2_fold2_predictions.npz": "66fbedb6af27b59abb7ce7038e89001f02e64260d4407b8162ad86c24fb0ffd9",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat2_fold3_predictions.npz": "781ea9ee814bc77be920ae1c670e59f62e891119a9883d69bd764391991c0d33",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat2_fold4_predictions.npz": "bbaa01313a575ed00308d8dc8575e0e706c70616a67b5aee6c1b5d3ff7f1ca24",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat3_fold0_predictions.npz": "602bd12e9f24e29aa9db90e8752e3e14f1bd5b2d5bd53a169e68448dfd90fe71",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat3_fold1_predictions.npz": "db1241985289efb397871a30dd62e50d139fabfb9185984c8b53d6938ada161f",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat3_fold2_predictions.npz": "fcf5879b519444c97c079c0307054f535945ae67b5219872bf529c82fdf0d995",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat3_fold3_predictions.npz": "7809523b3dfecd938b2993a99bb5b5cf9ee2ae988d4fd8fe1bc11bf0912d96cd",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat3_fold4_predictions.npz": "4a709956297f69c6c72927e2d410c9a6abbcc930b8f2a64cd33ac98514090c1a",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat4_fold0_predictions.npz": "d26bfad2e77267d9b841e8a477679bd1854b4ed02bd9e92243420d669a4e482b",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat4_fold1_predictions.npz": "e5f9c803a1a1225e8385bc1a72119c54a1a4a464e28188616a09e402896028c9",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat4_fold2_predictions.npz": "7c9bccc7d7cc4df4e12bc3c9bb1e73c88d482fd5d5115a8003abdd4a628024bd",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat4_fold3_predictions.npz": "bc8072ffa356d1bad22b08ffb3b7bdfdc710dd9ad0fbfe5741b0f931799fc749",
+    "results/ladder_regen_snapfix/20260917T150000/kappa_chemistry_full/repeat4_fold4_predictions.npz": "9ec07d30f174020aa732f4325d95b024b50166b3fe7b5b1f8f546d3f583535c3"
+  },
+  "device_for_prediction": "cpu",
+  "xgboost": "2.0.3",
+  "numpy": "1.26.4",
+  "pandas": "2.2.2",
+  "allow_dirty": false,
+  "accepted_as_result": true
+}
