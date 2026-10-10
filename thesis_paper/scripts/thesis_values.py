@@ -156,6 +156,27 @@ def values():
             v[f"estm_{lab}_{t}"] = _r3(r2)
             v[f"estm_{lab}_insup_{t}"] = _r3(ins[k]["properties"][t]["r2_in_support"])
             v[f"estm_{lab}_drop_{t}"] = f"{r2 - internal:+.3f}".replace("-", "−")
+    # the fit-to-fit difference: the earlier in-process refit against the saved final models, same hyperparameters (one pair of fits)
+    old = j(pav.ESTM_OLD)
+    diffs = {(lab, t): abs(d["results"]["zT_direct" if t == "zT" else t]["r2"] - o["results"]["zT_direct" if t == "zT" else t]["r2"])
+             for lab, d, o in (("a", a, old["dedup_a_source_doi"]), ("b", bb, old["dedup_b_chemistry_cluster"])) for t in T4}
+    (wl, wt), wmax = max(diffs.items(), key=lambda kv: kv[1])
+    v["estm_fit_diff_max"], v["estm_fit_diff_what"] = _r3(wmax), f"{NAME[wt]} in stratum ({wl})"
+    dd = [abs(d["results"]["zT_derived"]["r2"] - o["results"]["zT_derived"]["r2"]) for d, o in ((a, old["dedup_a_source_doi"]), (bb, old["dedup_b_chemistry_cluster"]))]
+    v["estm_fit_diff_derived_min"], v["estm_fit_diff_derived_max"] = _r3(min(dd)), _r3(max(dd))
+    # ordering claims between targets on ESTM must exceed the fit-to-fit difference wmax; otherwise the prose calls the targets tied (decisions 2026-10-10)
+    def ext(d, t):
+        return d["results"]["zT_direct" if t == "zT" else t]["r2"]
+
+    strat = {"a": a, "b": bb}
+    drop = {k: {t: ext(d, t) - ins[k]["properties"][t]["r2_internal_chemistry"] for t in T4} for k, d in strat.items()}
+    for k, d in strat.items():
+        assert all(drop[k][t] < -wmax for t in T4), f"stratum {k}: an external R2 is not below the internal one by more than the margin"
+        assert min(-drop[k]["sigma"], -drop[k]["S"]) - max(-drop[k]["kappa"], -drop[k]["zT"]) > wmax, f"stratum {k}: sigma and S do not lose clearly more than kappa and zT"
+        assert min(ext(d, "kappa"), ext(d, "zT")) - max(ext(d, "S"), ext(d, "sigma")) > wmax, f"stratum {k}: kappa and zT do not transfer clearly better than S and sigma"
+    assert abs(ext(a, "kappa") - ext(a, "zT")) < wmax, "stratum a: kappa and zT are no longer tied"
+    assert ext(bb, "kappa") - ext(bb, "zT") > wmax, "stratum b: kappa is no longer clearly above zT"
+    assert all(ext(a, t) - ext(bb, t) > wmax for t in T4), "the loss is not clearly larger in stratum b for every target"
     v["estm_a_zT_derived"], v["estm_b_zT_derived"] = _r3(a["results"]["zT_derived"]["r2"]), _r3(bb["results"]["zT_derived"]["r2"]).replace("-", "−")
 
     es = {t: bb["results"]["zT_direct" if t == "zT" else t]["r2"] for t in T4}
@@ -366,6 +387,7 @@ def na11_values():
 
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
     TEMATDB_INVENTORY, TEMATDB_INVENTORY_FILE_A,
+    pav.ESTM_OLD,  # the earlier in-process refit, read for the fit-to-fit sentence of Section 4.2
     f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
     f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json", f"{NA10_CLF}/analysis.json", f"{NA10_CLF}/run_config.json",
     f"{NA11_FILTER}/counts.json", f"{NA11_FILTER}/run_config.json", f"{NA11_SENS}/counts.json", f"{NA11_SENS}/run_config.json",
