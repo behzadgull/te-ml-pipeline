@@ -1,0 +1,19 @@
+{
+  "entries_total": 93902,
+  "with_n_seebeck": 23218,
+  "with_p_seebeck": 23218,
+  "with_n_or_p_seebeck": 23218,
+  "with_both": 23218,
+  "parse_failures": 0,
+  "featurisation_failed_unique_formulas": 0,
+  "featurised_entries": 23218,
+  "n_feature_columns": 397,
+  "composition_seen": 885,
+  "composition_unseen": 22333,
+  "cluster_seen": 1150,
+  "cluster_unseen": 22068,
+  "abx3_stoichiometry": 1319,
+  "abx3_stoichiometry_cluster_unseen": 1255,
+  "unique_composition_ids": 18218,
+  "unique_clusters": 18169
+}

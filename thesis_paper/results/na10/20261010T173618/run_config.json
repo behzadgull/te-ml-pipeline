@@ -1,0 +1,39 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "src/external_validation.py": {
+      "path": "src/external_validation.py",
+      "sha256": "f38f1ab71d48fae7e1dd3e19418718569546733d690d298656523fece34930c2",
+      "bytes": 21023
+    }
+  },
+  "git_head": "652b112b4adc22309ce1b5e837003d0ee908648c",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na10_jarvis_prep.py",
+  "script_sha256": "62d0b1f1b19fb03e51348ffabd39a3a2304f4f0782f07adb939a496038d32c2a",
+  "python": "3.12.10",
+  "jarvis": {
+    "jarvis_tools_version": "2026.6.12",
+    "dataset": "dft_3d",
+    "url": "https://ndownloader.figshare.com/files/64391379",
+    "json_name": "jdft_3d-9-24-2025.json",
+    "zip_file": "data\\external\\jarvis\\jdft_3d-9-24-2025.json.zip",
+    "zip_sha256": "f9e0a3309f0000d5de1ec9e49c93963109ea45e63f451103f8f6595d2eabf7f5",
+    "zip_bytes": 48447610,
+    "json_sha256": "9dacb55ac8371c7c2bf0332933b55c98e9cca6201e92eb9d6fcd03aab0975907",
+    "json_bytes": 254061560,
+    "n_entries_total": 93902
+  },
+  "featurised_matrix": {
+    "path": "data\\external\\jarvis\\jarvis_dft3d_seebeck_featurized.csv",
+    "sha256": "3c23d5500fa0d3c6fa6a92313ee61e12fb90f93189697966d5de279adfc49c49",
+    "bytes": 72098294
+  },
+  "seebeck_temperature_K": 600,
+  "entries_csv_sha256": "7e451f90ff36cd992e7156c77504542773df1c4279496b1bcbbec6458e93770a"
+}
