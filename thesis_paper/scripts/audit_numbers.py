@@ -50,6 +50,11 @@ BLOCK = re.compile(r"<!-- BEGIN TABLE (\d+[a-z]?) -->\n(.*?)<!-- END TABLE \1 --
 UNIT_SUFFIX = {"K", "eV", "meV", "nm", "GPa", "MPa", "Å", "h", "s", "mV", "V", "W"}
 NL = "\n"
 
+PROTOCOL_PHRASES = [  # the full phrases of this study's own protocol names; literature rows ("5-fold CV" of another study) are not matched
+    "Random split, 5-fold and 10-fold CV", "Random, 5-fold and 10-fold CV", "**Random 80/20** | **5-fold** | **10-fold**", "Random 80/20 pools",
+    "5-fold and 10-fold are single partitions", "random 80/20 minus chemistry cluster", "random 80/20 draws", "(ii) 5-fold and (iii) 10-fold CV", "shuffled 5-fold",
+]
+
 EXCLUSIONS = [  # (category, regex, group holding the excluded text or 0)
     ("LINK", re.compile(r"\]\([^)\n]*\)"), 0),
     ("LINK", re.compile(r"https?://\S+"), 0),
@@ -64,7 +69,14 @@ EXCLUSIONS = [  # (category, regex, group holding the excluded text or 0)
     ("ENUM", re.compile(r"(?<![\w)])\(\d{1,2}\)(?=\s*[*A-Za-z])"), 0),
     ("MATH", re.compile(r"\$\$.*?\$\$", re.S), 0),
     ("MATH", re.compile(r"\$[^$\n]+\$"), 0),
+    # exact-pattern rules (docs/decisions.md, 2026-10-10): labels and notation that are not values of this study; each has its own count in summary.json
+    ("SPACEGROUP", re.compile(r"\*Pm\*3\u0304\*m\*"), 0),  # the space-group symbol of the ideal perovskite
+    ("EQUATION", re.compile(r"\*\u03c3\* = 1/\*\u03c1\*"), 0),  # the conversion of a resistivity to a conductivity
+    ("STEPRANGE", re.compile(r"\(steps \d{1,2}--\d{1,2}\)"), 0),  # the run-in headings of the cleaning pipeline, "(steps 1--5)"
+    ("PROTOCOL", re.compile("|".join(re.escape(p) for p in PROTOCOL_PHRASES)), 0),  # names of the splitting protocols; tied to the run configurations in thesis_values.py
+    ("PENDING", re.compile(r"\[\[PENDING:[^\]\n]*\]\]"), 0),  # placeholders of analyses that have not run; the build refuses them anyway
 ]
+NEW_RULES = ("SPACEGROUP", "EQUATION", "STEPRANGE", "PROTOCOL", "PENDING")
 NOTATION = [re.compile(r"~[^~\s]+~"), re.compile(r"\^[^^\s]+\^")]  # sub- and superscripts, matched on the text with the math masked out
 TOKEN = re.compile(r"(?<![\w.])10\^[−-]?\d+\^|(?<![\w.])\d+(?:,\d{3})*(?:\.\d+)?")
 
@@ -306,6 +318,10 @@ def main():
     bad = [r for r in rows if r["class"] in ("UNCLASSIFIED", "INVALID_MARKER")]
     by_sec = Counter(r["section"].split(" ")[0] if r["section"] else "(front)" for r in bad)
     summary = {"numbers_total": len(rows), "by_class": dict(sorted(c.items())), "unclassified_or_invalid": len(bad), "unclassified_by_section": dict(sorted(by_sec.items()))}
+    text_clean = prepare(Path(args.paper).read_bytes().decode("utf-8"))[0]
+    spans = Counter(cat for (_, _, cat) in exclusion_spans(text_clean))
+    summary["exclusion_rules"] = {cat: {"pattern": next(rx.pattern for (cc, rx, _) in EXCLUSIONS if cc == cat), "spans": spans.get(cat, 0),
+                                        "numbers_excluded": c.get(f"EXCLUDED:{cat}", 0)} for cat in NEW_RULES}
     if not args.no_write:
         out = OUT_ROOT / rr.utc_stamp()
         out.mkdir(parents=True, exist_ok=True)

@@ -127,8 +127,8 @@ def table8b(v):
 def table10(v):
     """Direct versus derived zT, under chemistry-cluster CV (Paper A run) and random row-level CV (NA7)."""
     lines = [f"**Table 10:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
-             f"({v['dvd_clusters']} chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is 5 repeats x 5 folds "
-             f"of grouped folds; random CV is 5 repeats x 5 folds of shuffled row-level folds; both pool the out-of-fold predictions "
+             f"({v['dvd_clusters']} chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is {v['dvd_repeats']} repeats x {v['dvd_folds']} folds "
+             f"of grouped folds; random CV is {v['na7_repeats']} repeats x {v['na7_folds']} folds of shuffled row-level folds; both pool the out-of-fold predictions "
              f"(n = {v.get('na7_n', _pend('NA7'))}).", "",
              "| **Pathway** | **R^2^ (chemistry-cluster)** | **MAE (chemistry-cluster)** | **R^2^ (random)** | **MAE (random)** |",
              "|------------------------|----------|---------|----------|---------|",

@@ -43,6 +43,18 @@ regenerate the table with `--write` in the same commit and say why.
 | `results/external_snapfix/20260917T160553/tematdb_inventory_snapfix.json` | `83ec3e83b5dc1922cd3a7821c973f997ef1480a73095aa0dc2e025ca40f343cd` | <!-- Paper A artifact / source -->
 | `results/20260911T114356_tematdb_inventory_fileA/inventory_fileA.json` | `54b47a52fd959bce9f8856e3e87708c7722d5ae7fc040770b4851278fb39a11d` | <!-- Paper A artifact / source -->
 | `results/external_snapfix/20260917T160553/estm_results.json` | `fd75cbb6e5a4289277ac440f3771324d2335396c6f81bee1ba96ff03aa0a9016` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/S_random_f20/run_config.json` | `a41a4afe6c115b4ed1f1706b2054c0aaeef9a6d27e132afd380d5a15c2663ea7` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/S_kfold_f5/run_config.json` | `c0480db0b697a4254927b20045de9ce06c395d3d49dbd35d85d204adcd88d898` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/S_kfold_f10/run_config.json` | `ffe7a9be91e9fa5284dccd001f1cfd7284cfa96c4b7cac8c91a3a08aa24ebf1e` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/sigma_random_f20/run_config.json` | `5519b72d7478a0c2322e7d2bd6892e31c0314a37cde127c993a3d4e45878ffe8` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/sigma_kfold_f5/run_config.json` | `b4bbccfa4dd36527d94f907b038d2f6d62e0f630d1206e7b5f9ddeedf2089cc1` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/sigma_kfold_f10/run_config.json` | `e117112f72331bd85147ed0fe1fe0cf26f68d472b19aba112058789fda26269d` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/kappa_random_f20/run_config.json` | `a5b54d44999fa8012336122048ffb00925056d69205727a3d176bee9ae621fed` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/kappa_kfold_f5/run_config.json` | `2318f813367a5e4fcfb369f887d2fc7be2455de0554404af2aec2e62c6672426` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/kappa_kfold_f10/run_config.json` | `80c3dbc1a9f190d9939a299b55f91c9cbd59de97fa5a2e9066ce7fb1ad8d9ad3` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/zT_random_f20/run_config.json` | `ce2036c4982a58fe53632880d53179578ec80fac1be75a165aa65e5c6e3acd3c` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/zT_kfold_f5/run_config.json` | `d12d5f569bc1ab1dc8fd2cf952fbe7567e96cf5e7148e8020745db03897d6919` | <!-- Paper A artifact / source -->
+| `results/ungrouped_snapfix/20260922T093243/zT_kfold_f10/run_config.json` | `e0eea086364be018c3f175f8426158a2e77ef45231a38ea8829f95c529badd0a` | <!-- Paper A artifact / source -->
 | `thesis_paper/results/external_rescore/20261010T124804/tematdb_scoring.json` | `a654c9486b8584a6996472ebd8b3ef95f3c99d858ee39d978cd31cd483362de1` | <!-- thesis analysis result -->
 | `thesis_paper/results/external_rescore/20261010T124804/run_config.json` | `13426681e39ae282fccb6bf834929a7af9e405909bad40e4d948d24d0797028f` | <!-- thesis analysis result -->
 | `thesis_paper/results/na6_metrics/20261004T135638/metrics.json` | `c7a89dd286a0c6964447f096ea5976e2d675df79ac543058c8b13631798d89f6` | <!-- thesis analysis result -->

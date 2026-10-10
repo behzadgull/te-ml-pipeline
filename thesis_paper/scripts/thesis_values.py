@@ -25,6 +25,58 @@ def _r3(x):
     return f"{x:.3f}"
 
 
+def _mad_consistency():
+    """The factor that makes the MAD a consistent estimator of the standard deviation of normal data: 1 / Phi^-1(3/4) = 1.4826."""
+    from scipy.stats import norm
+
+    return 1.0 / float(norm.ppf(0.75))
+
+
+def _script_literal(path, finder):
+    """A numeric literal of a committed script, found by walking its AST with `finder(node) -> value or None`; exactly one distinct value must be found.
+    Used where a script keeps its threshold as a literal inside the statement that computes the quantity (no named constant exists)."""
+    import ast
+
+    tree = ast.parse((REPO_ROOT / path).read_text(encoding="utf-8"))
+    found = {x for node in ast.walk(tree) if (x := finder(node)) is not None}
+    assert len(found) == 1, f"{path}: {sorted(found)}"
+    return found.pop()
+
+
+def _zt_threshold_literal():
+    """The `zt > <literal>` comparison of na4_dataset_statistics.py (the zT cut whose rows are counted as zT_above_3)."""
+    import ast
+
+    def f(n):
+        if isinstance(n, ast.Compare) and isinstance(n.left, ast.Name) and n.left.id == "zt" and isinstance(n.ops[0], ast.Gt) and isinstance(n.comparators[0], ast.Constant):
+            return float(n.comparators[0].value)
+
+    return _script_literal("thesis_paper/scripts/na4_dataset_statistics.py", f)
+
+
+def _top_quantile_literal():
+    """The quantile of `top = y >= np.quantile(y, <literal>)` in na8_error_metrics.py (the top 5% of zT rows)."""
+    import ast
+
+    def f(n):
+        if (isinstance(n, ast.Assign) and isinstance(n.targets[0], ast.Name) and n.targets[0].id == "top" and isinstance(n.value, ast.Compare)
+                and isinstance(n.value.comparators[0], ast.Call) and len(n.value.comparators[0].args) == 2 and isinstance(n.value.comparators[0].args[1], ast.Constant)):
+            return float(n.value.comparators[0].args[1].value)
+
+    return _script_literal("thesis_paper/scripts/na8_error_metrics.py", f)
+
+
+def _screening_grid():
+    """The temperature grid of the screening, GRID in na11_ranked_list.py (a module constant)."""
+    import ast
+
+    tree = ast.parse((REPO_ROOT / "thesis_paper/scripts/na11_ranked_list.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and node.targets[0].id == "GRID":
+            return tuple(ast.literal_eval(node.value))
+    raise AssertionError("GRID not found")
+
+
 def _up(x, nd=3):
     """A value used in an "at most", "up to", "within" or "no more than" claim, or as the upper end of a range: rounded UP, so that the stated bound holds."""
     f = 10 ** nd
@@ -87,7 +139,9 @@ def values():
     assert len({c["MULTI_SOURCE_CV_THRESHOLDS"][t] for t in ("S", "kappa", "zT")}) == 1  # prose: one CV threshold for S, kappa and zT
     v["bins"] = str((c["TEMP_MAX_K"] - c["TEMP_MIN_K"]) // c["TEMP_BIN_WIDTH_K"] + 1)
     v["mad_thr"] = f"{c['MAD_THRESHOLD']:g}"
-    v["mad_sigma"] = f"{c['MAD_THRESHOLD'] / 1.4826:.1f}"
+    v["mad_const"] = f"{_mad_consistency():.4f}"
+    assert v["mad_const"] == "1.4826"
+    v["mad_sigma"] = f"{c['MAD_THRESHOLD'] / _mad_consistency():.1f}"
     v["zt_rel_err"] = f"{100 * c['ZT_SELF_CONSISTENCY_MAX_REL_ERROR']:.0f}"
     v["cv_S"], v["cv_sigma"], v["cv_kappa"], v["cv_zT"] = (f"{c['MULTI_SOURCE_CV_THRESHOLDS'][t]:g}" for t in T4)
     v["min_temps"] = str(c["MIN_TEMP_COVERAGE"])
@@ -96,6 +150,23 @@ def values():
     v["b_S"] = f"{b['S'][0]:g}".replace("-", "−")
     v["b_S_hi"] = f"{b['S'][1]:g}"
     v["b_sigma_lo"] = f"{b['sigma'][0]:g}"
+    assert abs(math.log10(b["sigma"][1]) - round(math.log10(b["sigma"][1]))) < 1e-9
+    v["b_sigma_hi"] = f"10^{round(math.log10(b['sigma'][1]))}^"
+    v["b_zT_lo"] = f"{b['zT'][0]:g}"
+    # the illustrative temperatures of Step 3: the cleaning code puts them in one bin
+    import pandas as _pd
+    sys.path.insert(0, str(REPO_ROOT))
+    from src import data_cleaning as _dc
+    _ex = [298, 300, 303]
+    assert _dc.step3_filter_temperature(_pd.DataFrame({"temperature_K": _ex}))["temperature_bin"].nunique() == 1
+    v["ex_temps"] = f"{_ex[0]}, {_ex[1]} and {_ex[2]}"
+    v["zt_hi_thr"] = f"{_zt_threshold_literal():.1f}"
+    top_q = _top_quantile_literal()
+    v["top_pct"] = f"{100 * (1 - top_q):.0f}"
+    grid = _screening_grid()
+    steps = {grid[i + 1] - grid[i] for i in range(len(grid) - 1)}
+    assert len(steps) == 1, "the screening grid is not uniform"
+    v["scr_T_step"] = str(steps.pop())
     v["b_kappa_lo"] = f"{b['kappa'][0]:g}"
     v["b_kappa_hi"] = f"{b['kappa'][1]:g}"
     v["b_zT_hi"] = f"{b['zT'][1]:g}"
@@ -119,7 +190,7 @@ def values():
     lo, hi = min(gaps, key=gaps.get), max(gaps, key=gaps.get)
     v["gap_lo"], v["gap_lo_name"] = f"{gaps[lo]:.3f}", NAME[lo]
     v["gap_hi"], v["gap_hi_name"] = f"{gaps[hi]:.3f}", NAME[hi]
-    v["spread_max"] = _up(max(max(p) - min(p) for p in ([ung["per_run"][t][k]["pooled_r2"] for k in ("random", "kfold5", "kfold10")] for t in T4)))  # "at most": rounded up
+    v["spread_max"] = f"{max(max(p) - min(p) for p in ([ung['per_run'][t][k]['pooled_r2'] for k in ('random', 'kfold5', 'kfold10')] for t in T4)):.3f}"  # an exact maximum: nearest
     v["foldsd_min"] = f"{min(float(v[f'foldsd_{t}']) for t in T4):.3f}"
     v["foldsd_max"] = f"{max(float(v[f'foldsd_{t}']) for t in T4):.3f}"
     ab = abl
@@ -139,6 +210,14 @@ def values():
     v["repeats"] = str(ladder["runs"]["S_chemistry_full"]["n_repeats_cfg"])
     v["outer_folds"] = str(ladder["runs"]["S_chemistry_full"]["n_outer_folds_cfg"])
     v["rand_draws"] = str(ung["per_run"]["S"]["random"]["n_files"])
+    # the names of the splitting protocols typed in the prose ("random 80/20", "5-fold", "10-fold") are tied to the committed run configurations
+    assert config_value("src/nested_cv.py:RANDOM_HOLDOUT_TEST_SIZE") == "0.2"
+    for t_ in T4:
+        for sub, nf in (("random_f20", 20), ("kfold_f5", 5), ("kfold_f10", 10)):
+            rc_ = pav._json(f"{UNGROUPED_RUNS}/{t_}_{sub}/run_config.json")
+            assert rc_["n_outer_folds"] == nf and rc_["n_repeats"] == 1, (t_, sub)
+            assert rc_["split_strategy"] == ("random" if sub.startswith("random") else "kfold"), (t_, sub)
+    assert v["rand_draws"] == "20"
     v["n_pooled_chem_zT"] = _n(ladder["runs"]["zT_chemistry_full"]["pooled_n"])
 
     # ---- hyperparameters
@@ -256,6 +335,7 @@ NA2_STACK_WEIGHTS = "thesis_paper/results/na2_stack_weights/20261010T103738"
 NA13_ANALYSIS = "thesis_paper/results/na13_analysis/20261009T190036"
 NA13_TEMP = "thesis_paper/results/na13_temperature/20261009T194925Z"
 NA13_CONV = "thesis_paper/results/na13_convergence/20261008T171143"
+UNGROUPED_RUNS = "results/ungrouped_snapfix/20260922T093243"  # run_config.json of the random 80/20, 5-fold and 10-fold runs
 NA13_PLATFORM = "thesis_paper/results/na13_platform_record/20261008T174804Z"  # one spcai3 CPU fit (kappa, repeat 0, fold 0), a record, not a result
 NA13_WIN_DIAG = "thesis_paper/results/na13_convergence/20261008T093143"  # the Windows diagnostic of the same fold (kappa)
 NA13_BUNDLES = {"S": "thesis_paper/results/na13_S/20261009T101641", "sigma": "thesis_paper/results/na13_sigma/20261009T101646",
@@ -295,7 +375,8 @@ def na7_values():
             "na7_rmse_direct": f"{r['zT_direct']['rmse']:.3f}", "na7_rmse_derived": f"{r['zT_derived']['rmse']:.3f}",
             "na7_gap": _r3(gap_random), "na7_grouped_gap": _r3(gap_grouped), "na7_ratio": f"{gap_grouped / gap_random:.1f}",
             "na7_sigma": _r3(r["sigma_log10"]["pooled_r2"]), "na7_S": _r3(r["S"]["pooled_r2"]), "na7_kappa": _r3(r["kappa_log10"]["pooled_r2"]),
-            "na7_n": _n(r["zT_direct"]["n"])}
+            "na7_n": _n(r["zT_direct"]["n"]), "na7_repeats": str(r["n_repeats"]), "na7_folds": str(r["n_folds"]),
+            "dvd_repeats": str(g["n_repeats"]), "dvd_folds": str(g["n_outer_folds"])}
 
 
 def na10_values():
@@ -401,6 +482,7 @@ def na11_values():
 EXTRA_FILES = [  # thesis-paper results read by the value hooks of the later analyses, pinned in SHARED_DEPENDENCIES.md
     TEMATDB_INVENTORY, TEMATDB_INVENTORY_FILE_A,
     pav.ESTM_OLD,  # the earlier in-process refit, read for the fit-to-fit sentence of Section 4.2
+    *[f"{UNGROUPED_RUNS}/{t}_{s}/run_config.json" for t in ("S", "sigma", "kappa", "zT") for s in ("random_f20", "kfold_f5", "kfold_f10")],
     pav.ESTM.rsplit("/", 1)[0] + "/tematdb_scoring.json", pav.ESTM.rsplit("/", 1)[0] + "/run_config.json",
     f"{NA6_METRICS}/metrics.json", f"{NA6_METRICS}/run_config.json", f"{NA6_SIGN}/sign_comparison_same_folds.json", f"{NA6_SIGN}/run_config.json",
     f"{NA10_ANALYSIS}/analysis.json", f"{NA10_ANALYSIS}/run_config.json", f"{NA10_CLF}/analysis.json", f"{NA10_CLF}/run_config.json",
@@ -733,10 +815,11 @@ def na2_na1_values():
         v[f"a2_m3_{t}_d"], v[f"a2_m3_{t}_lo"], v[f"a2_m3_{t}_hi"] = _sg(d["mean_diff"]), _sg(lo), _sg(hi)
         assert d["mean_diff"] > 0 and lo > 0, f"{t}: the prose says the mean of the three is above XGBoost with an interval that excludes zero"
         gains.append(d["mean_diff"])
-    v["a2_m3_dmin"], v["a2_m3_dmax"] = _down(min(gains)), _up(max(gains))
+    v["a2_m3_dmin"], v["a2_m3_dmax"] = _r3(min(gains)), _r3(max(gains))  # the observed range: nearest
+    v["a2_m3_dmax_ub"] = _up(max(gains))  # the bound in "above XGBoost by at most"
     for m, k in (("lightgbm", "lgbm"), ("random_forest", "rf")):
         vals = [abs(c2["targets"][t]["differences_vs_reference"][m]["mean_diff"]) for t in tops] if m == "random_forest" else [abs(d) for mm, d in diffs if mm == m]
-        v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _down(min(vals)), _up(max(vals)), str(len(vals))
+        v[f"a2_{k}_dmin"], v[f"a2_{k}_dmax"], v[f"a2_{k}_n"] = _r3(min(vals)), _r3(max(vals)), str(len(vals))
     v["a2_maxgap"] = _up(max(abs(d) for _, d in diffs))
     v["a2_n_diffs"], v["a2_n_excl"] = str(len(diffs)), str(excl)
     v["n_repeats"], v["n_folds"] = str(len(c2["targets"]["S"]["models"]["xgboost_frozen"]["per_repeat_r2"])), str(pav._json(f"{NA2_CMP}/run_config.json")["n_folds"])
@@ -796,7 +879,7 @@ def na2_stack_values():
         v[f"a2_stkmean_{t}_d"], v[f"a2_stkmean_{t}_lo"], v[f"a2_stkmean_{t}_hi"] = _sg(m["mean_diff"], 4), _sg(lo3, 4), _sg(hi3, 4)  # four decimals: below the third
         assert lo3 < 0 < hi3, f"{t}: the prose says the stack and the unweighted mean do not differ (the interval contains zero)"
         abs_vs_mean.append(abs(m["mean_diff"]))
-    v["a2_stk_dmin"], v["a2_stk_dmax"] = _down(min(d_all)), _up(max(d_all))
+    v["a2_stk_dmin"], v["a2_stk_dmax"] = _r3(min(d_all)), _r3(max(d_all))
     v["a2_stkmean_amax"] = _up(max(abs_vs_mean), 4)
     assert w["n_folds_per_target"] == 25 and w["overall"]["n_weights"] == 300
     v["a2_w_min"], v["a2_w_max"] = f"{w['overall']['weight_min']:.2f}", f"{w['overall']['weight_max']:.2f}"
@@ -957,6 +1040,32 @@ def tematdb_values(margin):
 
 
 
+def grouping_values(base):
+    """Numbers of Sections 3.3 and 3.5 that follow from the chemistry-cluster rule and the feature counts: the temperature feature (397 minus the MAGPIE and
+    CBFV features), and the selenium fraction of the worked example (checked against the grouping code in the same place)."""
+    sys.path.insert(0, str(REPO_ROOT))
+    from pymatgen.core import Composition
+
+    from src.canonicalization import DEFAULT_DOPANT_THRESHOLD_FRAC, chemistry_cluster_id, parse_formula
+
+    v = {}
+    n_temp = int(base["n_feat"].replace(",", "")) - int(base["n_magpie"]) - int(base["n_cbfv"])
+    assert n_temp == 1, n_temp
+    v["n_temp"] = str(n_temp)
+    se = 100 * Composition("Bi2Te2.7Se0.3").get_atomic_fraction("Se")
+    assert se > 100 * DEFAULT_DOPANT_THRESHOLD_FRAC, "selenium would be a dopant"
+    v["se_pct"] = f"{se:.1f}"
+
+    def cid(formula):
+        comp, err = parse_formula(formula)
+        assert comp is not None, (formula, err)
+        return chemistry_cluster_id(comp)
+
+    assert cid("(PbTe)0.97(SrTe)0.02(Na2Te)0.01") == cid("Pb0.97Te") == cid("PbTe"), "the worked example no longer groups with PbTe"
+    assert cid("Bi2Te2.7Se0.3") != cid("Bi2Te3"), "the worked example now groups with Bi2Te3"
+    return v
+
+
 def base_chem(t):
     """The chemistry-cluster R2 of the paper for a target (the ladder run)."""
     return pav._json(pav.LADDER)["runs"][f"{t}_chemistry_full"]["per_repeat_r2_mean"]
@@ -1113,6 +1222,7 @@ def new_analysis_values():
     v.update(na2_stack_values())
     v.update(na13_values())
     v.update(tematdb_values(float(base["estm_fit_diff_max_raw"])))
+    v.update(grouping_values(base))
     v.update(noise_ceiling_values())
     v.update(na2_design_values())
     return v
