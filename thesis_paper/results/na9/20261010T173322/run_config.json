@@ -1,0 +1,30 @@
+{
+  "inputs": {
+    "training_csv": {
+      "path": "data/processed/featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "estm_xlsx": {
+      "path": "data/external/estm.xlsx",
+      "sha256": "f3853d4e25cc471e8e07734fd520ce27402d3a3da16fb5917a412d3cdf28b850",
+      "bytes": 680110
+    },
+    "estm_results": {
+      "path": "thesis_paper/results/external_rescore/20261010T124804/estm_results.json",
+      "sha256": "2959e283e2711fc7523da43105fc6be5ef35334968ceb17e7ef74ce8b7866db0",
+      "bytes": 3202
+    },
+    "src/external_validation.py": {
+      "path": "src/external_validation.py",
+      "sha256": "f38f1ab71d48fae7e1dd3e19418718569546733d690d298656523fece34930c2",
+      "bytes": 21023
+    }
+  },
+  "git_head": "9d0a3c9ad82bda1240a3a31eaf442c7d755dbf42",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na9_estm_counts.py",
+  "script_sha256": "5771a7e2b5c503479dbf537ff1279c56297a0ac213cd2820dad1163ef4a5cb4c",
+  "python": "3.12.10"
+}
