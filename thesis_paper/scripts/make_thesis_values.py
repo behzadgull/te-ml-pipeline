@@ -227,23 +227,29 @@ def table7b(v):
     return "\n".join(lines)
 
 
-LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation protocol); values as the studies report them, N/R = not reported
-    ("Parse et al. [@parse2024predicting]", "XGBoost", "Starrydata2", "18.1K", "R^2^ (zT) 0.815", "5-fold CV"),
-    ("Jia et al. [@jia2024dealing]", "GBDT", "Starrydata2", "92K", "R^2^ (zT) 0.89--0.90", "Composition-level CV"),
+LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation protocol); values as the studies report them; each number is a CITED marker (docs/number_registry.csv)
+    ("Parse et al. [@parse2024predicting]", "XGBoost", "Starrydata2", "<!--c:parse2024_rows_k-->18.1<!--/c-->K", "R^2^ (zT) <!--c:parse2024_r2-->0.815<!--/c--> (test)",
+     "Compound-wise <!--c:parse2024_train_pct-->80<!--/c-->/<!--c:parse2024_test_pct-->20<!--/c--> split; <!--c:parse2024_folds-->5<!--/c-->-fold CV also reported"),
+    ("Jia et al. [@jia2024dealing]", "GBDT", "Starrydata2", "<!--c:jia2024_rows_k-->92.3<!--/c-->K",
+     "R^2^ (zT) <!--c:jia2024_r2_cv-->0.89<!--/c--> (CV); <!--c:jia2024_r2_test-->0.90<!--/c--> (test)", "Composition-level <!--c:jia2024_folds-->10<!--/c-->-fold CV and a test set"),
     ("Ma & Poon [@ma2025reexamining]", "LightGBM", "Compiled TE", "<!--c:ma2025_rows-->14.1<!--/c-->K",
      "R^2^ (zT) <!--c:ma2025_zT_r2-->0.86<!--/c-->; R^2^ (\\|S\\|) <!--c:ma2025_S_r2-->0.8<!--/c-->", "Not stated"),
-    ("Sun et al. [@sun2025rationally]", "DNN", "Starrydata2", "N/R", "R^2^ (zT) 0.90 (test)", "Train/test split"),
-    ("Barua et al. [@barua2025thermoelectric]", "XGBoost", "Starrydata2", "∼160K", "R^2^ (zT) 0.67--0.80", "Three external test sets"),
-    ("Wang et al. [@wang2025highperformance]", "Stacking", "Mixed", "5.2K", "R^2^ (zT) 0.97", "10-fold CV"),
-    ("Elavunkel & Padhan [@elavunkel2025unlocking]", "Stacking", "Half-Heusler", "small", "R^2^ (S) 0.99; R^2^ (zT) 0.92", "Random split"),
+    ("Sun et al. [@sun2025rationally]", "DNN", "Starrydata2", "<!--c:sun2025_rows_k-->231.1<!--/c-->K",
+     "R^2^ (zT) <!--c:sun2025_r2_test-->0.90<!--/c--> (test); <!--c:sun2025_r2_train-->0.95<!--/c--> (training)", "Compound-disjoint train/test split"),
+    ("Barua et al. [@barua2025thermoelectric]", "XGBoost", "Starrydata2", "∼<!--c:barua2025_rows_k-->160<!--/c-->K",
+     "R^2^ (zT) <!--c:barua2025_r2_lo-->0.67<!--/c-->--<!--c:barua2025_r2_hi-->0.80<!--/c-->", "Three external test sets"),
+    ("Wang et al. [@wang2025highperformance]", "Stacking", "UCSB dataset and literature", "<!--c:wang2025_rows_k-->5.2<!--/c-->K", "R^2^ (zT) <!--c:wang2025_r2-->0.970<!--/c-->",
+     "<!--c:wang2025_folds-->10<!--/c-->-fold CV"),
+    ("Elavunkel & Padhan [@elavunkel2025unlocking]", "Stacking", "Half-Heusler", "Not stated in the abstract",
+     "R^2^ (S) <!--c:elavunkel2025_r2_S-->0.99<!--/c-->; (*σ*) <!--c:elavunkel2025_r2_sigma-->0.96<!--/c-->; (*κ*) <!--c:elavunkel2025_r2_kappa-->0.93<!--/c-->; (zT) <!--c:elavunkel2025_r2_zT-->0.92<!--/c-->",
+     "Not stated in the abstract"),
 ]
 
 
 def table1(v):
     """Recent ML studies: the metric and the validation protocol each reports (no value of this work, no ranking)."""
     lines = ["**Table 1:** Recent ML studies of thermoelectric property prediction: the metric and the validation protocol each reports, as the authors report them. "
-             "The studies differ in dataset, target, preprocessing and protocol, so the values are not comparable with one another or with the R^2^ of this work. "
-             "N/R = not reported.", "",
+             "The studies differ in dataset, target, preprocessing and protocol, so the values are not comparable with one another or with the R^2^ of this work.", "",
              "| **Study** | **Model** | **Source** | **Rows** | **Reported metric** | **Validation protocol** |",
              "|--------------|----------|-----------|-----------|-------------------|------------|"]
     lines += [f"| {a} | {b} | {c} | {d} | {e} | {f} |" for (a, b, c, d, e, f) in LIT_ROWS]

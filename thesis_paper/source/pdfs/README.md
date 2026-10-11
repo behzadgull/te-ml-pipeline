@@ -44,7 +44,7 @@ filled and committed. Name each file `<first author><year>.pdf`.
 | File name | DOI | Compound(s) to read | Notes |
 |---|---|---|---|
 | `sebastialuna2022.pdf` | 10.1021/acsaem.2c01936 | CsSnI3 (vacuum-deposited films) | S, sigma, kappa as given; open access (PMC9400028) |
-| `singh2016.pdf` | 10.1080/14786435.2016.1263404 | LaCoO3 | open version arXiv:1606.01539 |
+| `singh2016.pdf` | 10.1080/14786435.2016.1263404 | LaCoO3 | the file in this folder is the published Philosophical Magazine version (97(6):451-463, Taylor & Francis cover page and typeset pages with the journal header; checked 2026-10-11), not the arXiv preprint 1606.01539 |
 | `shibasaki2009.pdf` | 10.1007/s11664-009-0666-x | LaRhO3 (undoped member of the B-site series) | related open preprint arXiv:0712.1626 (LaRh1-xNixO3); read the undoped member only if the paper tabulates it |
 | `rajasekaran2020.pdf` | 10.1039/d0ce00702a | La-doped BaSnO3 (undoped BaSnO3 if reported) | the BaSnO3 literature found is for La-doped samples; compositions as written in the paper |
 | `ohta2005.pdf` | 10.1063/1.1847723 | La- and Nb-doped SrTiO3 single crystals | S, sigma (and kappa if given) against temperature; the same single file as in the first table (audit row L07); download it once |
