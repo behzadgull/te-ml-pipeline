@@ -80,7 +80,7 @@ where L is the Lorenz number. The only transport parameter that can be reduced r
 
 ![Figure 2](../figures/source_media/image2.png){width="4.385416666666667in" height="4.052083333333333in"}
 
-**Figure 2:** Carrier-concentration dependence of the thermoelectric transport properties. The figure of merit (zT) reaches its maximum at an optimum carrier concentration of ≈10^19^--10^20^ cm^−3^.
+**Figure 2:** Carrier-concentration dependence of the thermoelectric transport properties. The figure of merit (zT) reaches its maximum at an optimum carrier concentration.
 
 Several strategies approach the PGEC ideal [@slack1995materials]. Band convergence aligns multiple band extrema to enhance the density-of-states effective mass and hence S without reducing mobility [@pei2011convergence]. Nanostructuring introduces grain boundaries that scatter long-wavelength phonons more effectively than charge carriers, reducing *κ*~l~ while preserving *σ* [@biswas2012performance]. Doping or alloying introduces mass and strain fluctuations that scatter phonons over a range of frequencies. Interest has also grown in materials with intrinsic bond anharmonicity: lone-pair electrons (SnSe, BiCuSeO), rattling cations in oversized cages (skutterudites, clathrates) and soft lattice modes (halide perovskites) produce strong anharmonic phonon--phonon interactions and intrinsically low *κ*~l~ without complex processing [@zhao2014ultralow].
 
