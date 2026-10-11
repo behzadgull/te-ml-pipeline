@@ -10,7 +10,7 @@
       "year": "2025",
       "journal": "Science and Technology of Advanced Materials: Methods",
       "volume": "5",
-      "pages": ""
+      "pages": "2506976"
     },
     "record": {
       "title": "Starrydata: from published plots to shared materials data",
@@ -22,9 +22,7 @@
     },
     "journal_similarity": 1.0,
     "problems": [],
-    "notes": [
-      "the bib entry has no pages; the record gives 2506976"
-    ]
+    "notes": []
   },
   {
     "position": 64,
@@ -87,7 +85,7 @@
       "year": "2022",
       "journal": "Nano-Micro Letters",
       "volume": "14",
-      "pages": ""
+      "pages": "215"
     },
     "record": {
       "title": "Defect Passivation on Lead-Free CsSnI3 Perovskite Nanowires Enables High-Performance Photodetectors with Ultra-High Stability",
@@ -99,9 +97,7 @@
     },
     "journal_similarity": 1.0,
     "problems": [],
-    "notes": [
-      "the bib entry has no pages; the record gives 215"
-    ]
+    "notes": []
   },
   {
     "position": 67,
@@ -109,12 +105,12 @@
     "doi": "10.1021/acsomega.1c04096",
     "agency": "Crossref",
     "bib": {
-      "title": "Inorganic Lead-Free B-$\\gamma$-CsSnI3 Perovskite Solar Cells Using Diverse Electron-Transporting Materials",
+      "title": "Inorganic Lead-Free B-$\\gamma$-CsSnI3 Perovskite Solar Cells Using Diverse Electron-Transporting Materials: A Simulation Study",
       "author": "Lin, S. and Zhang, B. and Lu, T.-Y. and Zheng, J.-C. and Pan, H. and Chen, H. and Lin, C. and Li, X. and Zhou, J.",
       "year": "2021",
       "journal": "ACS Omega",
       "volume": "6",
-      "pages": ""
+      "pages": "26689--26698"
     },
     "record": {
       "title": "Inorganic Lead-Free B-γ-CsSnI3 Perovskite Solar Cells Using Diverse Electron-Transporting Materials: A Simulation Study",
@@ -126,10 +122,7 @@
     },
     "journal_similarity": 1.0,
     "problems": [],
-    "notes": [
-      "the record's title has words the bib title lacks: simulation study",
-      "the bib entry has no pages; the record gives 26689-26698"
-    ]
+    "notes": []
   },
   {
     "position": 68,
@@ -195,7 +188,7 @@
       "pages": "440--444"
     },
     "record": {
-      "title": "Phase Relations in the System La‐Rh‐O and Thermodynamic Properties of LaRhO 3",
+      "title": "Phase Relations in the System La‐Rh‐O and Thermodynamic Properties of LaRhO3",
       "first_author": "Jacob",
       "year": 1995,
       "container": "Journal of the American Ceramic Society",
@@ -204,9 +197,7 @@
     },
     "journal_similarity": 1.0,
     "problems": [],
-    "notes": [
-      "the record's title has words the bib title lacks: larho"
-    ]
+    "notes": []
   },
   {
     "position": 71,

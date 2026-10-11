@@ -84,7 +84,7 @@ def main():
             mismatches.append((pos, e["key"], "the DOI is not registered at " + agency))
             continue
         # Crossref titles carry markup ("CsSnI<sub>3</sub>") and line breaks; the comparison is on the text
-        work["title"] = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", t)).strip() for t in work.get("title") or [""]]
+        work["title"] = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", re.sub(r"\s+(?=<su[bp]>)", "", t))).strip() for t in work.get("title") or [""]]
         cmp_ = vc.compare(ref_text, work)
         bw = set(vc.words(e["title"]))
         omitted = [w for w in vc.words(work["title"][0]) if w not in bw]
@@ -124,13 +124,16 @@ def main():
                         "record": {"title": cmp_["crossref_title"], "first_author": (work.get("author") or [{}])[0].get("family", ""), "year": cmp_["crossref_year"],
                                    "container": container, "volume": work.get("volume", ""), "page": work.get("page", "") or work.get("article-number", "")},
                         "journal_similarity": journal_sim, "problems": problems, "notes": notes})
-    new = [r for r in rows if r["reference_text"] not in already]
-    with open(CSV, "a", encoding="utf-8", newline="") as f:
+    # one row per entry: the rows of an earlier run of this script are replaced, the rows of the first report are kept as they are
+    changed = [r for r in rows if r["reference_text"] not in already]
+    kept = [r for r in report if r["doi_source"] != "refs.bib, added after the report"]
+    with open(CSV, "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
-        for r in new:
+        w.writeheader()
+        for r in kept + rows:
             w.writerow({c: r.get(c, "") for c in COLUMNS})
     DETAIL.write_text(json.dumps(details, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"appended {len(new)} rows to {CSV.name}; details in {DETAIL.name}")
+    print(f"{len(kept)} rows of the first report kept, {len(rows)} rows of this script written ({len(changed)} differ from the previous run); details in {DETAIL.name}")
     for d in details:
         print(f"{d['position']:3d} {d['key']:28s} {d['agency']:8s} {'OK ' if not d['problems'] else 'CHECK'} | {d['record']['first_author']} {d['record']['year']} | {d['record']['title'][:70]} | {d['record']['container'][:40]} | journal sim {d['journal_similarity']}")
     print("mismatches:", mismatches or "none")
