@@ -33,6 +33,8 @@ the paper does not support.
 | `goldsmid2010introduction.pdf` (book pages) | 10.1007/978-3-642-00716-3 | same |
 | `borlido2019large.pdf` | see refs.bib | PBE band gap underestimation (qualitative; check the claim) |
 
+`iltanen2011_notes.pdf` is not Rowe's handbook: it is two pages of lecture notes by K. Iltanen (2011, CC BY-SA) that were supplied under the Rowe file name; the Rowe and Goldsmid rows above remain unfilled.
+
 Already read from open versions (no download needed): Ma & Poon (arXiv), Ward et al. (arXiv), Bartel et al. (Europe PMC), Androulakis et al. (arXiv preprint).
 
 ## NA12 literature validation (pre-registration B, `docs/decisions.md`, 2026-10-05)

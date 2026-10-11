@@ -1102,19 +1102,20 @@ def noise_ceiling_values():
 
 def config_value(pointer):
     """Value of a module-level constant of a committed file, for DESIGN markers: 'path:NAME', 'path:NAME[key]' (dict key or tuple index), optionally
-    followed by '*k' or '/k'. The value is formatted with :g, so 0.5 * 100 reads 50."""
+    followed by '*k' or '/k'; subscripts may be chained ('PROPERTY_BOUNDS["zT"][1]'). The value is formatted with :g, so 0.5 * 100 reads 50."""
     import ast
 
-    m = re.fullmatch(r"([^:]+):(\w+)(?:\[([^\]]+)\])?(?:([*/])([\d.]+))?", pointer)
+    m = re.fullmatch(r"([^:]+):(\w+)((?:\[[^\]]+\])*)(?:([*/])([\d.]+))?", pointer)
     assert m, f"bad config pointer {pointer!r}"
-    path, name, sub, op, k = m.groups()
+    path, name, subs, op, k = m.groups()
+    subs = re.findall(r"\[([^\]]+)\]", subs)
     tree = ast.parse((Path(__file__).resolve().parents[2] / path).read_text(encoding="utf-8"))
     val = None
     for node in tree.body:
         if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and node.targets[0].id == name:
             val = _safe_eval(node.value)
     assert val is not None, f"{name} not found in {path}"
-    if sub is not None:
+    for sub in subs:
         val = val[ast.literal_eval(sub)]
     if op:
         val = val * float(k) if op == "*" else val / float(k)

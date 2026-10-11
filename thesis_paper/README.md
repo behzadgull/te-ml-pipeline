@@ -6,8 +6,8 @@ This folder follows the conventions of `paper_b/`: everything lives under `thesi
 ## Status
 
 State of 2026-10-11 (decisions in `docs/decisions.md`, 2026-10-04 to 2026-10-10). `paper/paper.md` is generated: every number is a marker filled from a committed artifact (GENERATED), a verified citation with
-page or table (CITED, `docs/number_registry.csv`) or a registered design constant (DESIGN, `docs/design_constants.csv`); `scripts/audit_numbers.py` classifies every number. **11 numbers are
-unclassified, all of them literature values (Sections 1 to 3.2.2) that wait for a source** (`reports/literature_value_verification.csv`: rows L05, L07 and L23); rows L01 to L04, L08 to L13, L15, L17 and L21 were verified on 2026-10-11, and the numbers of L16 and L20 were removed (verification from the abstracts, quoted in the ledger, and from the PDFs of L04, L08, L09, L10 and L12 in `source/pdfs/`, with page numbers in `docs/number_registry.csv`).
+page or table (CITED, `docs/number_registry.csv`) or a registered design constant (DESIGN, `docs/design_constants.csv`); `scripts/audit_numbers.py` classifies every number. **10 numbers are
+unclassified, all of them literature values (Sections 1 to 3.2.2) that wait for a source** (`reports/literature_value_verification.csv`: rows L05 and L07); rows L01 to L04, L08 to L13, L15, L17, L21 and L26 were verified on 2026-10-11, and the numbers of L16, L20 and L23 were removed (verification from the abstracts, quoted in the ledger, and from the PDFs of L04, L08, L09, L10 and L12 in `source/pdfs/`, with page numbers in `docs/number_registry.csv`).
 `make_thesis_values.py --check` passes with 2 `[[PENDING]]` markers, both NA12. Do not edit generated text by hand: change the script and rerun `scripts/make_thesis_values.py`.
 
 | Analysis | State |
