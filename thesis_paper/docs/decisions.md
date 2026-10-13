@@ -298,3 +298,21 @@ Written after the audit of the external-validation results (the same day) and be
 3. **Ohta 2005** (J. Appl. Phys. 97:034106) covers heavily La- or Nb-doped SrTiO3 crystals only: it gives no S, kappa or zT of undoped SrTiO3 and finds the doped crystals' kappa similar to undoped, not reduced. Section 2.2 was rewritten for the doped crystals with Table II values (ledger L07).
 4. **NA12 PDFs** are inventoried (structure only, no value read) in `docs/na12_pdf_inventory.md`.
 
+## 2026-10-13: NA12, amendment 1 to pre-registration B (how discrete measurements are read); Sebastia-Luna et al. 2022
+
+Made before any NA12 value is written to `docs/na12_literature_values.csv`. **No out-of-fold prediction for any NA12 compound has been looked at**: the extraction of Sebastia-Luna's Fig. 2a was
+validated only against the maxima that the same paper prints in its own Table 2 (eight cells over Figs. 2a and 3d, all inside the printed uncertainty, in a scratch run that wrote nothing to the repository).
+The amendment changes only the reading rule below; the compounds, the two comparison levels, the error measure and the Alleno band of pre-registration B are unchanged.
+
+1. **Discrete measurements.** Where a paper reports discrete measurements (markers, no curve), each marker is read at its stated measurement temperature and mapped by the pipeline's floor bins
+   (`step3_filter_temperature`: a bin is labelled by its lower edge, [300, 325) is 300; values below 300 K or at or above 800 K are recorded and not compared). No value is interpolated onto the
+   100 K grid; that rule stays for continuous curves.
+2. **Stated temperature.** The temperature the paper states is used (here the nominal 25, 50, 75 and 100 C of the series, 298.15, 323.15, 348.15 and 373.15 K). Where a marker is drawn
+   at another position (the Seebeck series of Fig. 2a sits about 2 C to the right of the other three), the drawn offset is recorded in the notes and not used.
+3. **Compounds.** Compositions that are not one of the pre-registered compounds are excluded (Cs2SnI6 and Cs2SnI4 of the same paper).
+4. **Uncertainties.** An uncertainty is recorded only where the paper prints one (Table 2 of Sebastia-Luna); none is attached to a digitised marker.
+5. **Application to Sebastia-Luna et al. 2022** (DOI 10.1021/acsaem.2c01936): CsSnI3 (the black phase) only; Table 2 values where tabulated (sigma and kappa at 25 C, S at 100 C, zT at 50 C, with the
+   printed uncertainty), the Fig. 2a markers otherwise; the 25 C values are below the window and are recorded, not compared. Extraction script `scripts/na12_extract_sebastialuna.py` (with
+   `scripts/pdf_vector.py`), run from a clean commit into `results/na12_extraction/<UTC>/` with the PDF SHA256, the code commit and `tree_clean`; the rows are appended to the values file by the same
+   script (`--append-values`). The comparison is not run before the values are reviewed.
+
