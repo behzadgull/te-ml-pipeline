@@ -1,0 +1,17 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/sebastialuna2022.pdf",
+      "sha256": "6bbf66385886dc528b4d7d2a44071faca52fe70efa7ec6eb768aed5748c5f2a9",
+      "bytes": 5468053
+    }
+  },
+  "git_head": "ef17fba154b26c8eae8cf4e71916af7adb0f2338",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_sebastialuna.py",
+  "script_sha256": "bb27d9ac4650fc456155f0b415b39998324fa64896ea60583cf637f3585ddb9e",
+  "python": "3.12.10",
+  "figure": "Fig. 2a (B-gamma CsSnI3), Table 2",
+  "rules": "docs/decisions.md pre-registration B + amendment 1 (2026-10-13)"
+}

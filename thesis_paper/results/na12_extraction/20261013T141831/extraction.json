@@ -1,0 +1,216 @@
+{
+  "calibration": {
+    "sigma": {
+      "colour": "black",
+      "axis_x_pt": 161.97,
+      "major_ticks": 7,
+      "first_label": 0.0,
+      "last_label": 60.0,
+      "step": 10.0,
+      "max_residual_tick_steps": 0.0013
+    },
+    "kappa": {
+      "colour": "red",
+      "axis_x_pt": 139.5,
+      "major_ticks": 8,
+      "first_label": 0.5,
+      "last_label": 1.2000000000000002,
+      "step": 0.1,
+      "max_residual_tick_steps": 0.0017
+    },
+    "S": {
+      "colour": "green",
+      "axis_x_pt": 264.11,
+      "major_ticks": 9,
+      "first_label": 90.0,
+      "last_label": 170.0,
+      "step": 10.0,
+      "max_residual_tick_steps": 0.0028
+    },
+    "zT": {
+      "colour": "blue",
+      "axis_x_pt": 289.65,
+      "major_ticks": 11,
+      "first_label": 1.6,
+      "last_label": 3.6,
+      "step": 0.2,
+      "max_residual_tick_steps": 0.0049
+    },
+    "temperature_axis": {
+      "major_ticks": 9,
+      "first_label": 20.0,
+      "last_label": 100.0,
+      "max_residual_tick_steps": 0.0018
+    }
+  },
+  "table2_printed": {
+    "sigma": "50 ± 3 at 25 C",
+    "kappa": "0.69 ± 0.07 at 25 C",
+    "S": "154 ± 11 at 100 C",
+    "zT": "0.0333 ± 0.0013 at 50 C"
+  },
+  "markers": [
+    {
+      "property": "sigma",
+      "nominal_C": 25,
+      "drawn_C": 25.44,
+      "value_digitised": 49.918120552574266,
+      "x_pt": 168.519,
+      "y_pt": 199.973
+    },
+    {
+      "property": "sigma",
+      "nominal_C": 50,
+      "drawn_C": 49.61,
+      "value_digitised": 40.99579391464742,
+      "x_pt": 197.559,
+      "y_pt": 186.149
+    },
+    {
+      "property": "sigma",
+      "nominal_C": 75,
+      "drawn_C": 74.86,
+      "value_digitised": 27.05465854288674,
+      "x_pt": 227.895,
+      "y_pt": 164.549
+    },
+    {
+      "property": "sigma",
+      "nominal_C": 100,
+      "drawn_C": 99.87,
+      "value_digitised": 13.79508978930103,
+      "x_pt": 257.943,
+      "y_pt": 144.005
+    },
+    {
+      "property": "kappa",
+      "nominal_C": 25,
+      "drawn_C": 25.44,
+      "value_digitised": 0.6862510009911913,
+      "x_pt": 168.519,
+      "y_pt": 147.365
+    },
+    {
+      "property": "kappa",
+      "nominal_C": 50,
+      "drawn_C": 49.73,
+      "value_digitised": 0.6313065245025842,
+      "x_pt": 197.703,
+      "y_pt": 140.069
+    },
+    {
+      "property": "kappa",
+      "nominal_C": 75,
+      "drawn_C": 74.92,
+      "value_digitised": 0.607810531267325,
+      "x_pt": 227.967,
+      "y_pt": 136.949
+    },
+    {
+      "property": "kappa",
+      "nominal_C": 100,
+      "drawn_C": 99.83,
+      "value_digitised": 0.5785309089280015,
+      "x_pt": 257.895,
+      "y_pt": 133.061
+    },
+    {
+      "property": "S",
+      "nominal_C": 25,
+      "drawn_C": 27.24,
+      "value_digitised": 117.4830824899087,
+      "x_pt": 170.679,
+      "y_pt": 154.565
+    },
+    {
+      "property": "S",
+      "nominal_C": 50,
+      "drawn_C": 51.63,
+      "value_digitised": 126.81742170733332,
+      "x_pt": 199.983,
+      "y_pt": 165.413
+    },
+    {
+      "property": "S",
+      "nominal_C": 75,
+      "drawn_C": 76.74,
+      "value_digitised": 139.24943986859353,
+      "x_pt": 230.151,
+      "y_pt": 179.861
+    },
+    {
+      "property": "S",
+      "nominal_C": 100,
+      "drawn_C": 101.71,
+      "value_digitised": 154.9236953244017,
+      "x_pt": 260.151,
+      "y_pt": 198.077
+    },
+    {
+      "property": "zT",
+      "nominal_C": 25,
+      "drawn_C": 25.44,
+      "value_digitised": 0.029620008098438545,
+      "x_pt": 168.519,
+      "y_pt": 187.349
+    },
+    {
+      "property": "zT",
+      "nominal_C": 50,
+      "drawn_C": 49.61,
+      "value_digitised": 0.033274023080306935,
+      "x_pt": 197.559,
+      "y_pt": 203.525
+    },
+    {
+      "property": "zT",
+      "nominal_C": 75,
+      "drawn_C": 74.86,
+      "value_digitised": 0.02959832254958472,
+      "x_pt": 227.895,
+      "y_pt": 187.253
+    },
+    {
+      "property": "zT",
+      "nominal_C": 100,
+      "drawn_C": 99.87,
+      "value_digitised": 0.021032530752326487,
+      "x_pt": 257.943,
+      "y_pt": 149.333
+    }
+  ],
+  "validation": [
+    {
+      "property": "sigma",
+      "table2": "50 ± 3 at 25 C",
+      "digitised": 49.918120552574266,
+      "drawn_C": 25.44,
+      "difference": 0.0818794474257345,
+      "difference_in_printed_uncertainties": 0.027
+    },
+    {
+      "property": "kappa",
+      "table2": "0.69 ± 0.07 at 25 C",
+      "digitised": 0.6862510009911913,
+      "drawn_C": 25.44,
+      "difference": 0.003748999008808651,
+      "difference_in_printed_uncertainties": 0.054
+    },
+    {
+      "property": "S",
+      "table2": "154 ± 11 at 100 C",
+      "digitised": 154.9236953244017,
+      "drawn_C": 101.71,
+      "difference": 0.9236953244017059,
+      "difference_in_printed_uncertainties": 0.084
+    },
+    {
+      "property": "zT",
+      "table2": "0.0333 ± 0.0013 at 50 C",
+      "digitised": 0.033274023080306935,
+      "drawn_C": 49.61,
+      "difference": 2.59769196930687e-05,
+      "difference_in_printed_uncertainties": 0.02
+    }
+  ]
+}
