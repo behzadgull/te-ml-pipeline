@@ -5,12 +5,11 @@ This folder follows the conventions of `paper_b/`: everything lives under `thesi
 
 ## Status
 
-State of 2026-10-11 (decisions in `docs/decisions.md`, 2026-10-04 to 2026-10-10). `paper/paper.md` is generated: every number is a marker filled from a committed artifact (GENERATED), a verified citation with
-page or table (CITED, `docs/number_registry.csv`) or a registered design constant (DESIGN, `docs/design_constants.csv`); `scripts/audit_numbers.py` classifies every number. **10 numbers are
-unclassified, all of them literature values (Sections 1 to 3.2.2) that wait for a source** (`reports/literature_value_verification.csv`: rows L05 and L07); rows L01 to L04, L08 to L13, L15, L17, L21 and L26 were verified on 2026-10-11, and the numbers of L16, L20 and L23 were removed (verification from the abstracts, quoted in the ledger, and from the PDFs of L04, L08, L09, L10 and L12 in `source/pdfs/`, with page numbers in `docs/number_registry.csv`).
+State of 2026-10-13 (decisions in `docs/decisions.md`, 2026-10-04 to 2026-10-13). `paper/paper.md` is generated: every number is a marker filled from a committed artifact (GENERATED), a verified citation with
+page or table (CITED, `docs/number_registry.csv`) or a registered design constant (DESIGN, `docs/design_constants.csv`); `scripts/audit_numbers.py` classifies every number. **No number is unclassified** (audit of 2026-10-13). Literature numbers were verified against abstracts (quoted in `reports/literature_value_verification.csv`) and the PDFs in `source/pdfs/` (page or table in `docs/number_registry.csv`); where a source did not say what the paper claimed, the number or the claim was removed or rewritten (ledger rows L05, L07, L08 to L10, L16, L17, L20, L21, L23).
 `make_thesis_values.py --check` passes with 2 `[[PENDING]]` markers, both NA12. Do not edit generated text by hand: change the script and rerun `scripts/make_thesis_values.py`.
 
-**Open before submission (2026-10-11): Figures 1 to 3.** They are the AI-generated images of the thesis docx (`figures/source_media/image1-3.png`; no source is recorded for them, see `docs/decisions.md`, 2026-10-11) and must be replaced by author-made figures. Figure 2 still prints "optimum ~10^19-10^20 cm^-3" inside the image, a value its caption no longer states because the source it was attributed to (Snyder & Toberer 2008) is not in `source/pdfs/`; the number goes back only with that PDF and a page, or the image is redrawn without it.
+**Open before submission (2026-10-11): Figures 1 to 3.** They are the AI-generated images of the thesis docx (`figures/source_media/image1-3.png`; no source is recorded for them, see `docs/decisions.md`, 2026-10-11) and must be replaced by author-made figures. Figure 2 still prints "optimum ~10^19-10^20 cm^-3" inside the image, a value its caption no longer states. Snyder & Toberer 2008 (now in `source/pdfs/`) gives 10^19 to 10^21 carriers per cm^3 (article page 105, repeated on page 107 with Figure 1), not 10^19 to 10^20; use it for the redraw.
 
 | Analysis | State |
 |---|---|
