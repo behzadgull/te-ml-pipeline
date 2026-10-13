@@ -153,12 +153,14 @@ def values():
     assert abs(math.log10(b["sigma"][1]) - round(math.log10(b["sigma"][1]))) < 1e-9
     v["b_sigma_hi"] = f"10^{round(math.log10(b['sigma'][1]))}^"
     v["b_zT_lo"] = f"{b['zT'][0]:g}"
-    # the illustrative temperatures of Step 3: the cleaning code puts them in one bin
+    # the illustrative temperatures of Step 3: all of them lie inside the window (step 3 keeps them) and the cleaning code puts them in one bin
     import pandas as _pd
     sys.path.insert(0, str(REPO_ROOT))
     from src import data_cleaning as _dc
-    _ex = [298, 300, 303]
-    assert _dc.step3_filter_temperature(_pd.DataFrame({"temperature_K": _ex}))["temperature_bin"].nunique() == 1
+    _ex = [300, 310, 320]
+    _kept = _dc.step3_filter_temperature(_pd.DataFrame({"temperature_K": _ex}))
+    assert len(_kept) == len(_ex), "an example temperature is dropped by step 3"
+    assert _kept["temperature_bin"].nunique() == 1, "the example temperatures do not share one bin"
     v["ex_temps"] = f"{_ex[0]}, {_ex[1]} and {_ex[2]}"
     v["zt_hi_thr"] = f"{_zt_threshold_literal():.1f}"
     top_q = _top_quantile_literal()
