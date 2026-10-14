@@ -287,6 +287,7 @@ def interpret(objs, content, res, ctm=(1, 0, 0, 1, 0, 0), depth=0, state=None):
     stack = []
     cur = []  # current path: list of subpaths, each list of points (user space)
     sub = None
+    ncurve = {}  # id(subpath) -> number of curve segments (a circle has four, a diamond none)
     ops = []
     tm = tlm = (1, 0, 0, 1, 0, 0)
     font, fsize, tl, tc, tw, th = None, 1.0, 0.0, 0.0, 0.0, 1.0
@@ -299,7 +300,9 @@ def interpret(objs, content, res, ctm=(1, 0, 0, 1, 0, 0), depth=0, state=None):
         if cur and kind != "n":
             pts = [[apply(gs["ctm"], x, y) for (x, y) in sp] for sp in cur]
             paths.append({"kind": kind, "color": gs["stroke"] if kind.startswith("S") else gs["fill"], "stroke": gs["stroke"], "fill": gs["fill"],
-                          "width": gs["w"] * (abs(gs["ctm"][0]) + abs(gs["ctm"][3])) / 2, "pts": pts})
+                          "width": gs["w"] * (abs(gs["ctm"][0]) + abs(gs["ctm"][3])) / 2, "pts": pts, "ncurve": [ncurve.get(id(sp), 0) for sp in cur]})
+        for sp in cur:
+            ncurve.pop(id(sp), None)
         cur = []
         sub = None
 
@@ -339,8 +342,10 @@ def interpret(objs, content, res, ctm=(1, 0, 0, 1, 0, 0), depth=0, state=None):
                 sub.append((nums[-2], nums[-1]))
             elif op == "c" and len(nums) >= 6 and sub is not None:
                 sub.append((nums[-2], nums[-1]))
+                ncurve[id(sub)] = ncurve.get(id(sub), 0) + 1
             elif op in ("v", "y") and len(nums) >= 4 and sub is not None:
                 sub.append((nums[-2], nums[-1]))
+                ncurve[id(sub)] = ncurve.get(id(sub), 0) + 1
             elif op == "h" and sub:
                 sub.append(sub[0])
             elif op == "re" and len(nums) >= 4:

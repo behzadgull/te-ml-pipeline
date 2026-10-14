@@ -316,3 +316,18 @@ The amendment changes only the reading rule below; the compounds, the two compar
    `scripts/pdf_vector.py`), run from a clean commit into `results/na12_extraction/<UTC>/` with the PDF SHA256, the code commit and `tree_clean`; the rows are appended to the values file by the same
    script (`--append-values`). The comparison is not run before the values are reviewed.
 
+
+## 2026-10-14: NA12, application of amendment 1 to Flahaut et al. 2006 and Singh & Pandey 2017 (before their rows are written)
+
+No out-of-fold prediction has been looked at. Both papers are read as vector figures with `scripts/pdf_vector.py`, `scripts/na12_plot_tools.py` and one script each.
+
+1. **Flahaut et al. 2006** (training source: its curves are in Starrydata2; every row says so, a comparison restates the cross-validation error). Resistivity curves (Fig. 2) are read on the 100 K
+   grid (continuous curves); the curve of a label is the one nearest to the tip of the arrow that starts at the label, accepted only where it is unique (nearest within 6 pt and at least twice
+   as close as the second). Seebeck markers (Fig. 3) are read only for the series whose marker shape is unique in the legend (CaMnO3 and x = 0.15); x = 0.05/0.4 and x = 0.1/0.5 share a shape
+   and are not read. Thermal conductivity (Fig. 4): the open markers (the closed ones are the electronic part), x = 0.05, 0.1, 0.15; the x = 0 series is the data of Ohtaki et al. (said in the
+   paper) and is not read. zT is read as Z (Fig. 5) times the nominal temperature. The paper's measurement temperatures (S at 373 to 973 K in 100 K steps) are used for S and Z (the markers
+   are drawn about 5 K higher; recorded). Compositions are the nominal Ca1-xYbxMnO3 of the paper.
+2. **Singh & Pandey 2017**: the experimental Seebeck coefficient only (the markers of Fig. 1 and the 300 K value of the abstract); the DFT and Boltzmann-transport results are excluded. Each
+   marker is a row at its drawn temperature; the markers of the inset (the same data, enlarged) are not read.
+3. Checks: the extraction of each paper is validated against the numbers the paper states (asserted in the scripts); where S, rho (or sigma), kappa and zT are all read at one temperature, the zT
+   is recomputed and the ratio recorded (flag outside 0.8 to 1.25).
