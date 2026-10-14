@@ -331,3 +331,17 @@ No out-of-fold prediction has been looked at. Both papers are read as vector fig
    marker is a row at its drawn temperature; the markers of the inset (the same data, enlarged) are not read.
 3. Checks: the extraction of each paper is validated against the numbers the paper states (asserted in the scripts); where S, rho (or sigma), kappa and zT are all read at one temperature, the zT
    is recomputed and the ratio recorded (flag outside 0.8 to 1.25).
+
+## 2026-10-14: NA12, amendment 2 to pre-registration B (aggregation and reporting); to be implemented before the comparison is run
+
+Made before the comparison has been run for any NA12 value and with no out-of-fold prediction for an NA12 compound looked at.
+
+1. **Aggregation.** Literature values of one paper, one composition (composition_id) and one property that fall in the same 25 K bin of the pipeline (floor bins, [300, 325) is 300) are averaged
+   into one value (arithmetic mean in the units of the pipeline, as step 4 of the cleaning does) before the comparison; the number n of values that were averaged and their identifiers are recorded.
+   Values outside the window [300, 800) K are recorded and not compared, as before.
+2. **Reporting per paper.** Results are reported per paper. Any overall summary weights papers equally, not rows: the fraction inside the band and the median absolute relative error are
+   computed within each paper and then averaged (median) over papers.
+3. **Training-source papers.** A paper whose DOI is among the DOIs of the training data (Flahaut et al. 2006; its curves are in Starrydata2) is a training-source paper: it is reported
+   separately, restates the cross-validation error, and is never pooled with the independent papers in an overall summary.
+4. Implemented in `scripts/na12_literature_comparison.py` (`aggregate_bins`, `summarise`, and a self-test that needs no dataset and no prediction: `--self-test`). The pooled-over-rows summary of the
+   earlier version of the script is removed.
