@@ -1,7 +1,9 @@
 """
 Copy the Paper A figures the thesis paper reuses into thesis_paper/figures/paper_a/ (so the thesis folder is self-contained) and record
 the source path and SHA256 of each file in thesis_paper/figures/paper_a/MANIFEST.json. The figures are generated from committed
-artifacts by scripts/make_figures.py (Paper A); nothing here redraws them.
+artifacts by scripts/make_figures.py (Paper A, in the shared style scripts/figstyle.py, which make_figures_thesis.py uses too); nothing here redraws them.
+The manifest also records the SHA256 of the shared style file, and --check fails when the style has changed since the figures were drawn (the copies would be stale).
+Redraw them with:  python scripts/make_figures.py --only cleaning_funnel fig2_validation_ladder
 
 Usage (from the repository root):
     python thesis_paper/scripts/import_paper_a_figures.py           # copy and write the manifest
@@ -17,6 +19,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 DEST = REPO / "thesis_paper" / "figures" / "paper_a"
+STYLE = REPO / "scripts" / "figstyle.py"
 FIGURES = {
     "cleaning_funnel": "Eleven-step cleaning funnel (Paper A Figure 3)",
     "fig2_validation_ladder": "Five-way validation ladder (Paper A Figure 5)",
@@ -33,6 +36,7 @@ def main():
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
     manifest, bad = {}, []
+    style_sha = sha(STYLE)
     for stem, what in FIGURES.items():
         for ext in ("png", "pdf"):
             src = REPO / "figures" / f"{stem}.{ext}"
@@ -45,8 +49,12 @@ def main():
                 DEST.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(src, dst)
     if args.check:
-        print("copies differ from their sources: " + ", ".join(bad) if bad else "figure copies match their sources")
+        recorded = json.loads((DEST / "MANIFEST.json").read_text(encoding="utf-8")).get("_style_sha256")
+        if recorded != style_sha:
+            bad.append("MANIFEST.json (the shared style has changed since the figures were drawn)")
+        print("copies differ from their sources: " + ", ".join(bad) if bad else "figure copies match their sources and the style")
         return 1 if bad else 0
+    manifest["_style_sha256"] = style_sha
     (DEST / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"copied {len(manifest)} files to {DEST}")
     return 0

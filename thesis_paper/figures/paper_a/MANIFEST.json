@@ -1,22 +1,23 @@
 {
   "cleaning_funnel.png": {
     "source": "figures/cleaning_funnel.png",
-    "sha256": "3ab5ab61117f1be00261e42899906057d5747ce49877c740d0f95a2f8af1dedb",
+    "sha256": "72c4e0434a6a8bd03ee04ef2101d03e6e1e340e30c203f05642c7ef54155bbcd",
     "what": "Eleven-step cleaning funnel (Paper A Figure 3)"
   },
   "cleaning_funnel.pdf": {
     "source": "figures/cleaning_funnel.pdf",
-    "sha256": "e3dd4ccc752cf0299b4ccc9bac7cd1ce9a626e65ff74d787fb9469e1bd5ec9e5",
+    "sha256": "71780e425fea4c1055a816df2b60e21501577f10c954f81c5171ecbefc089f37",
     "what": "Eleven-step cleaning funnel (Paper A Figure 3)"
   },
   "fig2_validation_ladder.png": {
     "source": "figures/fig2_validation_ladder.png",
-    "sha256": "80902eb15c70d16e2a1f6951119ccb7b90c50d19a39b0de8429d13ff2ae5ba01",
+    "sha256": "f7af92d0991d302b7edef12cf18a1d9bb1359245606c08e1eaca98b580ba5e49",
     "what": "Five-way validation ladder (Paper A Figure 5)"
   },
   "fig2_validation_ladder.pdf": {
     "source": "figures/fig2_validation_ladder.pdf",
-    "sha256": "302b84d136bc0e162b48bb33aa45cd9120153268769e1d33009075ae2ebf4703",
+    "sha256": "c01a7eef2054bfdd09e8f3a67b858f104cf821d71406ae5a6de4a432e82f4d39",
     "what": "Five-way validation ladder (Paper A Figure 5)"
-  }
+  },
+  "_style_sha256": "450736c8035cd6d624bba99b9d8376b73c249c5d7bd41c0babfd9378a8cca108"
 }

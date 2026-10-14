@@ -1,12 +1,18 @@
 """
-Shared style for every figure in the manuscript (scripts/make_figures.py).
+Shared style for every figure of the manuscript: scripts/make_figures.py (Paper A figures, two of which the thesis paper reuses) and
+thesis_paper/scripts/make_figures_thesis.py both import this one file (the thesis_paper copy was removed, 2026-10-14).
 
-Rules, so that the figures read as one set:
+Rules, so that the figures read as one set and are very clear:
   - Okabe-Ito colours only (plus greys); no saturated yellow, so the Okabe-Ito yellow is left out; no hatching.
     Where greyscale matters, use marker shape or line style.
-  - DejaVu Sans; 8 pt text and tick labels, 9 pt axis labels and panel titles, bold 10 pt panel letters.
-  - Final widths are 16 cm (double column) or 8 cm (single column). The figure is created at exactly that size
-    and saved without cropping, at 300 dpi, so that 8 pt stays 8 pt in the manuscript.
+  - Helvetica, with Arial (then Liberation Sans, metric-compatible) where Helvetica is not installed; apply() stops if none of them is
+    installed, so that a figure is never drawn in a fallback face by accident. Fonts are embedded as TrueType in PDFs (fonttype 42).
+  - 9 pt text and tick labels, 10 pt axis labels, bold 11 pt panel letters; axis labels and tick labels are bold.
+  - Axis lines 1.3 pt, ticks 1.3 pt wide and 4 pt long (3 pt and 1.0 pt for minor ticks).
+  - Final widths are DOUBLE_COLUMN_CM (16 cm, the text width of the manuscript's Word page, so Word shows a figure 1:1) or
+    SINGLE_COLUMN_CM (8.5 cm). They are the only place the widths are set: change them here when a journal's specification is known.
+    The figure is created at exactly that size and saved without cropping, at 300 dpi, so that 9 pt stays 9 pt on the page and nothing
+    is below 8 pt (MIN_PT, used only for long category labels).
   - Light y-grid (x-grid for horizontal bars), no top or right spines, legends inside the axes or in one row
     below the axes, never floating.
   - n and what error bars mean go in the caption, not in the image.
@@ -25,10 +31,16 @@ from cycler import cycler
 from matplotlib.transforms import ScaledTranslation
 
 CM = 1.0 / 2.54
-WIDTH_CM = {"double": 16.0, "single": 8.0}
+DOUBLE_COLUMN_CM = 16.0  # the page text width of the manuscript (A4, 2.5 cm margins); to be set to the journal's specification later
+SINGLE_COLUMN_CM = 8.5
+WIDTH_CM = {"double": DOUBLE_COLUMN_CM, "single": SINGLE_COLUMN_CM}
 DPI = 300
 
-TEXT_PT, LABEL_PT, LETTER_PT = 8, 9, 10
+TEXT_PT, LABEL_PT, LETTER_PT = 9, 10, 11
+MIN_PT = 8  # the smallest text size, for long category labels only (feature names); everything else is TEXT_PT or larger
+FONT_STACK = ("Helvetica", "Arial", "Liberation Sans")  # first one installed is used
+AXES_LW, TICK_W, TICK_LEN, MINOR_W, MINOR_LEN = 1.3, 1.3, 4.0, 1.0, 2.5
+FONT_USED = None  # set by apply(): the face the figures are drawn in
 
 # Okabe & Ito (2008) without the yellow, which is too light on white.
 OI = {
@@ -49,38 +61,65 @@ GRID_COLOR = "0.88"
 EDGE_GREY = "0.25"
 
 
+def resolve_font():
+    """The first face of FONT_STACK that matplotlib can find in regular and in bold; raises if none is installed."""
+    from matplotlib import font_manager as fm
+
+    installed = {}
+    for f in fm.fontManager.ttflist:
+        installed.setdefault(f.name, set()).add(f.weight)
+    for name in FONT_STACK:
+        w = installed.get(name, set())
+        if any(x <= 500 for x in w) and any(x >= 600 for x in w):
+            return name
+    raise RuntimeError(f"none of {FONT_STACK} is installed in regular and bold: the figures would be drawn in a fallback face")
+
+
 def apply():
     """Set the project-wide matplotlib rcParams."""
+    global FONT_USED
+    FONT_USED = resolve_font()
     mpl.rcParams.update(
         {
             "font.family": "sans-serif",
-            "font.sans-serif": ["DejaVu Sans"],
+            "font.sans-serif": [FONT_USED],
             "font.size": TEXT_PT,
+            "font.weight": "normal",
             "axes.labelsize": LABEL_PT,
+            "axes.labelweight": "bold",
             "axes.titlesize": LABEL_PT,
             "axes.titleweight": "normal",
             "xtick.labelsize": TEXT_PT,
             "ytick.labelsize": TEXT_PT,
             "legend.fontsize": TEXT_PT,
             "figure.titlesize": LABEL_PT,
-            "mathtext.fontset": "dejavusans",
+            "mathtext.fontset": "custom",
+            "mathtext.rm": FONT_USED,
+            "mathtext.it": f"{FONT_USED}:italic",
+            "mathtext.bf": f"{FONT_USED}:bold",
+            "mathtext.sf": FONT_USED,
+            "mathtext.fallback": "stixsans",
             "mathtext.default": "regular",
             "axes.spines.top": False,
             "axes.spines.right": False,
-            "axes.linewidth": 0.6,
+            "axes.linewidth": AXES_LW,
             "axes.grid": True,
             "axes.grid.axis": "y",
             "grid.color": GRID_COLOR,
             "grid.linewidth": 0.5,
             "axes.axisbelow": True,
             "axes.prop_cycle": cycler(color=CYCLE),
-            "xtick.major.width": 0.6,
-            "ytick.major.width": 0.6,
-            "xtick.major.size": 2.5,
-            "ytick.major.size": 2.5,
-            "xtick.major.pad": 2.0,
-            "ytick.major.pad": 2.0,
-            "lines.linewidth": 1.0,
+            "xtick.major.width": TICK_W,
+            "ytick.major.width": TICK_W,
+            "xtick.major.size": TICK_LEN,
+            "ytick.major.size": TICK_LEN,
+            "xtick.minor.width": MINOR_W,
+            "ytick.minor.width": MINOR_W,
+            "xtick.minor.size": MINOR_LEN,
+            "ytick.minor.size": MINOR_LEN,
+            "xtick.major.pad": 2.5,
+            "ytick.major.pad": 2.5,
+            "lines.linewidth": 1.4,
             "legend.frameon": False,
             "legend.handlelength": 1.4,
             "legend.handletextpad": 0.5,
@@ -137,6 +176,16 @@ def legend_row(fig, handles, labels, ncol=None):
     return fig.legend(handles, labels, loc="outside lower center", ncol=ncol)
 
 
+def embolden_ticks(fig):
+    """Make every tick label of every axes of `fig` bold (matplotlib has no rcParam for it); called by save() after the ticks exist."""
+    fig.canvas.draw()
+    for ax in fig.axes:
+        for axis in (ax.xaxis, ax.yaxis):
+            for lab in axis.get_ticklabels(which="both"):
+                lab.set_fontweight("bold")
+            axis.get_offset_text().set_fontweight("bold")
+
+
 def save(fig, path_without_ext, expect_width_cm=None):
     """
     Save PNG (300 dpi) and PDF with no cropping, and check that the file has the intended physical width,
@@ -144,6 +193,7 @@ def save(fig, path_without_ext, expect_width_cm=None):
     """
     from PIL import Image
 
+    embolden_ticks(fig)
     w_cm = fig.get_size_inches()[0] / CM
     if expect_width_cm is not None:
         assert abs(w_cm - expect_width_cm) < 0.01, (w_cm, expect_width_cm)
@@ -158,7 +208,7 @@ def save(fig, path_without_ext, expect_width_cm=None):
 def check_text_fits(fig, ax, checks, margin=0.08):
     """
     For schematics drawn in cm-sized data units: every (text, (x0, y0, x1, y1)) pair must lie inside its box,
-    and no text may be smaller than 8 pt. Raises AssertionError on the first overflow.
+    and no text may be smaller than TEXT_PT. Raises AssertionError on the first overflow.
     """
     fig.canvas.draw()
     inv = ax.transData.inverted()

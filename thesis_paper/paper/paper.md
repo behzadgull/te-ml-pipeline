@@ -148,7 +148,7 @@ Five gaps motivate this study. (1) *Validation bias is unquantified at scale*: t
 
 The research follows a four-phase pipeline (Fig. 4): (1) data acquisition and curation from Starrydata2; (2) feature engineering with two complementary compositional featurization schemes; (3) model development with chemistry-aware validation; and (4) virtual screening of lead-free perovskite candidates from the Materials Project. Each phase addresses a particular challenge: noise and inconsistency in experimental databases, translation of formulas into physically meaningful numerical representations, avoidance of temperature-series leakage, and the listing of lead-free candidates for experimental testing.
 
-![Figure 4](../figures/fig4_workflow.png){width=100%}
+![Figure 4](../figures/fig4_workflow.png){width=16cm}
 
 **Figure 4:** Study workflow, from data acquisition to the outputs. Every count is read from a committed artifact and every section number from the headings of this manuscript; the screening yields hypotheses, not findings.
 
@@ -162,7 +162,7 @@ The main data source is Starrydata2 [@katsura2019datadriven; @katsura2025starryd
 
 An eleven-step cleaning pipeline converted the raw data into a reliable training set (Fig. 5).
 
-![Figure 5](../figures/paper_a/cleaning_funnel.png){width=100%}
+![Figure 5](../figures/paper_a/cleaning_funnel.png){width=16cm}
 
 **Figure 5:** Row count through the eleven-step cleaning pipeline, from <!--v:n_step1-->1,996,047<!--/v--> property observations after range filtering to <!--v:n_clean-->280,664<!--/v--> rows in the final cleaned dataset.
 
@@ -197,7 +197,7 @@ The final cleaned dataset contains <!--v:n_clean-->280,664<!--/v--> rows; featur
 | zT | 129,419 | 46.2% | 0.427 | 0.316 | 0.388 | 0.000 to 3.899 |
 <!-- END TABLE 2 -->
 
-![Figure 6](../figures/fig6_property_distributions.png){width=100%}
+![Figure 6](../figures/fig6_property_distributions.png){width=16cm}
 
 **Figure 6:** Distribution of thermoelectric properties in the final dataset (<!--v:n_featurized-->280,173<!--/v--> featurised rows): (a) Seebeck coefficient, (b) electrical conductivity, (c) thermal conductivity and (d) figure of merit.
 
@@ -279,7 +279,7 @@ The label-noise ceiling is the R^2^ that a model without any error would reach g
 | zT | 0.746 ± 0.005 | 0.042 | 0.126 | 0.196 | 129,419 | 397 |
 <!-- END TABLE 5 -->
 
-![Figure 7](../figures/fig7_predicted_vs_measured.png){width=100%}
+![Figure 7](../figures/fig7_predicted_vs_measured.png){width=16cm}
 
 **Figure 7:** Predicted versus measured values under chemistry-cluster cross-validation (first repeat, all five folds pooled) for (a) S, (b) log *σ*, (c) log *κ* and (d) zT; colour is the number of rows per cell. The dashed line indicates perfect prediction.
 
@@ -298,7 +298,7 @@ Table 6 and Fig. 8 compare the five validation methods. Random split, 5-fold and
 | zT | 0.918 | 0.918 | 0.919 | 0.818 ± 0.001 | 0.746 ± 0.005 | +0.172 |
 <!-- END TABLE 6 -->
 
-![Figure 8](../figures/paper_a/fig2_validation_ladder.png){width=100%}
+![Figure 8](../figures/paper_a/fig2_validation_ladder.png){width=16cm}
 
 **Figure 8:** Pooled R^2^ across the five validation methods. Chemistry-cluster CV is the lowest for every target; ∆ is random 80/20 minus chemistry cluster. Error bars are the standard deviations defined in Table 6.
 
@@ -368,7 +368,7 @@ The most stringent test is evaluation on a completely independent dataset. ESTM 
 | zT (direct) | 0.746 | 0.666 | 0.513 | 0.552 | −0.232 |
 <!-- END TABLE 8 -->
 
-![Figure 9](../figures/fig9_estm_external.png){width=100%}
+![Figure 9](../figures/fig9_estm_external.png){width=16cm}
 
 **Figure 9:** ESTM external validation: R^2^ for the internal chemistry-cluster CV (blue), the external full set (orange) and the external rows inside the training range (green), for (a) rows sharing no source publication with the training data and (b) rows whose chemistry cluster is absent from training. The note in each panel gives the number of rows and the share of them outside the training range.
 
@@ -404,17 +404,17 @@ Table 9 lists the five features with the largest mean \|SHAP\| per target, each 
 
 SHAP values are in the units of each target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*). Feature labels read "Elemental <property>, <statistic> (MAGPIE or CBFV)": the property is one of the elements, the statistic is taken over the elements of the formula (mean = atomic-fraction-weighted mean, mean abs. deviation = the weighted mean absolute deviation about that mean, range, minimum and maximum over the elements, mode = the value of the most abundant element). For S the top feature, for instance, is the spread of the elemental thermal conductivities of the formula, not the thermal conductivity of the sample.
 
-![Figure 10](../figures/fig10_shap_global.png){width=100%}
+![Figure 10](../figures/fig10_shap_global.png){width=16cm}
 
 **Figure 10:** SHAP global feature importance (top <!--d:shap_top_n-->15<!--/d--> features, bars: mean over the <!--v:shap_folds-->25<!--/v--> folds; error bars: <!--d:iv_lo-->2.5<!--/d-->th to <!--d:iv_hi-->97.5<!--/d-->th percentile of the per-fold mean across the <!--v:shap_folds-->25<!--/v--> folds, which are five repeats of five grouped folds and not independent; orderings below the first few features are not supported where intervals overlap) for (a) S (*µ*V K^−1^), (b) *σ* (log~10~ units), (c) *κ* (log~10~ units) and (d) zT. Every feature other than temperature is a statistic of an ELEMENTAL property of the elements in the formula (the label names the property, the statistic and the element table, MAGPIE or CBFV), not a measured property of the material: the top feature of the S model, for example, is the spread of the elemental thermal conductivities, not the sample's thermal conductivity.
 
-![Figure 11](../figures/fig11_shap_beeswarm.png){width=100%}
+![Figure 11](../figures/fig11_shap_beeswarm.png){width=16cm}
 
 **Figure 11:** SHAP beeswarm plots for (a) S, (b) *σ*, (c) *κ* and (d) zT: one point per test row (<!--v:bs_rows-->5,000<!--/v--> per model, first repeat of the chemistry-cluster folds), coloured by the percentile rank of the row's value of the feature; the features are the ones with the largest mean \|SHAP\| among these rows, so their order can differ from Fig. 10, which averages all folds of all repeats. Every feature other than temperature is a statistic of an ELEMENTAL property of the elements in the formula, not a measured property of the material (for S, the top feature is the spread of the elemental thermal conductivities, not the sample's thermal conductivity).
 
 The two featurization schemes contribute differently to the targets (Fig. 12). In the zT model, temperature accounts for <!--v:shap_share_temperature-->20<!--/v-->% of the mean \|SHAP\|, CBFV features for <!--v:shap_share_cbfv-->53<!--/v-->% and MAGPIE features for <!--v:shap_share_magpie-->28<!--/v-->% (shares over all <!--v:n_feat-->397<!--/v--> features, chemistry-cluster folds). In the other models temperature accounts for <!--v:shap_share_S_temperature-->2<!--/v-->% (S), <!--v:shap_share_sigma_temperature-->4<!--/v-->% (*σ*) and <!--v:shap_share_kappa_temperature-->5<!--/v-->% (*κ*), CBFV features for <!--v:shap_share_S_cbfv-->69<!--/v-->%, <!--v:shap_share_sigma_cbfv-->68<!--/v-->% and <!--v:shap_share_kappa_cbfv-->60<!--/v-->%, and MAGPIE features for <!--v:shap_share_S_magpie-->29<!--/v-->%, <!--v:shap_share_sigma_magpie-->28<!--/v-->% and <!--v:shap_share_kappa_magpie-->35<!--/v-->%. CBFV features carry the largest share of every model (<!--v:shap_cbfv_min-->53<!--/v--> to <!--v:shap_cbfv_max-->69<!--/v-->%), but they are also the more numerous (<!--v:shap_n_cbfv-->264<!--/v--> against <!--v:shap_n_magpie-->132<!--/v--> MAGPIE features): per feature, the mean share of a CBFV feature is <!--v:shap_ratio_min-->0.85<!--/v--> to <!--v:shap_ratio_max-->1.22<!--/v--> times that of a MAGPIE feature, so neither scheme is more informative per feature. Both carry a substantial share of every model; this attribution does not show whether either could be dropped.
 
-![Figure 12](../figures/fig12_shap_shares.png){width=100%}
+![Figure 12](../figures/fig12_shap_shares.png){width=8.5cm}
 
 **Figure 12:** Relative contribution of MAGPIE, CBFV and temperature features (share of mean \|SHAP\| over all features) to each model.
 

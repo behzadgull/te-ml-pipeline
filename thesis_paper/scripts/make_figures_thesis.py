@@ -1,6 +1,6 @@
 """
 Figures of the thesis paper that are not reused from Paper A, drawn from committed artifacts with every plotted number asserted
-against the source (Paper A style: scripts/figstyle.py, 16 cm wide, 300 dpi, no cropping).
+against the source (the one shared style, scripts/figstyle.py: Helvetica or Arial, bold axis and tick labels, 16 cm or 8.5 cm wide, 300 dpi, no cropping).
 
   Figure 6  property distributions (NA4)
   Figure 7  predicted versus measured values (NA8)
@@ -17,6 +17,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+sys.path.append(str(HERE.parents[1] / "scripts"))  # the shared style, scripts/figstyle.py (appended: it must not shadow the modules of this folder)
 import matplotlib  # noqa: E402
 
 matplotlib.use("Agg")
@@ -63,11 +64,11 @@ def fig9_estm(out):
         fs.panel_title(ax, title, letter="ab"[k == "b"])
         ax.set_xlim(-0.6, len(T4) - 0.4)
         ax.text(0.98, 0.97, f"n = {e[ek]['n_surviving']:,} rows; {100 * ins[k]['ood_row_fraction']:.0f}% outside the training range",
-                transform=ax.transAxes, ha="right", va="top", fontsize=8, color="0.25")
+                transform=ax.transAxes, ha="right", va="top", fontsize=fs.TEXT_PT, color="0.25")
     axes[0].set_ylabel("R$^2$")
     handles = [Patch(fc=fs.OI["blue"], ec=fs.EDGE_GREY), Patch(fc=fs.OI["orange"], ec=fs.EDGE_GREY), Patch(fc=fs.OI["green"], ec=fs.EDGE_GREY)]
     fs.legend_row(fig, handles, ["Internal (chemistry-cluster CV)", "External, full set", "External, rows inside the training range"])
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -86,7 +87,7 @@ def fig6_distributions(out):
         ax.set_xlabel(xlabel)
         ax.set_ylabel("Rows")
         fs.panel_title(ax, f"n = {n4[t]['n']:,}", letter=letter)
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -111,10 +112,10 @@ def fig7_parity(out):
         ax.set_aspect("equal")
         ax.set_xlabel("Measured " + titles[t])
         ax.set_ylabel("Predicted")
-        ax.text(0.03, 0.97, f"R$^2$ = {d['r2_repeat0']:.3f}", transform=ax.transAxes, ha="left", va="top", fontsize=8)
+        ax.text(0.03, 0.97, f"R$^2$ = {d['r2_repeat0']:.3f}", transform=ax.transAxes, ha="left", va="top", fontsize=fs.TEXT_PT)
         fs.panel_title(ax, titles[t], letter=letter)
     fig.colorbar(mesh, ax=axes, shrink=0.6, label="Rows per cell")
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -139,12 +140,12 @@ def fig10_shap(out):
         ax.barh(y, mean_, xerr=[mean_ - lo_, hi_ - mean_], color=cols, ec=fs.EDGE_GREY, lw=0.4, error_kw={"lw": 0.6, "capsize": 1.5})
         ax.set_xlim(left=0)
         ax.set_yticks(y)
-        ax.set_yticklabels([fl.wrapped(fl.label(f["feature"]), 46) for f in top], fontsize=6.5)
-        ax.set_xlabel(units[t].replace(" (", "\n("), fontsize=7.5)
+        ax.set_yticklabels([fl.wrapped(fl.label(f["feature"]), 46) for f in top], fontsize=fs.MIN_PT, linespacing=1.0)  # long feature names: the smallest size of the style
+        ax.set_xlabel(units[t].replace(" (", "\n("), loc="right")
         fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
         fs.grid(ax, axis="x")
     fs.legend_row(fig, [Patch(color=c, ec=fs.EDGE_GREY) for c in colour.values()], ["MAGPIE", "CBFV", "Temperature"])
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -166,7 +167,7 @@ def fig12_shares(out):
     ax.set_ylabel("Share of mean |SHAP|")
     ax.set_ylim(0, 1)
     fs.legend_row(fig, *ax.get_legend_handles_labels())
-    fs.save(fig, str(out), expect_width_cm=8.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("single"))
     plt.close(fig)
 
 
@@ -206,15 +207,15 @@ def fig11_beeswarm(out, run_dirs, top_n=BEESWARM_TOP_N):
             sc = ax.scatter(v, (top_n - 1 - rank) + jitter, c=pct, cmap="viridis", s=2.5, lw=0, alpha=0.7, rasterized=True, vmin=0, vmax=1)
         ax.axvline(0, color="0.4", lw=0.5)
         ax.set_yticks(np.arange(top_n)[::-1])
-        ax.set_yticklabels([fl.wrapped(fl.label(cols[j]), 38) for j in top], fontsize=6.5)
-        ax.xaxis.set_major_locator(plt.MaxNLocator(4))
-        ax.set_xlabel({"zT": "SHAP value (zT)", "S": "SHAP value (µV K$^{-1}$)", "kappa": "SHAP value (log$_{10}$)", "sigma": "SHAP value (log$_{10}$)"}[t])
+        ax.set_yticklabels([fl.wrapped(fl.label(cols[j]), 30) for j in top], fontsize=fs.MIN_PT, linespacing=1.0)
+        ax.xaxis.set_major_locator(plt.MaxNLocator(3))  # bold 9 pt tick labels: three ticks keep them apart
+        ax.set_xlabel({"zT": "SHAP value (zT)", "S": "SHAP value (µV K$^{-1}$)", "kappa": "SHAP value (log$_{10}$)", "sigma": "SHAP value (log$_{10}$)"}[t], loc="right")
         fs.panel_title(ax, {"zT": "zT", "S": "S", "kappa": "κ", "sigma": "σ"}[t], letter=letter)
         fs.grid(ax, axis="x")
     for ax in axes.ravel()[len(order):]:
         ax.set_visible(False)
     fig.colorbar(sc, ax=axes, orientation="horizontal", location="bottom", shrink=0.5, aspect=40, label="Feature value (percentile rank)")
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -263,11 +264,13 @@ def fig4_workflow(out):
     assert v["optuna_trials"] == "20" and v["shap_rows"] == "20,000" and v["shap_folds"] == "25" and v["estm_scope"] == "4,539" and v["jv_both"] == "23,218"
     assert v["mp_f0"] == "75,508" and v["mp_f4"] == "315" and v["mp_f6"] == "30" and v["nv_main_seen"] == "9" and v["nv_main_unseen"] == "21"
 
-    W = 16.0
-    top_w, top_h, gap = 3.4, 2.45, 0.8
-    a_h, m_h, e_h, o_h, g = 4.25, 0.9, 3.9, 1.15, 0.6
+    W = fs.width_cm("double")
+    S = W / 16.0  # the layout below was drawn for 16 cm: widths scale with S, heights with K (the text is 9 pt instead of 8 pt)
+    K = fs.TEXT_PT / 8.0 * 1.05
+    top_w, top_h, gap = 3.4 * S, 2.45 * K, 0.8 * S
+    a_h, m_h, e_h, o_h, g = 4.25 * K, 0.9 * K, 3.9 * K, 1.15 * K, 0.6 * K
     H = 0.1 + o_h + g + e_h + g + m_h + g + a_h + 0.85 + top_h + 0.2
-    fsz = 8.0
+    fsz = fs.TEXT_PT
     fig = plt.figure(figsize=(W * fs.CM, H * fs.CM))
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(-0.1, W + 0.1)
@@ -297,7 +300,7 @@ def fig4_workflow(out):
         arrow((xs[i] + top_w + 0.03, top_y + top_h / 2), (xs[i + 1] - 0.03, top_y + top_h / 2))
 
     # analyses A to D
-    a_gap = 0.3
+    a_gap = 0.3 * S
     a_w = (W - 3 * a_gap) / 4
     a_y = 0.1 + o_h + g + e_h + g + m_h + g
     A = [
@@ -329,7 +332,7 @@ def fig4_workflow(out):
         arrow((xc, a_y), (xc, m_y + m_h + 0.03), dashed=True)
 
     # E to G
-    e_gap = 0.3
+    e_gap = 0.3 * S
     e_w = (W - 2 * e_gap) / 3
     e_y = m_y - g - e_h
     E = [
@@ -353,8 +356,24 @@ def fig4_workflow(out):
         arrow((xc, e_y), (xc, 0.1 + o_h + 0.03))
 
     fs.check_text_fits(fig, ax, checks)
-    fs.save(fig, str(out), expect_width_cm=16.0)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
+
+
+def check_paper_widths():
+    """Every figure of paper.md that carries a width in cm must be included at its true width (the width of its PNG at the style's dpi), so that Word does not rescale it."""
+    import re
+
+    from PIL import Image
+
+    text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
+    found = re.findall(r"!\[Figure (\d+)\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)
+    assert len(found) == 9, f"expected the nine drawn figures (4 to 12) with a width in cm, found {len(found)}"
+    for num, rel, w in found:
+        with Image.open(REPO / "thesis_paper" / "figures" / rel) as im:
+            cm = im.size[0] / fs.DPI * 2.54
+        assert abs(cm - float(w)) < 0.05, f"Figure {num}: paper.md says {w} cm, the file is {cm:.2f} cm wide"
+    return {int(n): float(w) for n, _, w in found}
 
 
 def main():
@@ -380,7 +399,8 @@ def main():
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
     fig11_beeswarm(FIG / "fig11_shap_beeswarm", [REPO / d for d in tv.NA3_ROWS])
-    print("Figures 4, 6, 7, 9, 10, 11 and 12 saved")
+    widths = check_paper_widths()
+    print("Figures 4, 6, 7, 9, 10, 11 and 12 saved; widths in paper.md match the files:", widths)
 
 
 if __name__ == "__main__":

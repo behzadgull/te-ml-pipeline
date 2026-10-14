@@ -393,7 +393,7 @@ def make_cleaning_funnel(out_path):
     )
     fs.grid(ax, "x")
     fs.panel_title(ax, "Rows remaining after each of the eleven cleaning steps")
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -670,7 +670,7 @@ def make_validation_ladder(
     fs.panel_title(ax, "Pooled out-of-fold R$^2$ under five validation protocols")
     handles = [Patch(facecolor=c, edgecolor=fs.EDGE_GREY, linewidth=0.4) for c in colors]
     fs.legend_row(fig, handles, LADDER_LEGEND_LABELS)
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -832,7 +832,7 @@ def make_headroom_decomposition(
     handles.append(Line2D([], [], color="black", linestyle=(0, (3, 2)), linewidth=1.0))
     labels = [HEADROOM_SEGMENT_DISPLAY_NAMES[n] for n in HEADROOM_SEGMENT_ORDER] + ["Ungrouped random 80/20 R$^2$"]
     fs.legend_row(fig, handles, labels, ncol=3)
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -968,7 +968,7 @@ def make_shap_attribution(out_path, shap_dir=SHAP_ATTRIBUTION_DIR):
     handles = [Patch(facecolor=SHAP_RANDOM_COLOR, edgecolor=fs.EDGE_GREY, linewidth=0.4),
                Patch(facecolor=fs.OI["blue"], edgecolor=fs.EDGE_GREY, linewidth=0.4)]
     fs.legend_row(fig, handles, ["Random 80/20", "Chemistry cluster"])
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -1143,7 +1143,7 @@ def make_descriptor_ablation(
     ax.set_ylabel("Share of headroom closed (%)")
     ax.legend(loc="upper left", ncol=1)
     fs.panel_title(ax, "Gain over MAGPIE, as a share of headroom")
-    fs.save(fig, out_path, expect_width_cm=8.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("single"))
     plt.close(fig)
 
 
@@ -1302,7 +1302,7 @@ def make_descriptor_ablation_absolute(
     handles = [Line2D([], [], color=fs.OI["blue"], marker="o", markersize=3.5, linewidth=1.0),
                Patch(facecolor=fs.OI["orange"], alpha=0.28, linewidth=0)]
     fs.legend_row(fig, handles, ["Chemistry-cluster grouped R$^2$", "Combined label-noise ceiling range"])
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -1369,7 +1369,7 @@ def make_zt_parity(
         (axes[0], yt_r, yp_r, "Random 80/20", "a", r2_r),
         (axes[1], yt_c, yp_c, "Chemistry-cluster CV", "b", r2_c),
     ], lo, hi)
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -1537,7 +1537,7 @@ def make_external_transfer(out_path, ladder_metrics_path=LADDER_METRICS_PATH, ex
 
     handles = [Patch(facecolor=c, edgecolor=fs.EDGE_GREY, linewidth=0.4) for c in (c_int, c_full, c_in)]
     fs.legend_row(fig, handles, ["Internal (chemistry-cluster CV)", "External, full set", "External, in-support rows"])
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -1609,7 +1609,7 @@ def make_sigma_extrapolation(out_path, training_csv=SIGMA_EXTRAPOLATION_TRAINING
     ax.set_ylabel("Density")
     ax.legend(loc="upper left")
     fs.panel_title(ax, "Conductivity: training vs ESTM")
-    fs.save(fig, out_path, expect_width_cm=8.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("single"))
     plt.close(fig)
 
 
@@ -1676,7 +1676,7 @@ def make_zt_direct_vs_derived(out_path, checkpoint_dir=DIRECT_VS_DERIVED_CHECKPO
         (axes[0], d["direct_true"], d["direct_pred"], "Direct prediction", "a", r2_direct),
         (axes[1], d["derived_true"], d["derived_pred"], "Derived: S$^2\\sigma T/\\kappa$", "b", r2_derived),
     ], lo, hi)
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -1790,7 +1790,7 @@ def make_leakage_schematic(out_path):
     handles = [Line2D([], [], marker="o", ms=4, mfc=blue, mec="white", mew=0.3, ls="none"),
                Line2D([], [], marker="D", ms=4, mfc=verm, mec="white", mew=0.3, ls="none")]
     fs.legend_row(fig, handles, ["Training row", "Test row"])
-    fs.save(fig, out_path, expect_width_cm=16.0)
+    fs.save(fig, out_path, expect_width_cm=fs.width_cm("double"))
     plt.close(fig)
 
 
@@ -2223,6 +2223,24 @@ def make_contact_sheet(out_path, paper_path=PAPER_MD_PATH, scale=0.75):
 
 
 def main():
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only", nargs="+", default=None, help="draw only these manuscript figures (file stems, e.g. cleaning_funnel fig2_validation_ladder); the legacy figures and the contact sheet are skipped")
+    args = ap.parse_args()
+    if args.only:
+        funcs = {"fig1_leakage_schematic": make_leakage_schematic, "fig0_study_overview": make_study_overview, "cleaning_funnel": make_cleaning_funnel,
+                 "fig3_grouping_rule_schematic": make_grouping_rule_schematic, "fig2_validation_ladder": make_validation_ladder, "zt_parity_random_vs_grouped": make_zt_parity,
+                 "shap_attribution": make_shap_attribution, "fig5_headroom": make_headroom_decomposition, "descriptor_ablation": make_descriptor_ablation,
+                 "external_transfer": make_external_transfer, "sigma_extrapolation": make_sigma_extrapolation, "zt_direct_vs_derived": make_zt_direct_vs_derived}
+        unknown = [k for k in args.only if k not in funcs]
+        assert not unknown, f"unknown figure stems: {unknown}"
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+        fs.apply()
+        for stem in args.only:
+            funcs[stem](FIGURES_DIR / stem)
+            print(f"Saved {stem}.png / .pdf")
+        return
     # legacy figures (not in the manuscript): their own older style, untouched by the overhaul
     apply_style()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
