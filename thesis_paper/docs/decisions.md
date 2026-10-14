@@ -360,3 +360,27 @@ No out-of-fold prediction for any NA12 compound has been looked at. The figures 
    `na12_literature_comparison.py`, with their self-test, before the comparison is run.
 3. **Cross-checks.** Fig. 2 (log sigma T against 1/T) and Fig. 5 (power factor) of Ohtaki et al. are cross-checks of Fig. 1 and Fig. 4 and are not rows.
 4. The reading rules of amendment 1 apply to the markers of both papers: each marker is read at its drawn temperature; the lines drawn through the Ohta markers are fits, not data.
+
+## 2026-10-14: NA12, amendment 4 to pre-registration B (marker temperatures of figures with several series: column consensus); made before any comparison, with no out-of-fold prediction for an NA12 compound looked at
+
+Prompted by the digitisation of Fig. 1 of Ohta et al. (Seebeck coefficient of four SrTiO3 crystals). The clicked temperatures of one measurement scattered by up to about 14 K between series, and
+for some columns the clicks of one measurement fell in two different 25 K bins. Measured on the figure image (not on any prediction): the clicks lie on a coarse lattice of the digitiser's canvas
+(7.75 K in temperature, 4.8 uV/K in S), the two clicked axis-calibration points sit about 3 px (2 K) off the printed ticks, and the marker centres of the four series agree with each other at every
+temperature to within about 1.5 K, i.e. the series were measured at common temperatures; those common temperatures are not a regular 50 K grid (the steps between consecutive columns are 44 to 54 K).
+Snapping to a nominal 350 + 50k K was therefore rejected: the figure does not support it, and the paper states no measurement temperatures.
+
+1. **Rule.** Where several series of one figure are measured at common temperatures, the temperature of each marker is the consensus of its column: the mean, over the series that have a marker
+   there, of the marker-centre temperatures read from the image on a calibration through the figure's own printed tick marks (a straight line through all of them; the calibration uncertainty is its
+   largest residual). The S, sigma, kappa or zT value of the marker comes from the digitised click, as before. The value is then assigned to its 25 K bin by the floor rule of amendment 1 (a).
+   A column that only one series reaches uses that series' own image-centre temperature. The extraction records, per marker, the column temperature, its standard deviation across the series and the
+   calibration uncertainty.
+2. **Pre-declared sensitivity.** A row whose column temperature lies within the calibration uncertainty of a 25 K bin edge (an "edge row") is also run in the neighbouring bin; both results are
+   reported and the headline uses the floor bin of the column temperature. Edge rows are marked in the `notes` column with the token `[edge-sensitivity: also bin B]` (B = the neighbouring bin); a row
+   that is compared only at the cluster level (amendment 3) carries the token `[cluster-level]`. These tokens are what `na12_literature_comparison.py` reads.
+3. **Other figures of the same paper.** Each figure's columns are computed from that figure's own image and ticks; the agreement with the columns of Fig. 1 is reported as a check, not assumed
+   (the thermal conductivity was measured in separate runs, so its temperatures need not coincide).
+4. **Sample (b) of Ohta et al.** Its doping is printed 7.9e20 cm^-3 in the captions of Figs. 1 and 3 and 8.4e20 cm^-3 in Tables I and II (the S, sigma and n of Table II agree with the latter). The
+   label records the doping as in the tables; the discrepancy is noted in every row of that sample.
+5. **Implementation.** `scripts/na12_extract_ohta.py` (reads the digitised CSVs and the WPD project, the figure image, and the S values of Table II from the PDF text; the SHA256 of every input, the
+   commit and the tree state are recorded; figure bitmaps are not committed). The comparison script gets the `[cluster-level]` and `[edge-sensitivity]` handling and the per-sample aggregation key of
+   amendment 3, with a self-test, before the comparison is run; that is not done yet.
