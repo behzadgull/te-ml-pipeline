@@ -345,3 +345,18 @@ Made before the comparison has been run for any NA12 value and with no out-of-fo
    separately, restates the cross-validation error, and is never pooled with the independent papers in an overall summary.
 4. Implemented in `scripts/na12_literature_comparison.py` (`aggregate_bins`, `summarise`, and a self-test that needs no dataset and no prediction: `--self-test`). The pooled-over-rows summary of the
    earlier version of the script is removed.
+
+## 2026-10-14: NA12, amendment 3 to pre-registration B (Ohta 2005 and Ohtaki 1995); made before any of their values is digitised
+
+No out-of-fold prediction for any NA12 compound has been looked at. The figures of `ohta2005.pdf` and `ohtaki1995.pdf` are bitmaps and are to be digitised by hand (WebPlotDigitizer).
+
+1. **Room temperature** is 298.15 K (25 C), below the window: such values are recorded and not compared. This applies to Table II of Ohta et al. (all four samples, the text values copied), to the first
+   thermal-conductivity marker of Fig. 3 of Ohta et al. (about 300 K; the same measurement as Table II, so it is not digitised separately), and to Fig. 3 of Ohtaki et al. (sigma at room temperature
+   against the ionic radius; not digitised).
+2. **Ohta et al. compositions are not derived from the carrier concentration.** Ohta is compared at the cluster level only (B.2(b)): every sample is SrTiO3 cluster, because any doping of these
+   crystals is below 5 at%. Each sample is recorded as the paper states it ("La-doped SrTiO3, n = 8.4e19 cm^-3" and so on, samples (a) to (d) of its Table I). In the values file the composition
+   column holds the host formula SrTiO3 (the column has to parse), the sample as stated is in `compound_label`, and a row marked cluster-level is not compared at the exact level.
+   Amendment 2's aggregation is read within one sample: its key includes the sample as stated (`compound_label`), so the four samples are never averaged together. Both changes are made to
+   `na12_literature_comparison.py`, with their self-test, before the comparison is run.
+3. **Cross-checks.** Fig. 2 (log sigma T against 1/T) and Fig. 5 (power factor) of Ohtaki et al. are cross-checks of Fig. 1 and Fig. 4 and are not rows.
+4. The reading rules of amendment 1 apply to the markers of both papers: each marker is read at its drawn temperature; the lines drawn through the Ohta markers are fits, not data.
