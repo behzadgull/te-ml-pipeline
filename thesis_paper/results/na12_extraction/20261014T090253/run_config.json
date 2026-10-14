@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/singh2016.pdf",
+      "sha256": "dd902d1636f33490bc3d7ed88c0923341e7950c3e8b08b5341ecfc8741f3172e",
+      "bytes": 1710266
+    },
+    "pdf_vector": {
+      "path": "thesis_paper/scripts/pdf_vector.py",
+      "sha256": "8ff17d5876d755d2b00f5f5b1a13aead5828aa1dfdc948c8128491831cbdef88",
+      "bytes": 17166
+    },
+    "na12_plot_tools": {
+      "path": "thesis_paper/scripts/na12_plot_tools.py",
+      "sha256": "fdb081be9dd6119126b931ba1a1613b9c37737c74e8b31eb9a40af8ee2bdc916",
+      "bytes": 4934
+    }
+  },
+  "git_head": "99ade463a65403dfa39675f70b3ef12928f4393f",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_singh.py",
+  "script_sha256": "7909ee8f1c721a1c0483333ef4576ac4d611f4429a75b3ad69afa905aa5157b2",
+  "python": "3.12.10",
+  "paper": "Singh & Pandey 2017, experimental S only (Fig. 1 and the 300 K text value)",
+  "rules": "docs/decisions.md pre-registration B + amendment 1 (2026-10-13)"
+}
