@@ -1,0 +1,146 @@
+{
+  "calibration": {
+    "Fig2_resistivity": {
+      "frame": [
+        366.72,
+        568.32,
+        547.44,
+        700.74
+      ],
+      "y_labels": [
+        0.005,
+        0.01,
+        0.015,
+        0.02
+      ],
+      "y_residual_label_steps": 0.0006,
+      "x_labels": "200..1200",
+      "x_residual_label_steps": 0.0016
+    },
+    "Fig3_S": {
+      "ya": 4.95,
+      "yb": -2823.093,
+      "xa": 4.032,
+      "xb": -68.898,
+      "y_ticks": 7,
+      "x_ticks": 8,
+      "y_first_label": -600.0,
+      "y_last_label": 0.0,
+      "x_first_label": 300,
+      "x_last_label": 1000,
+      "y_residual_label_steps": 0.001,
+      "x_residual_label_steps": 0.002
+    },
+    "Fig4_kappa": {
+      "ya": 0.028,
+      "yb": -4.675,
+      "xa": 4.711,
+      "xb": -220.827,
+      "y_ticks": 8,
+      "x_ticks": 9,
+      "y_first_label": 0.0,
+      "y_last_label": 3.5,
+      "x_first_label": 200,
+      "x_last_label": 1000,
+      "y_residual_label_steps": 0.002,
+      "x_residual_label_steps": 0.002
+    },
+    "Fig5_Z": {
+      "ya": 0.015,
+      "yb": -2.753,
+      "xa": 4.173,
+      "xb": -1161.098,
+      "y_ticks": 10,
+      "x_ticks": 8,
+      "y_first_label": 0.2,
+      "y_last_label": 2.0,
+      "x_first_label": 300,
+      "x_last_label": 1000,
+      "y_residual_label_steps": 0.003,
+      "x_residual_label_steps": 0.002
+    }
+  },
+  "fig2_assignment": {
+    "0.4": {
+      "curve": 4,
+      "tip_distance_pt": 4.66,
+      "second_nearest_pt": 23.63
+    },
+    "0.3": {
+      "curve": 1,
+      "tip_distance_pt": 3.78,
+      "second_nearest_pt": 9.92
+    },
+    "0.1": {
+      "curve": 3,
+      "tip_distance_pt": 3.29,
+      "second_nearest_pt": 10.5
+    },
+    "0.15": {
+      "curve": 2,
+      "tip_distance_pt": 2.36,
+      "second_nearest_pt": 13.32
+    },
+    "0.05": {
+      "curve": 0,
+      "tip_distance_pt": 4.69,
+      "second_nearest_pt": 36.37
+    }
+  },
+  "validation": [
+    {
+      "statement": "ZT = 0.2 for x = 0.05 at 1000 K (abstract; page 105)",
+      "read": 0.1919,
+      "accepted_range": [
+        0.15,
+        0.25
+      ]
+    },
+    {
+      "statement": "the substitution of 5% Yb enhances by a factor 4 the ZT at 1000 K of CaMnO3 (page 105)",
+      "read": 4.29,
+      "accepted_range": [
+        3.5,
+        4.5
+      ]
+    },
+    {
+      "statement": "the lowest resistivity reaches 3 mohm cm for x = 0.15 (abstract)",
+      "read_ohm_cm": 0.0033,
+      "accepted_range_ohm_cm": [
+        0.0025,
+        0.0035
+      ]
+    }
+  ],
+  "consistency_zT_x0.15": [
+    {
+      "T_K": 373,
+      "zT_read": 0.013778107938118095,
+      "zT_recomputed": 0.013553849919371738,
+      "ratio_recomputed_to_read": 0.984,
+      "outside_0.8_1.25": false
+    },
+    {
+      "T_K": 573,
+      "zT_read": 0.02360704408306044,
+      "zT_recomputed": 0.02331474913780987,
+      "ratio_recomputed_to_read": 0.988,
+      "outside_0.8_1.25": false
+    },
+    {
+      "T_K": 773,
+      "zT_read": 0.027187193297435578,
+      "zT_recomputed": 0.026677505827014444,
+      "ratio_recomputed_to_read": 0.981,
+      "outside_0.8_1.25": false
+    },
+    {
+      "T_K": 973,
+      "zT_read": 0.11033747746994023,
+      "zT_recomputed": 0.10984837815534108,
+      "ratio_recomputed_to_read": 0.996,
+      "outside_0.8_1.25": false
+    }
+  ]
+}
