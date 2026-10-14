@@ -8,7 +8,9 @@ What it does
      (first label and step are constants below); the temperature axis likewise. The marker centre is the centre of its 16-point body path.
   2. Reads the printed maxima of Table 2 (PDF page 5) from the text layer.
   3. Validates: every digitised marker that Table 2 also prints must agree with the printed value within the printed uncertainty (asserted).
-  4. Applies amendment 1: the nominal measurement temperature of the series (25, 50, 75, 100 C) is used, the drawn plotting offset is recorded and not used; a Table 2 value
+  4. Internal consistency: where S, sigma, kappa and zT are given at one temperature, zT = S^2 sigma T / kappa is recomputed and the ratio to the read zT is recorded
+     (flag outside 0.8 to 1.25).
+  5. Applies amendment 1: the nominal measurement temperature of the series (25, 50, 75, 100 C) is used, the drawn plotting offset is recorded and not used; a Table 2 value
      replaces the digitised one where it is tabulated; the printed uncertainty is carried only where printed. The 25 C values (298.15 K) are below the window edge and
      are recorded, not compared (the comparison script does that by itself).
 
@@ -137,6 +139,22 @@ def read_table2(objs, content, res):
     return {prop: (float(v), float(e), int(t), f"{v} ± {e} at {t} C") for prop, (v, e, t) in zip(TABLE2_ORDER, triples)}
 
 
+def consistency(rows, low=0.8, high=1.25):
+    """Where S, sigma, kappa and zT are all given at one temperature, recompute zT = S^2 sigma T / kappa (SI units) and compare it with the zT of the row.
+    Returns one record per temperature with the ratio (recomputed / read) and a flag when it lies outside [low, high]."""
+    SI = {"uV/K": 1e-6, "S/cm": 100.0, "W/mK": 1.0, "1": 1.0}
+    by_T = {}
+    for r in rows:
+        by_T.setdefault(r["T_K"], {})[r["property"]] = float(r["value"]) * SI[r["unit"]]
+    out = []
+    for T, d in sorted(by_T.items(), key=lambda kv: float(kv[0])):
+        if all(k in d for k in ("S", "sigma", "kappa", "zT")):
+            calc = d["S"] ** 2 * d["sigma"] * float(T) / d["kappa"]
+            ratio = calc / d["zT"]
+            out.append({"T_K": float(T), "zT_read": d["zT"], "zT_recomputed": calc, "ratio_recomputed_to_read": round(ratio, 3), "outside_0.8_1.25": not (low <= ratio <= high)})
+    return out
+
+
 def build(pdf):
     objs3, c3, r3, _ = pv.page(pdf, 3)
     markers, summary = read_markers(objs3, c3, r3, FIG2A)
@@ -179,7 +197,7 @@ def build(pdf):
         rows.append({"lit_id": f"SL2022_{prop}_{nom}C", "compound_label": "CsSnI3 (black phase, vacuum-deposited thin film)", "composition": "CsSnI3", "property": prop,
                      "T_K": f"{T_K:.2f}", "value": f"{val:g}" if kind == "table" else f"{val:g}", "unit": UNIT[prop], "doi": DOI, "location": loc, "value_kind": kind,
                      "digitisation_method": method, "notes": "; ".join(note)})
-    return {"calibration": summary, "table2_printed": {k: v[3] for k, v in table.items()}, "markers": detail, "validation": validation, "rows": rows}
+    return {"calibration": summary, "table2_printed": {k: v[3] for k, v in table.items()}, "markers": detail, "validation": validation, "consistency_zT": consistency(rows), "rows": rows}
 
 
 def main():
@@ -216,6 +234,8 @@ def main():
     print(f"wrote {out}")
     for v in res["validation"]:
         print("validation:", v)
+    for c in res["consistency_zT"]:
+        print("zT consistency:", c)
     return 0
 
 
