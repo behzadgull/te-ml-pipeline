@@ -1,0 +1,52 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/ohta2005.pdf",
+      "sha256": "52895895808e339dc5addbe153a43cb2acd1fd3b1b7390059e2241dcd82c5909",
+      "bytes": 502856
+    },
+    "image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig1_S_vs_T_x3_2235x2031.png",
+      "sha256": "94948eaf431aee625353bddeac3b939d6083eeb45f6afe9f378911a25c74d173",
+      "bytes": 344610
+    },
+    "project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\s_project.json",
+      "sha256": "7668bd0466e3043b597cb60fc95146efd4be58b7f66bda4ebe6c3daabf66e042",
+      "bytes": 4510
+    },
+    "pdf_vector": {
+      "path": "thesis_paper/scripts/pdf_vector.py",
+      "sha256": "8ff17d5876d755d2b00f5f5b1a13aead5828aa1dfdc948c8128491831cbdef88",
+      "bytes": 17166
+    },
+    "csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\a_La_8.4e19_open_circle.csv",
+      "sha256": "be62b8cd7bbecd05ed15d3a48fc424989cef220cee92667e996302a72f9b0958",
+      "bytes": 280
+    },
+    "csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\b_La_8.4e20_filled_circle.csv",
+      "sha256": "d22ec0212dca830daf78872f93c8f71c075fbcd8c5578cd19ea0c151352eae6e",
+      "bytes": 345
+    },
+    "csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\c_Nb_1.6e20_open_triangle.csv",
+      "sha256": "67adf3f44319431285fbf1526d0693d6b1ea5822f7f5b4759e43878392a37ede",
+      "bytes": 333
+    },
+    "csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\d_Nb_3.3e20_filled_triangle.csv",
+      "sha256": "db9bd1a14df0d028c91ec4affd615baf8e3a2959bd122090cc4b32fe30ed5c4a",
+      "bytes": 330
+    }
+  },
+  "git_head": "fc9df8caf6b3defae8d30ba1497df13069661d72",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_ohta.py",
+  "script_sha256": "3c6b2d4a5ff25a7b36e8160a18e89a0ceae7a64e4dab94ca16eb525240cb4144",
+  "python": "3.12.10",
+  "paper": "Ohta et al. 2005, Fig. 1 (S), samples (a) to (d)",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4 (2026-10-13/14)"
+}
