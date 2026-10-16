@@ -17,7 +17,7 @@ room-temperature values of Table II (read from the PDF text) and the fill of the
 c open triangle, d filled triangle). In Fig. 2 the series are, top to bottom, b, d, c, a.
 
 One temperature per column (amendment 5). The figures of one measurement run (Figs. 1 and 2) are given in one invocation; their columns are matched and each column gets one temperature, the
-mean of the figures' column consensus weighted by 1/u^2 (u: calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Bins and edge flags use that value.
+mean of the figures' column consensus weighted by 1/u^2 (u: calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Bins and edge flags use that value (an edge row: within 2 u of a 25 K bin edge, amendment 6).
 
 Validation (asserted): the series have as many clicks as their CSV; a project file that holds a series agrees with its CSV; the temperature axis has 11 printed ticks (every 100 K) and a
 straight-line fit through them (maximum residual below 2.5 K); the value axis ticks reproduce the clicked calibration (Fig. 1: every 0.02 mV/K, within 2 uV/K; Fig. 2: decades and minor
@@ -55,6 +55,7 @@ JOURNAL = "J. Appl. Phys. 97:034106 (2005)"
 COLUMNS = ["lit_id", "compound_label", "composition", "property", "T_K", "value", "unit", "doi", "location", "value_kind", "digitisation_method", "notes"]
 THRESHOLD = 128  # dark pixel: grey level below this
 MAX_COLUMN_RANGE_K = 5.0
+EDGE_FACTOR = 2.0  # amendment 6: a row is an edge row when its temperature is within EDGE_FACTOR x u of a 25 K bin edge (about 95 % coverage)
 TABLE2_TOL_UV = 15.0
 SEARCH_PX = 16  # default half-width of the search window around a click (a figure may set its own: the clicks of Fig. 2 are up to about 20 px from the marker centre); the result must not touch its edge
 WINDOW_ROWS = (-30, 21)  # rows around a click used for the column profile (the markers are about 45 px across; text sits directly under the base of some triangles)
@@ -398,7 +399,7 @@ def combine(results):
         g["column"] = i
         edge = round(g["T"] / 25.0) * 25.0
         g["floor_bin"] = float(25.0 * np.floor(g["T"] / 25.0))
-        g["edge"] = bool(abs(g["T"] - edge) <= g["u"])
+        g["edge"] = bool(abs(g["T"] - edge) <= EDGE_FACTOR * g["u"])
         g["edge_distance_K"] = float(abs(g["T"] - edge))
         g["other_bin"] = (edge - 25.0 if g["T"] >= edge else edge) if g["edge"] else None
         for x in g["members"]:
