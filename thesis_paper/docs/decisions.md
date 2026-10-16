@@ -384,3 +384,26 @@ Snapping to a nominal 350 + 50k K was therefore rejected: the figure does not su
 5. **Implementation.** `scripts/na12_extract_ohta.py` (reads the digitised CSVs and the WPD project, the figure image, and the S values of Table II from the PDF text; the SHA256 of every input, the
    commit and the tree state are recorded; figure bitmaps are not committed). The comparison script gets the `[cluster-level]` and `[edge-sensitivity]` handling and the per-sample aggregation key of
    amendment 3, with a self-test, before the comparison is run; that is not done yet.
+
+## 2026-10-16: NA12, amendment 5 to pre-registration B (one temperature per measurement column across the figures of one run; one marker-centre method); made before any comparison, with no out-of-fold prediction for an NA12 compound looked at
+
+Prompted by the digitisation of Fig. 2 of Ohta et al. (electrical conductivity of the same four crystals). The S and sigma markers are the same measurement temperatures (the columns of Fig. 2 agree
+with those of Fig. 1 within 1.9 K, inside the figures' calibration uncertainty of 1.15 K and 2.1 K), yet amendment 4, which computes each figure's columns from its own image, gave the same
+measurement different bins and edge flags in the two figures (Fig. 1: columns 6 to 8; Fig. 2: columns 1 and 7 to 10).
+
+1. **One temperature per column across figures.** Where several figures report the same measurement run (Ohta et al. Figs. 1 and 2, and Fig. 4 if its columns match), a column's temperature is ONE
+   value: the mean of the figures' column consensus temperatures (amendment 4) weighted by 1/u^2, where u is the figure's calibration uncertainty (the largest residual of the straight line through
+   all printed ticks of its temperature axis, taken as the standard uncertainty of that axis); the combined uncertainty is 1/sqrt(sum of 1/u^2). Two columns of different figures are the same
+   measurement if they differ by at most 2 sqrt(u1^2 + u2^2) and are nearest to each other; a column of a figure that matches no other keeps its own temperature and uncertainty. Fig. 3
+   (thermal conductivity, separate runs) is not combined.
+2. **Edge flags and bins use the combined values.** The floor bin is that of the combined temperature, and a row is an edge row (amendment 4, item 2) when the combined temperature lies within the
+   combined uncertainty of a 25 K bin edge. All rows of one column, in every figure, therefore carry the same T_K, bin and flag.
+3. **One marker-centre method.** For all figures the marker centre is the one that does not depend on the line joining the markers: the centroid of the enclosed white interior of an open symbol,
+   or of the body of a filled symbol after a morphological opening that removes the line. The left-right symmetry fit used for Fig. 1 on 2026-10-14 is kept only as a recorded cross-check: it is
+   biased by the connecting line at several markers of Fig. 2 (checked on enlarged crops), and the two methods agree within 2.2 px on the 40 markers of Fig. 1. The 40 Fig. 1 rows of commit 8f6bfc5
+   are replaced by the rows of the new run (the old ones are not kept).
+4. **File names.** The four Fig. 2 CSVs were named top to bottom by the digitiser (a, b, c, d for the series b, d, c, a of the figure); they are renamed to the true sample letters, and the
+   `--series-map` of the extraction is no longer used. The project file of Fig. 2 holds only one dataset, whose name (d_Nb_...) predates the rename and whose points are those of sample (a); the
+   extraction matches a project dataset to a CSV by its points, not its name.
+5. **Implementation.** `scripts/na12_extract_ohta.py` takes several figures in one run (`--figure N CSV_DIR IMAGE`, repeated) and writes the combined column table to extraction.json;
+   `--append-values <dir> --replace-prefix OH2005_` replaces the earlier rows of the paper.
