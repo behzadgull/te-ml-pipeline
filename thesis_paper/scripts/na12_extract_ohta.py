@@ -8,27 +8,27 @@ The figures are bitmaps, digitised by hand in WebPlotDigitizer (one CSV per seri
 consensus of its column (amendment 4): the marker centres are located in the figure image by a left-right symmetry fit of the column profile of the dark pixels, converted to temperature on
 a straight line through ALL printed tick marks of the temperature axis, and averaged over the series that have a marker in that column.
 
-Two ways of locating a marker centre are computed for every marker. Fig. 1 uses the symmetry fit (committed run 20261014T143357); in Fig. 2 the line joining the markers biases the symmetry
-fit at several triangles and circles (checked on enlarged crops), so Fig. 2 uses the centre that does not depend on the line: the centroid of the enclosed white interior of an open symbol,
-or of the body of a filled symbol after a morphological opening that removes the line. On the 40 markers of Fig. 1 the two agree within 2.2 px; the markers where they differ by more than
-3 px are listed in extraction.json.
+Marker centre (all figures, amendment 5): the centroid of the enclosed white interior of an open symbol, or of the body of a filled symbol after a morphological opening that removes the
+connecting line. A left-right symmetry fit of the column profile is computed as well and recorded as a cross-check (it is biased by the line at several markers of Fig. 2; the two agree
+within 2.2 px on the 40 markers of Fig. 1); the markers where they differ by more than 3 px are listed in extraction.json.
 
-Which series is which sample. The letters of the CSV file names are the digitiser's own; they are checked, not trusted. --series-map file_letter=sample_letter,... states the sample of each
-file (default: the letters are the samples). The run stops unless the order of the series' first values agrees with the order of the room-temperature values of Table II (read from the PDF
-text) and the fill of the symbols (filled or open) agrees with the sample's symbol in the figure (a open circle, b filled circle, c open triangle, d filled triangle).
+Which series is which sample. The letters of the CSV file names must be the samples; the run stops unless the order of the series' first values agrees with the order of the
+room-temperature values of Table II (read from the PDF text) and the fill of the symbols (filled or open) agrees with the sample's symbol in the figure (a open circle, b filled circle,
+c open triangle, d filled triangle). In Fig. 2 the series are, top to bottom, b, d, c, a.
+
+One temperature per column (amendment 5). The figures of one measurement run (Figs. 1 and 2) are given in one invocation; their columns are matched and each column gets one temperature, the
+mean of the figures' column consensus weighted by 1/u^2 (u: calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Bins and edge flags use that value.
 
 Validation (asserted): the series have as many clicks as their CSV; a project file that holds a series agrees with its CSV; the temperature axis has 11 printed ticks (every 100 K) and a
 straight-line fit through them (maximum residual below 2.5 K); the value axis ticks reproduce the clicked calibration (Fig. 1: every 0.02 mV/K, within 2 uV/K; Fig. 2: decades and minor
 ticks of the log axis, within 0.01 decade); every refined centre lies inside its search window and a majority (at least 3 of 5) of the window settings agree within 3 px; markers of one
 column lie within 5 K of each other; each series has at most one marker per column; Fig. 1: the first marker of every sample is within 15 uV/K of the room-temperature S of Table II and
 has the larger |S|. Reported, not asserted (flags in extraction.json and in the notes of the rows): Fig. 2 first marker against Table II sigma, Table II sigma against n e mu of its own
-row, and the columns against those of a Fig. 1 run (--fig1-run).
+row, and the match of the figures' columns (combined_columns in extraction.json).
 
 Usage (repository root, clean tree):
-    python thesis_paper/scripts/na12_extract_ohta.py --fig 1 --csv-dir <folder> --image <figure bitmap>
-    python thesis_paper/scripts/na12_extract_ohta.py --fig 2 --csv-dir <folder> --image <figure bitmap> --series-map a=b,b=d,c=c,d=a --fig1-run <run dir of Fig. 1>
-        # writes thesis_paper/results/na12_extraction/<UTC>/
-    python thesis_paper/scripts/na12_extract_ohta.py --append-values <dir>      # appends the rows of that run to docs/na12_literature_values.csv
+    python thesis_paper/scripts/na12_extract_ohta.py --figure 1 <fig1 folder> <fig1 bitmap> --figure 2 <fig2 folder> <fig2 bitmap>     # writes thesis_paper/results/na12_extraction/<UTC>/
+    python thesis_paper/scripts/na12_extract_ohta.py --append-values <dir> [--replace-prefix OH2005_]                                  # appends the rows of that run to docs/na12_literature_values.csv
 """
 
 import argparse
@@ -69,8 +69,8 @@ SYMBOL_FILLED = {"a": False, "b": True, "c": False, "d": True}  # open or filled
 
 FIGURES = {
     1: {"prop": "S", "unit": "uV/K", "scale": 1000.0, "project": "s_project.json", "logy": False, "xticks": [200 + 100 * k for k in range(11)],
-        "frame_rows": (1650, 1800), "frame_min": 1000, "x_range": (380, 1910), "x_band": (5, 15), "x_thr": 8, "fx_box": (0, 1700, 380, 420), "y_rows": (0, 1700), "search_px": 16, "estimator": "symmetry",
-        "locate": "located in the image by a symmetry fit",
+        "frame_rows": (1650, 1800), "frame_min": 1000, "x_range": (380, 1910), "x_band": (5, 15), "x_thr": 8, "fx_box": (0, 1700, 380, 420), "y_rows": (0, 1700), "search_px": 16, "estimator": "hole",
+        "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
         "location": f"{JOURNAL}, Fig. 1 (article page 034106-2, PDF page 3)", "page": 3, "res_note": "S to the digitiser's click resolution (4.8 uV/K lattice)",
         "id": "S", "method": "clicked S, mV/K converted to uV/K, 3 significant digits", "xlabel": "200 to 1200 K"},
     2: {"prop": "sigma", "unit": "S/cm", "scale": 1.0, "project": "sigma_project.json", "logy": True, "xticks": [300 + 100 * k for k in range(11)],
@@ -123,18 +123,20 @@ def load_csvs(folder, project):
                     pts.append((float(a), float(b)))
         out[m.group(1)] = {"file": p.name, "dopant": m.group(2), "n_cm3": f"{m.group(3)}e{m.group(4)}", "name": p.stem, "pts": pts}
     assert sorted(out) == ["a", "b", "c", "d"], sorted(out)
+    for k, v in out.items():
+        assert v["file"].startswith(k + "_"), v["file"]
     proj = json.loads((Path(folder) / project).read_text(encoding="utf-8"))
     ax = proj["axesColl"][0]
     assert not ax["isLogX"]
     cal = ax["calibrationPoints"]
-    held = {}
+    held, names = {}, {}
     for ds in proj["datasetColl"]:
-        s = ds["name"][0]
-        assert ds["name"] == out[s]["name"], (ds["name"], out[s]["name"])
-        assert len(ds["data"]) == len(out[s]["pts"]), (s, len(ds["data"]), len(out[s]["pts"]))
-        for p, (t, v) in zip(ds["data"], out[s]["pts"]):
-            assert abs(p["value"][0] - t) < 1e-6 and abs(p["value"][1] - v) < 1e-9 * max(1.0, abs(v)), (s, p["value"], (t, v))
-        held[s] = [(p["x"], p["y"]) for p in ds["data"]]
+        pts = [(p["value"][0], p["value"][1]) for p in ds["data"]]
+        match = [k for k, v in out.items() if len(v["pts"]) == len(pts) and all(abs(x - c) < 1e-6 and abs(y - d) < 1e-9 * max(1.0, abs(y)) for (x, y), (c, d) in zip(v["pts"], pts))]
+        assert len(match) == 1, f"project dataset {ds['name']} equals {len(match)} CSVs"
+        held[match[0]] = [(p["x"], p["y"]) for p in ds["data"]]
+        names[match[0]] = ds["name"]
+    out["_project_dataset_names"] = names
     return out, cal, bool(ax["isLogY"]), held
 
 
@@ -241,12 +243,12 @@ def fmt3(v):
     return f"{float(f'{v:.3g}'):g}"
 
 
-def build(fig, csv_dir, image, pdf, series_map=None, fig1_run=None):
+def measure(fig, csv_dir, image, pdf):
     cfg = FIGURES[fig]
     data, ucal, logy, held = load_csvs(csv_dir, cfg["project"])
     assert logy == cfg["logy"], "axis type of the project does not match the figure"
-    smap = series_map or {k: k for k in "abcd"}
-    assert sorted(smap) == list("abcd") and sorted(smap.values()) == list("abcd"), smap
+    smap = {k: k for k in "abcd"}
+    names = data.pop("_project_dataset_names")
     dark = np.array(Image.open(image).convert("L")) < THRESHOLD
     fy, fx, xt, yt = axis_ticks(dark, cfg)
     xticks = cfg["xticks"]
@@ -289,7 +291,7 @@ def build(fig, csv_dir, image, pdf, series_map=None, fig1_run=None):
         first_val = {fl: min(data[fl]["pts"])[1] for fl in "abcd"}
         order_series = [smap[fl] for fl in sorted("abcd", key=lambda fl: -first_val[fl])]
         order_t2 = sorted("abcd", key=lambda s: -t2["abcd".index(s)]["sigma_Scm"])
-        assert order_series == order_t2, f"the series of the figure ({order_series}, highest sigma first) do not match the order of Table II ({order_t2}); check --series-map"
+        assert order_series == order_t2, f"the series of the figure ({order_series}, highest sigma first) do not match the order of Table II ({order_t2}); the CSV letters must be the samples (top to bottom in Fig. 2: b, d, c, a)"
     # marker centres, per file letter
     mk = []
     for fl in "abcd":
@@ -316,7 +318,7 @@ def build(fig, csv_dir, image, pdf, series_map=None, fig1_run=None):
     for fl in "abcd":
         fills = [m["fill"] for m in mk if m["file_letter"] == fl]
         is_filled = float(np.median(fills)) >= 0.6
-        assert is_filled == SYMBOL_FILLED[smap[fl]], f"file {fl} (sample {smap[fl]}): symbols are {'filled' if is_filled else 'open'}, the sample's are {'filled' if SYMBOL_FILLED[smap[fl]] else 'open'}; check --series-map"
+        assert is_filled == SYMBOL_FILLED[smap[fl]], f"file {fl} (sample {smap[fl]}): symbols are {'filled' if is_filled else 'open'}, the sample's are {'filled' if SYMBOL_FILLED[smap[fl]] else 'open'}; the CSV letters must be the samples (top to bottom in Fig. 2: b, d, c, a)"
     first = {}
     for fl in "abcd":
         first[fl] = min((m for m in mk if m["file_letter"] == fl), key=lambda m: m["T_image"])
@@ -362,75 +364,117 @@ def build(fig, csv_dir, image, pdf, series_map=None, fig1_run=None):
             rec["flags"] = flags
             sample_flags[s] = flags
             checks.append(rec)
-    # agreement with the columns of a Fig. 1 run
-    agreement = None
-    if fig1_run:
-        ex = json.loads((Path(fig1_run) / "extraction.json").read_text(encoding="utf-8"))
-        fig1_cols = sorted({round(m["T_col"], 3) for m in ex["markers"]})
-        agreement = []
-        for k in range(1, len(cols) + 1):
-            tk = next(m["T_col"] for m in mk if m["column"] == k)
-            j = min(range(len(fig1_cols)), key=lambda i: abs(fig1_cols[i] - tk))
-            agreement.append({"column": k, "T_col": round(tk, 1), "nearest_fig1_column_T": round(fig1_cols[j], 1), "difference_K": round(tk - fig1_cols[j], 1)})
-    # rows
-    rows = []
-    for m in sorted(mk, key=lambda m: (m["sample"], m["column"])):
-        s, fl = m["sample"], m["file_letter"]
-        label = f"{t1[s][0]}-doped SrTiO3, n = {t1[s][1]} cm^-3 (sample ({s}), single crystal; Table I)"
-        T = m["T_col"]
-        edge = round(T / 25.0) * 25.0
-        tokens = ["[cluster-level]"]
-        if abs(T - edge) <= cal_unc:
-            other = edge - 25.0 if T >= edge else edge
-            tokens.append(f"[edge-sensitivity: also bin {other:g}]")
-        floor_bin = 25.0 * np.floor(T / 25.0)
-        sd = "" if m["T_col_sd"] is None else f"{m['T_col_sd']:.1f}"
-        note = (" ".join(tokens) + f" T = consensus of column {m['column']} ({m['n_series']} series, SD {sd or 'n/a (one series)'} K, range {m['column_range']:.1f} K), calibration "
-                f"uncertainty +/- {cal_unc:.1f} K, floor bin {floor_bin:g}; clicked T {m['click_T']:.1f} K (not used); {cfg['res_note']}")
-        if logy:
-            note += f"; clicked sigma calibration within {100 * (10 ** max(abs(x) for x in y_dev) - 1):.1f} % of the printed ticks"
-        if s == "b":
-            note += "; " + SAMPLE_DOPING_NOTE
-        if fl != s:
-            note += f"; digitised in the file of letter {fl} ({data[fl]['file']}), assigned to sample ({s}) by the order of Table II and the symbol (--series-map)"
-        for fgl in sample_flags[s]:
-            note += f"; Table II check: {fgl}"
-        if T >= 800.0:
-            note += "; at or above the 800 K window edge: recorded, not compared"
-        rows.append({
-            "lit_id": f"OH2005_{cfg['id']}_{s}_c{m['column']:02d}", "compound_label": label, "composition": "SrTiO3", "property": cfg["prop"], "T_K": f"{T:.1f}",
-            "value": fmt3(cfg["scale"] * m["click_value"]), "unit": cfg["unit"], "doi": DOI, "location": cfg["location"], "value_kind": "digitised",
-            "digitisation_method": (f"bitmap digitised by hand in WebPlotDigitizer ({cfg['method']}); temperature = column consensus of marker centres "
-                                    f"{cfg['locate']} and read on a straight line through the 11 printed major ticks ({cfg['xlabel']}), with "
-                                    "thesis_paper/scripts/na12_extract_ohta.py (amendment 4)"),
-            "notes": note})
-    return {"figure": fig, "series_map_file_to_sample": smap,
+    return {"figure": fig, "project_dataset_names": names,
             "temperature_axis_fit": {"slope_K_per_px": float(a), "intercept_K": float(b), "max_residual_K": cal_unc, "tick_px": xt},
-            "value_axis_fit": yfit,
-            "clicked_calibration_offset_px_at_first_and_last_x_point": user_x_off_px,
-            "clicked_calibration_offset_K": [o * a for o in user_x_off_px],
-            "n_columns": len(cols), "markers": mk, "estimator": cfg["estimator"], "estimator_disagreements_over_3px": disagree, "table2_checks": checks, "fig1_column_agreement": agreement, "rows": rows}
+            "value_axis_fit": yfit, "clicked_calibration_offset_px_at_first_and_last_x_point": user_x_off_px, "clicked_calibration_offset_K": [o * a for o in user_x_off_px],
+            "n_columns": len(cols), "markers": mk, "estimator": cfg["estimator"], "estimator_disagreements_over_3px": disagree, "table2_checks": checks,
+            "_ctx": {"data": data, "t1": t1, "sample_flags": sample_flags, "y_dev": y_dev}}
 
 
-def parse_map(s):
-    if not s:
-        return None
-    m = dict(p.split("=") for p in s.split(","))
-    return m
+def combine(results):
+    """Amendment 5: columns of the figures that report one measurement run are matched (difference <= 2 sqrt(u1^2 + u2^2), nearest, one per figure) and each gets one temperature, the mean of the
+    figures' column consensus weighted by 1/u^2 (u: the figure's calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Returns the groups sorted by temperature."""
+    groups = []
+    for fig in sorted(results):
+        res = results[fig]
+        u = res["temperature_axis_fit"]["max_residual_K"]
+        cols = {}
+        for m in res["markers"]:
+            cols.setdefault(m["column"], m)
+        for k, m in sorted(cols.items(), key=lambda kv: kv[1]["T_col"]):
+            member = {"figure": fig, "column": k, "T": m["T_col"], "u": u, "n_series": m["n_series"], "sd": m["T_col_sd"], "range": m["column_range"]}
+            free = [g for g in groups if all(x["figure"] != fig for x in g["members"])]
+            best = min(free, key=lambda g: abs(g["T"] - m["T_col"]), default=None)
+            if best is not None and abs(best["T"] - m["T_col"]) <= 2.0 * float(np.hypot(best["u"], u)):
+                best["members"].append(member)
+            else:
+                groups.append({"members": [member]})
+                best = groups[-1]
+            w = np.array([1.0 / x["u"] ** 2 for x in best["members"]])
+            best["T"] = float(np.sum(w * np.array([x["T"] for x in best["members"]])) / w.sum())
+            best["u"] = float(1.0 / np.sqrt(w.sum()))
+    groups.sort(key=lambda g: g["T"])
+    for i, g in enumerate(groups, 1):
+        g["column"] = i
+        edge = round(g["T"] / 25.0) * 25.0
+        g["floor_bin"] = float(25.0 * np.floor(g["T"] / 25.0))
+        g["edge"] = bool(abs(g["T"] - edge) <= g["u"])
+        g["edge_distance_K"] = float(abs(g["T"] - edge))
+        g["other_bin"] = (edge - 25.0 if g["T"] >= edge else edge) if g["edge"] else None
+        for x in g["members"]:
+            for m in results[x["figure"]]["markers"]:
+                if m["column"] == x["column"]:
+                    m["combined_column"] = i
+    return groups
+
+
+def make_rows(results, groups):
+    """The values-file rows of every figure, at the combined column temperatures."""
+    rows = []
+    by_col = {g["column"]: g for g in groups}
+    for fig in sorted(results):
+        res, cfg = results[fig], FIGURES[fig]
+        ctx = res["_ctx"]
+        for m in sorted(res["markers"], key=lambda m: (m["sample"], m["combined_column"])):
+            s = m["sample"]
+            g = by_col[m["combined_column"]]
+            label = f"{ctx['t1'][s][0]}-doped SrTiO3, n = {ctx['t1'][s][1]} cm^-3 (sample ({s}), single crystal; Table I)"
+            T = g["T"]
+            tokens = ["[cluster-level]"]
+            if g["edge"]:
+                tokens.append(f"[edge-sensitivity: also bin {g['other_bin']:g}]")
+            own = "; ".join(f"Fig. {x['figure']}: {x['T']:.1f} K (n = {x['n_series']} series, SD {'n/a' if x['sd'] is None else format(x['sd'], '.1f')} K, calibration u = {x['u']:.1f} K)" for x in g["members"])
+            note = (" ".join(tokens) + f" T = combined consensus of column {g['column']} over {len(g['members'])} figure(s) (amendment 5), uncertainty +/- {g['u']:.1f} K, floor bin {g['floor_bin']:g} [{own}]; "
+                    f"clicked T {m['click_T']:.1f} K (not used); {cfg['res_note']}")
+            if cfg["logy"]:
+                note += f"; clicked sigma calibration within {100 * (10 ** max(abs(x) for x in ctx['y_dev']) - 1):.1f} % of the printed ticks"
+            if s == "b":
+                note += "; " + SAMPLE_DOPING_NOTE
+            for fgl in ctx["sample_flags"][s]:
+                note += f"; Table II check: {fgl}"
+            if T >= 800.0:
+                note += "; at or above the 800 K window edge: recorded, not compared"
+            rows.append({
+                "lit_id": f"OH2005_{cfg['id']}_{s}_c{g['column']:02d}", "compound_label": label, "composition": "SrTiO3", "property": cfg["prop"], "T_K": f"{T:.1f}",
+                "value": fmt3(cfg["scale"] * m["click_value"]), "unit": cfg["unit"], "doi": DOI, "location": cfg["location"], "value_kind": "digitised",
+                "digitisation_method": (f"bitmap digitised by hand in WebPlotDigitizer ({cfg['method']}); temperature = combined column consensus (amendments 4 and 5) of marker centres "
+                                        f"{cfg['locate']}, read on a straight line through the 11 printed major ticks of the figure ({cfg['xlabel']}), with "
+                                        "thesis_paper/scripts/na12_extract_ohta.py"),
+                "notes": note})
+    return rows
+
+
+def replace_values(d, prefix):
+    """Replace the rows of this paper (lit_id starting with prefix) in the values file by the rows of the run d; returns (removed, added)."""
+    cfg = json.loads((d / "run_config.json").read_text(encoding="utf-8"))
+    assert cfg["tree_clean"], "that run was made from a dirty tree"
+    with open(d / "values_rows.csv", encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    assert rows and all(r["lit_id"].startswith(prefix) for r in rows)
+    with open(VALUES, encoding="utf-8", newline="") as f:
+        have = list(csv.DictReader(f))
+    keep = [r for r in have if not r["lit_id"].startswith(prefix)]
+    assert not ({r["lit_id"] for r in keep} & {r["lit_id"] for r in rows}), "duplicate ids"
+    with open(VALUES, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
+        w.writeheader()
+        w.writerows(keep + rows)
+    return len(have) - len(keep), len(rows)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--fig", type=int, choices=sorted(FIGURES), default=1)
-    ap.add_argument("--csv-dir", default=None)
-    ap.add_argument("--image", default=None)
+    ap.add_argument("--figure", nargs=3, action="append", metavar=("N", "CSV_DIR", "IMAGE"), help="a figure of the paper (1 or 2): folder with its 4 CSVs and project file, and the figure bitmap; repeat per figure")
     ap.add_argument("--pdf", default=PDF)
-    ap.add_argument("--series-map", default=None, help="file letter = sample letter, comma separated (default: identity)")
-    ap.add_argument("--fig1-run", default=None, help="run directory of the Fig. 1 extraction (its columns are compared with this figure's)")
-    ap.add_argument("--append-values", default=None)
+    ap.add_argument("--append-values", default=None, help="run directory whose rows are appended to the values file")
+    ap.add_argument("--replace-prefix", default=None, help="with --append-values: first remove every row whose lit_id starts with this prefix (the earlier rows of the paper)")
     args = ap.parse_args()
     if args.append_values:
         d = Path(args.append_values)
+        if args.replace_prefix:
+            removed, added = replace_values(d, args.replace_prefix)
+            print(f"removed {removed} rows with prefix {args.replace_prefix}, added {added} rows from {d}")
+            return 0
         cfg = json.loads((d / "run_config.json").read_text(encoding="utf-8"))
         assert cfg["tree_clean"], "that run was made from a dirty tree"
         with open(d / "values_rows.csv", encoding="utf-8", newline="") as f:
@@ -445,25 +489,30 @@ def main():
                 w.writerow(r)
         print(f"appended {len(rows)} rows from {d} to {VALUES}")
         return 0
-    assert args.csv_dir and args.image, "--csv-dir and --image are required"
-    cfg = FIGURES[args.fig]
-    inputs = {"pdf": args.pdf, "image": str(Path(args.image).resolve()), "project": str((Path(args.csv_dir) / cfg["project"]).resolve()), "pdf_vector": "thesis_paper/scripts/pdf_vector.py"}
-    for p in sorted(Path(args.csv_dir).glob("*.csv")):
-        inputs[f"csv_{p.stem[0]}"] = str(p.resolve())
-    if args.fig1_run:
-        inputs["fig1_extraction"] = str((Path(args.fig1_run) / "extraction.json").resolve())
+    assert args.figure, "--figure N CSV_DIR IMAGE is required (repeat per figure)"
+    figs = {}
+    for n, d, img in args.figure:
+        assert int(n) in FIGURES and int(n) not in figs, n
+        figs[int(n)] = (d, img)
+    inputs = {"pdf": args.pdf, "pdf_vector": "thesis_paper/scripts/pdf_vector.py"}
+    for n, (d, img) in sorted(figs.items()):
+        inputs[f"fig{n}_image"] = str(Path(img).resolve())
+        inputs[f"fig{n}_project"] = str((Path(d) / FIGURES[n]["project"]).resolve())
+        for p in sorted(Path(d).glob("*.csv")):
+            inputs[f"fig{n}_csv_{p.stem[0]}"] = str(p.resolve())
     prov = rr.provenance(inputs, __file__)
-    smap = parse_map(args.series_map)
-    res = build(args.fig, args.csv_dir, args.image, args.pdf, smap, args.fig1_run)
+    results = {n: measure(n, d, img, args.pdf) for n, (d, img) in sorted(figs.items())}
+    groups = combine(results)
+    rows = make_rows(results, groups)
     out = rr.new_run_dir("na12_extraction")
-    rr.write_json(out / "extraction.json", {k: v for k, v in res.items() if k != "rows"})
+    rr.write_json(out / "extraction.json", {"combined_columns": groups, "figures": {str(n): {k: v for k, v in r.items() if k != "_ctx"} for n, r in results.items()}})
     with open(out / "values_rows.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
         w.writeheader()
-        w.writerows(res["rows"])
-    rr.write_json(out / "run_config.json", {**prov, "paper": f"Ohta et al. 2005, Fig. {args.fig} ({cfg['prop']}), samples (a) to (d)", "series_map_file_to_sample": smap or "identity",
-                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4 (2026-10-13/14)"})
-    print(f"wrote {out}: {len(res['rows'])} rows, {res['n_columns']} columns; temperature-axis residual {res['temperature_axis_fit']['max_residual_K']:.2f} K")
+        w.writerows(rows)
+    rr.write_json(out / "run_config.json", {**prov, "paper": "Ohta et al. 2005, figures " + ", ".join(str(n) for n in sorted(figs)) + ", samples (a) to (d)",
+                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4, 5 (2026-10-13 to 16)"})
+    print(f"wrote {out}: {len(rows)} rows, {len(groups)} combined columns")
     return 0
 
 
