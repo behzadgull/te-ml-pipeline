@@ -407,3 +407,27 @@ measurement different bins and edge flags in the two figures (Fig. 1: columns 6 
    extraction matches a project dataset to a CSV by its points, not its name.
 5. **Implementation.** `scripts/na12_extract_ohta.py` takes several figures in one run (`--figure N CSV_DIR IMAGE`, repeated) and writes the combined column table to extraction.json;
    `--append-values <dir> --replace-prefix OH2005_` replaces the earlier rows of the paper.
+
+## 2026-10-16: NA12, amendment 6 to pre-registration B (edge-flag tolerance 2u); made before any comparison, with no out-of-fold prediction for an NA12 compound looked at
+
+Amendment 4, item 2, flags a row as an edge row when its temperature lies within the calibration uncertainty u of a 25 K bin edge. Taken as a standard uncertainty (amendment 5), u covers
+about 68 %, so a marker 1.1 to 1.6 K from an edge (one to one and a half u) was left unflagged although its bin is no better than a coin flip at that margin.
+
+1. **Tolerance.** A row is an edge row when the temperature used for its bin (the combined column temperature of amendment 5, or the figure's own column temperature where there is only one figure)
+   lies within 2u of a 25 K bin edge, u being the uncertainty of that temperature (about 95 % coverage). The neighbouring bin and the `[edge-sensitivity: also bin B]` token are as in amendment 4.
+2. **Scope.** Every NA12 extraction in which temperatures are read from a figure axis. Values at temperatures the paper states (Sebastia-Luna 2022, Flahaut 2006, Singh 2017: nominal or tabulated
+   temperatures) are unaffected, as no edge flag applies to them.
+3. **Ohta et al. Figs. 1 and 2.** The extraction is re-run with the new tolerance, and the earlier rows of the paper (amendment 5) are replaced.
+
+## 2026-10-16: NA12, amendment 7 to pre-registration B (Ohta et al. Fig. 3, thermal conductivity: only legible markers); made before any comparison, with no out-of-fold prediction looked at
+
+In Fig. 3 the four series overlap at most temperatures, so a marker centre cannot always be placed.
+
+1. **Rule, fixed before any comparison.** Only markers whose centre can be placed (the symbol is recognisable and its interior or body is not covered by another) are digitised. Every other
+   marker of the figure inside the window (300 K <= T < 800 K) is recorded as "not legible" with its sample and column in `not_legible.csv` of the run, and the count is reported with the
+   results, so that which markers are in the comparison depends on the figure's legibility and not on the values or on any prediction.
+2. **What is not data.** The dotted curve and the markers near 0 to 0.5 W/mK are the electronic thermal conductivity estimated from sigma with the Wiedemann-Franz law (derived, not measured),
+   the solid line is a fit, and the inset repeats the same data; none of them is read. The marker near 300 K is the room-temperature value of Table II (amendment 3).
+3. **Columns.** The thermal conductivity was measured in separate runs, so its columns (about 383, 481, 583, 684 and 788 K) are their own, from the figure's own ticks, and are not combined with
+   those of Figs. 1, 2 and 4. No zT consistency check from markers is possible (no common temperatures).
+4. Fig. 4 (ZT) is digitised first; its columns are combined with those of Figs. 1 and 2 only if each matches within the tolerance of amendment 5.
