@@ -42,15 +42,25 @@ C_TO_K = 273.15
 ABSTRACT_Z_RANGE = (0.7, 0.75)
 ABSTRACT_Z_T_C = (600.0, 900.0)
 ABSTRACT_ZT_MAX = (0.085, 900.0)
-SAMPLE = {"dopant": "Bi", "composition": "Ca0.9Bi0.1MnO3", "label": "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. 7)"}
+BI = {"tag": "Bi", "composition": "Ca0.9Bi0.1MnO3", "label": "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. {fig})"}
+CAMNO3 = {"tag": "CaMnO3", "composition": "CaMnO3", "label": "CaMnO3 (undoped, as stated for Fig. {fig})"}
 FIGURES = {
     # max_range_C: the largest spread of the markers of one column (deg C). The Z and ZT markers of Fig. 7 are plotted up to 5.6 deg C apart (measured on this figure; the columns are 90 to 100 deg C
     # apart and the temperature axis is good to 1 deg C), so the gate of the Ohta figures (5 K) is set to 6 deg C here; columns above 5 are flagged in the notes.
     7: {"max_range_C": 6.0, "x_tick_values": [200.0, 400.0, 600.0, 800.0], "location": f"{JOURNAL}, Fig. 7 (article page 110)", "frame_rows": (1500, 2000), "frame_min": 1200,
+        "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "shared", "run": "A",
         "datasets": {"ZT": {"project": "zT_project.json", "csv": "zT.csv", "filled": True, "side": "right", "y_ticks": [0.02, 0.04, 0.06, 0.08], "tol": 0.001, "row": True,
-                            "prop": "zT", "unit": "1", "id": "zT"},
+                            "prop": "zT", "unit": "1", "id": "zT", "method": "clicked ZT on the right axis", "sample": BI, "estimator": "interior", "axis_range": 0.10, "res_note": "read on the right axis of Fig. 7"},
                      "Z": {"project": "z_project.json", "csv": "z.csv", "filled": False, "side": "left", "y_ticks": [0.2, 0.4, 0.6, 0.8], "tol": 0.01, "row": False,
-                           "prop": "Z", "unit": "1e-4 K^-1", "id": "Z"}}},
+                           "prop": "Z", "unit": "1e-4 K^-1", "id": "Z", "method": "clicked Z on the left axis", "sample": BI, "estimator": "interior", "axis_range": 1.0, "res_note": ""}}},
+    # Fig. 6: the two samples have their own temperatures (amendment 9 item 4), so every sample has its own columns; the symbol of CaMnO3 is a ring with a speckled interior (no enclosed white
+    # interior), so its centre is the symmetry fit (an isolated symbol, no line through it)
+    6: {"x_tick_values": [200.0, 400.0, 600.0, 800.0, 1000.0], "location": f"{JOURNAL}, Fig. 6 (article page 109)", "frame_rows": (1500, 2000), "frame_min": 1200,
+        "fx_range": (300, 520), "rx_range": (2000, 2200), "scope": "per_dataset", "y_frame_values": (0.0, 4.0),
+        "datasets": {"Bi": {"project": "bi_project.json", "csv": "bi_kappa.csv", "filled": False, "side": "left", "y_ticks": [1.0, 2.0], "tol": 0.04, "row": True, "prop": "kappa", "unit": "W/mK",
+                            "id": "kappa", "method": "clicked kappa in W/mK", "sample": BI, "estimator": "interior", "axis_range": 4.0, "res_note": "kappa read on the linear axis of Fig. 6"},
+                     "CaMnO3": {"project": "camno3_project.json", "csv": "camno3_kappa.csv", "filled": None, "side": "left", "y_ticks": [1.0, 2.0], "tol": 0.04, "row": True, "prop": "kappa",
+                                "unit": "W/mK", "id": "kappa", "method": "clicked kappa in W/mK", "sample": CAMNO3, "estimator": "symmetry", "axis_range": 4.0, "res_note": "kappa read on the linear axis of Fig. 6"}}},
 }
 
 
@@ -71,8 +81,10 @@ def frame_and_ticks(dark, cfg):
     bot = [r for r in range(r0, r1) if rows[r] > cfg["frame_min"]]
     top = [r for r in range(150, 400) if rows[r] > cfg["frame_min"]]
     fy, ty = bot[len(bot) // 2], top[len(top) // 2]
-    fx = int(np.argmax(dark[200:1800, 400:600].sum(axis=0))) + 400
-    rx = int(np.argmax(dark[200:1800, 2100:2300].sum(axis=0))) + 2100
+    fa, fb = cfg["fx_range"]
+    ra, rb = cfg["rx_range"]
+    fx = int(np.argmax(dark[200:1800, fa:fb].sum(axis=0))) + fa
+    rx = int(np.argmax(dark[200:1800, ra:rb].sum(axis=0))) + ra
     prof = dark[fy - 28: fy - 8, fx + 30: rx - 30].sum(axis=0)
     xt = [x + fx + 30 for x in oh.runs(prof >= int(prof.max() * 0.7))]
     return {"fy": fy, "ty": ty, "fx": fx, "rx": rx, "x_ticks_px": xt}
@@ -130,45 +142,64 @@ def measure(fig, folder, image):
             j = int(np.argmin([abs(c["px"] - t) for t in xt]))
             assert abs(c["px"] - xt[j]) <= 10.0 and abs(xv[j] - float(c["dx"])) < 1e-6, ("x calibration point not on its tick", c)
         yt = y_ticks(dark, fr, d["side"], d["y_ticks"], cal[2:])
-        ay, by = np.polyfit(yt, d["y_ticks"], 1)
-        rng = float(d["y_ticks"][-1])
+        yv = list(d["y_ticks"])
+        yp = list(yt)
+        if "y_frame_values" in cfg:  # the frame lines are the 0 and the top of the axis (a tick hidden by a marker, or none inside)
+            yp += [fr["fy"], fr["ty"]]
+            yv += list(cfg["y_frame_values"])
+        ay, by = np.polyfit(yp, yv, 1)
+        rng = float(d["axis_range"])
         dev = [float(ay * c["py"] + by - float(c["dy"])) for c in cal[2:]]
         assert max(abs(x) for x in dev) <= d.get("tol", 0.01 * rng), ("clicked y calibration differs from the printed ticks", name, dev)
-        info[name] = {"project_dataset_name": pname, "y_ticks_px": yt, "y_fit_slope_per_px": float(ay), "y_fit_intercept": float(by), "clicked_y_calibration_minus_ticks": dev,
+        marker_dev = [float(v - (ay * cy + by)) for (t_c, v), (cx, cy) in zip(pts, px)]  # the clicked values against the printed ticks at every marker (a rotated calibration drifts)
+        assert max(abs(x) for x in marker_dev) <= 0.03 * rng, ("clicked values differ from the printed ticks", name, marker_dev)
+        info[name] = {"project_dataset_name": pname, "y_ticks_px": yt, "y_fit_slope_per_px": float(ay), "y_fit_intercept": float(by), "clicked_y_calibration_minus_ticks": dev, "clicked_value_minus_ticks_at_markers_max": max(abs(x) for x in marker_dev),
+                      "x_calibration_points_py_difference_px": float(cal[0]["py"] - cal[1]["py"]),
                       "x_calibration_offsets_px": [float(c["px"] - xt[int(np.argmin([abs(c["px"] - t) for t in xt]))]) for c in cal[:2]]}
         prev = -1e9
         for (t_c, v), (cx, cy) in zip(pts, px):
             c_sym, n_ok, spread = oh.refine_x(dark, cx, cy, 24)
-            h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"])
-            assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
-            t_img = float(a * h[0] + b)
+            if d["estimator"] == "interior":
+                h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"])
+                assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
+                c = h[0]
+            else:  # an isolated symbol without an enclosed interior: the symmetry fit, which must be a majority of the settings and near the click
+                assert n_ok >= oh.MIN_AGREE and abs(c_sym - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: the symmetry fit is not reliable ({n_ok} of {len(oh.SETTINGS)} settings, {c_sym - cx:.1f} px from the click)"
+                c = c_sym
+            t_img = float(a * c + b)
             assert t_img > prev
             prev = t_img
-            mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": h[0], "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok,
-                       "fill": oh.interior_fill(dark, h[0], cy), "sample": SAMPLE["dopant"]})
-        fills = float(np.median([m["fill"] for m in mk if m["dataset"] == name]))
-        assert (fills >= 0.6) == d["filled"], f"{name}: symbols are {'filled' if fills >= 0.6 else 'open'}, expected {'filled' if d['filled'] else 'open'}"
-    order = sorted(range(len(mk)), key=lambda i: mk[i]["T_image_C"])
-    cols = []
-    for i in order:
-        if cols and mk[i]["T_image_C"] - mk[cols[-1][-1]]["T_image_C"] < 20.0:
-            cols[-1].append(i)
-        else:
-            cols.append([i])
-    for k, c in enumerate(cols, 1):
-        names = [mk[i]["dataset"] for i in c]
-        assert len(set(names)) == len(names), (k, names)
-        ts = [mk[i]["T_image_C"] for i in c]
-        assert max(ts) - min(ts) <= cfg.get("max_range_C", oh.MAX_COLUMN_RANGE_K), (k, ts)
-        m_k = float(np.mean(ts)) + C_TO_K
-        sd = float(np.std(ts, ddof=1)) if len(ts) > 1 else None
-        for i in c:
-            mk[i].update(column=k, T_col=m_k, T_col_sd=sd, n_series=len(c), column_range=max(ts) - min(ts), column_basis="interior")
+            mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": c, "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok,
+                       "centre_method": d["estimator"], "fill": oh.interior_fill(dark, c, cy), "sample": d["sample"]["tag"]})
+        if d["filled"] is not None:
+            fills = float(np.median([m["fill"] for m in mk if m["dataset"] == name]))
+            assert (fills >= 0.6) == d["filled"], f"{name}: symbols are {'filled' if fills >= 0.6 else 'open'}, expected {'filled' if d['filled'] else 'open'}"
+    scopes = [list(range(len(mk)))] if cfg["scope"] == "shared" else [[i for i, m in enumerate(mk) if m["dataset"] == n] for n in cfg["datasets"]]
+    n_cols = 0
+    for scope in scopes:
+        order = sorted(scope, key=lambda i: mk[i]["T_image_C"])
+        cols = []
+        for i in order:
+            if cfg["scope"] == "shared" and cols and mk[i]["T_image_C"] - mk[cols[-1][-1]]["T_image_C"] < 20.0:
+                cols[-1].append(i)
+            else:  # a sample with its own temperatures: every marker is its own column
+                cols.append([i])
+        for k, c in enumerate(cols, 1):
+            names = [mk[i]["dataset"] for i in c]
+            assert len(set(names)) == len(names), (k, names)
+            ts = [mk[i]["T_image_C"] for i in c]
+            assert max(ts) - min(ts) <= cfg.get("max_range_C", oh.MAX_COLUMN_RANGE_K), (k, ts)
+            m_k = float(np.mean(ts)) + C_TO_K
+            sd = float(np.std(ts, ddof=1)) if len(ts) > 1 else None
+            run = cfg["run"] if cfg["scope"] == "shared" else f"{fig}:{mk[c[0]]['dataset']}"
+            for i in c:
+                mk[i].update(column=k, T_col=m_k, T_col_sd=sd, n_series=len(c), column_range=max(ts) - min(ts), column_basis="interior", run=run)
+        n_cols += len(cols)
     return {"figure": fig, "temperature_axis_fit": {"slope_C_per_px": float(a), "intercept_C": float(b), "max_residual_K": u_c, "tick_px": xt, "tick_values_C": xv}, "frame": fr,
-            "datasets": info, "n_columns": len(cols), "markers": mk}
+            "datasets": info, "n_columns": n_cols, "markers": mk}
 
 
-def z_check(res):
+def z_check(res):  # Fig. 7 only
     """ZT = Z T(K): the ZT marker of a column against Z (1e-4 K^-1) times the combined column temperature; ratio flagged outside 0.8 to 1.25 (reported, not asserted)."""
     out = []
     by = {}
@@ -202,22 +233,25 @@ def text_checks(res):
 
 def make_rows(results, groups, doi, checks):
     rows = []
-    by_col = {g["column"]: g for g in groups}
+    by_col = {(g["run"], g["column"]): g for g in groups}
     for fig in sorted(results):
         res, cfg = results[fig], FIGURES[fig]
         for name, d in cfg["datasets"].items():
             if not d["row"]:
                 continue
+            smp = d["sample"]
             for m in sorted((m for m in res["markers"] if m["dataset"] == name), key=lambda m: m["combined_column"]):
-                g = by_col[m["combined_column"]]
+                g = by_col[(m["run"], m["combined_column"])]
                 T = g["T"]
                 tokens = []
                 if g["edge"]:
                     tokens.append(f"[edge-sensitivity: also bin {g['other_bin']:g}]")
                 own = "; ".join(f"Fig. {x['figure']}: {x['T']:.1f} K (n = {x['n_series']} markers, SD {'n/a' if x['sd'] is None else format(x['sd'], '.1f')} K, calibration u = {x['u']:.1f} K)" for x in g["members"])
-                zc = next((c for c in checks if c.get("column") == m["combined_column"] and "ratio" in c), None)
+                zc = next((c for c in checks if c.get("column") == m["combined_column"] and "ratio" in c), None) if fig == 7 else None
                 note = (" ".join(tokens) + (" " if tokens else "") + f"T = combined consensus of column {g['column']} over {len(g['members'])} figure(s) (amendments 5 and 9), uncertainty +/- {g['u']:.1f} K, "
-                        f"floor bin {g['floor_bin']:g} [{own}]; clicked T {m['click_T_C']:.1f} deg C (not used); read on the right axis of Fig. 7")
+                        f"floor bin {g['floor_bin']:g} [{own}]; clicked T {m['click_T_C']:.1f} deg C (not used); {d['res_note']}")
+                if d["estimator"] != "interior":
+                    note += f"; marker centre by the symmetry fit ({m['n_settings_agreeing']} of {len(oh.SETTINGS)} settings agree): the symbol is a ring with a speckled interior"
                 wide = [x for x in g["members"] if x["range"] > oh.MAX_COLUMN_RANGE_K]
                 if wide:
                     note += "; the Z and ZT markers of this column are plotted " + ", ".join(f"{x['range']:.1f} deg C" for x in wide) + " apart (the column temperature is their mean)"
@@ -228,11 +262,12 @@ def make_rows(results, groups, doi, checks):
                 if T < 300.0:
                     note += "; below the 300 K window edge: recorded, not compared (room temperature)"
                 rows.append({
-                    "lit_id": f"{ID_PREFIX}{d['id']}_{SAMPLE['dopant']}_c{g['column']:02d}", "compound_label": SAMPLE["label"], "composition": SAMPLE["composition"], "property": d["prop"],
+                    "lit_id": f"{ID_PREFIX}{d['id']}_{smp['tag']}_c{g['column']:02d}", "compound_label": smp["label"].format(fig=fig), "composition": smp["composition"], "property": d["prop"],
                     "T_K": f"{T:.1f}", "value": oh.fmt3(m["click_value"]), "unit": d["unit"], "doi": doi, "location": cfg["location"], "value_kind": "digitised",
-                    "digitisation_method": ("1-bit scan digitised by hand in WebPlotDigitizer (clicked ZT on the right axis, 3 significant digits); temperature = column consensus (amendments 4, 5 and 9) of "
-                                            "marker centres located as the centroid of the enclosed interior / opened body of the symbols, read on a straight line through the printed ticks "
-                                            "(200 to 800 deg C) and converted to K, with thesis_paper/scripts/na12_extract_ohtaki.py"),
+                    "digitisation_method": (f"1-bit scan digitised by hand in WebPlotDigitizer ({d['method']}, 3 significant digits); temperature = column consensus (amendments 4, 5 and 9) of "
+                                            "marker centres " + ("located as the centroid of the enclosed interior / opened body of the symbols" if d["estimator"] == "interior" else "located by the symmetry fit")
+                                            + f", read on a straight line through the printed ticks ({cfg['x_tick_values'][0]:g} to {cfg['x_tick_values'][-1]:g} deg C) and converted to K, "
+                                            "with thesis_paper/scripts/na12_extract_ohtaki.py"),
                     "notes": note})
     return rows
 
@@ -241,13 +276,15 @@ def not_legible_rows(results, groups):
     """Amendment 9: every column of a figure inside the window with each row dataset that has no digitised marker in it (derived from the digitised files)."""
     rows = []
     for fig, res in sorted(results.items()):
+        if FIGURES[fig]["scope"] != "shared":
+            continue  # the samples of this figure have their own temperatures: a skipped marker leaves no column to derive it from (all markers were digitised)
         for name, d in FIGURES[fig]["datasets"].items():
             if not d["row"]:
                 continue
             have = {m["combined_column"] for m in res["markers"] if m["dataset"] == name}
             for g in groups:
-                if 300.0 <= g["T"] < 800.0 and g["column"] not in have:
-                    rows.append({"figure": fig, "series": f"{SAMPLE['dopant']} ({name})", "column": g["column"], "T_K": f"{g['T']:.1f}",
+                if g["run"] == FIGURES[fig]["run"] and 300.0 <= g["T"] < 800.0 and g["column"] not in have:
+                    rows.append({"figure": fig, "series": f"{d['sample']['tag']} ({name})", "column": g["column"], "T_K": f"{g['T']:.1f}",
                                  "reason": "no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files"})
     return rows
 
@@ -276,13 +313,19 @@ def main():
     prov = rr.provenance(inputs, __file__)
     doi = doi_from_readme()
     results = {n: measure(n, d, img) for n, (d, img) in sorted(figs.items())}
-    groups = oh._combine_run(results)
-    for g in groups:
-        g["run"] = "A"
-        for x in g["members"]:
-            for m in results[x["figure"]]["markers"]:
-                if m["column"] == x["column"]:
-                    m["T_comb"] = g["T"]
+    runs = {}
+    for n, res in results.items():
+        for run in sorted({m["run"] for m in res["markers"]}):
+            runs.setdefault(run, {})[n] = {**res, "markers": [m for m in res["markers"] if m["run"] == run]}
+    groups = []
+    for run, rs in sorted(runs.items()):
+        for g in oh._combine_run(rs):
+            g["run"] = run
+            groups.append(g)
+            for x in g["members"]:
+                for m in results[x["figure"]]["markers"]:
+                    if m["run"] == run and m["column"] == x["column"]:
+                        m["T_comb"] = g["T"]
     checks = z_check(results[7]) if 7 in results else []
     rows = make_rows(results, groups, doi, checks)
     nl = not_legible_rows(results, groups)
