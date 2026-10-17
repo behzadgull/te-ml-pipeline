@@ -449,3 +449,24 @@ and zT (Figs. 1, 2 and 4), so the exact check is impossible; an approximate one 
    the zT rows concerned. The ratios combine the reading errors of four figures (a few per cent each) with the interpolation error, so they are a plausibility check, not an acceptance criterion.
 4. **Not-legible markers.** The run writes `not_legible.csv`: every column of Fig. 3 inside the window, with each sample that has no digitised marker in it (amendment 7); the list is derived from
    the digitised files, not typed.
+
+## 2026-10-17: NA12, amendment 9 to pre-registration B (Ohtaki et al. 1995: legible markers only, extending amendment 7); made before any Ohtaki marker is digitised, with no out-of-fold prediction looked at
+
+Ohtaki et al. (J. Solid State Chem. 120:105-111) report sigma (Fig. 1), S (Fig. 4), kappa (Fig. 6) and Z and ZT (Fig. 7) of (Ca0.9M0.1)MnO3 (M = Bi, Ce, Y, Sm, Sb, La, Pb, In, Sn) and CaMnO3 in a 1-bit scan
+where many symbols overlap. An enlarged-crop survey (made before any digitising, no value read) found: Figs. 6 and 7 isolated and legible; Fig. 4 and Fig. 1 legible for some series (Ca, In, Ce, Pb, Bi; Sn,
+Sb in part) and overlapped for others (Y, La, Sm).
+
+1. **Rule of amendment 7 applies.** Only markers whose centre can be placed (the symbol is recognisable and its interior or body is not covered by another) are digitised. Every other marker of the
+   figure inside the window (26.85 <= T < 526.85 deg C, i.e. 300 <= T < 800 K; Fig. 1: 3.33 > 1000/T > 1.25) is recorded as "not legible" with its series and column in `not_legible.csv` of the run,
+   derived from the digitised files (every column inside the window with each series that has no digitised marker in it), not typed; the count is reported with the results. The first marker of every
+   series (about 25 deg C, 298.15 K) is room temperature and is recorded, not compared (amendment 3).
+2. **Sm and Sn.** The symbols of Sm (triangle with speckled interior) and Sn (solid triangle) differ only by the speckle. A triangle whose speckle cannot be told apart is skipped (not legible); it is never
+   assigned to Sm or Sn by its position or its value.
+3. **Which figures are rows.** Fig. 1 (sigma), Fig. 4 (S), Fig. 6 (kappa) and the ZT of Fig. 7 (right axis). Fig. 2 (log sigma T), Fig. 5 (power factor) and the Z of Fig. 7 (left axis) are checks only and not
+   rows (amendment 3, item 3): Z with ZT = Z T(K), and sigma T, S^2 sigma with the digitised sigma and S, reported and not asserted.
+4. **Axes and columns.** Temperatures are read on the deg C axes with the figure's own printed ticks and converted to K (T_K = T_C + 273.15) after the column consensus (amendments 4 and 5, 2u edge tolerance of
+   amendment 6); on Fig. 1 the calibration is on the 1000/T axis and T = 1000/x, with the uncertainty of T propagated from that of x. Figures of one measurement run (Figs. 1, 4 and 7) share columns only if
+   their columns match under amendment 5, which is decided after digitising and not assumed; Fig. 6 (kappa; its temperatures differ between its two samples) has its own columns, as Fig. 3 of Ohta et al.
+5. **Compositions and levels.** The composition of a row is the formula as the paper states it (Ca0.9M0.1MnO3 with the dopant, or CaMnO3), compared at the exact and the cluster level as for the other papers
+   (not a [cluster-level] value; amendment 3 concerns Ohta et al. only); the training-source status of the paper is decided by the comparison script from its DOI.
+6. **Order.** Fig. 7, Fig. 6, Fig. 4, Fig. 1, each digitised before any comparison is run.
