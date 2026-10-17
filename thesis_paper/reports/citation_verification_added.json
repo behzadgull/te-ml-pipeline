@@ -298,5 +298,132 @@
     "journal_similarity": 1.0,
     "problems": [],
     "notes": []
+  },
+  {
+    "position": 75,
+    "key": "sebastialuna2022",
+    "doi": "10.1021/acsaem.2c01936",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Vacuum-Deposited Cesium Tin Iodide Thin Films with Tunable Thermoelectric Properties",
+      "author": "Sebastia-Luna, Paz and Pokharel, Unnati and Huisman, Bas A. H. and Koster, L. Jan Anton and Palazon, Francisco and Bolink, Henk J.",
+      "year": "2022",
+      "journal": "ACS Applied Energy Materials",
+      "volume": "5",
+      "pages": "10216--10223"
+    },
+    "record": {
+      "title": "Vacuum-Deposited Cesium Tin Iodide Thin Films with Tunable Thermoelectric Properties",
+      "first_author": "Sebastia-Luna",
+      "year": 2022,
+      "container": "ACS Applied Energy Materials",
+      "volume": "5",
+      "page": "10216-10223"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 76,
+    "key": "singh2016",
+    "doi": "10.1080/14786435.2016.1263404",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Understanding the thermoelectric properties of LaCoO3 compound",
+      "author": "Singh, Saurabh and Pandey, Sudhir K.",
+      "year": "2016",
+      "journal": "Philosophical Magazine",
+      "volume": "97",
+      "pages": "451--463"
+    },
+    "record": {
+      "title": "Understanding the thermoelectric properties of LaCoO3compound",
+      "first_author": "Singh",
+      "year": 2016,
+      "container": "Philosophical Magazine",
+      "volume": "97",
+      "page": "451-463"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": [
+      "the record's title has words the bib title lacks: lacoo3compound"
+    ]
+  },
+  {
+    "position": 77,
+    "key": "shibasaki2009",
+    "doi": "10.1007/s11664-009-0666-x",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Thermoelectric Properties of B-Site Substituted LaRhO3",
+      "author": "Shibasaki, S. and Takahashi, Y. and Terasaki, I.",
+      "year": "2009",
+      "journal": "Journal of Electronic Materials",
+      "volume": "38",
+      "pages": "1013--1016"
+    },
+    "record": {
+      "title": "Thermoelectric Properties of B-Site Substituted LaRhO3",
+      "first_author": "Shibasaki",
+      "year": 2009,
+      "container": "Journal of Electronic Materials",
+      "volume": "38",
+      "page": "1013-1016"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 78,
+    "key": "rajasekaran2020",
+    "doi": "10.1039/d0ce00702a",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Facile synthesis of morphology-controlled La:BaSnO3 for the enhancement of thermoelectric power factor",
+      "author": "Rajasekaran, Palani and Arivanandhan, Mukannan and Kumaki, Yuki and Jayavel, Ramasamy and Hayakawa, Yasuhiro and Shimomura, Masaru",
+      "year": "2020",
+      "journal": "CrystEngComm",
+      "volume": "22",
+      "pages": "5363--5374"
+    },
+    "record": {
+      "title": "Facile synthesis of morphology-controlled La:BaSnO3 for the enhancement of thermoelectric power factor",
+      "first_author": "Rajasekaran",
+      "year": 2020,
+      "container": "CrystEngComm",
+      "volume": "22",
+      "page": "5363-5374"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
+  },
+  {
+    "position": 79,
+    "key": "ohtaki1995",
+    "doi": "10.1006/jssc.1995.1384",
+    "agency": "Crossref",
+    "bib": {
+      "title": "Electrical Transport Properties and High-Temperature Thermoelectric Performance of (Ca0.9M0.1)MnO3 (M = Y, La, Ce, Sm, In, Sn, Sb, Pb, Bi)",
+      "author": "Ohtaki, Michitaka and Koga, Hisako and Tokunaga, Tsutomu and Eguchi, Koichi and Arai, Hiromichi",
+      "year": "1995",
+      "journal": "Journal of Solid State Chemistry",
+      "volume": "120",
+      "pages": "105--111"
+    },
+    "record": {
+      "title": "Electrical Transport Properties and High-Temperature Thermoelectric Performance of (Ca0.9M0.1)MnO3 (M = Y, La, Ce, Sm, In, Sn, Sb, Pb, Bi)",
+      "first_author": "Ohtaki",
+      "year": 1995,
+      "container": "Journal of Solid State Chemistry",
+      "volume": "120",
+      "page": "105-111"
+    },
+    "journal_similarity": 1.0,
+    "problems": [],
+    "notes": []
   }
 ]

@@ -48,7 +48,7 @@ FIGURES = {
     # max_range_C: the largest spread of the markers of one column (deg C). The Z and ZT markers of Fig. 7 are plotted up to 5.6 deg C apart (measured on this figure; the columns are 90 to 100 deg C
     # apart and the temperature axis is good to 1 deg C), so the gate of the Ohta figures (5 K) is set to 6 deg C here; columns above 5 are flagged in the notes.
     7: {"max_range_C": 6.0, "x_tick_values": [200.0, 400.0, 600.0, 800.0], "location": f"{JOURNAL}, Fig. 7 (article page 110)", "frame_rows": (1500, 2000), "frame_min": 1200,
-        "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "shared", "run": "A",
+        "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "shared", "run": "A", "gates": dict(oh.GATES),
         "datasets": {"ZT": {"project": "zT_project.json", "csv": "zT.csv", "filled": True, "side": "right", "y_ticks": [0.02, 0.04, 0.06, 0.08], "tol": 0.001, "row": True,
                             "prop": "zT", "unit": "1", "id": "zT", "method": "clicked ZT on the right axis", "sample": BI, "estimator": "interior", "axis_range": 0.10, "res_note": "read on the right axis of Fig. 7"},
                      "Z": {"project": "z_project.json", "csv": "z.csv", "filled": False, "side": "left", "y_ticks": [0.2, 0.4, 0.6, 0.8], "tol": 0.01, "row": False,
@@ -56,7 +56,7 @@ FIGURES = {
     # Fig. 6: the two samples have their own temperatures (amendment 9 item 4), so every sample has its own columns; the symbol of CaMnO3 is a ring with a speckled interior (no enclosed white
     # interior), so its centre is the symmetry fit (an isolated symbol, no line through it)
     6: {"x_tick_values": [200.0, 400.0, 600.0, 800.0, 1000.0], "location": f"{JOURNAL}, Fig. 6 (article page 109)", "frame_rows": (1500, 2000), "frame_min": 1200,
-        "fx_range": (300, 520), "rx_range": (2000, 2200), "scope": "per_dataset", "y_frame_values": (0.0, 4.0),
+        "fx_range": (300, 520), "rx_range": (2000, 2200), "scope": "per_dataset", "y_frame_values": (0.0, 4.0), "gates": dict(oh.GATES),
         "datasets": {"Bi": {"project": "bi_project.json", "csv": "bi_kappa.csv", "filled": False, "side": "left", "y_ticks": [1.0, 2.0], "tol": 0.04, "row": True, "prop": "kappa", "unit": "W/mK",
                             "id": "kappa", "method": "clicked kappa in W/mK", "sample": BI, "estimator": "interior", "axis_range": 4.0, "res_note": "kappa read on the linear axis of Fig. 6"},
                      "CaMnO3": {"project": "camno3_project.json", "csv": "camno3_kappa.csv", "filled": None, "side": "left", "y_ticks": [1.0, 2.0], "tol": 0.04, "row": True, "prop": "kappa",
@@ -77,7 +77,7 @@ def _fig4_series(name, tag, composition, label, csv, filled, estimator, area=(60
 FIGURES[4] = {
     "x_tick_values": [200.0, 400.0, 600.0, 800.0, 1000.0, 1200.0], "location": f"{JOURNAL}, Fig. 4 (article page 108)", "frame_rows": (1500, 2000), "frame_min": 1200,
     "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "per_dataset", "y_frame_values": (-500.0, 0.0), "shared_project": "Sn", "top_tick_check": True,
-    "undigitised_series": ["Sm"], "column_gap_K": 20.0, "skip_unplaceable": True,
+    "undigitised_series": ["Sm"], "column_gap_K": oh.COLUMN_GAP_K, "skip_unplaceable": True, "gates": dict(oh.GATES),
     "datasets": dict([
         _fig4_series("Bi", "Bi", "Ca0.9Bi0.1MnO3", "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. {fig})", "bi_s.csv", False, "interior"),
         _fig4_series("Ce", "Ce", "Ca0.9Ce0.1MnO3", "(Ca0.9Ce0.1)MnO3 (M = Ce, as stated for Fig. {fig})", "ce_s.csv", True, "interior"),
@@ -107,7 +107,7 @@ FIGURES[1] = {
     "x_kind": "inv_T", "x_tick_values": [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0], "u_max": 0.02, "x_cal_tol": 0.02, "top_tick_check": True, "use_top_ticks": True,
     "location": f"{JOURNAL}, Fig. 1 (article page 107)", "frame_rows": (1500, 2000), "frame_min": 1200,
     "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "per_dataset", "y_frame_values": (-1.0, 3.0), "shared_project": "Ce",
-    "undigitised_series": ["Sm"], "reference_series": "Bi", "column_gap_K": 20.0, "skip_unplaceable": True, "gates": {"area_ratio": 0.8, "sym_px": 10.0, "click_K": 15.0},
+    "undigitised_series": ["Sm"], "reference_series": "Bi", "column_gap_K": oh.COLUMN_GAP_K, "skip_unplaceable": True, "gates": dict(oh.GATES),
     "datasets": dict([
         _fig1_series("Bi", "Bi", "Ca0.9Bi0.1MnO3", "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. {fig})", "bi_sigma.csv", False, "interior"),
         _fig1_series("Ce", "Ce", "Ca0.9Ce0.1MnO3", "(Ca0.9Ce0.1)MnO3 (M = Ce, as stated for Fig. {fig})", "ce_sigma.csv", True, "interior"),
@@ -342,7 +342,7 @@ def measure(fig, folder, image):
         order = sorted(scope, key=lambda i: mk[i]["T_image_C"])
         cols = []
         for i in order:
-            if cfg["scope"] == "shared" and cols and mk[i]["T_image_C"] - mk[cols[-1][-1]]["T_image_C"] < 20.0:
+            if cfg["scope"] == "shared" and cols and mk[i]["T_image_C"] - mk[cols[-1][-1]]["T_image_C"] < oh.COLUMN_GAP_K:
                 cols[-1].append(i)
             else:  # a sample with its own temperatures: every marker is its own column
                 cols.append([i])
@@ -447,6 +447,9 @@ def not_legible_rows(results, groups):
     rows = []
     for fig, res in sorted(results.items()):
         cfg = FIGURES[fig]
+        for gm in res.get("gated_markers", []):  # amendments 12 and 13: markers removed by the image-derived gates
+            rows.append({"figure": fig, "series": f"{cfg['datasets'][gm['dataset']]['sample']['tag']} ({gm['dataset']})", "column": "", "T_K": f"{gm['T_image_K']:.1f}",
+                         "reason": f"digitised marker not legible (amendments 12 and 13): {gm['reason']}; T_K is the image temperature"})
         if cfg.get("reference_series"):  # Fig. 1 (amendment 12): the series share measurement columns; the columns are those of the reference series plus any column where another series has a marker more than the gap from every reference column
             gap = cfg["column_gap_K"]
             ref = sorted(m["T_col"] for m in res["markers"] if m["dataset"] == cfg["reference_series"])
@@ -467,9 +470,6 @@ def not_legible_rows(results, groups):
                     if name is None or not any(m["dataset"] == name and abs(m["T_col"] - T) <= gap for m in res["markers"]):
                         rows.append({"figure": fig, "series": f"{tag} ({'no file: not digitised' if name is None else name})", "column": k, "T_K": f"{T:.1f}",
                                      "reason": f"no digitised marker within {gap:g} K: not legible (amendments 9 and 12); column of the reference series {cfg['reference_series']}" + (" (or an extra column of another series)" if any(abs(T - float(np.mean(g))) < 1e-9 for g in grp) else "")})
-            for gm in res.get("gated_markers", []):
-                rows.append({"figure": fig, "series": f"{cfg['datasets'][gm['dataset']]['sample']['tag']} ({gm['dataset']})", "column": "", "T_K": f"{gm['T_image_K']:.1f}",
-                             "reason": f"digitised marker not legible (amendment 12): {gm['reason']}; T_K is the image temperature"})
             for u in res.get("unplaceable_clicks", []):
                 rows.append({"figure": fig, "series": f"{cfg['datasets'][u['dataset']]['sample']['tag']} ({u['dataset']})", "column": "", "T_K": f"{u['click_T_C'] + C_TO_K:.1f}",
                              "reason": f"clicked marker skipped (amendment 11): {u['reason']}; T_K is the clicked temperature"})
@@ -564,7 +564,7 @@ def main():
         w.writeheader()
         w.writerows(nl)
     rr.write_json(out / "run_config.json", {**prov, "paper": "Ohtaki et al. 1995, figures " + ", ".join(str(n) for n in sorted(figs)),
-                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9, 10, 11 (2026-10-13 to 17)"})
+                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9, 10, 11, 12, 13 (2026-10-13 to 17)"})
     print(f"wrote {out}: {len(rows)} rows, {len(groups)} columns; not legible (in the window): {len(nl)}")
     return 0
 

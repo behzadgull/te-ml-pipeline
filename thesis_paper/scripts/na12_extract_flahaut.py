@@ -44,7 +44,9 @@ COLUMNS = ["lit_id", "compound_label", "composition", "property", "T_K", "value"
 BOOK = "2006 25th Int. Conf. on Thermoelectrics, pp. 103-106"
 COMPOSITION = {0.0: "CaMnO3", 0.05: "Ca0.95Yb0.05MnO3", 0.1: "Ca0.9Yb0.1MnO3", 0.15: "Ca0.85Yb0.15MnO3", 0.3: "Ca0.7Yb0.3MnO3", 0.4: "Ca0.6Yb0.4MnO3"}
 SHAPE_X = {"diamond": 0.0, "square": 0.05, "circle": 0.1, "triangle": 0.15}  # captions of Figs. 4 and 5
+GRID_STEP_K = 100  # the 100 K grid of the pre-registered reading rule for continuous curves (docs/decisions.md, pre-registration B)
 GRID_K = (300, 400, 500, 600, 700, 800)
+assert GRID_K == tuple(300 + GRID_STEP_K * i for i in range(6))
 TRAINING = "TRAINING-SOURCE PAPER (its curves are in Starrydata2; a comparison restates the cross-validation error, it is not independent)"
 
 

@@ -57,6 +57,8 @@ JOURNAL = "J. Appl. Phys. 97:034106 (2005)"
 COLUMNS = ["lit_id", "compound_label", "composition", "property", "T_K", "value", "unit", "doi", "location", "value_kind", "digitisation_method", "notes"]
 THRESHOLD = 128  # dark pixel: grey level below this
 MAX_COLUMN_RANGE_K = 5.0
+GATES = {"area_ratio": 0.8, "sym_px": 10.0, "click_K": 15.0}  # amendment 13: image-derived legibility gates, the same for every digitised scanned figure (Ohta Figs. 1 to 4, Ohtaki Figs. 1, 4, 6, 7)
+COLUMN_GAP_K = 20.0  # a new column starts after a gap of this many K between the markers of a figure sorted by temperature (amendments 4 and 12)
 EDGE_FACTOR = 2.0  # amendment 6: a row is an edge row when its temperature is within EDGE_FACTOR x u of a 25 K bin edge (about 95 % coverage)
 TABLE2_TOL_UV = 15.0
 SEARCH_PX = 16  # default half-width of the search window around a click (a figure may set its own: the clicks of Fig. 2 are up to about 20 px from the marker centre); the result must not touch its edge
@@ -392,6 +394,7 @@ def measure(fig, csv_dir, image, pdf):
             prev = t_assign
             mk.append({"file_letter": fl, "sample": s, "click_T": tc, "click_value": vc, "centre_px": c, "click_px": [px, py], "T_image": t_img, "T_assign": t_assign, "centre_method": method,
                        "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0],
+                       "interior_area_px": (h[2] if (h is not None and method == "interior" and cfg["estimator"] != "symmetry") else None),
                        "fill": interior_fill(dark, c if c is not None else px, py)})
     if logy and cfg.get("ydev_from_markers"):  # the clicked values against the printed ticks at every marker (a rotated calibration drifts along the axis)
         y_dev = [float(np.log10(m["click_value"]) - (ay * m["click_px"][1] + by)) for m in mk]
@@ -407,11 +410,28 @@ def measure(fig, csv_dir, image, pdf):
         first[fl] = min((m for m in mk if m["file_letter"] == fl), key=lambda m: m["T_assign"])
     disagree = [{"sample": m["sample"], "click_T": round(m["click_T"], 1), "symmetry_minus_hole_px": round(m["centre_px_symmetry"] - m["centre_px_hole"], 1)}
                 for m in mk if m["centre_px_hole"] is not None and abs(m["centre_px_symmetry"] - m["centre_px_hole"]) > 3.0]
+    gated = []  # amendment 13: the gates apply at once to all placed markers; the Table II identity checks below use the markers before gating
+    g = GATES
+    med = {fl: float(np.median([m["interior_area_px"] for m in mk if m["file_letter"] == fl and m["interior_area_px"]] or [np.nan])) for fl in "abcd"}
+    keep = []
+    for m in mk:
+        why = []
+        if m["interior_area_px"] and m["interior_area_px"] < g["area_ratio"] * med[m["file_letter"]]:
+            why.append(f"interior area {m['interior_area_px']} px is below {g['area_ratio']:g} of the series median {med[m['file_letter']]:.0f} px")
+        if m["centre_method"] == "interior" and m["centre_px_hole"] is not None and abs(m["centre_px_symmetry"] - m["centre_px_hole"]) > g["sym_px"]:
+            why.append(f"the symmetry fit and the interior centre differ by {abs(m['centre_px_symmetry'] - m['centre_px_hole']):.1f} px (limit {g['sym_px']:g})")
+        if not x_mislabelled and m["T_image"] is not None and abs(m["T_image"] - m["click_T"]) > g["click_K"]:
+            why.append(f"the image temperature differs from the clicked one by {abs(m['T_image'] - m['click_T']):.1f} K (limit {g['click_K']:g})")
+        if why:
+            gated.append({"sample": m["sample"], "T_image_K": m["T_image"], "click_T": m["click_T"], "click_value": m["click_value"], "reason": "; ".join(why)})
+        else:
+            keep.append(m)
+    mk = keep
     # columns: markers of all series sorted by temperature; a new column starts after a gap of 20 K
     order = sorted(range(len(mk)), key=lambda i: mk[i]["T_assign"])
     cols = []
     for i in order:
-        if cols and mk[i]["T_assign"] - mk[cols[-1][-1]]["T_assign"] < 20.0:
+        if cols and mk[i]["T_assign"] - mk[cols[-1][-1]]["T_assign"] < COLUMN_GAP_K:
             cols[-1].append(i)
         else:
             cols.append([i])
@@ -439,32 +459,32 @@ def measure(fig, csv_dir, image, pdf):
             s_uv = cfg["scale"] * f["click_value"]
             d = s_uv - t["S_uVK"]
             assert abs(d) <= TABLE2_TOL_UV and abs(s_uv) >= abs(t["S_uVK"]), (s, s_uv, t["S_uVK"])
-            checks.append({"sample": s, "table2_S_uVK_298K": t["S_uVK"], "first_marker_S_uVK": round(s_uv, 1), "first_marker_T_K": round(f["T_col"], 1), "difference_uVK": round(d, 1)})
+            checks.append({"sample": s, "table2_S_uVK_298K": t["S_uVK"], "first_marker_S_uVK": round(s_uv, 1), "first_marker_T_K": round(f.get("T_col", f["T_assign"]), 1), "difference_uVK": round(d, 1)})
         elif fig == 3:
-            rec = {"sample": s, "table2_kappa_WmK_298K": t["kappa"], "first_marker_kappa": round(f["click_value"], 3), "first_marker_T_K": round(f["T_col"], 1), "flags": []}
-            if f["T_col"] <= 320.0:
+            rec = {"sample": s, "table2_kappa_WmK_298K": t["kappa"], "first_marker_kappa": round(f["click_value"], 3), "first_marker_T_K": round(f.get("T_col", f["T_assign"]), 1), "flags": []}
+            if f.get("T_col", f["T_assign"]) <= 320.0:
                 rec["ratio_first_marker_over_table2"] = round(f["click_value"] / t["kappa"], 3)
                 if not 0.9 <= rec["ratio_first_marker_over_table2"] <= 1.1:
-                    rec["flags"].append(f"room-temperature kappa marker {f['click_value']:.2f} W/mK at {f['T_col']:.0f} K against Table II {t['kappa']:g} (ratio {rec['ratio_first_marker_over_table2']:.2f})")
+                    rec["flags"].append(f"room-temperature kappa marker {f['click_value']:.2f} W/mK at {f.get('T_col', f['T_assign']):.0f} K against Table II {t['kappa']:g} (ratio {rec['ratio_first_marker_over_table2']:.2f})")
             else:
                 rec["note"] = "no room-temperature marker digitised for this sample"
             sample_flags[s] = rec["flags"]
             checks.append(rec)
         elif fig == 4:
             ratio = f["click_value"] / t["zT"]
-            rec = {"sample": s, "table2_zT_298K": t["zT"], "first_marker_zT": round(f["click_value"], 4), "first_marker_T_K": round(f["T_col"], 1), "ratio_first_marker_over_table2": round(ratio, 2), "flags": []}
+            rec = {"sample": s, "table2_zT_298K": t["zT"], "first_marker_zT": round(f["click_value"], 4), "first_marker_T_K": round(f.get("T_col", f["T_assign"]), 1), "ratio_first_marker_over_table2": round(ratio, 2), "flags": []}
             if not 0.8 <= ratio <= 6.0:  # zT rises with T in this range (Fig. 4), so the first marker, 50 to 150 K above room temperature, is above the room-temperature value
-                rec["flags"].append(f"first marker zT {f['click_value']:.3f} at {f['T_col']:.0f} K against Table II room-temperature ZT {t['zT']:g} (ratio {ratio:.2f})")
+                rec["flags"].append(f"first marker zT {f['click_value']:.3f} at {f.get('T_col', f['T_assign']):.0f} K against Table II room-temperature ZT {t['zT']:g} (ratio {ratio:.2f})")
             sample_flags[s] = rec["flags"]
             checks.append(rec)
         else:
             ratio = f["click_value"] / t["sigma_Scm"]
             nemu = t["n_1e20"] * 1e20 * 1.602176634e-19 * t["mu"]
-            rec = {"sample": s, "table2_sigma_Scm": t["sigma_Scm"], "first_marker_sigma_Scm": round(f["click_value"], 1), "first_marker_T_K": round(f["T_col"], 1),
+            rec = {"sample": s, "table2_sigma_Scm": t["sigma_Scm"], "first_marker_sigma_Scm": round(f["click_value"], 1), "first_marker_T_K": round(f.get("T_col", f["T_assign"]), 1),
                    "ratio_first_marker_over_table2": round(ratio, 3), "n_1e20": t["n_1e20"], "mu_cm2Vs": t["mu"], "n_e_mu_Scm": round(nemu, 1), "table2_over_n_e_mu": round(t["sigma_Scm"] / nemu, 3)}
             flags = []
             if not 0.5 <= ratio <= 1.1:  # sigma decreases with T (inset: n constant, mu ~ T^-1.5 to T^-2), so a marker 50 K above room temperature is at or below the room-temperature value
-                flags.append(f"first marker {f['click_value']:.0f} S/cm at {f['T_col']:.0f} K against Table II room-temperature sigma {t['sigma_Scm']:g} S/cm (ratio {ratio:.2f})")
+                flags.append(f"first marker {f['click_value']:.0f} S/cm at {f.get('T_col', f['T_assign']):.0f} K against Table II room-temperature sigma {t['sigma_Scm']:g} S/cm (ratio {ratio:.2f})")
             if not 0.9 <= rec["table2_over_n_e_mu"] <= 1.1:
                 flags.append(f"Table II sigma {t['sigma_Scm']:g} S/cm differs from n e mu = {nemu:.0f} S/cm of its own n and mu (ratio {rec['table2_over_n_e_mu']:.2f})")
             rec["flags"] = flags
@@ -473,7 +493,7 @@ def measure(fig, csv_dir, image, pdf):
     return {"figure": fig, "project_dataset_names": names,
             "temperature_axis_fit": {"slope_K_per_px": float(a), "intercept_K": float(b), "max_residual_K": cal_unc, "tick_px": xt},
             "value_axis_fit": yfit, "clicked_calibration_offset_px_at_first_and_last_x_point": user_x_off_px, "clicked_calibration_offset_K": [o * a for o in user_x_off_px],
-            "n_columns": len(cols), "markers": mk, "estimator": cfg["estimator"], "estimator_disagreements_over_3px": disagree, "table2_checks": checks,
+            "n_columns": len(cols), "markers": mk, "gated_markers": gated, "estimator": cfg["estimator"], "estimator_disagreements_over_3px": disagree, "table2_checks": checks,
             "x_calibration_points": x_cal, "x_calibration_mislabelled": x_mislabelled, "_ctx": {"data": data, "t1": t1, "sample_flags": sample_flags, "y_dev": y_dev, "x_mislabelled": x_mislabelled}}
 
 
@@ -586,6 +606,9 @@ def not_legible_rows(results, groups):
     """Amendment 7: every column of a legible-markers-only figure inside the window, with each sample that has no digitised marker in it (derived from the digitised files)."""
     rows = []
     for fig, res in sorted(results.items()):
+        for gm in res.get("gated_markers", []):  # amendment 13
+            rows.append({"figure": fig, "sample": gm["sample"], "column": "", "T_K": f"{gm['T_image_K']:.1f}" if gm["T_image_K"] is not None else "",
+                         "reason": f"digitised marker not legible (amendment 13): {gm['reason']}; T_K is the image temperature"})
         if not FIGURES[fig].get("legible_only"):
             continue
         for g in groups:
@@ -710,7 +733,7 @@ def main():
     out = rr.new_run_dir("na12_extraction")
     rr.write_json(out / "extraction.json", {"combined_columns": groups, "figures": {str(n): {k: v for k, v in r.items() if k != "_ctx"} for n, r in results.items()},
                                             "approx_zt_check": None if approx is None else {k: v for k, v in approx.items() if k != "by_key"}, "not_legible": nl})
-    if any(FIGURES[n].get("legible_only") for n in figs):
+    if nl:
         with open(out / "not_legible.csv", "w", encoding="utf-8", newline="") as f:
             w = csv.DictWriter(f, fieldnames=["figure", "sample", "column", "T_K", "reason"], lineterminator="\n")
             w.writeheader()
@@ -720,7 +743,7 @@ def main():
         w.writeheader()
         w.writerows(rows)
     rr.write_json(out / "run_config.json", {**prov, "paper": "Ohta et al. 2005, figures " + ", ".join(str(n) for n in sorted(figs)) + ", samples (a) to (d)",
-                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4, 5 (2026-10-13 to 16)"})
+                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4, 5, 7, 8, 13 (2026-10-13 to 17)"})
     print(f"wrote {out}: {len(rows)} rows, {len(groups)} columns; not legible (in the window): {len(nl)}" + ("" if approx is None else f"; approximate zT check: {approx['summary']['n_checked']} checked, {approx['summary']['n_flagged']} flagged, {approx['summary']['n_gaps']} gaps"))
     return 0
 

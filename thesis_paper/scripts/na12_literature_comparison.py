@@ -67,6 +67,7 @@ TARGETS = ("S", "sigma", "kappa", "zT")
 LOG_TARGETS = ("sigma", "kappa")
 N_REPEATS, N_FOLDS, SEED = 5, 5, 0
 T_MIN, T_MAX, BIN = 300.0, 800.0, 25.0
+ROOM_TEMPERATURE_K = 298.15  # 25 C: below the window, recorded and not compared (amendment 3)
 COLUMNS = ["lit_id", "compound_label", "composition", "property", "T_K", "value", "unit", "doi", "location", "value_kind", "digitisation_method", "notes"]
 UNITS = {"S": {"uV/K": 1.0, "mV/K": 1e3, "V/K": 1e6}, "sigma": {"S/m": 1.0, "S/cm": 100.0}, "kappa": {"W/mK": 1.0}, "zT": {"1": 1.0},
          "resistivity": {"ohm m": 1.0, "ohm cm": 1e-2, "mohm cm": 1e-5}}  # resistivity factors give ohm m; sigma = 1 / rho
@@ -341,7 +342,7 @@ def self_test():
     assert parse_tokens("[edge-sensitivity: also bin 700]", 700.6)[2] is not None, "the floor bin itself is not a neighbouring bin"
     assert parse_tokens("[edge-sensitivity: also bin 675]", 700.6)[2] is None and parse_tokens("[edge-sensitivity: also bin 725]", 751.0)[2] is None
     # ---- room temperature and 800 K are recorded, not compared
-    for T in (295.8, 298.15, 299.99, 800.0, 802.1, 852.8):
+    for T in (295.8, ROOM_TEMPERATURE_K, 299.99, 800.0, 802.1, 852.8):
         assert not in_window(T) and not_compared_reason(T) is not None
     for T in (300.0, 351.0, 799.9):
         assert in_window(T) and not_compared_reason(T) is None
@@ -358,7 +359,7 @@ def self_test():
     row("a4", "10.1/A", "CsSnI3", "film", "sigma", 310.0, 5.0)  # another property
     row("a5", "10.1/A", "LaCoO3", "film", "S", 310.0, 7.0)      # another composition
     row("b1", "10.1/B", "CsSnI3", "film", "S", 310.0, 50.0)     # another paper
-    row("a6", "10.1/A", "CsSnI3", "film", "S", 298.15, 11.0)    # below the window: not aggregated
+    row("a6", "10.1/A", "CsSnI3", "film", "S", ROOM_TEMPERATURE_K, 11.0)    # below the window: not aggregated
     row("a7", "10.1/A", "CsSnI3", "film", "S", 301.0, 12.0)     # in the first bin with a1 and a2
     row("a8", "10.1/A", "CsSnI3", "film", "S", 800.0, 13.0)     # at 800 K: outside the window
     row("o1", "10.1/O", "SrTiO3", "La-doped SrTiO3, n = 8.4e19 cm^-3 (sample (a))", "S", 351.0, -422.0, True)    # Ohta samples: one host formula, different stated samples
@@ -408,7 +409,7 @@ def self_test():
     assert r4["alt_status"] == "alt bin outside the window" and r4["cluster_alt_n_rows"] == 0 and r4["exact_alt_n_rows"] == 0
     r5 = compare_value({**base, "T_K": 750.0, "alt_bin": 775.0}, "C1", "G1", sub, pred, eps)   # alt bin in the window but no training row
     assert r5["alt_status"] == "no training row in the alt bin" and r5["cluster_n_rows"] == 0
-    for T in (298.15, 295.8, 800.0, 852.8):
+    for T in (ROOM_TEMPERATURE_K, 295.8, 800.0, 852.8):
         rn = compare_value({**base, "T_K": T, "alt_bin": 325.0}, "C1", "G1", sub, pred, eps)
         assert not rn["in_window"] and rn["status"].startswith("recorded, not compared") and rn["exact_n_rows"] == 0 and rn["cluster_n_rows"] == 0 and rn["cluster_alt_n_rows"] == 0, \
             "values outside the window get no result, alt bin included"

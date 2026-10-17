@@ -1229,4 +1229,18 @@ def new_analysis_values():
     v.update(grouping_values(base))
     v.update(noise_ceiling_values())
     v.update(na2_design_values())
+    v.update(na12_values())
     return v
+
+
+def na12_values():
+    """Counts of the NA12 literature validation, read from committed files: the papers of the NA12 table of source/pdfs/README.md (pre-registration B) and the
+    amendments of docs/decisions.md (numbered 1 to N without gaps; the pre-registration itself is not counted)."""
+    root = Path(__file__).resolve().parents[1]
+    readme = (root / "source" / "pdfs" / "README.md").read_text(encoding="utf-8")
+    block = readme.split("## NA12 literature validation", 1)[1]
+    papers = [ln for ln in block.splitlines() if re.match(r"\| `[a-z]+\d{4}\.pdf` \|", ln)]
+    assert len({ln.split("|")[1].strip() for ln in papers}) == len(papers)
+    nums = sorted(int(m.group(1)) for m in re.finditer(r"^## .*NA12, amendment (\d+) to pre-registration B", (root / "docs" / "decisions.md").read_text(encoding="utf-8"), re.M))
+    assert nums == list(range(1, len(nums) + 1)), nums
+    return {"na12_papers": str(len(papers)), "na12_amendments": str(len(nums))}

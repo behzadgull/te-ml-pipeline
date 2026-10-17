@@ -538,3 +538,24 @@ Fig. 1 (log10 sigma against 1000/T, ten series; Sm not digitised, amendment 9 it
 10. **Sn calibration.** The Sn clicks were made with their own calibration (`sn_project.json`), which is not in the folder; the Sn markers are located with the shared project's calibration (positions only), and the Sn values
    are the clicks. Check, reported: the value read from the body centre row of each Sn marker agrees with its click to 0.042 in log10 sigma at most (the centroid of a solid triangle sits below its centre), the same as the
    other interior-centre series (0.009 to 0.042).
+
+## 2026-10-17: NA12, amendment 13 to pre-registration B (the legibility gates of amendment 12 apply to every digitised scanned figure); made before the comparison, with no out-of-fold prediction looked at
+
+Found on review: amendment 12 (item 8) applied three image-derived gates to Ohtaki et al. Fig. 1 only, and item 9 left Fig. 4 under amendment 11. Two rules for the same kind of marker in the same two papers is arbitrary, and the
+gates were chosen after seeing the digitised Fig. 1, not because Fig. 1 is special.
+
+1. **Scope.** The gates of amendment 12, item 8, apply unchanged to every digitised scanned figure: Ohta et al. Figs. 1 to 4 and Ohtaki et al. Figs. 1, 4, 6 and 7 (the figures read as vector graphics, Sebastia-Luna, Flahaut
+   and Singh, have no marker centres to place). The thresholds are not changed: (a) enclosed-interior area below 0.8 of the median of its series; (b) symmetry-fit and interior centres more than 10 px apart (interior-centre
+   markers); (c) image temperature more than 15 K from the clicked temperature. This replaces the "Fig. 1 only" scope of amendment 12 item 8 and its item 9 (Fig. 4 not changed).
+2. **How they apply to Ohta et al.** Gate (a) uses the interior area of the markers whose centre is the enclosed interior or opened body; gate (b) the markers with an interior centre; gate (c) the markers with an image
+   temperature, and is not applied to a figure whose project labels a printed temperature tick with the wrong value (Fig. 3: the clicked temperatures are not recorded there, and three of its markers have no located centre).
+   The Table II identity checks (series order, symbol fill, the first marker against room temperature) use the markers before gating; the column temperatures are computed from the markers that remain.
+3. **Pixels.** The limit of 10 px is in pixels of the digitised bitmap, as for amendment 12. The bitmaps are 3 times (Ohta) and 4 times (Ohtaki) the native scan, so the same limit is 3.3 and 2.5 native pixels; it was not
+   rescaled (stated here, so that the figures are not read as equally strict in native pixels).
+4. **Effect, per figure and gate** (from the test run of the changed code from a dirty tree, discarded; the official run's `extraction.json` is the record). The thresholds were fixed by amendment 12; the effect on the figures
+   other than Ohtaki Fig. 1 was not looked at before they were applied to them. Ohta Fig. 1: none; Fig. 2: 2 markers (gate b: sample (a) at 750 K, 19.3 px; sample (c) at 545 K, 11.6 px); Fig. 3: none; Fig. 4: 1 marker
+   (gate b: sample (c) at 350 K, 13.2 px). Ohtaki Fig. 1: 12 (amendment 12: a 2, b 5, c 6, one marker fails a and b); Fig. 4: 5 (gate a: Y 900 K, Sb 576 K, La 378 K and 722 K; gate c: CaMnO3 585 K); Figs. 6 and 7: none.
+   In Ohta et al. the combined column temperatures of the remaining markers move by at most 0.1 K, with no change of floor bin or edge flag.
+5. **Records.** Each removed marker is listed in `not_legible.csv` of its run with its reason; the rows of Ohta et al. (137 before, 134 after) and of Ohtaki et al. (132 before, 127 after) are replaced by the rows of the
+   official runs. The gate thresholds are module constants (`GATES` in `na12_extract_ohta.py`, read by `na12_extract_ohtaki.py`), as are the column gap (`COLUMN_GAP_K`), the 2u edge factor (`EDGE_FACTOR`), the room
+   temperature (`ROOM_TEMPERATURE_K`) and the curve grid step (`GRID_STEP_K`); the number registry reads them from there.

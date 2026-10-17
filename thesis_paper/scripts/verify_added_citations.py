@@ -25,7 +25,8 @@ DETAIL = REPO / "thesis_paper" / "reports" / "citation_verification_added.json"
 # report). Two uncited entries (hira2018temperature, kanas2022tuning, positions 59 and 60) were removed from refs.bib on 2026-10-10, so the positions in the
 # file are now two lower; the keys are what identify an entry.
 ADDED_KEYS = ["katsura2025starrydata", "ho2026physicsinspired", "probst2019hyperparameters", "gao2022defect", "lin2021inorganic", "monacelli2023first",
-              "lee2017transparent", "jacob1995phase", "radovic2008thermal", "alleno2015invited", "ryu2025tematdb", "ryu2025tematdbv116"]
+              "lee2017transparent", "jacob1995phase", "radovic2008thermal", "alleno2015invited", "ryu2025tematdb", "ryu2025tematdbv116",
+              "sebastialuna2022", "singh2016", "shibasaki2009", "rajasekaran2020", "ohtaki1995"]  # the last five: the NA12 papers, added 2026-10-17 (positions 75 to 79)
 FIRST_ADDED = 63
 COLUMNS = ["ref", "reference_text", "doi", "doi_source", "url", "metadata_verdict", "title_similarity", "first_author_in_ref", "year_in_ref", "volume_in_ref",
            "page_in_ref", "crossref_title", "crossref_year", "crossref_volume", "crossref_page", "abstract_available"]
