@@ -68,6 +68,11 @@ SAMPLE_DOPING_NOTE = ("sample (b): doping printed 7.9e20 cm^-3 in the captions o
                       "recorded as in the tables")
 SYMBOL_FILLED = {"a": False, "b": True, "c": False, "d": True}  # open or filled symbol of each sample in the figures
 
+def _log_ticks(decades, tail):
+    """Printed ticks of a log axis: k x 10^n for k = 1..9 over the decades, plus the closing tick values `tail`."""
+    return [k * 10.0 ** n for n in decades for k in range(1, 10)] + list(tail)
+
+
 FIGURES = {
     1: {"prop": "S", "unit": "uV/K", "scale": 1000.0, "project": "s_project.json", "logy": False, "xticks": [200 + 100 * k for k in range(11)],
         "frame_rows": (1650, 1800), "frame_min": 1000, "x_range": (380, 1910), "x_band": (5, 15), "x_thr": 8, "fx_box": (0, 1700, 380, 420), "y_rows": (0, 1700), "search_px": 16, "estimator": "hole",
@@ -78,7 +83,14 @@ FIGURES = {
         "frame_rows": (2600, 2800), "frame_min": 1000, "x_range": (400, 2200), "x_band": (8, 18), "x_thr": 8, "fx_box": (200, 2700, 380, 480), "y_rows": (0, 2712), "search_px": 24, "estimator": "hole",
         "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
         "location": f"{JOURNAL}, Fig. 2 (article page 034106-3, PDF page 4)", "page": 4, "res_note": "sigma read on the log axis from the click",
-        "id": "sigma", "method": "clicked sigma in S/cm, 3 significant digits", "xlabel": "300 to 1300 K"},
+        "id": "sigma", "method": "clicked sigma in S/cm, 3 significant digits", "xlabel": "300 to 1300 K",
+        "y_ticks": [v for v in _log_ticks(range(0, 6), [1e6]) if v >= 5.0], "order_key": "sigma_Scm"},
+    4: {"prop": "zT", "unit": "1", "scale": 1.0, "project": "zT_project.json", "logy": True, "xticks": [300 + 100 * k for k in range(11)],
+        "frame_rows": (2200, 2500), "frame_min": 1000, "x_range": (300, 2230), "x_band": (8, 18), "x_thr": 8, "fx_box": (200, 2330, 300, 500), "y_rows": (0, 2354), "search_px": 24,
+        "estimator": "hole",
+        "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
+        "location": f"{JOURNAL}, Fig. 4 (article page 034106-3, PDF page 4)", "page": 4, "res_note": "zT read on the log axis from the click",
+        "id": "zT", "method": "clicked zT, 3 significant digits", "xlabel": "300 to 1300 K", "y_ticks": _log_ticks(range(-3, 0), [1.0]), "order_key": "zT", "ydev_from_markers": True},
 }
 
 
@@ -151,6 +163,24 @@ def click_px(cal, logy, T, v):
     return float(px), float(py)
 
 
+def affine_map(held, data, logy):
+    """The project's calibration when WebPlotDigitizer rotated the axes (its two temperature points are at different pixel rows): (px, py) -> (T, value or log10 value) is affine; it is
+    fitted on the project's own datasets (the pixel position of every click it holds) and inverted, so series not held in the project get their pixel positions from their values."""
+    f = np.log10 if logy else (lambda z: z)
+    rows = [(p, v) for fl in held for p, v in zip(held[fl], data[fl]["pts"])]
+    assert len(rows) >= 6, "too few clicks in the project to reconstruct the rotated calibration"
+    A = np.array([[p[0], p[1], 1.0] for p, v in rows])
+    cT = np.linalg.lstsq(A, np.array([v[0] for p, v in rows]), rcond=None)[0]
+    cZ = np.linalg.lstsq(A, np.array([f(v[1]) for p, v in rows]), rcond=None)[0]
+    assert np.abs(A @ cT - np.array([v[0] for p, v in rows])).max() < 1e-4 and np.abs(A @ cZ - np.array([f(v[1]) for p, v in rows])).max() < 1e-8, "calibration is not affine"
+    M = np.array([[cT[0], cT[1]], [cZ[0], cZ[1]]])
+
+    def inv(T, v):
+        x, y = np.linalg.solve(M, [T - cT[2], f(v) - cZ[2]])
+        return float(x), float(y)
+    return inv
+
+
 def _symmetry_centre(dark, cx, cy, rows, half, search):
     cx, cy = int(round(cx)), int(round(cy))
     prof = dark[cy + rows[0]: cy + rows[1], :].sum(axis=0).astype(float)
@@ -219,7 +249,9 @@ def table2(pdf):
     for _, s in cells:
         m = re.match(r"^(\d+?)(\d\.\d)(\d\.\d)\?(0\.\d\d)", s)  # the PDF's '?' is the minus sign; S is negative in all cases (n-type, text)
         assert m, s
-        out.append({"sigma_Scm": float(m.group(1)), "n_1e20": float(m.group(2)), "mu": float(m.group(3)), "S_uVK": -1000.0 * float(m.group(4))})
+        z = re.search(r"(0\.\d\d)$", s)
+        assert z, s
+        out.append({"sigma_Scm": float(m.group(1)), "n_1e20": float(m.group(2)), "mu": float(m.group(3)), "S_uVK": -1000.0 * float(m.group(4)), "zT": float(z.group(1))})
     assert len(out) == 4, out
     return out
 
@@ -258,7 +290,9 @@ def measure(fig, csv_dir, image, pdf):
     resid = np.array(xticks) - (a * np.array(xt) + b)
     cal_unc = float(np.abs(resid).max())
     assert cal_unc < 2.5, cal_unc  # tick positions of the bitmaps jitter by about 3 px (2 K)
-    uy1, uy2 = ucal[2], ucal[3]
+    uy1, uy2 = ucal[0 + 2], ucal[3]
+    rotated = abs(ucal[0]["py"] - ucal[1]["py"]) > 1.0
+    pxmap = affine_map(held, data, logy) if rotated else None
     if not logy:  # S axis: ticks every 0.02 mV/K from -0.6 (top) to 0 (bottom)
         assert len(yt) == 31, len(yt)
         ay, by = np.polyfit(yt, [-0.6 + 0.02 * k for k in range(31)], 1)
@@ -267,9 +301,8 @@ def measure(fig, csv_dir, image, pdf):
         yfit = {"slope_mVK_per_px": float(ay), "intercept_mVK": float(by)}
         y_dev = None
     else:  # log axis: ticks at k x 10^n; each detected tick is matched to the nearest expected one using the clicked calibration
-        exp = [(k * 10.0 ** n) for n in range(0, 6) for k in range(1, 10)] + [1e6]
-        exp = [v for v in exp if v >= 5.0]
-        pred = [click_px(ucal, True, 400.0, v)[1] for v in exp]
+        exp = list(cfg["y_ticks"])
+        pred = [(pxmap(700.0, v)[1] if pxmap else click_px(ucal, True, 400.0, v)[1]) for v in exp]
         assert len(yt) == len(exp), f"{len(yt)} value-axis ticks found, {len(exp)} expected"
         vals = []
         for y in yt:
@@ -282,16 +315,18 @@ def measure(fig, csv_dir, image, pdf):
         assert np.abs(r).max() < 0.01, np.abs(r).max()
         y_dev = [float((ay * py + by) - np.log10(float(dy))) for py, dy in ((uy1["py"], uy1["dy"]), (uy2["py"], uy2["dy"]))]
         assert max(abs(d) for d in y_dev) <= 0.01, ("clicked value calibration differs from the printed ticks", y_dev)
+        cal_points_dev = list(y_dev)
         yfit = {"slope_decade_per_px": float(ay), "intercept_decade": float(by), "max_tick_residual_decade": float(np.abs(r).max()), "n_ticks": len(yt),
                 "clicked_calibration_minus_ticks_decade": y_dev}
     ux1, ux2 = ucal[0], ucal[1]
     user_x_off_px = [ux1["px"] - float(np.interp(float(ux1["dx"]), xticks, xt)), ux2["px"] - float(np.interp(float(ux2["dx"]), xticks, xt))]
     t2 = table2(REPO / pdf)
     t1 = table1(REPO / pdf)
-    if fig == 2:  # the order of the series in the figure (first clicked values) against the order of Table II
+    if "order_key" in cfg:  # the order of the series in the figure (first clicked values) against the order of the same quantity in Table II
         first_val = {fl: min(data[fl]["pts"])[1] for fl in "abcd"}
         order_series = [smap[fl] for fl in sorted("abcd", key=lambda fl: -first_val[fl])]
-        order_t2 = sorted("abcd", key=lambda s: -t2["abcd".index(s)]["sigma_Scm"])
+        key = "zT" if cfg["order_key"] == "zT" else "sigma_Scm"
+        order_t2 = sorted("abcd", key=lambda s: -t2["abcd".index(s)][key])
         assert order_series == order_t2, f"the series of the figure ({order_series}, highest sigma first) do not match the order of Table II ({order_t2}); the CSV letters must be the samples (top to bottom in Fig. 2: b, d, c, a)"
     # marker centres, per file letter
     mk = []
@@ -299,9 +334,12 @@ def measure(fig, csv_dir, image, pdf):
         s = smap[fl]
         prev = -1.0
         for i, (tc, vc) in enumerate(data[fl]["pts"]):
-            px, py = click_px(ucal, logy, tc, vc)
-            if fl in held:
-                assert abs(held[fl][i][0] - px) < 3.0 and abs(held[fl][i][1] - py) < 1.0, (fl, i, held[fl][i], (px, py))
+            if rotated:
+                px, py = held[fl][i] if fl in held else pxmap(tc, vc)
+            else:
+                px, py = click_px(ucal, logy, tc, vc)
+                if fl in held:
+                    assert abs(held[fl][i][0] - px) < 3.0 and abs(held[fl][i][1] - py) < 1.0, (fl, i, held[fl][i], (px, py))
             c_sym, n_ok, spread = refine_x(dark, px, py, cfg["search_px"])
             h = hole_centre(dark, c_sym if n_ok >= MIN_AGREE else px, py, SYMBOL_FILLED[s])
             if cfg["estimator"] == "symmetry":
@@ -316,6 +354,11 @@ def measure(fig, csv_dir, image, pdf):
             prev = t_img
             mk.append({"file_letter": fl, "sample": s, "click_T": tc, "click_value": vc, "centre_px": c, "click_px": [px, py], "T_image": t_img, "centre_px_symmetry": c_sym,
                        "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0], "fill": interior_fill(dark, c, py)})
+    if logy and cfg.get("ydev_from_markers"):  # the clicked values against the printed ticks at every marker (a rotated calibration drifts along the axis)
+        y_dev = [float(np.log10(m["click_value"]) - (ay * m["click_px"][1] + by)) for m in mk]
+        assert max(abs(d) for d in y_dev) <= 0.015, ("clicked values differ from the printed ticks", max(abs(d) for d in y_dev))
+        yfit["marker_deviation_max_decade"] = float(max(abs(d) for d in y_dev))
+        yfit["x_calibration_points_py_difference_px"] = float(ucal[0]["py"] - ucal[1]["py"])
     for fl in "abcd":
         fills = [m["fill"] for m in mk if m["file_letter"] == fl]
         is_filled = float(np.median(fills)) >= 0.6
@@ -337,7 +380,8 @@ def measure(fig, csv_dir, image, pdf):
         samples = [mk[i]["sample"] for i in c]
         assert len(set(samples)) == len(samples), (k, samples)
         ts = [mk[i]["T_image"] for i in c]
-        assert max(ts) - min(ts) <= MAX_COLUMN_RANGE_K, (k, ts)
+        if max(ts) - min(ts) > MAX_COLUMN_RANGE_K:  # allowed only outside the window (a series measured at a visibly different temperature); flagged in the notes
+            assert np.mean(ts) >= 800.0, (k, ts)
         m = float(np.mean(ts))
         sd = float(np.std(ts, ddof=1)) if len(ts) > 1 else None
         for i in c:
@@ -352,6 +396,13 @@ def measure(fig, csv_dir, image, pdf):
             d = s_uv - t["S_uVK"]
             assert abs(d) <= TABLE2_TOL_UV and abs(s_uv) >= abs(t["S_uVK"]), (s, s_uv, t["S_uVK"])
             checks.append({"sample": s, "table2_S_uVK_298K": t["S_uVK"], "first_marker_S_uVK": round(s_uv, 1), "first_marker_T_K": round(f["T_col"], 1), "difference_uVK": round(d, 1)})
+        elif fig == 4:
+            ratio = f["click_value"] / t["zT"]
+            rec = {"sample": s, "table2_zT_298K": t["zT"], "first_marker_zT": round(f["click_value"], 4), "first_marker_T_K": round(f["T_col"], 1), "ratio_first_marker_over_table2": round(ratio, 2), "flags": []}
+            if not 0.8 <= ratio <= 6.0:  # zT rises with T in this range (Fig. 4), so the first marker, 50 to 150 K above room temperature, is above the room-temperature value
+                rec["flags"].append(f"first marker zT {f['click_value']:.3f} at {f['T_col']:.0f} K against Table II room-temperature ZT {t['zT']:g} (ratio {ratio:.2f})")
+            sample_flags[s] = rec["flags"]
+            checks.append(rec)
         else:
             ratio = f["click_value"] / t["sigma_Scm"]
             nemu = t["n_1e20"] * 1e20 * 1.602176634e-19 * t["mu"]
@@ -433,6 +484,9 @@ def make_rows(results, groups):
                 note += "; " + SAMPLE_DOPING_NOTE
             for fgl in ctx["sample_flags"][s]:
                 note += f"; Table II check: {fgl}"
+            wide = [x for x in g["members"] if x["range"] > MAX_COLUMN_RANGE_K]
+            if wide:
+                note += "; the series of this column differ by up to " + ", ".join(f"{x['range']:.1f} K (Fig. {x['figure']})" for x in wide) + " (measured at visibly different temperatures)"
             if T >= 800.0:
                 note += "; at or above the 800 K window edge: recorded, not compared"
             rows.append({
