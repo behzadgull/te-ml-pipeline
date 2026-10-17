@@ -20,7 +20,7 @@ predictions of its cluster. Where a level has no row the value is reported as ha
 without smearing).
 
 **Reading the literature.** Values are read from the PDFs only, with page and figure or table, and marked as table, text or digitised. A value read from a figure carries the tool (vector extraction from the PDF where the figure is
-vector, WebPlotDigitizer clicks on the scan otherwise [TODO: cite]) and the axis calibration; no uncertainty is attached to a digitised marker, and an uncertainty is recorded only where the paper prints one. Discrete
+vector, WebPlotDigitizer, version 5, clicks on the scan otherwise [@rohatgiwebplotdigitizer]) and the axis calibration; no uncertainty is attached to a digitised marker, and an uncertainty is recorded only where the paper prints one. Discrete
 markers are read at their own measurement temperature and assigned to the <!--d:clean_bin_width-->25<!--/d--> K floor bins of the cleaning pipeline (the bin [<!--v:t_min-->300<!--/v-->, 325) K is labelled <!--v:t_min-->300<!--/v--> K); curves, and only curves, are read on a <!--d:na12_grid_step_K-->100<!--/d--> K grid (<!--v:t_min-->300<!--/v--> to
 <!--d:na12_grid_max_K-->700<!--/d--> K). Values below <!--v:t_min-->300<!--/v--> K (room temperature, <!--d:na12_room_temperature_K-->298.15<!--/d--> K) or at or above <!--v:t_max-->800<!--/v--> K are recorded and not compared. Derived curves are not read (Wiedemann-Franz electronic conductivity, fitted lines, DFT and Boltzmann-transport
 results). Units are converted to those of the pipeline (S: µV K^-1^, *σ*: S m^-1^, *κ*: W m^-1^ K^-1^; *zT* as stated, or *Z* multiplied by the temperature). Where S, *σ* (or resistivity), *κ* and *zT* are all read at one
@@ -64,5 +64,5 @@ were set after viewing the digitised figures, and amendment 13 applies them to e
   `docs/number_registry.csv` and read from the code constants; "7 papers" and "13 amendments" are GENERATED (`na12_values()` in `scripts/thesis_values.py`, from the PDF README table and the amendment headings).
   Existing keys reused: `clean_bin_width`, `t_min`, `t_max`, `grp_dopant_pct`. "Five repeats of five folds" and "twelve" style number words are not audited as numbers; the Alleno values are not restated.
 - References added and verified against Crossref (`scripts/verify_added_citations.py`, positions 75 to 79): `sebastialuna2022`, `singh2016` (year 2016: the Crossref record is December 2016, issue 97(6)), `shibasaki2009`,
-  `rajasekaran2020`, `ohtaki1995`. WebPlotDigitizer is not added yet: it needs the version you give.
+  `rajasekaran2020`, `ohtaki1995`. WebPlotDigitizer (version 5, online, used October 2026) is in `refs.bib` as `rohatgiwebplotdigitizer` (a `@misc`, year 2026 = the year it was used; no DOI, so it is not in the Crossref verification).
 - The test is not blind, and the thresholds of 10 to 12 were set after viewing the figures: both stay in the text (the second in the amendment paragraph).

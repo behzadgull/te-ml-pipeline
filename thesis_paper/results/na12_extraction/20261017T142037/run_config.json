@@ -1,0 +1,142 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/ohta2005.pdf",
+      "sha256": "52895895808e339dc5addbe153a43cb2acd1fd3b1b7390059e2241dcd82c5909",
+      "bytes": 502856
+    },
+    "pdf_vector": {
+      "path": "thesis_paper/scripts/pdf_vector.py",
+      "sha256": "8ff17d5876d755d2b00f5f5b1a13aead5828aa1dfdc948c8128491831cbdef88",
+      "bytes": 17166
+    },
+    "fig1_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig1_S_vs_T_x3_2235x2031.png",
+      "sha256": "94948eaf431aee625353bddeac3b939d6083eeb45f6afe9f378911a25c74d173",
+      "bytes": 344610
+    },
+    "fig1_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\s_project.json",
+      "sha256": "7668bd0466e3043b597cb60fc95146efd4be58b7f66bda4ebe6c3daabf66e042",
+      "bytes": 4510
+    },
+    "fig1_csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\a_La_8.4e19_open_circle.csv",
+      "sha256": "be62b8cd7bbecd05ed15d3a48fc424989cef220cee92667e996302a72f9b0958",
+      "bytes": 280
+    },
+    "fig1_csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\b_La_8.4e20_filled_circle.csv",
+      "sha256": "d22ec0212dca830daf78872f93c8f71c075fbcd8c5578cd19ea0c151352eae6e",
+      "bytes": 345
+    },
+    "fig1_csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\c_Nb_1.6e20_open_triangle.csv",
+      "sha256": "67adf3f44319431285fbf1526d0693d6b1ea5822f7f5b4759e43878392a37ede",
+      "bytes": 333
+    },
+    "fig1_csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\d_Nb_3.3e20_filled_triangle.csv",
+      "sha256": "db9bd1a14df0d028c91ec4affd615baf8e3a2959bd122090cc4b32fe30ed5c4a",
+      "bytes": 330
+    },
+    "fig2_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig2_sigma_vs_T_x3_2235x3018.png",
+      "sha256": "42a481a78aad2669e6fec403ab94597c396ad1cb5fa796af75eaeb0ee5b68019",
+      "bytes": 450187
+    },
+    "fig2_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig2\\sigma_project.json",
+      "sha256": "e1778d49577f372634e3e9eb2d33c80377fa421fa0282fe2a38502eb5d8161ef",
+      "bytes": 1466
+    },
+    "fig2_csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig2\\a_La_8.4e19_open_circle.csv",
+      "sha256": "2be6096b993800eaa98934d88755c6b6f089318e84e820d1de575e95eba6db21",
+      "bytes": 336
+    },
+    "fig2_csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig2\\b_La_8.4e20_filled_circle.csv",
+      "sha256": "3510ad53848004b5408a0b7a04047cc15d77f4ba17d80734c8e7d0d1702fb87e",
+      "bytes": 412
+    },
+    "fig2_csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig2\\c_Nb_1.6e20_open_triangle.csv",
+      "sha256": "91d884516d1418111caccc431750b4ffe0dbcddab0e0fdcc0435bf436962e9d5",
+      "bytes": 406
+    },
+    "fig2_csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig2\\d_Nb_3.3e20_filled_triangle.csv",
+      "sha256": "b71ac525578ccaf20fdee6e11f1f9a8be4e2ebd60b5d2a8840747f4bdab13e22",
+      "bytes": 411
+    },
+    "fig3_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig3_kappa_vs_T_x3_2235x2682.png",
+      "sha256": "0bf606039cde63dfde2832280eabdd4558c517043ef4519122416d6428c76f39",
+      "bytes": 276684
+    },
+    "fig3_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\kappa_project.json",
+      "sha256": "870d1b5b761a1c74293fbb85509bedc5323c5c2d4cbaf034b6b06546ae2230d4",
+      "bytes": 1166
+    },
+    "fig3_csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_a_open circles.csv",
+      "sha256": "9eb4df20c1b207ca52b23a75be2f0c97cb1d24468704545a79136a6dc4199c57",
+      "bytes": 339
+    },
+    "fig3_csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_b_filled circles.csv",
+      "sha256": "3217e816ed9fccb524fcccd34b8b61fed623ecd6b58685ef5c35eb2f944bc93c",
+      "bytes": 187
+    },
+    "fig3_csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_c_open triangles.csv",
+      "sha256": "9a1d8ca27b450b906960f588a32c07794869aa7a8528c613bb84d566a99024f3",
+      "bytes": 189
+    },
+    "fig3_csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_d_filled triangles.csv",
+      "sha256": "8e305f2af3fa970f9dd56b4c455cedf46469eadbf9c88b10bc6e9197b411b290",
+      "bytes": 225
+    },
+    "fig4_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig4_ZT_vs_T_x3_2235x2649.png",
+      "sha256": "c025d094237657a2fdfae712ef63b0852da48fe31a833a1840e369807a254202",
+      "bytes": 219336
+    },
+    "fig4_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig4\\zT_project.json",
+      "sha256": "c59ccbc9ffee65364cb6f6352a26b56fd0fbebfc14ef3df1c3e8ff29a5704a4f",
+      "bytes": 1199
+    },
+    "fig4_csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig4\\a_La_8.4e19_open_circle.csv",
+      "sha256": "94c1b5e6c701fa52459ca6ba65a573fbbc428aa53c88a046103156c42b782b2c",
+      "bytes": 239
+    },
+    "fig4_csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig4\\b_La_8.4e20_filled_circle.csv",
+      "sha256": "5ca58891439314e6a9bb2b22ff0902497530741f946ddd751f63c45737b5802d",
+      "bytes": 307
+    },
+    "fig4_csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig4\\c_Nb_1.6e20_open_triangle.csv",
+      "sha256": "d71938b0a76d2c28c6ae2c06bdb315333a9aeb47f22c9ff79df4d58631562b4f",
+      "bytes": 314
+    },
+    "fig4_csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig4\\d_Nb_3.3e20_filled_triangle.csv",
+      "sha256": "700d4c7c4356a6997a2a4077b435587922b05726e4e55e9f6712733134edcb22",
+      "bytes": 309
+    }
+  },
+  "git_head": "abb4e8b1cb25c3a4996540604352f809f6b20649",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_ohta.py",
+  "script_sha256": "da2a534bf0d971cf1036d60d0af469013fb93118b3baae1222b6e29371ae94d7",
+  "python": "3.12.10",
+  "paper": "Ohta et al. 2005, figures 1, 2, 3, 4, samples (a) to (d)",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4, 5, 7, 8, 13 (2026-10-13 to 17)"
+}
