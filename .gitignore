@@ -78,3 +78,6 @@ thesis_paper/paper/build/
 # Only the README of that folder is tracked. (Not a blanket *.pdf: the tracked figures/*.pdf are our own figures.)
 thesis_paper/source/pdfs/*
 !thesis_paper/source/pdfs/README.md
+
+# Claude Code config file that lands in the repository root
+.claude.json
