@@ -1,5 +1,5 @@
 """
-NA12: Seebeck coefficient (Fig. 1) and electrical conductivity (Fig. 2) of four heavily La- or Nb-doped SrTiO3 crystals from Ohta, Nomura, Ohta & Koumoto 2005
+NA12: Seebeck coefficient (Fig. 1), electrical conductivity (Fig. 2), thermal conductivity (Fig. 3) and zT (Fig. 4) of four heavily La- or Nb-doped SrTiO3 crystals from Ohta, Nomura, Ohta & Koumoto 2005
 (J. Appl. Phys. 97:034106, DOI 10.1063/1.1847723).
 Rules: docs/decisions.md, pre-registration B with amendments 1 (reading rules), 3 (Ohta compared at the cluster level, sample as stated) and 4 (column-consensus marker temperatures,
 edge-row sensitivity). No out-of-fold prediction is read or used here.
@@ -16,14 +16,16 @@ Which series is which sample. The letters of the CSV file names must be the samp
 room-temperature values of Table II (read from the PDF text) and the fill of the symbols (filled or open) agrees with the sample's symbol in the figure (a open circle, b filled circle,
 c open triangle, d filled triangle). In Fig. 2 the series are, top to bottom, b, d, c, a.
 
-One temperature per column (amendment 5). The figures of one measurement run (Figs. 1 and 2) are given in one invocation; their columns are matched and each column gets one temperature, the
+One temperature per column (amendment 5). The figures of one measurement run (Figs. 1, 2 and 4; Fig. 3, the thermal conductivity, is a run of its own, amendment 7) are given in one invocation; their columns are matched and each column gets one temperature, the
 mean of the figures' column consensus weighted by 1/u^2 (u: calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Bins and edge flags use that value (an edge row: within 2 u of a 25 K bin edge, amendment 6).
 
 Validation (asserted): the series have as many clicks as their CSV; a project file that holds a series agrees with its CSV; the temperature axis has 11 printed ticks (every 100 K) and a
 straight-line fit through them (maximum residual below 2.5 K); the value axis ticks reproduce the clicked calibration (Fig. 1: every 0.02 mV/K, within 2 uV/K; Fig. 2: decades and minor
 ticks of the log axis, within 0.01 decade); every refined centre lies inside its search window and a majority (at least 3 of 5) of the window settings agree within 3 px; markers of one
 column lie within 5 K of each other; each series has at most one marker per column; Fig. 1: the first marker of every sample is within 15 uV/K of the room-temperature S of Table II and
-has the larger |S|. Reported, not asserted (flags in extraction.json and in the notes of the rows): Fig. 2 first marker against Table II sigma, Table II sigma against n e mu of its own
+has the larger |S|. Thermal conductivity (Fig. 3): only legible markers are digitised; the columns inside the window with no digitised marker of a sample are written to not_legible.csv; a marker whose open ring is not closed in the bitmap
+has no enclosed interior, so its own centre is not used for the column temperature (symmetry fallback or click-only assignment, recorded per marker). approx_zt_check in extraction.json: S^2 sigma T / kappa with kappa
+interpolated in log-log from Fig. 3 (amendment 8). Reported, not asserted (flags in extraction.json and in the notes of the rows): Fig. 2 first marker against Table II sigma, Table II sigma against n e mu of its own
 row, and the match of the figures' columns (combined_columns in extraction.json).
 
 Usage (repository root, clean tree):
@@ -78,19 +80,27 @@ FIGURES = {
         "frame_rows": (1650, 1800), "frame_min": 1000, "x_range": (380, 1910), "x_band": (5, 15), "x_thr": 8, "fx_box": (0, 1700, 380, 420), "y_rows": (0, 1700), "search_px": 16, "estimator": "hole",
         "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
         "location": f"{JOURNAL}, Fig. 1 (article page 034106-2, PDF page 3)", "page": 3, "res_note": "S to the digitiser's click resolution (4.8 uV/K lattice)",
-        "id": "S", "method": "clicked S, mV/K converted to uV/K, 3 significant digits", "xlabel": "200 to 1200 K"},
+        "id": "S", "method": "clicked S, mV/K converted to uV/K, 3 significant digits", "xlabel": "200 to 1200 K",
+        "y_lin": ([-0.6 + 0.02 * k for k in range(31)], 0.002), "run": "A"},
     2: {"prop": "sigma", "unit": "S/cm", "scale": 1.0, "project": "sigma_project.json", "logy": True, "xticks": [300 + 100 * k for k in range(11)],
         "frame_rows": (2600, 2800), "frame_min": 1000, "x_range": (400, 2200), "x_band": (8, 18), "x_thr": 8, "fx_box": (200, 2700, 380, 480), "y_rows": (0, 2712), "search_px": 24, "estimator": "hole",
         "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
         "location": f"{JOURNAL}, Fig. 2 (article page 034106-3, PDF page 4)", "page": 4, "res_note": "sigma read on the log axis from the click",
         "id": "sigma", "method": "clicked sigma in S/cm, 3 significant digits", "xlabel": "300 to 1300 K",
-        "y_ticks": [v for v in _log_ticks(range(0, 6), [1e6]) if v >= 5.0], "order_key": "sigma_Scm"},
+        "y_ticks": [v for v in _log_ticks(range(0, 6), [1e6]) if v >= 5.0], "order_key": "sigma_Scm", "run": "A"},
     4: {"prop": "zT", "unit": "1", "scale": 1.0, "project": "zT_project.json", "logy": True, "xticks": [300 + 100 * k for k in range(11)],
         "frame_rows": (2200, 2500), "frame_min": 1000, "x_range": (300, 2230), "x_band": (8, 18), "x_thr": 8, "fx_box": (200, 2330, 300, 500), "y_rows": (0, 2354), "search_px": 24,
         "estimator": "hole",
         "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
         "location": f"{JOURNAL}, Fig. 4 (article page 034106-3, PDF page 4)", "page": 4, "res_note": "zT read on the log axis from the click",
-        "id": "zT", "method": "clicked zT, 3 significant digits", "xlabel": "300 to 1300 K", "y_ticks": _log_ticks(range(-3, 0), [1.0]), "order_key": "zT", "ydev_from_markers": True},
+        "id": "zT", "method": "clicked zT, 3 significant digits", "xlabel": "300 to 1300 K", "y_ticks": _log_ticks(range(-3, 0), [1.0]), "order_key": "zT", "ydev_from_markers": True, "run": "A"},
+    3: {"prop": "kappa", "unit": "W/mK", "scale": 1.0, "project": "kappa_project.json", "logy": False, "xticks": [300 + 100 * k for k in range(11)],
+        "frame_rows": (2200, 2500), "frame_min": 1000, "x_range": (300, 2230), "x_band": (8, 18), "x_thr": 8, "fx_box": (300, 2380, 300, 450), "y_rows": (0, 2394), "search_px": 24,
+        "estimator": "hole",
+        "locate": "located in the image as the centroid of the enclosed white interior of an open symbol or of the opened body of a filled symbol (the connecting line is removed)",
+        "location": f"{JOURNAL}, Fig. 3 (article page 034106-3, PDF page 4)", "page": 4, "res_note": "kappa read on the linear axis from the click",
+        "id": "kappa", "method": "clicked kappa in W/mK, 3 significant digits", "xlabel": "300 to 1300 K", "y_lin": ([20.0 - 2.5 * k for k in range(9)], 0.1),
+        "run": "K", "legible_only": True, "fallback_centres": True},
 }
 
 
@@ -127,17 +137,19 @@ def load_csvs(folder, project):
     out = {}
     for p in sorted(Path(folder).glob("*.csv")):
         m = re.fullmatch(r"([a-d])_(La|Nb)_(\d\.\d)e(\d\d)_(open|filled)_(circle|triangle)\.csv", p.name)
-        assert m, f"unexpected CSV name {p.name}"
+        m2 = None if m else re.fullmatch(r"_([a-d])_(open|filled) (circles|triangles)\.csv", p.name)
+        assert m or m2, f"unexpected CSV name {p.name}"
+        letter = (m or m2).group(1)
         pts = []
         with open(p, encoding="utf-8") as f:
             for line in f:
                 if line.strip():
                     a, b = line.split(",")
                     pts.append((float(a), float(b)))
-        out[m.group(1)] = {"file": p.name, "dopant": m.group(2), "n_cm3": f"{m.group(3)}e{m.group(4)}", "name": p.stem, "pts": pts}
+        out[letter] = {"file": p.name, "dopant": m.group(2) if m else None, "n_cm3": f"{m.group(3)}e{m.group(4)}" if m else None, "name": p.stem, "pts": pts}
     assert sorted(out) == ["a", "b", "c", "d"], sorted(out)
     for k, v in out.items():
-        assert v["file"].startswith(k + "_"), v["file"]
+        assert v["file"].lstrip("_").startswith(k + "_"), v["file"]
     proj = json.loads((Path(folder) / project).read_text(encoding="utf-8"))
     ax = proj["axesColl"][0]
     assert not ax["isLogX"]
@@ -251,7 +263,15 @@ def table2(pdf):
         assert m, s
         z = re.search(r"(0\.\d\d)$", s)
         assert z, s
-        out.append({"sigma_Scm": float(m.group(1)), "n_1e20": float(m.group(2)), "mu": float(m.group(3)), "S_uVK": -1000.0 * float(m.group(4)), "zT": float(z.group(1))})
+        rem = s[m.end(): z.start()]
+        kap = set()
+        for i in range(1, len(rem) - 1):
+            for j in range(i + 1, len(rem)):
+                pf, ka, zz = rem[:i], rem[i:j], rem[j:]
+                if all(re.fullmatch(r"\d+(\.\d)?", x) for x in (pf, ka, zz)) and float(ka) > 0 and abs(float(zz) - 10.0 * float(pf) / float(ka)) <= 0.04 * float(zz):
+                    kap.add(float(ka))
+        assert len(kap) == 1, (s, kap)
+        out.append({"sigma_Scm": float(m.group(1)), "n_1e20": float(m.group(2)), "mu": float(m.group(3)), "S_uVK": -1000.0 * float(m.group(4)), "zT": float(z.group(1)), "kappa": kap.pop()})
     assert len(out) == 4, out
     return out
 
@@ -293,12 +313,13 @@ def measure(fig, csv_dir, image, pdf):
     uy1, uy2 = ucal[0 + 2], ucal[3]
     rotated = abs(ucal[0]["py"] - ucal[1]["py"]) > 1.0
     pxmap = affine_map(held, data, logy) if rotated else None
-    if not logy:  # S axis: ticks every 0.02 mV/K from -0.6 (top) to 0 (bottom)
-        assert len(yt) == 31, len(yt)
-        ay, by = np.polyfit(yt, [-0.6 + 0.02 * k for k in range(31)], 1)
+    if not logy:  # linear value axis: the printed ticks (values from the configuration, top tick first) reproduce the clicked calibration
+        vals_y, tol_y = cfg["y_lin"]
+        assert len(yt) == len(vals_y), f"{len(yt)} value-axis ticks found, {len(vals_y)} expected"
+        ay, by = np.polyfit(yt, vals_y, 1)
         for py, dy in ((uy1["py"], float(uy1["dy"])), (uy2["py"], float(uy2["dy"]))):
-            assert abs((ay * py + by) - dy) < 0.002, ("S calibration differs from the printed ticks", py, dy)
-        yfit = {"slope_mVK_per_px": float(ay), "intercept_mVK": float(by)}
+            assert abs((ay * py + by) - dy) < tol_y, ("value calibration differs from the printed ticks", py, dy)
+        yfit = {"slope_per_px": float(ay), "intercept": float(by), "n_ticks": len(yt)}
         y_dev = None
     else:  # log axis: ticks at k x 10^n; each detected tick is matched to the nearest expected one using the clicked calibration
         exp = list(cfg["y_ticks"])
@@ -319,7 +340,13 @@ def measure(fig, csv_dir, image, pdf):
         yfit = {"slope_decade_per_px": float(ay), "intercept_decade": float(by), "max_tick_residual_decade": float(np.abs(r).max()), "n_ticks": len(yt),
                 "clicked_calibration_minus_ticks_decade": y_dev}
     ux1, ux2 = ucal[0], ucal[1]
-    user_x_off_px = [ux1["px"] - float(np.interp(float(ux1["dx"]), xticks, xt)), ux2["px"] - float(np.interp(float(ux2["dx"]), xticks, xt))]
+    x_cal = []
+    for u in (ux1, ux2):
+        j = int(np.argmin([abs(u["px"] - t) for t in xt]))
+        assert abs(u["px"] - xt[j]) <= 10.0, "a clicked temperature calibration point does not sit on a printed tick"
+        x_cal.append({"project_label_K": float(u["dx"]), "nearest_printed_tick_K": xticks[j], "offset_px_to_nearest_tick": float(u["px"] - xt[j])})
+    x_mislabelled = [c for c in x_cal if abs(c["nearest_printed_tick_K"] - c["project_label_K"]) > 1e-6]
+    user_x_off_px = [c["offset_px_to_nearest_tick"] for c in x_cal]
     t2 = table2(REPO / pdf)
     t1 = table1(REPO / pdf)
     if "order_key" in cfg:  # the order of the series in the figure (first clicked values) against the order of the same quantity in Table II
@@ -342,18 +369,30 @@ def measure(fig, csv_dir, image, pdf):
                     assert abs(held[fl][i][0] - px) < 3.0 and abs(held[fl][i][1] - py) < 1.0, (fl, i, held[fl][i], (px, py))
             c_sym, n_ok, spread = refine_x(dark, px, py, cfg["search_px"])
             h = hole_centre(dark, c_sym if n_ok >= MIN_AGREE else px, py, SYMBOL_FILLED[s])
+            method = "interior"
             if cfg["estimator"] == "symmetry":
                 assert n_ok >= MIN_AGREE, f"series {fl} marker at click {tc:.1f} K: only {n_ok} of {len(SETTINGS)} window settings agree"
                 c = c_sym
-            else:
-                assert h is not None, f"series {fl} marker at click {tc:.1f} K: no enclosed interior / filled body found near the click"
+            elif h is not None:
                 c = h[0]
-            assert abs(c - px) < cfg["search_px"] - 0.5, f"series {fl} marker at click {tc:.1f} K: centre at the edge of the search window"
-            t_img = float(a * c + b)
-            assert t_img > prev
-            prev = t_img
-            mk.append({"file_letter": fl, "sample": s, "click_T": tc, "click_value": vc, "centre_px": c, "click_px": [px, py], "T_image": t_img, "centre_px_symmetry": c_sym,
-                       "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0], "fill": interior_fill(dark, c, py)})
+            elif cfg.get("fallback_centres"):
+                # an open symbol whose ring is not closed in the bitmap has no enclosed interior; its centre is then the symmetry fit if the settings agree and it is near the click,
+                # else the marker is only assigned to its column by the click (the columns are about 100 K apart, the click error about 10 K)
+                if n_ok >= MIN_AGREE and abs(c_sym - px) <= 15.0:
+                    c, method = c_sym, "symmetry fallback"
+                else:
+                    c, method = None, "click only"
+            else:
+                raise AssertionError(f"series {fl} marker at click {tc:.1f} K: no enclosed interior / filled body found near the click")
+            if c is not None:
+                assert abs(c - px) < cfg["search_px"] - 0.5, f"series {fl} marker at click {tc:.1f} K: centre at the edge of the search window"
+            t_img = None if c is None else float(a * c + b)
+            t_assign = t_img if c is not None else float(a * px + b)
+            assert t_assign > prev
+            prev = t_assign
+            mk.append({"file_letter": fl, "sample": s, "click_T": tc, "click_value": vc, "centre_px": c, "click_px": [px, py], "T_image": t_img, "T_assign": t_assign, "centre_method": method,
+                       "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0],
+                       "fill": interior_fill(dark, c if c is not None else px, py)})
     if logy and cfg.get("ydev_from_markers"):  # the clicked values against the printed ticks at every marker (a rotated calibration drifts along the axis)
         y_dev = [float(np.log10(m["click_value"]) - (ay * m["click_px"][1] + by)) for m in mk]
         assert max(abs(d) for d in y_dev) <= 0.015, ("clicked values differ from the printed ticks", max(abs(d) for d in y_dev))
@@ -365,27 +404,32 @@ def measure(fig, csv_dir, image, pdf):
         assert is_filled == SYMBOL_FILLED[smap[fl]], f"file {fl} (sample {smap[fl]}): symbols are {'filled' if is_filled else 'open'}, the sample's are {'filled' if SYMBOL_FILLED[smap[fl]] else 'open'}; the CSV letters must be the samples (top to bottom in Fig. 2: b, d, c, a)"
     first = {}
     for fl in "abcd":
-        first[fl] = min((m for m in mk if m["file_letter"] == fl), key=lambda m: m["T_image"])
+        first[fl] = min((m for m in mk if m["file_letter"] == fl), key=lambda m: m["T_assign"])
     disagree = [{"sample": m["sample"], "click_T": round(m["click_T"], 1), "symmetry_minus_hole_px": round(m["centre_px_symmetry"] - m["centre_px_hole"], 1)}
                 for m in mk if m["centre_px_hole"] is not None and abs(m["centre_px_symmetry"] - m["centre_px_hole"]) > 3.0]
     # columns: markers of all series sorted by temperature; a new column starts after a gap of 20 K
-    order = sorted(range(len(mk)), key=lambda i: mk[i]["T_image"])
+    order = sorted(range(len(mk)), key=lambda i: mk[i]["T_assign"])
     cols = []
     for i in order:
-        if cols and mk[i]["T_image"] - mk[cols[-1][-1]]["T_image"] < 20.0:
+        if cols and mk[i]["T_assign"] - mk[cols[-1][-1]]["T_assign"] < 20.0:
             cols[-1].append(i)
         else:
             cols.append([i])
     for k, c in enumerate(cols, 1):
         samples = [mk[i]["sample"] for i in c]
         assert len(set(samples)) == len(samples), (k, samples)
-        ts = [mk[i]["T_image"] for i in c]
+        for basis in ("interior", "symmetry fallback", "click only"):  # the column temperature uses the markers with the best centre estimate present
+            use = [i for i in c if mk[i]["centre_method"] == basis]
+            if use:
+                break
+        ts = [mk[i]["T_assign"] for i in use]
         if max(ts) - min(ts) > MAX_COLUMN_RANGE_K:  # allowed only outside the window (a series measured at a visibly different temperature); flagged in the notes
             assert np.mean(ts) >= 800.0, (k, ts)
         m = float(np.mean(ts))
         sd = float(np.std(ts, ddof=1)) if len(ts) > 1 else None
         for i in c:
-            mk[i].update(column=k, T_col=m, T_col_sd=sd, n_series=len(c), column_range=max(ts) - min(ts))
+            mk[i].update(column=k, T_col=m, T_col_sd=sd, n_series=len(use), column_range=max(ts) - min(ts), column_basis=basis)
+        assert basis != "click only" or m >= 800.0 or m < 300.0, f"column {k} inside the window has no marker with a located centre"
     checks, sample_flags = [], {s: [] for s in "abcd"}
     for fl in "abcd":
         s = smap[fl]
@@ -396,6 +440,16 @@ def measure(fig, csv_dir, image, pdf):
             d = s_uv - t["S_uVK"]
             assert abs(d) <= TABLE2_TOL_UV and abs(s_uv) >= abs(t["S_uVK"]), (s, s_uv, t["S_uVK"])
             checks.append({"sample": s, "table2_S_uVK_298K": t["S_uVK"], "first_marker_S_uVK": round(s_uv, 1), "first_marker_T_K": round(f["T_col"], 1), "difference_uVK": round(d, 1)})
+        elif fig == 3:
+            rec = {"sample": s, "table2_kappa_WmK_298K": t["kappa"], "first_marker_kappa": round(f["click_value"], 3), "first_marker_T_K": round(f["T_col"], 1), "flags": []}
+            if f["T_col"] <= 320.0:
+                rec["ratio_first_marker_over_table2"] = round(f["click_value"] / t["kappa"], 3)
+                if not 0.9 <= rec["ratio_first_marker_over_table2"] <= 1.1:
+                    rec["flags"].append(f"room-temperature kappa marker {f['click_value']:.2f} W/mK at {f['T_col']:.0f} K against Table II {t['kappa']:g} (ratio {rec['ratio_first_marker_over_table2']:.2f})")
+            else:
+                rec["note"] = "no room-temperature marker digitised for this sample"
+            sample_flags[s] = rec["flags"]
+            checks.append(rec)
         elif fig == 4:
             ratio = f["click_value"] / t["zT"]
             rec = {"sample": s, "table2_zT_298K": t["zT"], "first_marker_zT": round(f["click_value"], 4), "first_marker_T_K": round(f["T_col"], 1), "ratio_first_marker_over_table2": round(ratio, 2), "flags": []}
@@ -420,10 +474,10 @@ def measure(fig, csv_dir, image, pdf):
             "temperature_axis_fit": {"slope_K_per_px": float(a), "intercept_K": float(b), "max_residual_K": cal_unc, "tick_px": xt},
             "value_axis_fit": yfit, "clicked_calibration_offset_px_at_first_and_last_x_point": user_x_off_px, "clicked_calibration_offset_K": [o * a for o in user_x_off_px],
             "n_columns": len(cols), "markers": mk, "estimator": cfg["estimator"], "estimator_disagreements_over_3px": disagree, "table2_checks": checks,
-            "_ctx": {"data": data, "t1": t1, "sample_flags": sample_flags, "y_dev": y_dev}}
+            "x_calibration_points": x_cal, "x_calibration_mislabelled": x_mislabelled, "_ctx": {"data": data, "t1": t1, "sample_flags": sample_flags, "y_dev": y_dev, "x_mislabelled": x_mislabelled}}
 
 
-def combine(results):
+def _combine_run(results):
     """Amendment 5: columns of the figures that report one measurement run are matched (difference <= 2 sqrt(u1^2 + u2^2), nearest, one per figure) and each gets one temperature, the mean of the
     figures' column consensus weighted by 1/u^2 (u: the figure's calibration uncertainty), with uncertainty 1/sqrt(sum 1/u^2). Returns the groups sorted by temperature."""
     groups = []
@@ -460,24 +514,42 @@ def combine(results):
     return groups
 
 
-def make_rows(results, groups):
+def combine(results):
+    """Amendment 5 per run: the figures of one measurement run (A: Figs. 1, 2, 4) share columns; the thermal conductivity (run K: Fig. 3) has its own (amendment 7)."""
+    out = []
+    for run in sorted({FIGURES[f]["run"] for f in results}):
+        gs = _combine_run({f: r for f, r in results.items() if FIGURES[f]["run"] == run})
+        for g in gs:
+            g["run"] = run
+        out += gs
+    return out
+
+
+def make_rows(results, groups, approx=None):
     """The values-file rows of every figure, at the combined column temperatures."""
     rows = []
-    by_col = {g["column"]: g for g in groups}
+    by_col = {(g["run"], g["column"]): g for g in groups}
     for fig in sorted(results):
         res, cfg = results[fig], FIGURES[fig]
         ctx = res["_ctx"]
         for m in sorted(res["markers"], key=lambda m: (m["sample"], m["combined_column"])):
             s = m["sample"]
-            g = by_col[m["combined_column"]]
+            g = by_col[(cfg["run"], m["combined_column"])]
             label = f"{ctx['t1'][s][0]}-doped SrTiO3, n = {ctx['t1'][s][1]} cm^-3 (sample ({s}), single crystal; Table I)"
             T = g["T"]
             tokens = ["[cluster-level]"]
             if g["edge"]:
                 tokens.append(f"[edge-sensitivity: also bin {g['other_bin']:g}]")
             own = "; ".join(f"Fig. {x['figure']}: {x['T']:.1f} K (n = {x['n_series']} series, SD {'n/a' if x['sd'] is None else format(x['sd'], '.1f')} K, calibration u = {x['u']:.1f} K)" for x in g["members"])
-            note = (" ".join(tokens) + f" T = combined consensus of column {g['column']} over {len(g['members'])} figure(s) (amendment 5), uncertainty +/- {g['u']:.1f} K, floor bin {g['floor_bin']:g} [{own}]; "
-                    f"clicked T {m['click_T']:.1f} K (not used); {cfg['res_note']}")
+            clicked = (f"clicked T {m['click_T']:.1f} K (not used)" if not ctx["x_mislabelled"] else
+                       "clicked T not recorded (the project's temperature calibration labels a printed tick with the wrong value; the pixel positions are unaffected)")
+            what = f"combined consensus of column {g['column']} over {len(g['members'])} figure(s) (amendment 5)" if cfg["run"] == "A" else f"consensus of column {g['column']} of this figure (own run, amendment 7)"
+            note = (" ".join(tokens) + f" T = {what}, uncertainty +/- {g['u']:.1f} K, floor bin {g['floor_bin']:g} [{own}]; {clicked}; {cfg['res_note']}")
+            if cfg.get("legible_only"):
+                note += "; legible markers only (amendment 7)"
+                if m["centre_method"] != "interior":
+                    note += (f"; this marker's own centre was not used for the column temperature ({m['centre_method']}: open symbol whose ring is not closed in the bitmap, so no enclosed interior), "
+                             f"assigned to the column by its click; the column temperature rests on {g['members'][0]['n_series']} marker(s) with a located centre")
             if cfg["logy"]:
                 note += f"; clicked {cfg['prop']} calibration within {100 * (10 ** max(abs(x) for x in ctx['y_dev']) - 1):.1f} % of the printed ticks"
             if s == "b":
@@ -487,8 +559,15 @@ def make_rows(results, groups):
             wide = [x for x in g["members"] if x["range"] > MAX_COLUMN_RANGE_K]
             if wide:
                 note += "; the series of this column differ by up to " + ", ".join(f"{x['range']:.1f} K (Fig. {x['figure']})" for x in wide) + " (measured at visibly different temperatures)"
+            if approx is not None and fig == 4:
+                rec = approx["by_key"].get((s, g["column"]))
+                if rec is not None:
+                    note += ("; approximate zT check (S^2 sigma T / kappa with kappa interpolated in log-log from Fig. 3, measured at other temperatures; reported, not asserted): "
+                             + (f"ratio {rec['ratio']:.2f}" + (" [FLAG outside 0.8 to 1.25]" if rec["flag"] else "") if "ratio" in rec else f"none ({rec['reason']})"))
             if T >= 800.0:
                 note += "; at or above the 800 K window edge: recorded, not compared"
+            if T < 300.0:
+                note += "; below the 300 K window edge: recorded, not compared"
             rows.append({
                 "lit_id": f"OH2005_{cfg['id']}_{s}_c{g['column']:02d}", "compound_label": label, "composition": "SrTiO3", "property": cfg["prop"], "T_K": f"{T:.1f}",
                 "value": fmt3(cfg["scale"] * m["click_value"]), "unit": cfg["unit"], "doi": DOI, "location": cfg["location"], "value_kind": "digitised",
@@ -496,7 +575,73 @@ def make_rows(results, groups):
                                         f"{cfg['locate']}, read on a straight line through the 11 printed major ticks of the figure ({cfg['xlabel']}), with "
                                         "thesis_paper/scripts/na12_extract_ohta.py"),
                 "notes": note})
+    for r in rows:
+        if r["lit_id"].startswith("OH2005_kappa_"):
+            r["digitisation_method"] = r["digitisation_method"].replace("combined column consensus (amendments 4 and 5)", "own column consensus (amendments 4 and 7)")
     return rows
+
+
+def not_legible_rows(results, groups):
+    """Amendment 7: every column of a legible-markers-only figure inside the window, with each sample that has no digitised marker in it (derived from the digitised files)."""
+    rows = []
+    for fig, res in sorted(results.items()):
+        if not FIGURES[fig].get("legible_only"):
+            continue
+        for g in groups:
+            if g["run"] != FIGURES[fig]["run"] or not 300.0 <= g["T"] < 800.0:
+                continue
+            have = {m["sample"] for m in res["markers"] if m["combined_column"] == g["column"]}
+            for smp in "abcd":
+                if smp not in have:
+                    rows.append({"figure": fig, "sample": smp, "column": g["column"], "T_K": f"{g['T']:.1f}",
+                                 "reason": "no digitised marker: the centre could not be placed (amendment 7); derived from the digitised files"})
+    return rows
+
+
+def approx_zt_check(results, groups):
+    """Amendment 8: zT_calc = S^2 sigma T / kappa at the columns of the S, sigma and zT run, kappa interpolated in log-log between the sample's legible Fig. 3 markers (no extrapolation);
+    reported, not asserted. Returns {records, gaps, by_key, summary} or None if a figure is missing."""
+    if not all(f in results for f in (1, 2, 3, 4)):
+        return None
+    colA = {g["column"]: g for g in groups if g["run"] == "A"}
+    colK = {g["column"]: g for g in groups if g["run"] == "K"}
+
+    def val(fig, smp, col):
+        for m in results[fig]["markers"]:
+            if m["sample"] == smp and m["combined_column"] == col:
+                return m["click_value"]
+        return None
+    kap = {}
+    for m in results[3]["markers"]:
+        kap.setdefault(m["sample"], []).append((colK[m["combined_column"]]["T"], m["click_value"]))
+    records, gaps, by_key = [], [], {}
+    for smp in "abcd":
+        pts = sorted(kap.get(smp, []))
+        for col, g in sorted(colA.items()):
+            z = val(4, smp, col)
+            if z is None:
+                continue
+            base = {"sample": smp, "column": col, "T_K": round(g["T"], 1), "zT_fig4": z}
+            S, sg = val(1, smp, col), val(2, smp, col)
+            if S is None or sg is None:
+                rec = {**base, "reason": "no S or sigma marker at this column"}
+            elif len(pts) < 2 or not pts[0][0] <= g["T"] <= pts[-1][0]:
+                rng = "no legible kappa marker" if not pts else f"outside the sample's legible kappa range {pts[0][0]:.0f} to {pts[-1][0]:.0f} K"
+                rec = {**base, "reason": rng}
+            else:
+                kappa = float(np.exp(np.interp(np.log(g["T"]), np.log([q[0] for q in pts]), np.log([q[1] for q in pts]))))
+                zc = (S * 1e-3) ** 2 * (sg * 100.0) * g["T"] / kappa  # S: mV/K -> V/K; sigma: S/cm -> S/m
+                ratio = zc / z
+                rec = {**base, "S_mVK": S, "sigma_Scm": sg, "kappa_interp_WmK": kappa, "zT_calc": zc, "ratio": ratio, "flag": bool(not 0.8 <= ratio <= 1.25)}
+                records.append(rec)
+                by_key[(smp, col)] = rec
+                continue
+            gaps.append(rec)
+            by_key[(smp, col)] = rec
+    r = [x["ratio"] for x in records]
+    summary = {"n_checked": len(r), "n_flagged": sum(x["flag"] for x in records), "n_gaps": len(gaps), "median_ratio": float(np.median(r)) if r else None,
+               "min_ratio": min(r) if r else None, "max_ratio": max(r) if r else None, "label": "approximate: kappa interpolated from separate runs at other temperatures; reported, not asserted"}
+    return {"records": records, "gaps": gaps, "by_key": by_key, "summary": summary}
 
 
 def replace_values(d, prefix):
@@ -554,20 +699,28 @@ def main():
         inputs[f"fig{n}_image"] = str(Path(img).resolve())
         inputs[f"fig{n}_project"] = str((Path(d) / FIGURES[n]["project"]).resolve())
         for p in sorted(Path(d).glob("*.csv")):
-            inputs[f"fig{n}_csv_{p.stem[0]}"] = str(p.resolve())
+            inputs[f"fig{n}_csv_{p.stem.lstrip('_')[0]}"] = str(p.resolve())
     prov = rr.provenance(inputs, __file__)
     results = {n: measure(n, d, img, args.pdf) for n, (d, img) in sorted(figs.items())}
     groups = combine(results)
-    rows = make_rows(results, groups)
+    approx = approx_zt_check(results, groups)
+    rows = make_rows(results, groups, approx)
+    nl = not_legible_rows(results, groups)
     out = rr.new_run_dir("na12_extraction")
-    rr.write_json(out / "extraction.json", {"combined_columns": groups, "figures": {str(n): {k: v for k, v in r.items() if k != "_ctx"} for n, r in results.items()}})
+    rr.write_json(out / "extraction.json", {"combined_columns": groups, "figures": {str(n): {k: v for k, v in r.items() if k != "_ctx"} for n, r in results.items()},
+                                            "approx_zt_check": None if approx is None else {k: v for k, v in approx.items() if k != "by_key"}, "not_legible": nl})
+    if any(FIGURES[n].get("legible_only") for n in figs):
+        with open(out / "not_legible.csv", "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=["figure", "sample", "column", "T_K", "reason"], lineterminator="\n")
+            w.writeheader()
+            w.writerows(nl)
     with open(out / "values_rows.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     rr.write_json(out / "run_config.json", {**prov, "paper": "Ohta et al. 2005, figures " + ", ".join(str(n) for n in sorted(figs)) + ", samples (a) to (d)",
                                             "rules": "docs/decisions.md pre-registration B + amendments 1, 3, 4, 5 (2026-10-13 to 16)"})
-    print(f"wrote {out}: {len(rows)} rows, {len(groups)} combined columns")
+    print(f"wrote {out}: {len(rows)} rows, {len(groups)} columns; not legible (in the window): {len(nl)}" + ("" if approx is None else f"; approximate zT check: {approx['summary']['n_checked']} checked, {approx['summary']['n_flagged']} flagged, {approx['summary']['n_gaps']} gaps"))
     return 0
 
 
