@@ -64,6 +64,34 @@ FIGURES = {
 }
 
 
+def _fig4_series(name, tag, composition, label, csv, filled, estimator, area=(60, 1500)):
+    """One series of Fig. 4 (S against temperature; the y ticks are read at the right frame, where no marker covers them; the left-frame ticks sit up to 6 px, 2 uV/K, higher): the legend symbol decides the centre method (amendment 5 item 3; the symmetry fit only for symbols with no enclosed white interior)."""
+    return name, {"project": "fig4_project.json", "csv": csv, "filled": filled, "side": "right", "y_ticks": [-100.0, -200.0, -300.0, -400.0], "tol": 5.0, "row": True, "prop": "S", "unit": "uV/K",
+                  "id": "S", "method": "clicked S in uV/K", "sample": {"tag": tag, "composition": composition, "label": label}, "estimator": estimator, "axis_range": 500.0, "hole": {"win": 40, "area": area},
+                  "res_note": "S read on the linear axis of Fig. 4 (calibration of the one project, applied to every series)"}
+
+
+# Fig. 4: ten series (nine digitised, Sm not: its speckled triangle cannot be told from Sn's solid one, amendment 9 item 2), one WebPlotDigitizer project with one calibration for all of them (its single dataset,
+# "sn", must equal sn_s.csv; the pixel position of every other series' click is the inverse of the affine map fitted on that dataset's 6 clicks and checked against the project's four calibration points).
+# The series are measured at their own temperatures (the clicked temperatures of the series differ by tens of deg C), so, as for Fig. 6, every marker is its own column (amendment 9 item 4).
+FIGURES[4] = {
+    "x_tick_values": [200.0, 400.0, 600.0, 800.0, 1000.0, 1200.0], "location": f"{JOURNAL}, Fig. 4 (article page 108)", "frame_rows": (1500, 2000), "frame_min": 1200,
+    "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "per_dataset", "y_frame_values": (-500.0, 0.0), "shared_project": "Sn", "top_tick_check": True,
+    "undigitised_series": ["Sm"], "column_gap_K": 20.0, "skip_unplaceable": True,
+    "datasets": dict([
+        _fig4_series("Bi", "Bi", "Ca0.9Bi0.1MnO3", "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. {fig})", "bi_s.csv", False, "interior"),
+        _fig4_series("Ce", "Ce", "Ca0.9Ce0.1MnO3", "(Ca0.9Ce0.1)MnO3 (M = Ce, as stated for Fig. {fig})", "ce_s.csv", True, "interior"),
+        _fig4_series("Y", "Y", "Ca0.9Y0.1MnO3", "(Ca0.9Y0.1)MnO3 (M = Y, as stated for Fig. {fig})", "y_s.csv", True, "interior"),
+        _fig4_series("Sb", "Sb", "Ca0.9Sb0.1MnO3", "(Ca0.9Sb0.1)MnO3 (M = Sb, as stated for Fig. {fig})", "sb_s.csv", False, "interior", area=(60, 3200)),
+        _fig4_series("La", "La", "Ca0.9La0.1MnO3", "(Ca0.9La0.1)MnO3 (M = La, as stated for Fig. {fig})", "la_s.csv", False, "interior"),
+        _fig4_series("Pb", "Pb", "Ca0.9Pb0.1MnO3", "(Ca0.9Pb0.1)MnO3 (M = Pb, as stated for Fig. {fig})", "pb_s.csv", None, "symmetry"),
+        _fig4_series("In", "In", "Ca0.9In0.1MnO3", "(Ca0.9In0.1)MnO3 (M = In, as stated for Fig. {fig})", "in_s.csv", None, "symmetry"),
+        _fig4_series("Sn", "Sn", "Ca0.9Sn0.1MnO3", "(Ca0.9Sn0.1)MnO3 (M = Sn, as stated for Fig. {fig})", "sn_s.csv", True, "interior"),
+        _fig4_series("CaMnO3", "CaMnO3", "CaMnO3", "CaMnO3 (undoped, as stated for Fig. {fig})", "camno3_s.csv", None, "symmetry"),
+    ]),
+}
+
+
 def doi_from_readme():
     """The DOI of ohtaki1995.pdf from the PDF README (the scan prints none)."""
     for line in (REPO / README).read_text(encoding="utf-8").splitlines():
@@ -126,8 +154,59 @@ def load_dataset(folder, d):
     return pts, ax["calibrationPoints"], [(p["x"], p["y"]) for p in ds["data"]], ds["name"]
 
 
+def _read_csv(path):
+    pts = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            a, b = line.split(",")
+            pts.append((float(a), float(b)))
+    return pts
+
+
+def shared_project_maps(folder, cfg):
+    """One project, one calibration, several series (Fig. 4). The project's single dataset must equal its CSV; the affine map (px, py) -> (T, value) is fitted exactly on that dataset's clicks (WebPlotDigitizer
+    rotated the axes: the two temperature points are at different pixel rows), checked against the project's four calibration points, and inverted to give every other series' clicks their pixel positions.
+    Returns (calibration points, held dataset name, held clicks px, forward map, inverse map, check dict)."""
+    held = cfg["shared_project"]
+    d0 = cfg["datasets"][held]
+    proj = json.loads((Path(folder) / d0["project"]).read_text(encoding="utf-8"))
+    ax = proj["axesColl"][0]
+    assert not ax["isLogX"] and not ax["isLogY"] and len(proj["datasetColl"]) == 1
+    ds = proj["datasetColl"][0]
+    pts = _read_csv(Path(folder) / d0["csv"])
+    assert len(ds["data"]) == len(pts) >= 6
+    for p, (t, v) in zip(ds["data"], pts):
+        assert abs(p["value"][0] - t) < 1e-6 and abs(p["value"][1] - v) < 1e-9 * max(1.0, abs(v)), (p["value"], (t, v))
+    px = [(p["x"], p["y"]) for p in ds["data"]]
+    A = np.array([[x, y, 1.0] for x, y in px])
+    cT = np.linalg.lstsq(A, np.array([t for t, v in pts]), rcond=None)[0]
+    cV = np.linalg.lstsq(A, np.array([v for t, v in pts]), rcond=None)[0]
+    assert np.abs(A @ cT - np.array([t for t, v in pts])).max() < 1e-4 and np.abs(A @ cV - np.array([v for t, v in pts])).max() < 1e-8, "calibration is not affine"
+    M = np.array([[cT[0], cT[1]], [cV[0], cV[1]]])
+
+    def fwd(x, y):
+        return float(cT[0] * x + cT[1] * y + cT[2]), float(cV[0] * x + cV[1] * y + cV[2])
+
+    def inv(t, v):
+        x, y = np.linalg.solve(M, [t - cT[2], v - cV[2]])
+        return float(x), float(y)
+    cal = ax["calibrationPoints"]
+    chk = {"x_points_T_error_K": [fwd(c["px"], c["py"])[0] - float(c["dx"]) for c in cal[:2]], "y_points_value_error": [fwd(c["px"], c["py"])[1] - float(c["dy"]) for c in cal[2:]]}
+    assert max(abs(e) for e in chk["x_points_T_error_K"]) <= 3.0 and max(abs(e) for e in chk["y_points_value_error"]) <= d0["tol"], ("the fitted map disagrees with the project's calibration points", chk)
+    return cal, held, px, fwd, inv, chk
+
+
+def load_dataset_fig4(folder, cfg, name, maps):
+    """Points of one Fig. 4 series and the pixel position of each click (the held dataset: its own clicks; the others: the inverse map)."""
+    cal, held, hpx, fwd, inv, chk = maps
+    pts = _read_csv(Path(folder) / cfg["datasets"][name]["csv"])
+    px = hpx if name == held else [inv(t, v) for t, v in pts]
+    return pts, cal, px, ("held in the project" if name == held else "not held: pixel positions from the inverse map")
+
+
 def measure(fig, folder, image):
     cfg = FIGURES[fig]
+    maps = shared_project_maps(folder, cfg) if cfg.get("shared_project") else None
     dark = np.array(Image.open(image).convert("L")) < oh.THRESHOLD
     fr = frame_and_ticks(dark, cfg)
     xt, xv = fr["x_ticks_px"], cfg["x_tick_values"]
@@ -135,9 +214,16 @@ def measure(fig, folder, image):
     a, b = np.polyfit(xt, xv, 1)
     u_c = float(np.abs(np.array(xv) - (a * np.array(xt) + b)).max())
     assert u_c < 3.0, u_c
-    mk, info = [], {}
+    top = None
+    if cfg.get("top_tick_check"):  # reported only: the printed ticks along the top frame, to see whether the figure's temperature axis is the same at the top as at the bottom
+        r_top = dark[fr["ty"] + 8: fr["ty"] + 28, fr["fx"] + 30: fr["rx"] - 30].sum(axis=0)
+        tt = [x + fr["fx"] + 30 for x in oh.runs(r_top >= int(r_top.max() * 0.7))]
+        assert len(tt) == len(xv), f"{len(tt)} top ticks found"
+        a_t, b_t = np.polyfit(tt, xv, 1)
+        top = {"top_ticks_px": tt, "bottom_minus_top_tick_px": [float(p - q) for p, q in zip(xt, tt)], "max_residual_K": float(np.abs(np.array(xv) - (a_t * np.array(tt) + b_t)).max()), "line": (float(a_t), float(b_t))}
+    mk, info, unplaced = [], {}, []
     for name, d in cfg["datasets"].items():
-        pts, cal, px, pname = load_dataset(folder, d)
+        pts, cal, px, pname = load_dataset_fig4(folder, cfg, name, maps) if maps else load_dataset(folder, d)
         for c in cal[:2]:  # clicked x calibration points sit on their printed ticks
             j = int(np.argmin([abs(c["px"] - t) for t in xt]))
             assert abs(c["px"] - xt[j]) <= 10.0 and abs(xv[j] - float(c["dx"])) < 1e-6, ("x calibration point not on its tick", c)
@@ -159,18 +245,30 @@ def measure(fig, folder, image):
         prev = -1e9
         for (t_c, v), (cx, cy) in zip(pts, px):
             c_sym, n_ok, spread = oh.refine_x(dark, cx, cy, 24)
-            if d["estimator"] == "interior":
-                h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"])
-                assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
-                c = h[0]
-            else:  # an isolated symbol without an enclosed interior: the symmetry fit, which must be a majority of the settings and near the click
-                assert n_ok >= oh.MIN_AGREE and abs(c_sym - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: the symmetry fit is not reliable ({n_ok} of {len(oh.SETTINGS)} settings, {c_sym - cx:.1f} px from the click)"
-                c = c_sym
+            area = None
+            try:
+                if d["estimator"] == "interior":
+                    h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"], **d.get("hole", {}))
+                    assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
+                    c, area = h[0], h[2]
+                else:  # an isolated symbol without an enclosed interior: the symmetry fit, which must be a majority of the settings and near the click
+                    assert n_ok >= oh.MIN_AGREE and abs(c_sym - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: the symmetry fit is not reliable ({n_ok} of {len(oh.SETTINGS)} settings, {c_sym - cx:.1f} px from the click)"
+                    c = c_sym
+            except AssertionError as e:
+                if not cfg.get("skip_unplaceable"):
+                    raise
+                unplaced.append({"dataset": name, "click_T_C": t_c, "click_value": v, "click_px": [cx, cy], "reason": str(e)})  # amendment 9: the centre cannot be placed, so the marker is not legible
+                continue
             t_img = float(a * c + b)
+            t_alt = None
+            if top:  # the temperature at the marker's own height, interpolating between the bottom-tick line and the top-tick line (reported, not used)
+                frac = (fr["fy"] - cy) / (fr["fy"] - fr["ty"])
+                t_alt = float((1 - frac) * t_img + frac * (top["line"][0] * c + top["line"][1]))
             assert t_img > prev
             prev = t_img
             mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": c, "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok,
-                       "centre_method": d["estimator"], "fill": oh.interior_fill(dark, c, cy), "sample": d["sample"]["tag"]})
+                       "centre_method": d["estimator"], "fill": oh.interior_fill(dark, c, cy), "sample": d["sample"]["tag"], "T_image_topbottom_interpolated_C": t_alt,
+                       "centre_symmetry_minus_used_px": float(c_sym - c), "interior_area_px": area})
         if d["filled"] is not None:
             fills = float(np.median([m["fill"] for m in mk if m["dataset"] == name]))
             assert (fills >= 0.6) == d["filled"], f"{name}: symbols are {'filled' if fills >= 0.6 else 'open'}, expected {'filled' if d['filled'] else 'open'}"
@@ -195,8 +293,14 @@ def measure(fig, folder, image):
             for i in c:
                 mk[i].update(column=k, T_col=m_k, T_col_sd=sd, n_series=len(c), column_range=max(ts) - min(ts), column_basis="interior", run=run)
         n_cols += len(cols)
-    return {"figure": fig, "temperature_axis_fit": {"slope_C_per_px": float(a), "intercept_C": float(b), "max_residual_K": u_c, "tick_px": xt, "tick_values_C": xv}, "frame": fr,
-            "datasets": info, "n_columns": n_cols, "markers": mk}
+    out = {"figure": fig, "temperature_axis_fit": {"slope_C_per_px": float(a), "intercept_C": float(b), "max_residual_K": u_c, "tick_px": xt, "tick_values_C": xv}, "frame": fr,
+           "datasets": info, "n_columns": n_cols, "markers": mk, "unplaceable_clicks": unplaced}
+    if top:
+        alts = [abs(m["T_image_topbottom_interpolated_C"] - m["T_image_C"]) for m in mk]
+        out["top_tick_check"] = {**{k: v for k, v in top.items() if k != "line"}, "max_abs_T_difference_K": max(alts), "note": "reported, not used: T of every marker if the temperature axis is interpolated between the bottom and the top ticks"}
+    if maps:
+        out["shared_project_calibration_check"] = maps[5]
+    return out
 
 
 def z_check(res):  # Fig. 7 only
@@ -276,6 +380,32 @@ def not_legible_rows(results, groups):
     """Amendment 9: every column of a figure inside the window with each row dataset that has no digitised marker in it (derived from the digitised files)."""
     rows = []
     for fig, res in sorted(results.items()):
+        cfg = FIGURES[fig]
+        if cfg.get("column_gap_K"):  # Fig. 4: the series have no common columns, so the columns are derived by single-linkage clustering of all digitised markers of the figure (gap below column_gap_K)
+            mks = sorted(res["markers"], key=lambda m: m["T_col"])
+            clusters = []
+            for m in mks:
+                if clusters and m["T_col"] - clusters[-1][-1]["T_col"] < cfg["column_gap_K"]:
+                    clusters[-1].append(m)
+                else:
+                    clusters.append([m])
+            series = [(d["sample"]["tag"], n) for n, d in cfg["datasets"].items() if d["row"]] + [(t, None) for t in cfg.get("undigitised_series", [])]
+            for k, c in enumerate(clusters, 1):
+                T = float(np.mean([m["T_col"] for m in c]))
+                if not 300.0 <= T < 800.0:
+                    continue
+                have = {m["dataset"] for m in c}
+                if 2 * len(have) < len(series):  # amendment 11: a column of the figure needs markers of at least half of the series (a column of one or two series is those series' own extra temperature)
+                    continue
+                for tag, name in series:
+                    if name is None or name not in have:
+                        rows.append({"figure": fig, "series": f"{tag} ({'no file: not digitised' if name is None else name})", "column": k, "T_K": f"{T:.1f}",
+                                     "reason": f"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of {len(c)} markers of {len(have)} of {len(series)} series "
+                                               f"(markers within {cfg['column_gap_K']:g} K of each other), range {max(m['T_col'] for m in c) - min(m['T_col'] for m in c):.1f} K"})
+            for u in res.get("unplaceable_clicks", []):  # amendment 11: clicks whose centre the estimator could not place (the marker is not legible)
+                rows.append({"figure": fig, "series": f"{FIGURES[fig]['datasets'][u['dataset']]['sample']['tag']} ({u['dataset']})", "column": "", "T_K": f"{u['click_T_C'] + C_TO_K:.1f}",
+                             "reason": f"clicked marker skipped (amendment 11): {u['reason']}; T_K is the clicked temperature"})
+            continue
         if FIGURES[fig]["scope"] != "shared":
             continue  # the samples of this figure have their own temperatures: a skipped marker leaves no column to derive it from (all markers were digitised)
         for name, d in FIGURES[fig]["datasets"].items():
@@ -341,7 +471,7 @@ def main():
         w.writeheader()
         w.writerows(nl)
     rr.write_json(out / "run_config.json", {**prov, "paper": "Ohtaki et al. 1995, figures " + ", ".join(str(n) for n in sorted(figs)),
-                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9 (2026-10-13 to 17)"})
+                                            "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9, 10, 11 (2026-10-13 to 17)"})
     print(f"wrote {out}: {len(rows)} rows, {len(groups)} columns; not legible (in the window): {len(nl)}")
     return 0
 

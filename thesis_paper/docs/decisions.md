@@ -479,3 +479,28 @@ temperature axis is good to 1 deg C: the offsets are in the figure, not a groupi
 here. The column temperature is the mean of the Z and ZT markers (amendment 4); the columns above 5 deg C are flagged in the notes of their rows. Using the ZT marker's own temperature instead would move
 T by up to 2.8 K and change one floor bin (column 2, 373.9 against 375.4 K), a row that is already an edge row run in both bins (amendment 6). ZT against Z T(K) agrees to within 5.4 % at all 8 columns
 (reported, not asserted). The abstract's statements on Z and ZT are not checked against Fig. 7 (the markers beyond 690 deg C are not digitised): decided 2026-10-17, Fig. 7 stays as digitised.
+
+## 2026-10-17: NA12, amendment 11 to pre-registration B (Ohtaki et al. Fig. 4: unplaceable clicks, columns of the not-legible list, estimator settings); made after a test run of the Fig. 4 files, before the official run and any comparison, with no out-of-fold prediction looked at
+
+Ohtaki et al. Fig. 4 (S, ten series, one WebPlotDigitizer project with one calibration for all) was digitised under amendment 9 (nine series; Sm not, its speckled triangle cannot be told from Sn's solid one, item 2). A test run from a dirty tree
+(discarded, not a result) showed the points below. The rules and the parameter choices were made after seeing that run, which is stated here.
+
+1. **Calibration.** The project holds one dataset (Sn); its 6 clicks fix the affine map (pixel to temperature and S) exactly (the axes are rotated), which reproduces the project's four calibration points to 1e-12 and is
+   inverted to place the clicks of the other series. The S ticks are read at the right frame (the left-frame ticks are covered by markers and sit up to 6 px, 2 uV/K, away); the clicked S calibration must agree with them to 5 uV/K.
+2. **Columns.** The series are measured at their own temperatures (the clicked temperatures differ by tens of deg C, Bi has twice as many columns as the others), so, as for Fig. 6, every marker is its own column and
+   has its own temperature (amendment 9, item 4); Fig. 4 shares no column with Fig. 7. The temperature axis is the straight line through all six printed bottom ticks (200 to 1200 deg C; the 1200 tick sits 6 px off
+   the equidistant position of the other five), giving u = 2.1 K, so the 2u edge tolerance of amendment 6 is 4.2 K and flags 27 of the 49 rows. Reported, not used: interpolating between the bottom and the top ticks moves
+   any marker by at most 2.8 K, inside u.
+3. **Unplaceable clicks.** A clicked marker whose centre the estimator cannot place (no enclosed interior or opened body near the click; or a symmetry fit in which fewer than 3 of the 5 settings agree) is skipped, not
+   digitised, and listed in `not_legible.csv` with its clicked temperature and reason (amendment 9, item 1: the centre cannot be placed). Three clicks: Y at 214 deg C (hidden behind the Bi circle), Sb at 108 deg C (its
+   interior is occupied by an Sm triangle), and CaMnO3 at 389 deg C (an isolated plus whose symmetry fit agrees in 1 of 5 settings; it looks legible, and is skipped because the rule is applied as written, not by eye).
+4. **Not-legible columns.** The series have no common columns, so the columns of the list are derived by single-linkage clustering of the digitised markers of the figure (a gap of 20 K starts a new column), and a cluster
+   is a column of the figure only if it holds markers of at least half of the series (5 of 10, Sm counted as a series with no digitised marker). A cluster of one or two series is those series' own extra temperature
+   (Bi and In), not a column at which the other series were expected. Each column inside 300 <= T < 800 K lists the series with no digitised marker in it.
+5. **Estimator settings, chosen after seeing the failures.** The enclosed-interior search window is 40 px (was 34) for every Fig. 4 series, and the largest accepted interior area is 3200 px (was 1500) for Sb, whose open squares
+   have interiors of about 1800 px; `hole_centre` in `na12_extract_ohta.py` takes both as optional arguments whose defaults are the old values, so no earlier extraction changes. Symmetry fit for the symbols with no enclosed white interior
+   (Pb hatched, In dotted, Ca plus), as for CaMnO3 in Fig. 6.
+6. **Reported, not asserted** (in `extraction.json`): the interior area of every marker (partly covered interiors: Sb at 576 K, La at 378 and 722 K, Y at 900 K), the difference between the symmetry fit and the interior centre,
+   and the click against the image temperature.
+7. **Records.** Rows are written for every digitised marker, including those at or above 800 K (recorded, not compared), as for Figs. 6 and 7. The official run takes Figs. 7, 6 and 4 together (the append replaces all
+   `OHTAKI1995_` rows); the test run reproduced the 17 rows of Figs. 6 and 7 byte for byte.

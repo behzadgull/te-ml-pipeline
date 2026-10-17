@@ -214,7 +214,7 @@ def refine_x(dark, cx, cy, search=SEARCH_PX):
     return float(ok.mean()), int(ok.size), float(ok.max() - ok.min())
 
 
-def hole_centre(dark, cx, cy, filled, win=34):
+def hole_centre(dark, cx, cy, filled, win=34, area=(60, 1500)):
     """Marker centre (x, y, area) that does not depend on the line joining the markers: the centroid of the enclosed white interior of an open symbol (the connecting line never enters
     it), or of the body of a filled symbol after a morphological opening with a disc of radius 11 px (wider than the line). None if no such region is near the click."""
     cx, cy = int(round(cx)), int(round(cy))
@@ -226,7 +226,7 @@ def hole_centre(dark, cx, cy, filled, win=34):
             m = lab == k
             ys, xs = np.nonzero(m)
             touches = ys.min() == 0 or xs.min() == 0 or ys.max() == sub.shape[0] - 1 or xs.max() == sub.shape[1] - 1
-            if touches or not 60 <= m.sum() <= 1500:
+            if touches or not area[0] <= m.sum() <= area[1]:
                 continue
             d = float(np.hypot(xs.mean() - win, ys.mean() - win))
             if best is None or d < best[0]:
