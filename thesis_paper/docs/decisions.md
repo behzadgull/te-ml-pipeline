@@ -470,3 +470,12 @@ Sb in part) and overlapped for others (Y, La, Sm).
 5. **Compositions and levels.** The composition of a row is the formula as the paper states it (Ca0.9M0.1MnO3 with the dopant, or CaMnO3), compared at the exact and the cluster level as for the other papers
    (not a [cluster-level] value; amendment 3 concerns Ohta et al. only); the training-source status of the paper is decided by the comparison script from its DOI.
 6. **Order.** Fig. 7, Fig. 6, Fig. 4, Fig. 1, each digitised before any comparison is run.
+
+## 2026-10-17: NA12, amendment 10 to pre-registration B (Ohtaki et al. Fig. 7: column-grouping gate 6 deg C); made after the Fig. 7 digitising, before any comparison, with no out-of-fold prediction looked at
+
+The extraction script stops when the markers of one column differ by more than a gate (a data-quality check against mis-grouping, not a result; 5 deg C for the Ohta figures, where the largest spread was 4.1 K).
+In Fig. 7 of Ohtaki et al. the Z and ZT markers of one column are plotted up to 5.6 deg C apart (columns at about 500, 600 and, within 5.0, 200 deg C), while the columns are 90 to 100 deg C apart and the
+temperature axis is good to 1 deg C: the offsets are in the figure, not a grouping error. The gate is therefore 6 deg C for this figure only; this value was chosen after seeing the 5.6, which is stated
+here. The column temperature is the mean of the Z and ZT markers (amendment 4); the columns above 5 deg C are flagged in the notes of their rows. Using the ZT marker's own temperature instead would move
+T by up to 2.8 K and change one floor bin (column 2, 373.9 against 375.4 K), a row that is already an edge row run in both bins (amendment 6). ZT against Z T(K) agrees to within 5.4 % at all 8 columns
+(reported, not asserted). The abstract's statements on Z and ZT are not checked against Fig. 7 (the markers beyond 690 deg C are not digitised): decided 2026-10-17, Fig. 7 stays as digitised.
