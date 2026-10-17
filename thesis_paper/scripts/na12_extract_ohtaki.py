@@ -92,6 +92,36 @@ FIGURES[4] = {
 }
 
 
+def _fig1_series(name, tag, composition, label, csv, filled, estimator, area=(60, 1500)):
+    """One series of Fig. 1 (log10 sigma, S/cm, against 1000/T): the same symbols as Fig. 4; the click value is log10(sigma / S cm^-1), converted to S/m (x 100) in the row."""
+    n, d = _fig4_series(name, tag, composition, label, csv, filled, estimator, area)
+    d.update({"project": "fig1_project.json", "side": "left", "y_ticks": [2.0, 1.0, 0.0], "tol": 0.05, "prop": "sigma", "unit": "S/m", "id": "sigma", "axis_range": 4.0, "value_transform": "log10_Scm_to_Sm",
+              "method": "clicked log10(sigma / S cm^-1) on the linear log axis, converted to S/m", "res_note": "log10 sigma read on the linear axis of Fig. 1 (calibration of the one project, applied to every series), converted from S/cm to S/m (x 100)"})
+    return n, d
+
+
+# Fig. 1: ten series (nine digitised, Sm not), one project and one calibration, as Fig. 4. The x axis is 1000/T (linear, printed ticks every 0.5 from 1.0 to 4.0): T = 1000/x, and u(T) = T^2/1000 u(x) with u(x) the
+# largest residual of the straight lines through the bottom and the top ticks. The figure is tilted (the top ticks sit up to 6 px left of the bottom ones), so x is interpolated between the two tick lines at the
+# marker's height. The y axis is log10(sigma / S cm^-1) as plain numbers (ticks 2, 1, 0; the frame lines are -1 and 3).
+FIGURES[1] = {
+    "x_kind": "inv_T", "x_tick_values": [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0], "u_max": 0.02, "x_cal_tol": 0.02, "top_tick_check": True, "use_top_ticks": True,
+    "location": f"{JOURNAL}, Fig. 1 (article page 107)", "frame_rows": (1500, 2000), "frame_min": 1200,
+    "fx_range": (400, 600), "rx_range": (2100, 2300), "scope": "per_dataset", "y_frame_values": (-1.0, 3.0), "shared_project": "Ce",
+    "undigitised_series": ["Sm"], "reference_series": "Bi", "column_gap_K": 20.0, "skip_unplaceable": True, "gates": {"area_ratio": 0.8, "sym_px": 10.0, "click_K": 15.0},
+    "datasets": dict([
+        _fig1_series("Bi", "Bi", "Ca0.9Bi0.1MnO3", "(Ca0.9Bi0.1)MnO3 (M = Bi, as stated for Fig. {fig})", "bi_sigma.csv", False, "interior"),
+        _fig1_series("Ce", "Ce", "Ca0.9Ce0.1MnO3", "(Ca0.9Ce0.1)MnO3 (M = Ce, as stated for Fig. {fig})", "ce_sigma.csv", True, "interior"),
+        _fig1_series("Y", "Y", "Ca0.9Y0.1MnO3", "(Ca0.9Y0.1)MnO3 (M = Y, as stated for Fig. {fig})", "y_sigma.csv", True, "interior"),
+        _fig1_series("Sb", "Sb", "Ca0.9Sb0.1MnO3", "(Ca0.9Sb0.1)MnO3 (M = Sb, as stated for Fig. {fig})", "sb_sigma.csv", False, "interior", area=(60, 3200)),
+        _fig1_series("La", "La", "Ca0.9La0.1MnO3", "(Ca0.9La0.1)MnO3 (M = La, as stated for Fig. {fig})", "la_sigma.csv", False, "interior"),
+        _fig1_series("Pb", "Pb", "Ca0.9Pb0.1MnO3", "(Ca0.9Pb0.1)MnO3 (M = Pb, as stated for Fig. {fig})", "pb_sigma.csv", None, "symmetry"),
+        _fig1_series("In", "In", "Ca0.9In0.1MnO3", "(Ca0.9In0.1)MnO3 (M = In, as stated for Fig. {fig})", "in_sigma.csv", None, "symmetry"),
+        _fig1_series("Sn", "Sn", "Ca0.9Sn0.1MnO3", "(Ca0.9Sn0.1)MnO3 (M = Sn, as stated for Fig. {fig})", "sn-redo_sigma.csv", True, "interior"),
+        _fig1_series("CaMnO3", "CaMnO3", "CaMnO3", "CaMnO3 (undoped, as stated for Fig. {fig})", "camno3_sigma.csv", None, "symmetry"),
+    ]),
+}
+
+
 def doi_from_readme():
     """The DOI of ohtaki1995.pdf from the PDF README (the scan prints none)."""
     for line in (REPO / README).read_text(encoding="utf-8").splitlines():
@@ -192,7 +222,7 @@ def shared_project_maps(folder, cfg):
         return float(x), float(y)
     cal = ax["calibrationPoints"]
     chk = {"x_points_T_error_K": [fwd(c["px"], c["py"])[0] - float(c["dx"]) for c in cal[:2]], "y_points_value_error": [fwd(c["px"], c["py"])[1] - float(c["dy"]) for c in cal[2:]]}
-    assert max(abs(e) for e in chk["x_points_T_error_K"]) <= 3.0 and max(abs(e) for e in chk["y_points_value_error"]) <= d0["tol"], ("the fitted map disagrees with the project's calibration points", chk)
+    assert max(abs(e) for e in chk["x_points_T_error_K"]) <= cfg.get("x_cal_tol", 3.0) and max(abs(e) for e in chk["y_points_value_error"]) <= d0["tol"], ("the fitted map disagrees with the project's calibration points", chk)
     return cal, held, px, fwd, inv, chk
 
 
@@ -213,7 +243,8 @@ def measure(fig, folder, image):
     assert len(xt) == len(xv), f"{len(xt)} interior temperature ticks found"
     a, b = np.polyfit(xt, xv, 1)
     u_c = float(np.abs(np.array(xv) - (a * np.array(xt) + b)).max())
-    assert u_c < 3.0, u_c
+    inv = cfg.get("x_kind") == "inv_T"  # Fig. 1: the axis is 1000/T (linear); u_c and the tick fits are then in units of 1000/T and T = 1000/x
+    assert u_c < cfg.get("u_max", 3.0), u_c
     top = None
     if cfg.get("top_tick_check"):  # reported only: the printed ticks along the top frame, to see whether the figure's temperature axis is the same at the top as at the bottom
         r_top = dark[fr["ty"] + 8: fr["ty"] + 28, fr["fx"] + 30: fr["rx"] - 30].sum(axis=0)
@@ -221,6 +252,7 @@ def measure(fig, folder, image):
         assert len(tt) == len(xv), f"{len(tt)} top ticks found"
         a_t, b_t = np.polyfit(tt, xv, 1)
         top = {"top_ticks_px": tt, "bottom_minus_top_tick_px": [float(p - q) for p, q in zip(xt, tt)], "max_residual_K": float(np.abs(np.array(xv) - (a_t * np.array(tt) + b_t)).max()), "line": (float(a_t), float(b_t))}
+    u_x = max(u_c, top["max_residual_K"]) if (inv and top) else u_c  # the tick residual of the axis (both tick lines when both are used)
     mk, info, unplaced = [], {}, []
     for name, d in cfg["datasets"].items():
         pts, cal, px, pname = load_dataset_fig4(folder, cfg, name, maps) if maps else load_dataset(folder, d)
@@ -244,13 +276,16 @@ def measure(fig, folder, image):
                       "x_calibration_offsets_px": [float(c["px"] - xt[int(np.argmin([abs(c["px"] - t) for t in xt]))]) for c in cal[:2]]}
         prev = -1e9
         for (t_c, v), (cx, cy) in zip(pts, px):
+            if inv:
+                t_c = 1000.0 / t_c - C_TO_K  # the click's own temperature (deg C) from its 1000/T
             c_sym, n_ok, spread = oh.refine_x(dark, cx, cy, 24)
             area = None
+            cyc = None
             try:
                 if d["estimator"] == "interior":
                     h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"], **d.get("hole", {}))
                     assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
-                    c, area = h[0], h[2]
+                    c, area, cyc = h[0], h[2], h[1]
                 else:  # an isolated symbol without an enclosed interior: the symmetry fit, which must be a majority of the settings and near the click
                     assert n_ok >= oh.MIN_AGREE and abs(c_sym - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: the symmetry fit is not reliable ({n_ok} of {len(oh.SETTINGS)} settings, {c_sym - cx:.1f} px from the click)"
                     c = c_sym
@@ -261,17 +296,46 @@ def measure(fig, folder, image):
                 continue
             t_img = float(a * c + b)
             t_alt = None
-            if top:  # the temperature at the marker's own height, interpolating between the bottom-tick line and the top-tick line (reported, not used)
+            u_K = None
+            if inv:  # x = 1000/T read on the bottom tick line, or interpolated between the bottom and the top tick lines at the marker's height (the figure is tilted: the top ticks sit up to 6 px left of the bottom ones)
+                x_img = t_img
+                if top and cfg.get("use_top_ticks"):
+                    frac = (fr["fy"] - cy) / (fr["fy"] - fr["ty"])
+                    x_img = float((1 - frac) * t_img + frac * (top["line"][0] * c + top["line"][1]))
+                T_K = 1000.0 / x_img
+                t_img, u_K = float(T_K - C_TO_K), float(T_K ** 2 / 1000.0 * u_x)  # u(T) = T^2/1000 u(x)
+                t_alt = float(1000.0 / (a * c + b) - C_TO_K)  # reported, not used: T on the bottom tick line alone
+            elif top:  # the temperature at the marker's own height, interpolating between the bottom-tick line and the top-tick line (reported, not used)
                 frac = (fr["fy"] - cy) / (fr["fy"] - fr["ty"])
                 t_alt = float((1 - frac) * t_img + frac * (top["line"][0] * c + top["line"][1]))
-            assert t_img > prev
-            prev = t_img
+            assert c > prev  # the markers of a series are clicked in order along the temperature axis
+            prev = c
             mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": c, "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok,
                        "centre_method": d["estimator"], "fill": oh.interior_fill(dark, c, cy), "sample": d["sample"]["tag"], "T_image_topbottom_interpolated_C": t_alt,
-                       "centre_symmetry_minus_used_px": float(c_sym - c), "interior_area_px": area})
+                       "centre_symmetry_minus_used_px": float(c_sym - c), "interior_area_px": area, "u_K": u_K, "value_from_centre_row_minus_click": (None if cyc is None else float(ay * cyc + by - v)),
+                       "value_out": (100.0 * 10.0 ** v if d.get("value_transform") == "log10_Scm_to_Sm" else v)})
         if d["filled"] is not None:
             fills = float(np.median([m["fill"] for m in mk if m["dataset"] == name]))
             assert (fills >= 0.6) == d["filled"], f"{name}: symbols are {'filled' if fills >= 0.6 else 'open'}, expected {'filled' if d['filled'] else 'open'}"
+    gated = []
+    if cfg.get("gates"):  # amendment 12: image-derived legibility gates, applied to all placed markers at once (the median area is that of the series before any marker is removed)
+        g = cfg["gates"]
+        med = {n: float(np.median([m["interior_area_px"] for m in mk if m["dataset"] == n and m["interior_area_px"]] or [np.nan])) for n in cfg["datasets"]}
+        keep = []
+        for m in mk:
+            why = []
+            if m["interior_area_px"] and m["interior_area_px"] < g["area_ratio"] * med[m["dataset"]]:
+                why.append(f"interior area {m['interior_area_px']} px is below {g['area_ratio']:g} of the series median {med[m['dataset']]:.0f} px")
+            if m["centre_method"] == "interior" and abs(m["centre_symmetry_minus_used_px"]) > g["sym_px"]:
+                why.append(f"the symmetry fit and the interior centre differ by {abs(m['centre_symmetry_minus_used_px']):.1f} px (limit {g['sym_px']:g})")
+            dT = m["T_image_C"] - m["click_T_C"]
+            if abs(dT) > g["click_K"]:
+                why.append(f"the image temperature differs from the clicked one by {abs(dT):.1f} K (limit {g['click_K']:g})")
+            if why:
+                gated.append({"dataset": m["dataset"], "T_image_K": m["T_image_C"] + C_TO_K, "click_T_C": m["click_T_C"], "click_value": m["click_value"], "reason": "; ".join(why)})
+            else:
+                keep.append(m)
+        mk = keep
     scopes = [list(range(len(mk)))] if cfg["scope"] == "shared" else [[i for i, m in enumerate(mk) if m["dataset"] == n] for n in cfg["datasets"]]
     n_cols = 0
     for scope in scopes:
@@ -293,11 +357,12 @@ def measure(fig, folder, image):
             for i in c:
                 mk[i].update(column=k, T_col=m_k, T_col_sd=sd, n_series=len(c), column_range=max(ts) - min(ts), column_basis="interior", run=run)
         n_cols += len(cols)
-    out = {"figure": fig, "temperature_axis_fit": {"slope_C_per_px": float(a), "intercept_C": float(b), "max_residual_K": u_c, "tick_px": xt, "tick_values_C": xv}, "frame": fr,
-           "datasets": info, "n_columns": n_cols, "markers": mk, "unplaceable_clicks": unplaced}
+    out = {"figure": fig, "temperature_axis_fit": {"slope_C_per_px": float(a), "intercept_C": float(b), "max_residual_K": (max(m["u_K"] for m in mk) if inv else u_c), "tick_px": xt, "tick_values_C": xv,
+                                                    **({"x_axis": "1000/T (linear)", "max_residual_in_1000_over_T": u_x} if inv else {})}, "frame": fr,
+           "datasets": info, "n_columns": n_cols, "markers": mk, "unplaceable_clicks": unplaced, "gated_markers": gated}
     if top:
-        alts = [abs(m["T_image_topbottom_interpolated_C"] - m["T_image_C"]) for m in mk]
-        out["top_tick_check"] = {**{k: v for k, v in top.items() if k != "line"}, "max_abs_T_difference_K": max(alts), "note": "reported, not used: T of every marker if the temperature axis is interpolated between the bottom and the top ticks"}
+        alts = [abs(m["T_image_topbottom_interpolated_C"] - m["T_image_C"]) for m in mk if m["T_image_topbottom_interpolated_C"] is not None]
+        out["top_tick_check"] = {**{k: v for k, v in top.items() if k != "line"}, "max_abs_T_difference_K": max(alts), "note": ("T of every marker on the bottom tick line alone, against the interpolated T used (reported, not used)" if inv else "reported, not used: T of every marker if the temperature axis is interpolated between the bottom and the top ticks")}
     if maps:
         out["shared_project_calibration_check"] = maps[5]
     return out
@@ -367,11 +432,12 @@ def make_rows(results, groups, doi, checks):
                     note += "; below the 300 K window edge: recorded, not compared (room temperature)"
                 rows.append({
                     "lit_id": f"{ID_PREFIX}{d['id']}_{smp['tag']}_c{g['column']:02d}", "compound_label": smp["label"].format(fig=fig), "composition": smp["composition"], "property": d["prop"],
-                    "T_K": f"{T:.1f}", "value": oh.fmt3(m["click_value"]), "unit": d["unit"], "doi": doi, "location": cfg["location"], "value_kind": "digitised",
+                    "T_K": f"{T:.1f}", "value": oh.fmt3(m["value_out"]), "unit": d["unit"], "doi": doi, "location": cfg["location"], "value_kind": "digitised",
                     "digitisation_method": (f"1-bit scan digitised by hand in WebPlotDigitizer ({d['method']}, 3 significant digits); temperature = column consensus (amendments 4, 5 and 9) of "
                                             "marker centres " + ("located as the centroid of the enclosed interior / opened body of the symbols" if d["estimator"] == "interior" else "located by the symmetry fit")
-                                            + f", read on a straight line through the printed ticks ({cfg['x_tick_values'][0]:g} to {cfg['x_tick_values'][-1]:g} deg C) and converted to K, "
-                                            "with thesis_paper/scripts/na12_extract_ohtaki.py"),
+                                            + (f", read as 1000/T on the printed ticks ({cfg['x_tick_values'][0]:g} to {cfg['x_tick_values'][-1]:g}), interpolated between the bottom and the top tick lines at the marker's height, T = 1000/x, "
+                                               if cfg.get("x_kind") == "inv_T" else f", read on a straight line through the printed ticks ({cfg['x_tick_values'][0]:g} to {cfg['x_tick_values'][-1]:g} deg C) and converted to K, ")
+                                            + "with thesis_paper/scripts/na12_extract_ohtaki.py"),
                     "notes": note})
     return rows
 
@@ -381,6 +447,33 @@ def not_legible_rows(results, groups):
     rows = []
     for fig, res in sorted(results.items()):
         cfg = FIGURES[fig]
+        if cfg.get("reference_series"):  # Fig. 1 (amendment 12): the series share measurement columns; the columns are those of the reference series plus any column where another series has a marker more than the gap from every reference column
+            gap = cfg["column_gap_K"]
+            ref = sorted(m["T_col"] for m in res["markers"] if m["dataset"] == cfg["reference_series"])
+            cols = list(ref)
+            extra = sorted(m["T_col"] for m in res["markers"] if m["dataset"] != cfg["reference_series"] and all(abs(m["T_col"] - r) > gap for r in ref))
+            grp = []
+            for t in extra:
+                if grp and t - grp[-1][-1] <= gap:
+                    grp[-1].append(t)
+                else:
+                    grp.append([t])
+            cols += [float(np.mean(g)) for g in grp]
+            series = [(d["sample"]["tag"], n) for n, d in cfg["datasets"].items() if d["row"]] + [(t, None) for t in cfg.get("undigitised_series", [])]
+            for k, T in enumerate(sorted(cols), 1):
+                if not 300.0 <= T < 800.0:
+                    continue
+                for tag, name in series:
+                    if name is None or not any(m["dataset"] == name and abs(m["T_col"] - T) <= gap for m in res["markers"]):
+                        rows.append({"figure": fig, "series": f"{tag} ({'no file: not digitised' if name is None else name})", "column": k, "T_K": f"{T:.1f}",
+                                     "reason": f"no digitised marker within {gap:g} K: not legible (amendments 9 and 12); column of the reference series {cfg['reference_series']}" + (" (or an extra column of another series)" if any(abs(T - float(np.mean(g))) < 1e-9 for g in grp) else "")})
+            for gm in res.get("gated_markers", []):
+                rows.append({"figure": fig, "series": f"{cfg['datasets'][gm['dataset']]['sample']['tag']} ({gm['dataset']})", "column": "", "T_K": f"{gm['T_image_K']:.1f}",
+                             "reason": f"digitised marker not legible (amendment 12): {gm['reason']}; T_K is the image temperature"})
+            for u in res.get("unplaceable_clicks", []):
+                rows.append({"figure": fig, "series": f"{cfg['datasets'][u['dataset']]['sample']['tag']} ({u['dataset']})", "column": "", "T_K": f"{u['click_T_C'] + C_TO_K:.1f}",
+                             "reason": f"clicked marker skipped (amendment 11): {u['reason']}; T_K is the clicked temperature"})
+            continue
         if cfg.get("column_gap_K"):  # Fig. 4: the series have no common columns, so the columns are derived by single-linkage clustering of all digitised markers of the figure (gap below column_gap_K)
             mks = sorted(res["markers"], key=lambda m: m["T_col"])
             clusters = []

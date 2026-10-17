@@ -504,3 +504,37 @@ Ohtaki et al. Fig. 4 (S, ten series, one WebPlotDigitizer project with one calib
    and the click against the image temperature.
 7. **Records.** Rows are written for every digitised marker, including those at or above 800 K (recorded, not compared), as for Figs. 6 and 7. The official run takes Figs. 7, 6 and 4 together (the append replaces all
    `OHTAKI1995_` rows); the test run reproduced the 17 rows of Figs. 6 and 7 byte for byte.
+
+## 2026-10-17: NA12, amendment 12 to pre-registration B (Ohtaki et al. Fig. 1: the 1000/T axis, tilt, units, room temperature); made after a test run of the Fig. 1 files, before the official run and any comparison, with no out-of-fold prediction looked at
+
+Fig. 1 (log10 sigma against 1000/T, ten series; Sm not digitised, amendment 9 item 2) is read as Fig. 4 is (one project and one calibration for all series, amendment 11), with the changes below, made after seeing a test run from a dirty tree
+(discarded, not a result). Items 7 to 10 were added the same day after the test run showed the points they answer (file problems, the column derivation, and doubtful markers), still before the official run.
+
+1. **Calibration.** x: the printed ticks 1.0 and 4.0, entered as 1 and 4 (linear in 1000/T, not temperatures); y: the printed ticks 2 and 0, entered as 2 and 0 (linear; the axis is log10 of sigma in S/cm as plain numbers, not a log
+   scale). The project's single dataset (Ce) must equal its CSV; the affine map fitted on its 6 clicks reproduces the four calibration points to better than 1e-12 and is inverted to place the clicks of the other series.
+   The ticks 3 and -1 are the top and bottom frame lines and are used from the frame.
+2. **Temperature and its uncertainty.** x is read on the printed ticks (every 0.5, 1.0 to 4.0) and T = 1000/x. The uncertainty of x is the largest residual of the straight lines through the bottom and through the top ticks
+   (about 0.0066 in the test run); u(T) = T^2/1000 u(x) is computed per marker (about 0.6 K near 330 K to 5 K near 870 K), is the u of that marker's column in amendments 5 and 6 (`_combine_run` takes an optional per-marker `u_K`;
+   without it the figure's single u is used, so no earlier extraction changes), and flags the edge rows with the 2u tolerance of amendment 6.
+3. **Tilt.** The figure is tilted: the top ticks sit 6.5 to 8 px (of 432 px per unit of 1000/T) left of the bottom ticks. x of a marker is therefore interpolated between the bottom and the top tick lines at the marker's
+   height. On the bottom ticks alone T would differ by up to 11 K (reported in `extraction.json`, not used). This differs from Figs. 4, 6 and 7, which use the bottom ticks only (for Fig. 4 the top-tick alternative is at most
+   2.8 K, reported); those are not changed.
+4. **Values.** The click value is log10(sigma / S cm^-1); the row holds sigma in S/m = 100 x 10^y, 3 significant digits (the unit of the other papers' sigma rows).
+5. **Room temperature.** The markers at 1000/T about 3.35 to 3.45 (T below 300 K) were not digitised, as in Fig. 4, with one exception: `sb_sigma.csv` holds the Sb marker at 1000/T = 3.389 (T 295 K), which is recorded below the
+   window and not compared (amendment 9 item 1; the row's notes say so).
+6. **Estimator and unplaceable clicks.** As amendment 11 (items 3 and 5): the symbol decides the centre method (Pb hatched, In dotted and Ca plus by the symmetry fit), the interior search window is 40 px, Sb's largest interior
+   is 3200 px, a click whose centre cannot be placed is skipped and listed in `not_legible.csv`. `sm_sigma.csv` in the folder is not a Fig. 1 file (its values are temperatures in deg C and S in uV/K) and is not read; nor is the old `sn_sigma.csv`, which held Sb points. The Sn series is `sn-redo_sigma.csv`.
+7. **Not-legible columns (the Fig. 4 rule does not carry over).** Clustering all markers with a 20 K gap chained different columns of this figure into one (9 markers over 70 K) and hid the gaps of a real column
+   with fewer than half the series. The series of Fig. 1 share measurement columns, so the columns are those of a reference series, Bi (the series with most digitised in-window markers), plus any column where another
+   series has a marker more than 20 K from every Bi column (such markers are clustered with a 20 K gap; the column temperature is their mean). Each column inside 300 <= T < 800 K lists every series (Sm included, as it has
+   no file) that has no marker within 20 K of the column temperature. Columns use the markers that remain after item 8.
+8. **Image-derived legibility gates (Fig. 1 only).** A placed marker is not legible, and is not a row, if any of: (a) its enclosed-interior area is below 0.8 of the median area of its series (the interior is partly covered);
+   (b) for the interior-centre estimator, the symmetry-fit centre and the interior centre differ by more than 10 px; (c) its image temperature differs from the temperature of its click by more than 15 K (the click and the
+   marker are not the same marker, or the centre is biased by neighbours). The gates apply at once to all placed markers, inside or outside the window, with the series median taken before any marker is removed, and each
+   removed marker is listed in `not_legible.csv` with its reason. Thresholds fixed after seeing the flags of the test run (stated here). In the test run they remove 12 markers (Ce 417 K; Y 911 K; Sb 570 K; La 426, 526, 572 and
+   675 K; Pb 871 K; In 700 and 805 K; Sn 1068 and 1174 K); the two In markers at 700 and 721 K were 21 K apart where the clicks were 50 K apart.
+9. **Fig. 4 is not changed.** Fig. 4 was extracted under amendment 11 without these gates and its rows stay. Applied to it they would have removed 5 of its 49 rows (Y 900 K, Sb 576 K, La 378 and 722 K by item 8a; CaMnO3 585 K
+   by item 8c; computed from the saved clicks, not applied). The difference between the two figures is stated, not hidden.
+10. **Sn calibration.** The Sn clicks were made with their own calibration (`sn_project.json`), which is not in the folder; the Sn markers are located with the shared project's calibration (positions only), and the Sn values
+   are the clicks. Check, reported: the value read from the body centre row of each Sn marker agrees with its click to 0.042 in log10 sigma at most (the centroid of a solid triangle sits below its centre), the same as the
+   other interior-centre series (0.009 to 0.042).

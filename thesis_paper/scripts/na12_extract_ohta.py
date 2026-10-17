@@ -488,10 +488,11 @@ def _combine_run(results):
         for m in res["markers"]:
             cols.setdefault(m["column"], m)
         for k, m in sorted(cols.items(), key=lambda kv: kv[1]["T_col"]):
-            member = {"figure": fig, "column": k, "T": m["T_col"], "u": u, "n_series": m["n_series"], "sd": m["T_col_sd"], "range": m["column_range"]}
+            um = m.get("u_K", u)  # a figure whose axis uncertainty varies along the axis (Fig. 1 of Ohtaki et al., 1000/T) gives each marker its own u
+            member = {"figure": fig, "column": k, "T": m["T_col"], "u": um, "n_series": m["n_series"], "sd": m["T_col_sd"], "range": m["column_range"]}
             free = [g for g in groups if all(x["figure"] != fig for x in g["members"])]
             best = min(free, key=lambda g: abs(g["T"] - m["T_col"]), default=None)
-            if best is not None and abs(best["T"] - m["T_col"]) <= 2.0 * float(np.hypot(best["u"], u)):
+            if best is not None and abs(best["T"] - m["T_col"]) <= 2.0 * float(np.hypot(best["u"], um)):
                 best["members"].append(member)
             else:
                 groups.append({"members": [member]})
