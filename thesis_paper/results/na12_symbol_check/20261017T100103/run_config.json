@@ -1,0 +1,50 @@
+{
+  "inputs": {
+    "image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\ohta2005_fig3_kappa_vs_T_x3_2235x2682.png",
+      "sha256": "0bf606039cde63dfde2832280eabdd4558c517043ef4519122416d6428c76f39",
+      "bytes": 276684
+    },
+    "project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\kappa_project.json",
+      "sha256": "870d1b5b761a1c74293fbb85509bedc5323c5c2d4cbaf034b6b06546ae2230d4",
+      "bytes": 1166
+    },
+    "csv_a": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_a_open circles.csv",
+      "sha256": "9eb4df20c1b207ca52b23a75be2f0c97cb1d24468704545a79136a6dc4199c57",
+      "bytes": 339
+    },
+    "csv_b": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_b_filled circles.csv",
+      "sha256": "3217e816ed9fccb524fcccd34b8b61fed623ecd6b58685ef5c35eb2f944bc93c",
+      "bytes": 187
+    },
+    "csv_c": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_c_open triangles.csv",
+      "sha256": "9a1d8ca27b450b906960f588a32c07794869aa7a8528c613bb84d566a99024f3",
+      "bytes": 189
+    },
+    "csv_d": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohta2005\\fig3\\_d_filled triangles.csv",
+      "sha256": "8e305f2af3fa970f9dd56b4c455cedf46469eadbf9c88b10bc6e9197b411b290",
+      "bytes": 225
+    }
+  },
+  "git_head": "f68a1163418b8910c8b04c540a101f72bfb5acf7",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_ohta_fig3_symbol_check.py",
+  "script_sha256": "7823810f8fdf5bce5e69675d79736479021465dd0e18a3122db02dbc32389e90",
+  "python": "3.12.10",
+  "paper": "Ohta et al. 2005, Fig. 3: are series (b) and (d) swapped?",
+  "legend_templates": {
+    "legend_circle_px": 1879,
+    "legend_triangle_px": 1612
+  },
+  "n_clicks": 11,
+  "n_consistent": 7,
+  "n_not_separable": 4,
+  "n_swapped": 0,
+  "verdict": "no separable column shows a swap"
+}

@@ -1,0 +1,12 @@
+column_px,series_file,marker,kappa_WmK,click_px,click_py,circle_fit,triangle_fit,dist_to_circle_px,dist_to_triangle_px,nearest_symbol,label_expects,column_separable,status
+360,b,0,9.56,370.7,1372.0,"375,1373","379,1413",4.5,41.9,circle,circle,True,consistent
+360,d,0,9.066,392.8,1421.8,"375,1373","379,1413",51.9,16.3,triangle,triangle,True,consistent
+480,b,1,6.484,531.1,1681.8,"529,1687","527,1683",5.6,4.3,triangle,circle,False,not separable (the filled symbols of this column are merged)
+480,d,1,6.319,536.6,1698.4,"529,1687","527,1683",13.7,18.1,circle,triangle,False,not separable (the filled symbols of this column are merged)
+720,b,2,5.385,702.6,1792.4,"701,1798","701,1838",5.8,45.6,circle,circle,True,consistent
+720,d,2,4.78,708.1,1853.3,"701,1798","701,1838",55.7,16.9,triangle,triangle,True,consistent
+840,b,3,4.56,879.6,1875.4,"874,1871","872,1917",7.1,42.3,circle,circle,True,consistent
+840,d,3,4.066,874.1,1925.2,"874,1871","872,1917",54.2,8.5,triangle,triangle,True,consistent
+1080,b,4,3.791,1056.6,1952.9,,"1049,1952",,7.7,triangle,circle,False,not separable (the filled symbols of this column are merged)
+1080,d,4,3.626,1051.1,1969.5,,"1049,1952",,17.6,triangle,triangle,False,not separable (the filled symbols of this column are merged)
+1200,d,5,3.407,1217.1,1991.6,,"1221,1977",,15.1,triangle,triangle,False,consistent (single filled symbol)
