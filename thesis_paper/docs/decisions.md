@@ -431,3 +431,18 @@ In Fig. 3 the four series overlap at most temperatures, so a marker centre canno
 3. **Columns.** The thermal conductivity was measured in separate runs, so its columns (about 383, 481, 583, 684 and 788 K) are their own, from the figure's own ticks, and are not combined with
    those of Figs. 1, 2 and 4. No zT consistency check from markers is possible (no common temperatures).
 4. Fig. 4 (ZT) is digitised first; its columns are combined with those of Figs. 1 and 2 only if each matches within the tolerance of amendment 5.
+
+## 2026-10-17: NA12, amendment 8 to pre-registration B (approximate zT consistency check for Ohta et al.); made before the Fig. 3 data were read, with no out-of-fold prediction looked at
+
+Amendment 1, item 3, asks for a zT check where S, sigma, kappa and zT are read at one temperature. For Ohta et al. kappa (Fig. 3) is measured in separate runs at other temperatures than S, sigma
+and zT (Figs. 1, 2 and 4), so the exact check is impossible; an approximate one is made.
+
+1. **Check.** For each sample and each column of the S, sigma and zT run that has all three values: zT_calc = S^2 sigma T / kappa, with S in V/K, sigma in S/m, T the combined column temperature
+   (amendment 5) and kappa interpolated at that T from the sample's legible Fig. 3 markers; the ratio zT_calc / zT of Fig. 4 is recorded.
+2. **Interpolation.** Linear in log kappa against log T between the sample's legible Fig. 3 markers (each at its own column temperature, amendment 7). No extrapolation: a column outside the range of
+   the sample's legible markers has no check, and the gap is listed with its reason (also a column where the sample lacks S, sigma or zT).
+3. **Reporting.** The check is labelled approximate (kappa at other temperatures, from separate runs, and only the legible markers), is reported and not asserted (nothing is excluded or changed on its
+   account), and the ratio is flagged outside 0.8 to 1.25. It goes to `extraction.json` of the run (`approx_zt_check`: every column, its inputs, ratio and flag, and the gaps), and into the notes of
+   the zT rows concerned. The ratios combine the reading errors of four figures (a few per cent each) with the interpolation error, so they are a plausibility check, not an acceptance criterion.
+4. **Not-legible markers.** The run writes `not_legible.csv`: every column of Fig. 3 inside the window, with each sample that has no digitised marker in it (amendment 7); the list is derived from
+   the digitised files, not typed.
