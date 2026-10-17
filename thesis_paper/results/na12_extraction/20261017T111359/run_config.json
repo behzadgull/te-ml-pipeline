@@ -1,0 +1,42 @@
+{
+  "inputs": {
+    "readme": {
+      "path": "thesis_paper/source/pdfs/README.md",
+      "sha256": "910d7e71c80788d1ea6777ec68bce8c88e0c9e5ae36232d8a3a4814f3cfd061a",
+      "bytes": 6789
+    },
+    "fig7_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p110_fig7_Z_ZT_vs_T_x4_2468x2444.png",
+      "sha256": "74ac5187504fa7e437420e084001378a182c300572ea90f72968c1d5e9f536b7",
+      "bytes": 357141
+    },
+    "fig7_ZT_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT_project.json",
+      "sha256": "1abaef828cc2e434ac23d8ce81ea58a4d106c168c3dc0c7f9b590d3c41086087",
+      "bytes": 1327
+    },
+    "fig7_ZT_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT.csv",
+      "sha256": "c6ba228676ea72f94a78150ef509edbbb72c6d26a54f019d7e54aad776b1a325",
+      "bytes": 275
+    },
+    "fig7_Z_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z_project.json",
+      "sha256": "8d9ce1f38950aff3a8e015bf31aa0621d700b66361100ed6d658114e3ecc66cb",
+      "bytes": 1339
+    },
+    "fig7_Z_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z.csv",
+      "sha256": "302fa708d09123a4fc97e4cfd8221feb5adfa1c6687855584439bbdd4fc4ed7f",
+      "bytes": 310
+    }
+  },
+  "git_head": "763587f50844d746f42e993555ab13c0cdbf871c",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_ohtaki.py",
+  "script_sha256": "69b9cfc5850989a816235db0427cc055a6ac58bb97643110ad4d44844374b5e9",
+  "python": "3.12.10",
+  "paper": "Ohtaki et al. 1995, figures 7",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9 (2026-10-13 to 17)"
+}
