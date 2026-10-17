@@ -432,7 +432,10 @@ In Fig. 3 the four series overlap at most temperatures, so a marker centre canno
    those of Figs. 1, 2 and 4. No zT consistency check from markers is possible (no common temperatures).
 4. Fig. 4 (ZT) is digitised first; its columns are combined with those of Figs. 1 and 2 only if each matches within the tolerance of amendment 5.
 
-## 2026-10-17: NA12, amendment 8 to pre-registration B (approximate zT consistency check for Ohta et al.); made before the Fig. 3 data were read, with no out-of-fold prediction looked at
+## 2026-10-17: NA12, amendment 8 to pre-registration B (approximate zT consistency check for Ohta et al.); made before any comparison, with no out-of-fold prediction looked at
+
+The rules below (log-log interpolation, no extrapolation, reported not asserted) were approved on 2026-10-17 before the Fig. 3 files were delivered; this text was written after the files'
+names and values had been listed (to check their format), and before any extraction or comparison.
 
 Amendment 1, item 3, asks for a zT check where S, sigma, kappa and zT are read at one temperature. For Ohta et al. kappa (Fig. 3) is measured in separate runs at other temperatures than S, sigma
 and zT (Figs. 1, 2 and 4), so the exact check is impossible; an approximate one is made.
