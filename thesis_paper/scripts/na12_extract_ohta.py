@@ -479,7 +479,7 @@ def make_rows(results, groups):
             note = (" ".join(tokens) + f" T = combined consensus of column {g['column']} over {len(g['members'])} figure(s) (amendment 5), uncertainty +/- {g['u']:.1f} K, floor bin {g['floor_bin']:g} [{own}]; "
                     f"clicked T {m['click_T']:.1f} K (not used); {cfg['res_note']}")
             if cfg["logy"]:
-                note += f"; clicked sigma calibration within {100 * (10 ** max(abs(x) for x in ctx['y_dev']) - 1):.1f} % of the printed ticks"
+                note += f"; clicked {cfg['prop']} calibration within {100 * (10 ** max(abs(x) for x in ctx['y_dev']) - 1):.1f} % of the printed ticks"
             if s == "b":
                 note += "; " + SAMPLE_DOPING_NOTE
             for fgl in ctx["sample_flags"][s]:
