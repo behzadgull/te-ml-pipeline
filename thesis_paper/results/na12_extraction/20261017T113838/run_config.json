@@ -1,0 +1,67 @@
+{
+  "inputs": {
+    "readme": {
+      "path": "thesis_paper/source/pdfs/README.md",
+      "sha256": "910d7e71c80788d1ea6777ec68bce8c88e0c9e5ae36232d8a3a4814f3cfd061a",
+      "bytes": 6789
+    },
+    "fig6_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p109_fig6_kappa_vs_T_x4_2344x2436.png",
+      "sha256": "ff7c6b1b92b56f1480ae06b352a9a4751f0c746bd85ca15a7bc4a4739faaf8ef",
+      "bytes": 296281
+    },
+    "fig6_Bi_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\bi_project.json",
+      "sha256": "50efebf52082a0e3e894779d27da3d18151a3e3dc56a6dc5613afa99d54fd7c9",
+      "bytes": 972
+    },
+    "fig6_Bi_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\bi_kappa.csv",
+      "sha256": "1df6a56580d4ddd364303c0d6d56b96730520a78a18f8e32c4bc5a4be2762442",
+      "bytes": 153
+    },
+    "fig6_CaMnO3_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\camno3_project.json",
+      "sha256": "41e5a6aed50b4b8e4ed96dd3bd92228fab93cc57c3e4b5b65fb1cb36f573958e",
+      "bytes": 1066
+    },
+    "fig6_CaMnO3_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\camno3_kappa.csv",
+      "sha256": "463896eea70bfe5c4b7210f0c800769bac7980a3a754a74f08c2c1bce82df0c6",
+      "bytes": 189
+    },
+    "fig7_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p110_fig7_Z_ZT_vs_T_x4_2468x2444.png",
+      "sha256": "74ac5187504fa7e437420e084001378a182c300572ea90f72968c1d5e9f536b7",
+      "bytes": 357141
+    },
+    "fig7_ZT_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT_project.json",
+      "sha256": "1abaef828cc2e434ac23d8ce81ea58a4d106c168c3dc0c7f9b590d3c41086087",
+      "bytes": 1327
+    },
+    "fig7_ZT_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT.csv",
+      "sha256": "c6ba228676ea72f94a78150ef509edbbb72c6d26a54f019d7e54aad776b1a325",
+      "bytes": 275
+    },
+    "fig7_Z_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z_project.json",
+      "sha256": "8d9ce1f38950aff3a8e015bf31aa0621d700b66361100ed6d658114e3ecc66cb",
+      "bytes": 1339
+    },
+    "fig7_Z_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z.csv",
+      "sha256": "302fa708d09123a4fc97e4cfd8221feb5adfa1c6687855584439bbdd4fc4ed7f",
+      "bytes": 310
+    }
+  },
+  "git_head": "02e059097fe45db5d672bdab355646c643469d47",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_ohtaki.py",
+  "script_sha256": "b9c82e66796e178949ff02ef6ff675a68760706d74d88cd0c2b235190092cec0",
+  "python": "3.12.10",
+  "paper": "Ohtaki et al. 1995, figures 6, 7",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9 (2026-10-13 to 17)"
+}
