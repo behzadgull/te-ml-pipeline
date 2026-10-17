@@ -1,0 +1,162 @@
+{
+  "inputs": {
+    "readme": {
+      "path": "thesis_paper/source/pdfs/README.md",
+      "sha256": "910d7e71c80788d1ea6777ec68bce8c88e0c9e5ae36232d8a3a4814f3cfd061a",
+      "bytes": 6789
+    },
+    "fig4_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p108_fig4_S_vs_T_x4_2488x2448.png",
+      "sha256": "7243ca3eeab05ab4f9c5761c5f7478a065d23307ca947043953b85bd58a65fe3",
+      "bytes": 433130
+    },
+    "fig4_Bi_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Bi_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\bi_s.csv",
+      "sha256": "eda03eac7b3350f9e04d950dd0ce4419b3186804c402f717b05927c67d387f54",
+      "bytes": 306
+    },
+    "fig4_Ce_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Ce_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\ce_s.csv",
+      "sha256": "c75127f826273e090d6f5601d40992ca901910c295cb16db64f6f2be3a770db8",
+      "bytes": 193
+    },
+    "fig4_Y_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Y_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\y_s.csv",
+      "sha256": "2e39229c672422a8e1d15d9c044824ff49e937aa1944eb529424cfe5a1bf19ca",
+      "bytes": 193
+    },
+    "fig4_Sb_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Sb_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\sb_s.csv",
+      "sha256": "97328ed2a10797bfc787fda4a534dbcc4d93b7c7f337f062e36c7cd75d6a5382",
+      "bytes": 229
+    },
+    "fig4_La_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_La_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\la_s.csv",
+      "sha256": "3d747e94e5234ec700f65de07dbfae92ff7edd4309e20c96bd5df61069019d1c",
+      "bytes": 192
+    },
+    "fig4_Pb_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Pb_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\pb_s.csv",
+      "sha256": "284c135461ab4098d318b3de6db7ddef21f267c6167b0db93b2f310cd7ac29d4",
+      "bytes": 231
+    },
+    "fig4_In_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_In_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\in_s.csv",
+      "sha256": "6cbe374f9411e6984c9622d2bac95ed383ecf9223bb3c83f9de820559236c0ae",
+      "bytes": 218
+    },
+    "fig4_Sn_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_Sn_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\sn_s.csv",
+      "sha256": "62fdc1da058f4ad3a905fc5021d1a52fccf841803927203cf955fe5f18f8e535",
+      "bytes": 234
+    },
+    "fig4_CaMnO3_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\fig4_project.json",
+      "sha256": "745207556cbfeb59977954ddaef5acbbcbf2ec8c5138cfdcf256ad08f324e999",
+      "bytes": 1177
+    },
+    "fig4_CaMnO3_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig4\\camno3_s.csv",
+      "sha256": "d6a2b27122c998e843a6219b8cbb749fdc49431dca0e8ed83c63d3d6a399e154",
+      "bytes": 195
+    },
+    "fig6_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p109_fig6_kappa_vs_T_x4_2344x2436.png",
+      "sha256": "ff7c6b1b92b56f1480ae06b352a9a4751f0c746bd85ca15a7bc4a4739faaf8ef",
+      "bytes": 296281
+    },
+    "fig6_Bi_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\bi_project.json",
+      "sha256": "50efebf52082a0e3e894779d27da3d18151a3e3dc56a6dc5613afa99d54fd7c9",
+      "bytes": 972
+    },
+    "fig6_Bi_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\bi_kappa.csv",
+      "sha256": "1df6a56580d4ddd364303c0d6d56b96730520a78a18f8e32c4bc5a4be2762442",
+      "bytes": 153
+    },
+    "fig6_CaMnO3_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\camno3_project.json",
+      "sha256": "41e5a6aed50b4b8e4ed96dd3bd92228fab93cc57c3e4b5b65fb1cb36f573958e",
+      "bytes": 1066
+    },
+    "fig6_CaMnO3_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig6\\camno3_kappa.csv",
+      "sha256": "463896eea70bfe5c4b7210f0c800769bac7980a3a754a74f08c2c1bce82df0c6",
+      "bytes": 189
+    },
+    "fig7_image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\ohtaki1995_p110_fig7_Z_ZT_vs_T_x4_2468x2444.png",
+      "sha256": "74ac5187504fa7e437420e084001378a182c300572ea90f72968c1d5e9f536b7",
+      "bytes": 357141
+    },
+    "fig7_ZT_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT_project.json",
+      "sha256": "1abaef828cc2e434ac23d8ce81ea58a4d106c168c3dc0c7f9b590d3c41086087",
+      "bytes": 1327
+    },
+    "fig7_ZT_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\zT.csv",
+      "sha256": "c6ba228676ea72f94a78150ef509edbbb72c6d26a54f019d7e54aad776b1a325",
+      "bytes": 275
+    },
+    "fig7_Z_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z_project.json",
+      "sha256": "8d9ce1f38950aff3a8e015bf31aa0621d700b66361100ed6d658114e3ecc66cb",
+      "bytes": 1339
+    },
+    "fig7_Z_csv": {
+      "path": "C:\\Users\\choha\\na12_digitising\\ohtaki1995\\fig7\\z.csv",
+      "sha256": "302fa708d09123a4fc97e4cfd8221feb5adfa1c6687855584439bbdd4fc4ed7f",
+      "bytes": 310
+    }
+  },
+  "git_head": "0d66af34db108822a8f36c6caed8868f1c1d2164",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_ohtaki.py",
+  "script_sha256": "93e8eaf0b328bbec1985db25189bdda24648fed245a577d0c3c4f1ad595d23e0",
+  "python": "3.12.10",
+  "paper": "Ohtaki et al. 1995, figures 4, 6, 7",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 4, 5, 6, 7, 9, 10, 11 (2026-10-13 to 17)"
+}

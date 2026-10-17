@@ -1,0 +1,18 @@
+figure,series,column,T_K,reason
+4,Bi (Bi),2,376.4,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 6 markers of 6 of 10 series (markers within 20 K of each other), range 15.2 K"
+4,Y (Y),2,376.4,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 6 markers of 6 of 10 series (markers within 20 K of each other), range 15.2 K"
+4,Sb (Sb),2,376.4,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 6 markers of 6 of 10 series (markers within 20 K of each other), range 15.2 K"
+4,Sm (no file: not digitised),2,376.4,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 6 markers of 6 of 10 series (markers within 20 K of each other), range 15.2 K"
+4,Y (Y),4,470.3,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 6.4 K"
+4,La (La),4,470.3,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 6.4 K"
+4,Sm (no file: not digitised),4,470.3,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 6.4 K"
+4,Y (Y),6,570.8,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 8 markers of 8 of 10 series (markers within 20 K of each other), range 24.2 K"
+4,Sm (no file: not digitised),6,570.8,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 8 markers of 8 of 10 series (markers within 20 K of each other), range 24.2 K"
+4,La (La),8,673.0,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 27.6 K"
+4,CaMnO3 (CaMnO3),8,673.0,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 27.6 K"
+4,Sm (no file: not digitised),8,673.0,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 7 markers of 7 of 10 series (markers within 20 K of each other), range 27.6 K"
+4,La (La),10,772.5,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 8 markers of 8 of 10 series (markers within 20 K of each other), range 20.5 K"
+4,Sm (no file: not digitised),10,772.5,"no digitised marker: the centre could not be placed (amendment 9); derived from the digitised files; column = cluster of 8 markers of 8 of 10 series (markers within 20 K of each other), range 20.5 K"
+4,Y (Y),,486.9,clicked marker skipped (amendment 11): Y marker at 214 deg C: no enclosed interior / body near the click; T_K is the clicked temperature
+4,Sb (Sb),,381.2,clicked marker skipped (amendment 11): Sb marker at 108 deg C: no enclosed interior / body near the click; T_K is the clicked temperature
+4,CaMnO3 (CaMnO3),,661.7,"clicked marker skipped (amendment 11): CaMnO3 marker at 389 deg C: the symmetry fit is not reliable (1 of 5 settings, 2.5 px from the click); T_K is the clicked temperature"
