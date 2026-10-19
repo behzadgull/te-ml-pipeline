@@ -1,0 +1,52 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/rajasekaran2020.pdf",
+      "sha256": "e6c902b095a36a4f85615628ddbe612229f7bb0bcc7f5e8b264a22097e50e60b",
+      "bytes": 6352198
+    },
+    "image": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\rajasekaran2020_fig10_sigma_S_PF_native_1657x1245.png",
+      "sha256": "fe404f61e4c6a23e74039c12bb28b21cbc256be8deaf1ae1b5e0037de134f9ee",
+      "bytes": 533610
+    },
+    "fig10a_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10a\\fig10a_project.json",
+      "sha256": "038e20e52ad98b0f47498ecb061fd3071bb051adda9f4ae02d59ef306ab33e85",
+      "bytes": 1164
+    },
+    "fig10a_csv_BSOLa5": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10a\\la5.csv",
+      "sha256": "39a36532e0152648da19a1089ac248dcfb01e8af480abcc371a03cf81648ae92",
+      "bytes": 226
+    },
+    "fig10a_csv_BSOLa10": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10a\\la10.csv",
+      "sha256": "ceee40dd3b0155612d47fe0d1c17c4042cbb8a838c96a1ffcb64bbb572c0b83d",
+      "bytes": 228
+    },
+    "fig10b_project": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10b\\fig10b_project.json",
+      "sha256": "57c28e55f2280220514b5956bb94cd10980a10764f80662a7073fdf7cec360bd",
+      "bytes": 1155
+    },
+    "fig10b_csv_BSOLa5": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10b\\la5_s.csv",
+      "sha256": "cbc18e7b2d58c3f6811ea37ea04c42965684a86a93e8b085ce0f2bc2546e2b57",
+      "bytes": 223
+    },
+    "fig10b_csv_BSOLa10": {
+      "path": "C:\\Users\\choha\\na12_digitising\\rajasekaran2020\\fig10b\\la10_s.csv",
+      "sha256": "837c61d7750537117f679246eafb79468e87b238680e85dae0808d2e20d020c3",
+      "bytes": 225
+    }
+  },
+  "git_head": "2f5691efac62afc137cfc4da9924be3e1e5ece54",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_rajasekaran.py",
+  "script_sha256": "b07eca48d8056ec419a9d62b65debae778cd23feb6c265425aef9839379c2d38",
+  "python": "3.12.10",
+  "paper": "Rajasekaran et al. 2020, Fig. 10(a) and 10(b)",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 2, 4, 5, 6, 9, 12, 13, 14 (2026-10-13 to 19)"
+}
