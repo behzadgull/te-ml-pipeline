@@ -30,7 +30,7 @@ Table 12 gives every paper.
 **Training-source papers (reported separately, never pooled with the independent papers).** A paper whose DOI is among the DOIs of the training data is a training source; its comparison partly restates the cross-validation error. The rows of the training table with each paper's DOI are: Shibasaki et al. 2009: 2 rows (2 compositions; 4 of its 26 values have a training row of the same DOI and composition); Rajasekaran et al. 2020: 2 rows (2 compositions; 0 of its 22 values have a training row of the same DOI and composition); Ohta et al. 2005: 3 rows (1 composition; 0 of its 137 values have a training row of the same DOI and composition); Flahaut et al. 2006: 102 rows (6 compositions; 0 of its 75 values have a training row of the same DOI and composition). Their results per paper are in Table 12 (part B). Comparisons by level: 
 Flahaut 4 exact and 46 cluster-level comparisons out of 55 values inside the window; Ohta 0 exact and 104 cluster-level comparisons out of 104 values inside the window; Rajasekaran 0 exact and 7 cluster-level comparisons out of 22 values inside the window; Shibasaki 1 exact and 1 cluster-level comparisons out of 2 values inside the window.
 
-**Edge sensitivity.** 86 of the compared values lie within twice the calibration uncertainty of a 25 K bin edge and were also evaluated in the neighbouring bin. Table 13 gives the overall summary of the independent papers for the headline assignment and for the neighbouring-bin assignment. 16 value-level results change (a changed in-band status, or no prediction in the neighbouring bin): 15 of Ohtaki et al, 1 of Ohta et al.
+**Edge sensitivity.** 86 of the compared values lie within twice the calibration uncertainty of a 25 K bin edge and were also evaluated in the neighbouring bin. Table 13 gives the overall summary of the independent papers for the headline assignment and for the neighbouring-bin assignment. 16 value-level results change (a changed in-band status, or no prediction in the neighbouring bin): 15 of Ohtaki et al., 1 of Ohta et al.
 
 Among the training-source papers, the neighbouring-bin run changes Ohta S cluster: 0 of 35 inside the band becomes 0 of 35, the median absolute relative error 0.544 becomes 0.541; Ohta σ cluster: 0 of 34 inside the band becomes 0 of 34, the median absolute relative error 0.874 becomes 0.889; Ohta zT cluster: 2 of 19 inside the band becomes 3 of 19, the median absolute relative error 0.473 becomes 0.524.
 
@@ -113,4 +113,4 @@ Among the training-source papers, the neighbouring-bin run changes Ohta S cluste
 
 
 ---
-Generated at commit `b2ed0b0e14beec41ac87311f887a2cf6ccbabab3` (tree clean: True) from summary.json SHA256 `4352a9ab37c3a458f180f3605f6f5b468eb31c698c7bbe81c3323e6bcd4d9b43`.
+Generated at commit `6453b03e30225b6839fab7a1e4a0d3ebd6531ad3` (tree clean: True) from summary.json SHA256 `4352a9ab37c3a458f180f3605f6f5b468eb31c698c7bbe81c3323e6bcd4d9b43`.
