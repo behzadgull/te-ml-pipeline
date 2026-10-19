@@ -33,7 +33,7 @@ the paper does not support.
 | `goldsmid2010introduction.pdf` (book pages) | 10.1007/978-3-642-00716-3 | same |
 | `borlido2019large.pdf` | see refs.bib | PBE band gap underestimation (qualitative; check the claim) |
 
-**Status of the files supplied on 2026-10-13.** `013-High-temperaturethermoelectricpropertiesofW-substitutedCaMnO3.pdf` (Alfaruq et al., MRS Symp. Proc. 1490, 2013) is NOT an NA12 source: the NA12 papers were fixed in pre-registration B (2026-10-05) and it is not one of them. `shibasaki2009.pdf` contains only page 1 (article page 1013): the full text is needed. `snyder2008complex.pdf` states a zT peak at carrier concentrations between 10^19 and 10^21 cm^-3 (article page 105, repeated on page 107), not 10^19 to 10^20: this is the value for the redraw of Figure 2.
+**Status of the files supplied on 2026-10-13.** `013-High-temperaturethermoelectricpropertiesofW-substitutedCaMnO3.pdf` (Alfaruq et al., MRS Symp. Proc. 1490, 2013) is NOT an NA12 source: the NA12 papers were fixed in pre-registration B (2026-10-05) and it is not one of them. `shibasaki2009.pdf` contained only page 1 (article page 1013); the full text (article pages 1013 to 1016) was supplied on 2026-10-19 and replaced it (the one-page file is kept as `shibasaki2009_onepage_old.pdf`); `rajasekaran2020.pdf` (CrystEngComm 22:5363-5374) was supplied the same day. `snyder2008complex.pdf` states a zT peak at carrier concentrations between 10^19 and 10^21 cm^-3 (article page 105, repeated on page 107), not 10^19 to 10^20: this is the value for the redraw of Figure 2.
 
 `iltanen2011_notes.pdf` is not Rowe's handbook: it is two pages of lecture notes by K. Iltanen (2011, CC BY-SA) that were supplied under the Rowe file name; the Rowe and Goldsmid rows above remain unfilled.
 

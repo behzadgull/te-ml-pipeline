@@ -13,6 +13,7 @@ Input: docs/na12_literature_values.csv, one row per literature value, with colum
   value_kind    table, text or digitised; a digitised value needs a digitisation_method (tool and axis calibration)
   notes         tokens read by this script: [cluster-level] (amendment 3: compared at the cluster level only) and [edge-sensitivity: also bin B] (amendments 4 to 6: the temperature lies
                 within 2 u of a 25 K bin edge; B is the neighbouring bin, its lower edge in K)
+              [not-compared: reason] (amendment 14: recorded in the values file and not compared, e.g. a doped member of a paper whose pre-registered compound is the undoped one; kept in the output with the reason)
 Values come from the PDFs only. Rows with T_K outside [300, 800) K (room-temperature values below 300 K, values at or above 800 K) are kept in the output, marked "recorded, not compared",
 and are never compared (the cleaning pipeline bins 300 K up to 800 K exclusive, in 25 K bins).
 
@@ -73,6 +74,7 @@ UNITS = {"S": {"uV/K": 1.0, "mV/K": 1e3, "V/K": 1e6}, "sigma": {"S/m": 1.0, "S/c
          "resistivity": {"ohm m": 1.0, "ohm cm": 1e-2, "mohm cm": 1e-5}}  # resistivity factors give ohm m; sigma = 1 / rho
 CLUSTER_TOKEN = "[cluster-level]"
 EDGE_RE = re.compile(r"\[edge-sensitivity: also bin ([0-9]+(?:\.[0-9]+)?)\]")
+NOTCMP_RE = re.compile(r"\[not-compared: ([^\]]+)\]")  # amendment 14: recorded, not compared (a composition or a temperature the rules do not compare)
 FIELDS = ("n_rows", "pred", "pred_sd_repeats", "rel_error", "log10_ratio", "inside_band")  # per level, in comparison.csv as <level>_<field> and <level>_alt_<field>
 
 
@@ -159,6 +161,7 @@ def load_values(path):
         if canon.parse_formula(r["composition"])[0] is None:
             problems.append(f"{where}: composition {r['composition']!r} is not parseable")
         cluster_only, alt, prob = parse_tokens(r["notes"], temp)
+        excl = NOTCMP_RE.search(r["notes"])
         if prob:
             problems.append(f"{where}: {prob}")
         conv = val * UNITS[r["property"]][r["unit"]]
@@ -169,7 +172,8 @@ def load_values(path):
             prop, si = "sigma", 1.0 / conv
         else:
             prop, si = r["property"], conv
-        rows.append({**r.to_dict(), "T_K": temp, "value": val, "target": prop, "value_target_units": si, "cluster_only": cluster_only, "alt_bin": alt})
+        rows.append({**r.to_dict(), "T_K": temp, "value": val, "target": prop, "value_target_units": si, "cluster_only": cluster_only, "alt_bin": alt,
+                     "excluded_reason": excl.group(1).strip() if excl else ""})
     if problems:
         raise SystemExit("values file problems:\n  " + "\n  ".join(problems))
     return pd.DataFrame(rows)
@@ -180,13 +184,14 @@ def aggregate_bins(vals):
     with n_aggregated and the identifiers. The members of a group must agree on [cluster-level] and on the edge-sensitivity bin. Rows outside the window are passed through
     (n_aggregated = 1) and are never compared."""
     vals = vals.copy()
-    for col, default in (("compound_label", ""), ("cluster_only", False), ("alt_bin", np.nan)):
+    for col, default in (("compound_label", ""), ("cluster_only", False), ("alt_bin", np.nan), ("excluded_reason", "")):
         if col not in vals.columns:
             vals[col] = default
     out, groups = [], {}
     for _, r in vals.iterrows():
         d = r.to_dict()
-        if not in_window(d["T_K"]):
+        ex = d.get("excluded_reason", "")
+        if not in_window(d["T_K"]) or not (ex is None or (isinstance(ex, float) and np.isnan(ex)) or ex == ""):  # outside the window, or recorded and not compared by token (amendment 14): passed through
             d.update(n_aggregated=1, aggregated_lit_ids=d["lit_id"])
             out.append(d)
             continue
@@ -238,11 +243,13 @@ def compare_value(r, cid, clid, sub, pred, eps):
     """The comparison columns of one aggregated value: <level>_<field> at its floor bin and <level>_alt_<field> at the edge-sensitivity bin (amendments 4 to 6); the exact level is not
     computed for a [cluster-level] value (amendment 3); a value outside the window gets no result and a reason."""
     t, lit = r["target"], r["value_target_units"]
-    win = in_window(r["T_K"])
+    excl = r.get("excluded_reason", "") if hasattr(r, "get") else ""
+    excl = "" if (excl is None or (isinstance(excl, float) and np.isnan(excl))) else str(excl)
+    win = in_window(r["T_K"]) and not excl
     tbin = floor_bin(r["T_K"]) if win else np.nan
     alt = r["alt_bin"] if win else np.nan
     cluster_only = bool(r["cluster_only"])
-    row = {"in_window": win, "temperature_bin": tbin, "status": not_compared_reason(r["T_K"]) or "compared", "alt_bin": alt, "cluster_only": cluster_only,
+    row = {"in_window": win, "temperature_bin": tbin, "status": (f"recorded, not compared ({excl})" if excl else (not_compared_reason(r["T_K"]) or "compared")), "alt_bin": alt, "cluster_only": cluster_only,
            "exact_level": "not applicable ([cluster-level] value)" if cluster_only else "computed"}
     masks = {"exact": sub["composition_id"] == cid, "cluster": sub[ncv.GROUP_COL] == clid}
     for level, mask in masks.items():
@@ -362,16 +369,19 @@ def self_test():
     row("a6", "10.1/A", "CsSnI3", "film", "S", ROOM_TEMPERATURE_K, 11.0)    # below the window: not aggregated
     row("a7", "10.1/A", "CsSnI3", "film", "S", 301.0, 12.0)     # in the first bin with a1 and a2
     row("a8", "10.1/A", "CsSnI3", "film", "S", 800.0, 13.0)     # at 800 K: outside the window
+    rows.append({**rows[0], "lit_id": "x1", "excluded_reason": "doped member, amendment 14", "value_target_units": 999.0})  # (rows without the key are the compared ones)   # in the first bin, recorded and not compared by token: not aggregated
     row("o1", "10.1/O", "SrTiO3", "La-doped SrTiO3, n = 8.4e19 cm^-3 (sample (a))", "S", 351.0, -422.0, True)    # Ohta samples: one host formula, different stated samples
     row("o2", "10.1/O", "SrTiO3", "La-doped SrTiO3, n = 8.4e20 cm^-3 (sample (b))", "S", 351.0, -154.0, True)
     row("o3", "10.1/O", "SrTiO3", "La-doped SrTiO3, n = 8.4e19 cm^-3 (sample (a))", "S", 360.0, -430.0, True)  # same sample and bin as o1
     df = pd.DataFrame(rows)
     agg = aggregate_bins(df)
-    first = agg[(agg["doi"] == "10.1/A") & (agg["composition"] == "CsSnI3") & (agg["target"] == "S") & (agg["T_K"] > 300) & (agg["T_K"] < 325)]
+    first = agg[(agg["doi"] == "10.1/A") & (agg["composition"] == "CsSnI3") & (agg["target"] == "S") & (agg["T_K"] > 300) & (agg["T_K"] < 325) & (agg["lit_id"] != "x1")]
     assert len(first) == 1, "a1, a2 and a7 must give one value"
+    xr = agg[agg["lit_id"] == "x1"].iloc[0]
+    assert xr["n_aggregated"] == 1 and abs(xr["value_target_units"] - 999.0) < 1e-9, "a [not-compared: ...] value is passed through and never aggregated"
     assert first.iloc[0]["n_aggregated"] == 3 and abs(first.iloc[0]["value_target_units"] - (100 + 140 + 12) / 3) < 1e-9
     assert set(first.iloc[0]["aggregated_lit_ids"].split(";")) == {"a1", "a2", "a7"}
-    assert len(agg) == len(df) - 3, f"{len(df)} rows must become {len(df) - 3}, not {len(agg)}"
+    assert len(agg) == len(df) - 3, f"{len(df)} rows must become {len(df) - 3}, not {len(agg)}"  # x1 stays a row of its own
     assert (agg[agg["T_K"] < 300]["n_aggregated"] == 1).all() and (agg[agg["T_K"] >= 800]["n_aggregated"] == 1).all()
     assert agg[agg["lit_id"] == "b1"].iloc[0]["n_aggregated"] == 1 and agg[agg["lit_id"] == "a5"].iloc[0]["n_aggregated"] == 1
     oh = agg[agg["doi"] == "10.1/O"]
@@ -413,6 +423,9 @@ def self_test():
         rn = compare_value({**base, "T_K": T, "alt_bin": 325.0}, "C1", "G1", sub, pred, eps)
         assert not rn["in_window"] and rn["status"].startswith("recorded, not compared") and rn["exact_n_rows"] == 0 and rn["cluster_n_rows"] == 0 and rn["cluster_alt_n_rows"] == 0, \
             "values outside the window get no result, alt bin included"
+    rx = compare_value({**base, "excluded_reason": "doped member, amendment 14"}, "C1", "G1", sub, pred, eps)   # a [not-compared: ...] value inside the window gets no result
+    assert not rx["in_window"] and rx["status"] == "recorded, not compared (doped member, amendment 14)" and rx["exact_n_rows"] == 0 and rx["cluster_n_rows"] == 0 and rx["cluster_alt_n_rows"] == 0
+    assert NOTCMP_RE.search("x [not-compared: doped member, amendment 14] y").group(1) == "doped member, amendment 14" and NOTCMP_RE.search("[cluster-level]") is None
     lit_sd = compare_value({**base, "value_target_units": 41.0}, "C2", "G1", sub, pred, eps)["exact_rel_error"]
     assert abs(lit_sd - ((np.mean([30.0]) + 2.0 - 41.0) / 41.0)) < 1e-9, "relative error (prediction - literature) / |literature|"
     # ---- summaries: papers weigh equally, training source separate, edge-sensitivity run swaps the neighbouring bin in
@@ -490,12 +503,12 @@ def main():
         return 3
     print(f"{len(vals)} literature values, {vals['doi'].map(norm_doi).nunique()} DOIs, {vals['compound_label'].nunique()} samples/compounds: valid")
     n_raw = len(vals)
-    wmask = vals["T_K"].map(in_window)
-    print(f"  inside [300, 800) K: {int(wmask.sum())}; recorded, not compared: {int((vals['T_K'] < T_MIN).sum())} below 300 K, {int((vals['T_K'] >= T_MAX).sum())} at or above 800 K")
+    wmask = vals["T_K"].map(in_window) & (vals["excluded_reason"] == "")
+    print(f"  inside [300, 800) K: {int(wmask.sum())}; recorded, not compared: {int((vals['T_K'] < T_MIN).sum())} below 300 K, {int((vals['T_K'] >= T_MAX).sum())} at or above 800 K, {int((vals['excluded_reason'] != '').sum())} by a [not-compared: ...] token")
     print(f"  [cluster-level] rows: {int(vals['cluster_only'].sum())}; edge-sensitivity rows: {int(vals['alt_bin'].notna().sum())} ({int((vals['alt_bin'].notna() & wmask).sum())} inside the window)")
     vals = aggregate_bins(vals)
     print(f"after the aggregation per paper, composition, sample, property and 25 K bin (amendments 2 and 3): {len(vals)} values "
-          f"({int(vals['T_K'].map(in_window).sum())} to compare, {int(vals['cluster_only'].sum())} cluster-level only, {int((vals['alt_bin'].notna() & vals['T_K'].map(in_window)).sum())} with an edge-sensitivity bin)")
+          f"({int((vals['T_K'].map(in_window) & (vals['excluded_reason'] == '')).sum())} to compare, {int(vals['cluster_only'].sum())} cluster-level only, {int((vals['alt_bin'].notna() & vals['T_K'].map(in_window) & (vals['excluded_reason'] == '')).sum())} with an edge-sensitivity bin)")
     if args.check_only:
         return 0
     prov = rr.provenance({"dataset": str(Path(args.dataset).resolve()), "values": str(Path(args.values).resolve()), "noise_floor": "src/noise_floor.py"}, __file__)
