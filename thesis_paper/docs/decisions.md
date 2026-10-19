@@ -581,3 +581,18 @@ instruction "read no values" was not met to the letter.
    (La is below 5 at% in both samples); each row carries `[cluster-level]`.
 4. **Implementation.** `scripts/na12_literature_comparison.py` reads the token `[not-compared: reason]` (self-test extended); `scripts/na12_extract_shibasaki.py` (vector extraction, as for Sebastia-Luna) writes the Shibasaki rows from a
    clean tree with the SHA256 of the PDF, the commit and the tree state.
+
+## 2026-10-19: NA12, amendment 15 to pre-registration B (a value the stated-temperature figure cannot resolve is taken from the figure that does); made before the comparison, with no out-of-fold prediction looked at
+
+Found when the Shibasaki et al. rows of amendment 14 were extracted and cross-checked, before any prediction was looked at. The undoped LaRhO3 conductivity of Fig. 5 (the figure that states 300 K) is plotted on a linear axis of 0 to 40 ohm^-1 cm^-1
+about 0.2% of the axis range above zero, so its reading precision is far below the property's spread; the end markers of the x = 0 series of Figs. 2 and 4, on logarithmic resistivity axes, resolve it, and they differ from the Fig. 5 value by
+a factor of about 1.6 to 1.8 (a difference of 0.2 dex, the size of the model's own sigma error). This is a reading-precision reason known before any comparison; it is not a choice made after seeing a prediction.
+
+1. **Rule.** Where the figure that states the temperature places a value within 1% of its axis range (below 0.01 x the range of the labelled ticks), the value of the same sample at that temperature is taken from another figure of the
+   paper that resolves it. The extraction applies the test to every Fig. 5 marker and stops if it triggers anywhere other than the one case below.
+2. **Application.** It triggers for the undoped LaRhO3 conductivity (x = 0, both series) of Fig. 5(a) and for nothing else (the smallest doped conductivity is above 1% of the range; S and the other values are far from it). The conductivity of
+   undoped LaRhO3 is therefore taken from the end markers of the x = 0 series of Fig. 2 (Ni series) and Fig. 4 (Mg series): the marker nearest 300 K of each (drawn at 300.3 and 300.2 K; the text gives 4.2 to 300 K, so the stated 300 K is used and
+   the drawn offset is recorded, not used, as in amendment 1, item 2), read as the resistivity in ohm cm (the unit of the axes) and converted to sigma by the comparison script. The two rows carry one stated sample ("LaRhO3, undoped, x = 0, as stated
+   for Figs. 2 and 4"), so amendment 2 aggregates them (n = 2, identifiers kept). The S of undoped LaRhO3 stays from Fig. 5 (the Fig. 2 and 4 end markers agree with it, the cross-check of amendment 14).
+3. **Records.** The Fig. 5 conductivity of the two x = 0 markers stays in the values file with the token `[not-compared: unreadable in Fig. 5 (within 1% of the axis range), replaced by Figs. 2 and 4, amendment 15]`; the notes of the Fig. 2 and
+   Fig. 4 rows state the Fig. 5 value, its share of the axis range and this reason. The cross-check of amendment 14 is unchanged and still reports the difference.

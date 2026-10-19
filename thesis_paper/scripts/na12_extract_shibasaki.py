@@ -1,12 +1,13 @@
 """
 NA12: electrical conductivity and Seebeck coefficient of LaRhO3 and its Ni- and Mg-substituted members from Shibasaki, Takahashi & Terasaki 2009 (J. Electron. Mater. 38(7):1013-1016,
 DOI 10.1007/s11664-009-0666-x), read from the vector figures of the PDF.
-Rules: docs/decisions.md, pre-registration B with amendment 1 (stated temperature), amendment 2 (aggregation) and amendment 14 (which values are rows). No out-of-fold prediction is read or used here.
+Rules: docs/decisions.md, pre-registration B with amendment 1 (stated temperature), amendment 2 (aggregation), amendment 14 (which values are rows) and amendment 15 (a value below 1% of the axis range of Fig. 5 is taken from Figs. 2 and 4). No out-of-fold prediction is read or used here.
 
 Rows (amendment 14): Fig. 5 (PDF page 4), whose caption states 300 K: the conductivity (panel a, 1/rho in ohm^-1 cm^-1 = S/cm) and S (panel b, uV/K) of every marker, Ni series (filled symbols,
 x = 0, 0.03, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3) and Mg series (open symbols, x = 0, 0.03, 0.05, 0.1, 0.2), at T = 300 K as stated. Only undoped LaRhO3 (x = 0, one marker in each series, both with
 the same stated sample so that amendment 2 aggregates them) is compared; every doped member is recorded with the token [not-compared: doped member, amendment 14]. The power factor of panel c
-is derived and is only a check. Cross-check, reported and not asserted (amendment 14): for each composition shared with Fig. 2 (Ni series, PDF page 2) or Fig. 4 (Mg series, PDF page 3), the marker
+is derived and is only a check. Amendment 15: a Fig. 5 value below 1% of its axis range is unreadable; that is the case of the undoped conductivity, which is then taken from the end markers of the x = 0 series
+of Figs. 2 and 4 (resistivity in ohm cm, T = 300 K as stated), and the Fig. 5 value stays recorded with a [not-compared] token. Cross-check, reported and not asserted (amendment 14): for each composition shared with Fig. 2 (Ni series, PDF page 2) or Fig. 4 (Mg series, PDF page 3), the marker
 of that series nearest 300 K (the text gives 4.2 to 300 K; the last markers are drawn at 297.9 to 306.6 K) against the Fig. 5 value, in the same units (the resistivity axes of Figs. 2 and 4 are in ohm cm, labelled with the symbol of the ohm and no prefix: sigma in S/cm = 1 / rho).
 
 Each marker is a filled path of the content stream (pdf_vector.py); its centre is the centre of its bounding box. The axes are calibrated on the printed major ticks and the tick labels (the
@@ -46,6 +47,9 @@ NI_X = (0.0, 0.03, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3)
 MG_X = (0.0, 0.03, 0.05, 0.1, 0.2)
 UNDOPED_LABEL = "LaRhO3 (undoped, x = 0, as stated for Fig. 5)"
 NOT_COMPARED = "[not-compared: doped member, amendment 14]"
+NOT_COMPARED_UNREADABLE = "[not-compared: unreadable in Fig. 5 (within 1% of the axis range), replaced by Figs. 2 and 4, amendment 15]"
+UNREADABLE_FRACTION = 0.01  # amendment 15
+UNDOPED_LABEL_FIG24 = "LaRhO3 (undoped, x = 0, as stated for Figs. 2 and 4)"
 # frames (x0, y0, x1, y1) of the panels, in PDF points; every edge is asserted to be among the stroked segments
 FIG5 = {"a": (74.6, 624.8, 273.1, 709.8), "b": (74.6, 539.8, 273.1, 624.8), "c": (74.6, 454.7, 273.1, 539.8)}
 FIG2 = {"a": (341.1, 307.1, 537.0, 447.0), "b": (341.1, 167.2, 537.0, 307.1)}  # resistivity (log), S; Ni series
@@ -261,8 +265,20 @@ def composition_of(ser, x):
     return f"LaRh{1 - x:g}{ser}{x:g}O3"
 
 
-def make_rows(f5, cal_text):
+def axis_range(cal):
+    return max(cal["labels"]) - min(cal["labels"])
+
+
+def make_rows(f5, f2, f4, cal_text):
     rows = []
+    unreadable = []
+    for panel in "ab":
+        rng = axis_range(f5["y"][panel])
+        for ser in ("Ni", "Mg"):
+            for x, val, *_ in f5["series"][ser][panel]:
+                if abs(val) < UNREADABLE_FRACTION * rng:
+                    unreadable.append((panel, ser, x))
+    assert sorted(unreadable) == [("a", "Mg", 0.0), ("a", "Ni", 0.0)], ("amendment 15 applies to the undoped conductivity of Fig. 5(a) and to nothing else", unreadable)
     loc = f"{JOURNAL}, Fig. 5 (article page 1016, PDF page 4)"
     for prop, panel, unit, what in (("sigma", "a", "S/cm", "the conductivity 1/rho of panel (a), ohm^-1 cm^-1 = S/cm"), ("S", "b", "uV/K", "the thermopower S of panel (b), uV/K")):
         for ser, fillname in (("Ni", "filled"), ("Mg", "open")):
@@ -273,6 +289,8 @@ def make_rows(f5, cal_text):
                 notes = []
                 if not undoped:
                     notes.append(NOT_COMPARED)
+                if (panel, ser, x) in unreadable:
+                    notes.append(NOT_COMPARED_UNREADABLE)
                 notes.append(f"T = 300 K as stated in the caption of Fig. 5 (amendment 1, item 2; the window edge, not the room-temperature value); {ser} series ({fillname} symbols, legend 'A = {ser}'); marker at "
                              f"x = {xr:.4f} for the composition {x:g}")
                 if undoped:
@@ -284,6 +302,21 @@ def make_rows(f5, cal_text):
                              "digitisation_method": ("vector marker (filled path) read from the PDF content stream with thesis_paper/scripts/na12_extract_shibasaki.py; marker centre = centre of its bounding box; "
                                                      f"{what}; axes calibrated on the printed major ticks ({cal_text}); value to 3 significant digits"),
                              "notes": "; ".join(notes)})
+    # amendment 15: the undoped resistivity from the end marker nearest 300 K of the x = 0 series of Fig. 2 (Ni series) and Fig. 4 (Mg series)
+    rng_a = axis_range(f5["y"]["a"])
+    for fig, ser, axes, page_txt, art in (("Fig. 2", "Ni", f2, "PDF page 2", "article page 1014"), ("Fig. 4", "Mg", f4, "PDF page 3", "article page 1015")):
+        pts = axes["series"][0.0]["a"]
+        Tm, lg = nearest_300(pts)
+        assert abs(Tm - T_STATED) <= 3.0, (fig, Tm)
+        five = [m[1] for m in f5["series"][ser]["a"] if m[0] == 0.0][0]
+        rows.append({"lit_id": f"{ID_PREFIX}resistivity_{fig.replace('. ', '')}_x0p0", "compound_label": UNDOPED_LABEL_FIG24, "composition": "LaRhO3", "property": "resistivity", "T_K": f"{T_STATED:g}",
+                     "value": f"{10.0 ** lg:.3g}", "unit": "ohm cm", "doi": DOI, "location": f"{JOURNAL}, {fig} ({art}, {page_txt}), panel (a)", "value_kind": "digitised",
+                     "digitisation_method": ("vector marker (filled path) read from the PDF content stream with thesis_paper/scripts/na12_extract_shibasaki.py; marker centre = centre of its bounding box; the resistivity of "
+                                             f"panel (a) on its logarithmic axis, calibrated on the decade ticks and exponent labels ({axes['y']['a']['labels'][0]:g} to {axes['y']['a']['labels'][-1]:g}, maximum residual "
+                                             f"{axes['y']['a']['residual_label_steps']:.3f} label steps); the marker of the x = 0 series (black) nearest 300 K; value to 3 significant digits"),
+                     "notes": (f"T = 300 K as stated in the text (measured from 4.2 K to 300 K; amendment 1, item 2); the end marker is drawn at {Tm:.1f} K (drawn offset recorded, not used); {ser} series, "
+                               f"{len(pts)} markers in the series. Used instead of the Fig. 5 conductivity of the undoped sample ({five:.3g} ohm^-1 cm^-1, {100 * five / rng_a:.2f}% of the axis range of {rng_a:g}: "
+                               "within 1%, unreadable; amendment 15)")})
     return rows
 
 
@@ -293,7 +326,7 @@ def build(pdf):
     f4 = curve_axes(pdf, 3, FIG4, (0.0, 0.03, 0.05, 0.1, 0.2))
     cal_text = ("composition axis 0, 0.1, 0.2, 0.3; panel a 0 to 40 ohm^-1 cm^-1 and panel b 0 to 400 uV/K, every labelled major tick, maximum residuals "
                 f"{max(f5['y']['a']['residual_label_steps'], f5['y']['b']['residual_label_steps'], f5['x']['residual_label_steps']):.3f} label steps")
-    rows = make_rows(f5, cal_text)
+    rows = make_rows(f5, f2, f4, cal_text)
     # the DOI printed on page 1
     o, c, r, _ = pv.page(pdf, 1)
     _, t1 = pv.interpret(o, c, r)
@@ -336,7 +369,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
         w.writeheader()
         w.writerows(res["rows"])
-    rr.write_json(out / "run_config.json", {**prov, "paper": "Shibasaki et al. 2009, Fig. 5 (rows), Figs. 2 and 4 (cross-check)", "rules": "docs/decisions.md pre-registration B + amendments 1, 2, 14 (2026-10-13 to 19)"})
+    rr.write_json(out / "run_config.json", {**prov, "paper": "Shibasaki et al. 2009, Fig. 5 (rows), Figs. 2 and 4 (cross-check)", "rules": "docs/decisions.md pre-registration B + amendments 1, 2, 14, 15 (2026-10-13 to 19)"})
     cc = res["crosscheck_end_markers_vs_fig5"]
     print(f"wrote {out}: {len(res['rows'])} rows; cross-check {len(cc)} pairs, {sum(c['flag'] for c in cc)} flagged; power-factor check {len(res['power_factor_check'])} markers, "
           f"{sum(bool(c['flag']) for c in res['power_factor_check'])} flagged")
