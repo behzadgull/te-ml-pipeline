@@ -1,0 +1,65 @@
+{
+  "Ohta et al. 2005": {
+    "run_folder": "thesis_paper/results/na12_extraction/20261019T124250",
+    "run_config_sha256": "56742b38329c84acecab6a385ea6c69db9220546c3b8deb61880bf2d688fe2f3",
+    "not_legible_csv_sha256": "f16e47e3c1fd104117bd8b553887b5650e130b1721d7a0437909b6c52af65e47",
+    "entries": 4,
+    "by_kind": {
+      "removed by a gate": {
+        "total": 0,
+        "inside_window": 0
+      },
+      "unplaceable click": {
+        "total": 0,
+        "inside_window": 0
+      },
+      "empty derived column": {
+        "total": 4,
+        "inside_window": 4
+      }
+    },
+    "rows_in_values_file": 137
+  },
+  "Ohtaki et al. 1995": {
+    "run_folder": "thesis_paper/results/na12_extraction/20261019T124259",
+    "run_config_sha256": "8ef146b2232b9f510dbe2daa9ff4435fc2a71d89cb7c4de0a724c2d9b2382d54",
+    "not_legible_csv_sha256": "cb12e6b541bef3402aecfb80cb860ba4b619778c21aa5d2c31295a20754eabd8",
+    "entries": 65,
+    "by_kind": {
+      "removed by a gate": {
+        "total": 13,
+        "inside_window": 7
+      },
+      "unplaceable click": {
+        "total": 2,
+        "inside_window": 2
+      },
+      "empty derived column": {
+        "total": 50,
+        "inside_window": 50
+      }
+    },
+    "rows_in_values_file": 134
+  },
+  "Rajasekaran et al. 2020": {
+    "run_folder": "thesis_paper/results/na12_extraction/20261019T124301",
+    "run_config_sha256": "394e2eae97d2259f548ccfb269f9124cb13b4f689c594e07d7bcd160e241b905",
+    "not_legible_csv_sha256": "d7e4cf2c11d417b31c398905608c23eb7c2d64c5804e2c6a9b08922c52e25c60",
+    "entries": 4,
+    "by_kind": {
+      "removed by a gate": {
+        "total": 0,
+        "inside_window": 0
+      },
+      "unplaceable click": {
+        "total": 2,
+        "inside_window": 2
+      },
+      "empty derived column": {
+        "total": 2,
+        "inside_window": 2
+      }
+    },
+    "rows_in_values_file": 22
+  }
+}

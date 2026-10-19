@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "values": {
+      "path": "thesis_paper/docs/na12_literature_values.csv",
+      "sha256": "62326ff4fa98bbee91c65b9fb7fa5a80015e1e6eb8c1fbb92b05d129c3e638aa",
+      "bytes": 461654
+    }
+  },
+  "git_head": "0ba689bef88737e1e904d2ec0e5f8b427478092f",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_not_legible_counts.py",
+  "script_sha256": "04a3bac235e907912715a4c67df03a8f4361fa099e695c5c66a734d805e6e148",
+  "python": "3.12.10"
+}
