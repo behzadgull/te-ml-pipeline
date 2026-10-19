@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "pdf": {
+      "path": "thesis_paper/source/pdfs/shibasaki2009.pdf",
+      "sha256": "b7991a80577f3c264addc3ad687ea6cb13b259b87eb01beed0ab7cd0bade7a31",
+      "bytes": 517959
+    },
+    "pdf_vector": {
+      "path": "thesis_paper/scripts/pdf_vector.py",
+      "sha256": "8ff17d5876d755d2b00f5f5b1a13aead5828aa1dfdc948c8128491831cbdef88",
+      "bytes": 17166
+    },
+    "na12_plot_tools": {
+      "path": "thesis_paper/scripts/na12_plot_tools.py",
+      "sha256": "fdb081be9dd6119126b931ba1a1613b9c37737c74e8b31eb9a40af8ee2bdc916",
+      "bytes": 4934
+    }
+  },
+  "git_head": "c7da8741d2a598acb8f8492b19b6311af39298c3",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_extract_shibasaki.py",
+  "script_sha256": "a1bf8abccb3fa5b80d5eb6aba3e6bf50a502f16c4ef46cce3da76b8ae9922d7f",
+  "python": "3.12.10",
+  "paper": "Shibasaki et al. 2009, Fig. 5 (rows), Figs. 2 and 4 (cross-check)",
+  "rules": "docs/decisions.md pre-registration B + amendments 1, 2, 14, 15 (2026-10-13 to 19)"
+}

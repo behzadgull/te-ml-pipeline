@@ -1,0 +1,690 @@
+{
+  "fig5": {
+    "x": {
+      "a": 0.002015433711611896,
+      "b": -0.20044714078407186,
+      "residual_label_steps": 0.000739544234254208,
+      "ticks_pt": [
+        99.468,
+        149.037,
+        198.727,
+        248.295
+      ],
+      "labels": "0, 0.1, 0.2, 0.3"
+    },
+    "y": {
+      "a": {
+        "a": 0.4816027739426159,
+        "b": -301.86438059910995,
+        "residual_label_steps": 3.852822191561245e-05,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          626.791,
+          647.555,
+          668.32,
+          689.083,
+          709.847
+        ],
+        "labels": [
+          0.0,
+          10.0,
+          20.0,
+          30.0,
+          40.0
+        ],
+        "log": false
+      },
+      "b": {
+        "a": 5.289963257468926,
+        "b": -2865.038567142344,
+        "residual_label_steps": 0.0019214723603045059,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          541.575,
+          560.539,
+          579.382,
+          598.346,
+          617.19
+        ],
+        "labels": [
+          0.0,
+          100.0,
+          200.0,
+          300.0,
+          400.0
+        ],
+        "log": false
+      },
+      "c": {
+        "a": 5.174965582598411,
+        "b": -2352.9430010147107,
+        "residual_label_steps": 5.1751155519923484e-05,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          454.679,
+          474.001,
+          493.325,
+          512.649,
+          531.974
+        ],
+        "labels": [
+          0.0,
+          100.0,
+          200.0,
+          300.0,
+          400.0
+        ],
+        "log": false
+      }
+    },
+    "legend": {
+      "Ni": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        185.824,
+        700.185
+      ],
+      "Mg": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        185.824,
+        688.1825
+      ]
+    },
+    "n_markers": {
+      "Ni": {
+        "a": 8,
+        "b": 8,
+        "c": 8
+      },
+      "Mg": {
+        "a": 5,
+        "b": 5,
+        "c": 5
+      }
+    }
+  },
+  "fig2": {
+    "x": {
+      "a": 1.582929353015408,
+      "b": -539.9379621993253,
+      "residual_label_steps": 0.000751996705705551,
+      "ticks_pt": [
+        341.065,
+        404.322,
+        467.46,
+        530.599
+      ],
+      "labels": "0, 100, 200, 300"
+    },
+    "y": {
+      "a": {
+        "a": 0.047867642908106384,
+        "b": -16.399583404528368,
+        "residual_label_steps": 0.0020348659476923103,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          321.72,
+          342.569,
+          363.536,
+          384.385,
+          405.233,
+          426.2,
+          447.049
+        ],
+        "labels": [
+          -1.0,
+          0.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0
+        ],
+        "log": true
+      },
+      "b": {
+        "a": 3.2159186935532387,
+        "b": -537.7864189189033,
+        "residual_label_steps": 0.0011476484900583728,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          167.25,
+          198.286,
+          229.441,
+          260.477,
+          291.631
+        ],
+        "labels": [
+          0.0,
+          100.0,
+          200.0,
+          300.0,
+          400.0
+        ],
+        "log": false
+      }
+    },
+    "legend_fill": {
+      "0.0": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "0.03": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "0.05": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "0.1": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "0.2": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "0.3": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "n_markers": {
+      "0.0": {
+        "a": 95,
+        "b": 73
+      },
+      "0.03": {
+        "a": 121,
+        "b": 95
+      },
+      "0.05": {
+        "a": 121,
+        "b": 106
+      },
+      "0.1": {
+        "a": 149,
+        "b": 84
+      },
+      "0.2": {
+        "a": 134,
+        "b": 101
+      },
+      "0.3": {
+        "a": 157,
+        "b": 82
+      }
+    }
+  },
+  "fig4": {
+    "x": {
+      "a": 1.5676115459736193,
+      "b": -555.077577827809,
+      "residual_label_steps": 0.0007588319249168762,
+      "ticks_pt": [
+        354.055,
+        417.931,
+        481.686,
+        545.441
+      ],
+      "labels": "0, 100, 200, 300"
+    },
+    "y": {
+      "a": {
+        "a": 0.05235588363056495,
+        "b": -31.470203916762614,
+        "residual_label_steps": 0.0024857874226853482,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          581.952,
+          601.091,
+          620.23,
+          639.249,
+          658.387,
+          677.525,
+          696.544
+        ],
+        "labels": [
+          -1.0,
+          0.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0
+        ],
+        "log": true
+      },
+      "b": {
+        "a": 3.1848336931754115,
+        "b": -1361.1513342218027,
+        "residual_label_steps": 0.0011724571463287248,
+        "label_offset_pt": -4.0,
+        "ticks_pt": [
+          427.409,
+          458.749,
+          490.207,
+          521.545,
+          553.005
+        ],
+        "labels": [
+          0.0,
+          100.0,
+          200.0,
+          300.0,
+          400.0
+        ],
+        "log": false
+      }
+    },
+    "legend_fill": {
+      "0.0": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "0.03": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "0.05": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "0.1": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "0.2": [
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    "n_markers": {
+      "0.0": {
+        "a": 123,
+        "b": 70
+      },
+      "0.03": {
+        "a": 164,
+        "b": 95
+      },
+      "0.05": {
+        "a": 170,
+        "b": 112
+      },
+      "0.1": {
+        "a": 152,
+        "b": 86
+      },
+      "0.2": {
+        "a": 146,
+        "b": 87
+      }
+    }
+  },
+  "crosscheck_end_markers_vs_fig5": [
+    {
+      "series": "Ni",
+      "x": 0.0,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.3,
+      "n_markers_of_series": 95,
+      "fig5_value": 0.08683298385284388,
+      "end_marker_value": 0.04854162140939253,
+      "ratio_end_marker_over_fig5": 0.5590228419612547,
+      "flag": true
+    },
+    {
+      "series": "Ni",
+      "x": 0.0,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.6,
+      "n_markers_of_series": 73,
+      "fig5_value": 378.60026849499127,
+      "end_marker_value": 378.17315133827697,
+      "ratio_end_marker_over_fig5": 0.9988718519445002,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.03,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 299.8,
+      "n_markers_of_series": 121,
+      "fig5_value": 3.208100561774927,
+      "end_marker_value": 2.909048752401845,
+      "ratio_end_marker_over_fig5": 0.9067822832811615,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.03,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 301.3,
+      "n_markers_of_series": 95,
+      "fig5_value": 168.44325318389474,
+      "end_marker_value": 172.83835071424937,
+      "ratio_end_marker_over_fig5": 1.0260924521895594,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.05,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 299.7,
+      "n_markers_of_series": 121,
+      "fig5_value": 5.086832982925046,
+      "end_marker_value": 5.0011321687686445,
+      "ratio_end_marker_over_fig5": 0.9831524222548543,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.05,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.0,
+      "n_markers_of_series": 106,
+      "fig5_value": 167.80845759299837,
+      "end_marker_value": 121.02668464241322,
+      "ratio_end_marker_over_fig5": 0.7212192184970236,
+      "flag": true
+    },
+    {
+      "series": "Ni",
+      "x": 0.1,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.9,
+      "n_markers_of_series": 149,
+      "fig5_value": 11.589433636698288,
+      "end_marker_value": 12.392605825103027,
+      "ratio_end_marker_over_fig5": 1.069302108591525,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.1,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.5,
+      "n_markers_of_series": 84,
+      "fig5_value": 118.6038643536508,
+      "end_marker_value": 119.12446873517649,
+      "ratio_end_marker_over_fig5": 1.0043894386103083,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.2,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 297.9,
+      "n_markers_of_series": 134,
+      "fig5_value": 17.659073396697067,
+      "end_marker_value": 17.17507834715676,
+      "ratio_end_marker_over_fig5": 0.9725922737468867,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.2,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.5,
+      "n_markers_of_series": 101,
+      "fig5_value": 117.64902598567733,
+      "end_marker_value": 99.50575674515494,
+      "ratio_end_marker_over_fig5": 0.8457847900693104,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.3,
+      "property": "sigma",
+      "figure": "Fig. 2",
+      "marker_T_K": 300.2,
+      "n_markers_of_series": 157,
+      "fig5_value": 29.01719321735976,
+      "end_marker_value": 27.84367395088045,
+      "ratio_end_marker_over_fig5": 0.9595577953495087,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.3,
+      "property": "S",
+      "figure": "Fig. 2",
+      "marker_T_K": 299.7,
+      "n_markers_of_series": 82,
+      "fig5_value": 85.9039564776067,
+      "end_marker_value": 97.41058571630492,
+      "ratio_end_marker_over_fig5": 1.133947605098931,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.0,
+      "property": "sigma",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.2,
+      "n_markers_of_series": 123,
+      "fig5_value": 0.08683298385284388,
+      "end_marker_value": 0.054263078782837856,
+      "ratio_end_marker_over_fig5": 0.6249132112607999,
+      "flag": true
+    },
+    {
+      "series": "Mg",
+      "x": 0.0,
+      "property": "S",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.5,
+      "n_markers_of_series": 70,
+      "fig5_value": 378.60026849499127,
+      "end_marker_value": 374.74386266030206,
+      "ratio_end_marker_over_fig5": 0.9898140435821159,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.03,
+      "property": "sigma",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.0,
+      "n_markers_of_series": 164,
+      "fig5_value": 6.15599114107772,
+      "end_marker_value": 5.596991507524953,
+      "ratio_end_marker_over_fig5": 0.9091942108521449,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.03,
+      "property": "S",
+      "figure": "Fig. 4",
+      "marker_T_K": 297.7,
+      "n_markers_of_series": 95,
+      "fig5_value": 261.77671991704756,
+      "end_marker_value": 273.789411837181,
+      "ratio_end_marker_over_fig5": 1.045889076476854,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.05,
+      "property": "sigma",
+      "figure": "Fig. 4",
+      "marker_T_K": 299.3,
+      "n_markers_of_series": 170,
+      "fig5_value": 9.566461184752313,
+      "end_marker_value": 9.406496074431638,
+      "ratio_end_marker_over_fig5": 0.983278549169714,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.05,
+      "property": "S",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.9,
+      "n_markers_of_series": 112,
+      "fig5_value": 200.82311828286174,
+      "end_marker_value": 197.219640185858,
+      "ratio_end_marker_over_fig5": 0.9820564578031887,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.1,
+      "property": "sigma",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.3,
+      "n_markers_of_series": 152,
+      "fig5_value": 2.7457618987900787,
+      "end_marker_value": 2.8829706449058103,
+      "ratio_end_marker_over_fig5": 1.0499711013457478,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.1,
+      "property": "S",
+      "figure": "Fig. 4",
+      "marker_T_K": 298.5,
+      "n_markers_of_series": 86,
+      "fig5_value": 200.82311828286174,
+      "end_marker_value": 188.07757506959774,
+      "ratio_end_marker_over_fig5": 0.9365334861730822,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.2,
+      "property": "sigma",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.3,
+      "n_markers_of_series": 146,
+      "fig5_value": 0.6069639797108835,
+      "end_marker_value": 0.5373546135379452,
+      "ratio_end_marker_over_fig5": 0.885315490704909,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.2,
+      "property": "S",
+      "figure": "Fig. 4",
+      "marker_T_K": 300.4,
+      "n_markers_of_series": 87,
+      "fig5_value": 180.50701439255226,
+      "end_marker_value": 176.45770934004736,
+      "ratio_end_marker_over_fig5": 0.9775670487591203,
+      "flag": false
+    }
+  ],
+  "power_factor_check": [
+    {
+      "series": "Ni",
+      "x": 0.0,
+      "ratio_S2sigma_over_panel_c": 3.342783722411333,
+      "flag": true
+    },
+    {
+      "series": "Ni",
+      "x": 0.03,
+      "ratio_S2sigma_over_panel_c": 1.0581283315324528,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.05,
+      "ratio_S2sigma_over_panel_c": 1.057905717945,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.1,
+      "ratio_S2sigma_over_panel_c": 1.0669591944553822,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.15,
+      "ratio_S2sigma_over_panel_c": 1.0737449942050956,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.2,
+      "ratio_S2sigma_over_panel_c": 1.0664518283443547,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.25,
+      "ratio_S2sigma_over_panel_c": 1.0662628221161072,
+      "flag": false
+    },
+    {
+      "series": "Ni",
+      "x": 0.3,
+      "ratio_S2sigma_over_panel_c": 1.0962196440634353,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.0,
+      "ratio_S2sigma_over_panel_c": 3.342783722411333,
+      "flag": true
+    },
+    {
+      "series": "Mg",
+      "x": 0.03,
+      "ratio_S2sigma_over_panel_c": 1.038496499685194,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.05,
+      "ratio_S2sigma_over_panel_c": 1.042211148443109,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.1,
+      "ratio_S2sigma_over_panel_c": 1.0612480394882355,
+      "flag": false
+    },
+    {
+      "series": "Mg",
+      "x": 0.2,
+      "ratio_S2sigma_over_panel_c": 1.1370383233629187,
+      "flag": false
+    }
+  ]
+}
