@@ -1243,4 +1243,27 @@ def na12_values():
     assert len({ln.split("|")[1].strip() for ln in papers}) == len(papers)
     nums = sorted(int(m.group(1)) for m in re.finditer(r"^## .*NA12, amendment (\d+) to pre-registration B", (root / "docs" / "decisions.md").read_text(encoding="utf-8"), re.M))
     assert nums == list(range(1, len(nums) + 1)), nums
-    return {"na12_papers": str(len(papers)), "na12_amendments": str(len(nums))}
+    out = {"na12_papers": str(len(papers)), "na12_amendments": str(len(nums))}
+    out.update(na12_comparison_values())
+    return out
+
+
+NA12_COMPARISON_RUN = "thesis_paper/results/na12_comparison/20261019T125259"  # the one comparison run of the freeze entry of docs/decisions.md (2026-10-19)
+
+
+def na12_comparison_values():
+    """Counts of the NA12 comparison read from its committed summary.json (the rows of the training-source papers come from the block added after the run by na12_comparison_report.py)."""
+    import json
+
+    f = Path(__file__).resolve().parents[2] / NA12_COMPARISON_RUN / "summary.json"
+    if not f.exists():
+        return {}
+    s = json.loads(f.read_text(encoding="utf-8"))
+    if "added_after_run" not in s:
+        return {}
+    by = s["by_paper"]
+    out = {"na12_n_independent": str(sum(not v["training_source"] for v in by.values())), "na12_n_training_source": str(sum(v["training_source"] for v in by.values()))}
+    key = {"10.1109/ict.2006.331291": "flahaut", "10.1063/1.1847723": "ohta", "10.1039/d0ce00702a": "rajasekaran", "10.1007/s11664-009-0666-x": "shibasaki"}
+    for doi, rec in s["added_after_run"]["training_source_rows"].items():
+        out[f"na12_ts_rows_{key[doi]}"] = str(rec["rows_in_training_table"])
+    return out

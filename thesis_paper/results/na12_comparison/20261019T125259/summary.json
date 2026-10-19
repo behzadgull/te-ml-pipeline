@@ -2372,5 +2372,395 @@
         "status_changes": false
       }
     ]
+  },
+  "added_after_run": {
+    "provenance": {
+      "git_head": "197a36c164ca5e508d53fbabca30ddd62f3f90cd",
+      "tree_clean": true,
+      "script": "thesis_paper/scripts/na12_comparison_report.py",
+      "script_sha256": "f7f5ee5e7039443b0d9ac42c8bb472bdd8da573bedacede7c5d5ba1f26c060bc",
+      "inputs": {
+        "comparison_csv": {
+          "path": "thesis_paper\\results\\na12_comparison\\20261019T125259\\comparison.csv",
+          "sha256": "b7cf8bb45e5e86d8189b63cac82622c9395dac0e2119ef298abb12291f67f0d4",
+          "bytes": 544998
+        },
+        "summary_json": {
+          "path": "thesis_paper\\results\\na12_comparison\\20261019T125259\\summary.json",
+          "sha256": "7e1738156acd887c128e59545011f3a1305377936bb51f736703bc0651fff485",
+          "bytes": 74832
+        },
+        "dataset": {
+          "path": "C:\\Users\\choha\\te-ml-pipeline\\data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+          "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+          "bytes": 974854507
+        },
+        "comparison_script": {
+          "path": "thesis_paper/scripts/na12_literature_comparison.py",
+          "sha256": "6b59217720374d6193c65ce7264ffe3ef10845e80c365954ece4eef656b5d493",
+          "bytes": 41877
+        }
+      },
+      "summary_as_run_sha256": "7e1738156acd887c128e59545011f3a1305377936bb51f736703bc0651fff485"
+    },
+    "log10_comparison": {
+      "headline": {
+        "by_paper": {
+          "10.1006/jssc.1995.1384": {
+            "training_source": false,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 22,
+                "n_with_log10_ratio": 22,
+                "median_abs_log10_ratio": 0.20614766702104736,
+                "median_signed_log10_ratio": -0.1854745485172504
+              },
+              "sigma_cluster": {
+                "n_compared": 66,
+                "n_with_log10_ratio": 66,
+                "median_abs_log10_ratio": 0.8508606809031265,
+                "median_signed_log10_ratio": 0.8508606809031265
+              },
+              "kappa_exact": {
+                "n_compared": 2,
+                "n_with_log10_ratio": 2,
+                "median_abs_log10_ratio": 0.1951067514885098,
+                "median_signed_log10_ratio": -0.1951067514885098
+              },
+              "kappa_cluster": {
+                "n_compared": 5,
+                "n_with_log10_ratio": 5,
+                "median_abs_log10_ratio": 0.1242021130279801,
+                "median_signed_log10_ratio": -0.1242021130279801
+              }
+            }
+          },
+          "10.1007/s11664-009-0666-x": {
+            "training_source": true,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "sigma_cluster": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_cluster": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              }
+            }
+          },
+          "10.1021/acsaem.2c01936": {
+            "training_source": false,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 3,
+                "n_with_log10_ratio": 3,
+                "median_abs_log10_ratio": 0.7678323677559651,
+                "median_signed_log10_ratio": 0.7678323677559651
+              },
+              "sigma_cluster": {
+                "n_compared": 3,
+                "n_with_log10_ratio": 3,
+                "median_abs_log10_ratio": 0.792581519621606,
+                "median_signed_log10_ratio": 0.792581519621606
+              },
+              "kappa_exact": {
+                "n_compared": 3,
+                "n_with_log10_ratio": 3,
+                "median_abs_log10_ratio": 0.0616435726654268,
+                "median_signed_log10_ratio": 0.0616435726654268
+              },
+              "kappa_cluster": {
+                "n_compared": 3,
+                "n_with_log10_ratio": 3,
+                "median_abs_log10_ratio": 0.0544259713511588,
+                "median_signed_log10_ratio": 0.0544259713511588
+              }
+            }
+          },
+          "10.1039/d0ce00702a": {
+            "training_source": true,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "sigma_cluster": {
+                "n_compared": 2,
+                "n_with_log10_ratio": 2,
+                "median_abs_log10_ratio": 1.1725965245125398,
+                "median_signed_log10_ratio": 1.1725965245125398
+              },
+              "kappa_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_cluster": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              }
+            }
+          },
+          "10.1063/1.1847723": {
+            "training_source": true,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "sigma_cluster": {
+                "n_compared": 34,
+                "n_with_log10_ratio": 34,
+                "median_abs_log10_ratio": 0.38805706175445254,
+                "median_signed_log10_ratio": 0.2688737406995618
+              },
+              "kappa_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_cluster": {
+                "n_compared": 16,
+                "n_with_log10_ratio": 16,
+                "median_abs_log10_ratio": 0.0389308215238703,
+                "median_signed_log10_ratio": -0.01999103182876125
+              }
+            }
+          },
+          "10.1080/14786435.2016.1263404": {
+            "training_source": false,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "sigma_cluster": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_cluster": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              }
+            }
+          },
+          "10.1109/ict.2006.331291": {
+            "training_source": true,
+            "by_property_and_level": {
+              "sigma_exact": {
+                "n_compared": 4,
+                "n_with_log10_ratio": 4,
+                "median_abs_log10_ratio": 0.3482051337646692,
+                "median_signed_log10_ratio": -0.3482051337646692
+              },
+              "sigma_cluster": {
+                "n_compared": 13,
+                "n_with_log10_ratio": 13,
+                "median_abs_log10_ratio": 0.1754090252741909,
+                "median_signed_log10_ratio": -0.1754090252741909
+              },
+              "kappa_exact": {
+                "n_compared": 0,
+                "n_with_log10_ratio": 0,
+                "median_abs_log10_ratio": null,
+                "median_signed_log10_ratio": null
+              },
+              "kappa_cluster": {
+                "n_compared": 15,
+                "n_with_log10_ratio": 15,
+                "median_abs_log10_ratio": 0.1041847528118053,
+                "median_signed_log10_ratio": 0.1041847528118053
+              }
+            }
+          }
+        },
+        "overall_independent_papers": {
+          "n_papers": 3,
+          "papers": [
+            "10.1006/jssc.1995.1384",
+            "10.1021/acsaem.2c01936",
+            "10.1080/14786435.2016.1263404"
+          ],
+          "by_property_and_level": {
+            "sigma_exact": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.4869900173885062,
+              "median_over_papers_of_signed_median_log10_ratio": 0.29117890961935733
+            },
+            "sigma_cluster": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.8217211002623662,
+              "median_over_papers_of_signed_median_log10_ratio": 0.8217211002623662
+            },
+            "kappa_exact": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.1283751620769683,
+              "median_over_papers_of_signed_median_log10_ratio": -0.0667315894115415
+            },
+            "kappa_cluster": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.08931404218956945,
+              "median_over_papers_of_signed_median_log10_ratio": -0.03488807083841065
+            }
+          }
+        }
+      },
+      "neighbouring_bin": {
+        "overall_independent_papers": {
+          "n_papers": 3,
+          "papers": [
+            "10.1006/jssc.1995.1384",
+            "10.1021/acsaem.2c01936",
+            "10.1080/14786435.2016.1263404"
+          ],
+          "by_property_and_level": {
+            "sigma_exact": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.4884884869760262,
+              "median_over_papers_of_signed_median_log10_ratio": 0.2881188456202344
+            },
+            "sigma_cluster": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.8237233443674089,
+              "median_over_papers_of_signed_median_log10_ratio": 0.8237233443674089
+            },
+            "kappa_exact": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.1312403489637669,
+              "median_over_papers_of_signed_median_log10_ratio": -0.0695967762983401
+            },
+            "kappa_cluster": {
+              "n_papers_with_comparisons": 2,
+              "median_over_papers_of_median_abs_log10_ratio": 0.08771834581155413,
+              "median_over_papers_of_signed_median_log10_ratio": -0.033292374460395326
+            }
+          }
+        }
+      },
+      "definition": "log10 of the prediction minus log10 of the literature value (sigma and kappa), per value from comparison.csv; per paper and level the median of |.| and the signed median over the compared values; overall: the median over the independent papers of each paper's median (papers weigh equally)"
+    },
+    "training_source_rows": {
+      "10.1007/s11664-009-0666-x": {
+        "name": "Shibasaki et al. 2009",
+        "rows_in_training_table": 2,
+        "distinct_compositions": 2,
+        "rows_with_a_value_of": {
+          "S": 2,
+          "sigma": 0,
+          "kappa": 0,
+          "zT": 0
+        },
+        "compared_values_with_a_training_row_of_the_same_doi_and_composition": 4,
+        "n_values": 26
+      },
+      "10.1039/d0ce00702a": {
+        "name": "Rajasekaran et al. 2020",
+        "rows_in_training_table": 2,
+        "distinct_compositions": 2,
+        "rows_with_a_value_of": {
+          "S": 2,
+          "sigma": 2,
+          "kappa": 0,
+          "zT": 0
+        },
+        "compared_values_with_a_training_row_of_the_same_doi_and_composition": 0,
+        "n_values": 22
+      },
+      "10.1063/1.1847723": {
+        "name": "Ohta et al. 2005",
+        "rows_in_training_table": 3,
+        "distinct_compositions": 1,
+        "rows_with_a_value_of": {
+          "S": 3,
+          "sigma": 0,
+          "kappa": 0,
+          "zT": 0
+        },
+        "compared_values_with_a_training_row_of_the_same_doi_and_composition": 0,
+        "n_values": 137
+      },
+      "10.1109/ict.2006.331291": {
+        "name": "Flahaut et al. 2006",
+        "rows_in_training_table": 102,
+        "distinct_compositions": 6,
+        "rows_with_a_value_of": {
+          "S": 15,
+          "sigma": 99,
+          "kappa": 14,
+          "zT": 0
+        },
+        "compared_values_with_a_training_row_of_the_same_doi_and_composition": 0,
+        "n_values": 75
+      }
+    },
+    "NOT_PRE_REGISTERED_context_rung_errors": {
+      "note": "added after the result; every committed chemistry-cluster out-of-fold prediction counted (5 repeats x 5 folds), not averaged per bin as the NA12 predictions are",
+      "by_property": {
+        "S": {
+          "n_predictions": 925320,
+          "n_with_nonzero_true_value": 925280,
+          "median_abs_rel_error": 0.21198230112900407,
+          "fraction_inside_alleno_band": 0.17792668165312123
+        },
+        "sigma": {
+          "n_predictions": 913775,
+          "n_with_nonzero_true_value": 913775,
+          "median_abs_rel_error": 0.33072377419024923,
+          "fraction_inside_alleno_band": 0.13984295915296435,
+          "median_abs_log10_ratio": 0.15256746614466232,
+          "median_signed_log10_ratio": -0.0264496946712951
+        },
+        "kappa": {
+          "n_predictions": 605550,
+          "n_with_nonzero_true_value": 605550,
+          "median_abs_rel_error": 0.1509195328615748,
+          "fraction_inside_alleno_band": 0.3905441334324168,
+          "median_abs_log10_ratio": 0.06617971182665042,
+          "median_signed_log10_ratio": -0.00545820338878783
+        },
+        "zT": {
+          "n_predictions": 647095,
+          "n_with_nonzero_true_value": 646840,
+          "median_abs_rel_error": 0.2685961171574361,
+          "fraction_inside_alleno_band": 0.3806304495702183
+        }
+      }
+    }
   }
 }

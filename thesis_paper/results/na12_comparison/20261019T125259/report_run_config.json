@@ -1,0 +1,30 @@
+{
+  "inputs": {
+    "comparison_csv": {
+      "path": "thesis_paper\\results\\na12_comparison\\20261019T125259\\comparison.csv",
+      "sha256": "b7cf8bb45e5e86d8189b63cac82622c9395dac0e2119ef298abb12291f67f0d4",
+      "bytes": 544998
+    },
+    "summary_json": {
+      "path": "thesis_paper\\results\\na12_comparison\\20261019T125259\\summary.json",
+      "sha256": "7e1738156acd887c128e59545011f3a1305377936bb51f736703bc0651fff485",
+      "bytes": 74832
+    },
+    "dataset": {
+      "path": "C:\\Users\\choha\\te-ml-pipeline\\data\\processed\\featurized_ThermoelectricMaterials_2026-08-22-snapfix.csv",
+      "sha256": "d9fc1e5d942e4f5e22590df56dc73200ce40790723c490684ceadcbdc042e489",
+      "bytes": 974854507
+    },
+    "comparison_script": {
+      "path": "thesis_paper/scripts/na12_literature_comparison.py",
+      "sha256": "6b59217720374d6193c65ce7264ffe3ef10845e80c365954ece4eef656b5d493",
+      "bytes": 41877
+    }
+  },
+  "git_head": "197a36c164ca5e508d53fbabca30ddd62f3f90cd",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/na12_comparison_report.py",
+  "script_sha256": "f7f5ee5e7039443b0d9ac42c8bb472bdd8da573bedacede7c5d5ba1f26c060bc",
+  "python": "3.12.10"
+}

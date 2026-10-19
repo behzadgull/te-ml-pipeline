@@ -57,8 +57,9 @@ Ohta et al. have dopant levels below <!--d:grp_dopant_pct-->5<!--/d--> at% given
 threshold used: a prediction is inside the band if its relative error does not exceed it.
 
 **Reporting.** Results are reported per paper. Any overall summary weights papers equally: the fraction inside the band and the median absolute relative error are computed within each paper and then summarised by the
-median over papers. A paper whose DOI is among the DOIs of the training data (Flahaut et al.) is a training-source paper: it is reported separately, restates the cross-validation error, and is never pooled with the
-independent papers. For every value the table states whether its DOI is among the training DOIs, whether its composition and cluster are in the training data, and whether the training data hold a row with the same DOI and
+median over papers. A paper whose DOI is among the DOIs of the training data is a training-source paper: it is reported separately, is never pooled with the independent papers, and for it the comparison partly restates the
+cross-validation error. By this rule <!--v:na12_n_training_source-->4<!--/v--> of the <!--v:na12_papers-->7<!--/v--> papers are training sources, with this many rows of the training table whose DOI is theirs: Flahaut et al. <!--v:na12_ts_rows_flahaut-->102<!--/v-->,
+Ohta et al. <!--v:na12_ts_rows_ohta-->3<!--/v-->, Rajasekaran et al. <!--v:na12_ts_rows_rajasekaran-->2<!--/v--> and Shibasaki et al. <!--v:na12_ts_rows_shibasaki-->2<!--/v-->; the other <!--v:na12_n_independent-->3<!--/v--> (Ohtaki et al., Sebastia-Luna et al., Singh and Pandey) are independent. For every value the table states whether its DOI is among the training DOIs, whether its composition and cluster are in the training data, and whether the training data hold a row with the same DOI and
 composition (the value is then probably a training label, although its cluster was held out).
 
 **Pre-registration and its amendments.** The comparison script was run only after the values file was filled and committed. The rules above are the pre-registration plus <!--v:na12_amendments-->17<!--/v--> dated amendments
