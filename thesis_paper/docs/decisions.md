@@ -636,3 +636,14 @@ Ohtaki et al., so every scanned extraction is re-run and the changes are shown (
    `na12_extract_ohta.py`, used by the three extraction scripts.
 5. **Effect.** In the test run of the changed code (a dirty-tree run, discarded; the official runs' `extraction.json` are the record) the three Ohta markers removed under amendment 13 return; Ohtaki Fig. 1 goes from 12 to 8 removed markers and Ohtaki Fig. 4 keeps its 5 and
    places the Sb marker at 108 deg C that was unplaceable (the window artefact again); the Rajasekaran end markers stay. The per-figure comparison with the rows of amendment 13 is in the reply that introduced this amendment and in the run folders.
+
+## 2026-10-19: NA12 pre-comparison freeze (no prediction for an NA12 compound has been looked at)
+
+The inputs of the comparison are frozen as of commit `ed24f2f58c3e1727d63f7be1a547328b69275c72`: the values file `docs/na12_literature_values.csv` (485 rows from 7 DOIs; SHA256 `62326ff4fa98bbee91c65b9fb7fa5a80015e1e6eb8c1fbb92b05d129c3e638aa`), the comparison script `scripts/na12_literature_comparison.py`
+(SHA256 `6b59217720374d6193c65ce7264ffe3ef10845e80c365954ece4eef656b5d493`) and the methods draft `docs/na12_methods_draft.md` (SHA256 `76533412ada63cabe4b5b39a8477da85319d19e7f5dbaaaa1f32d94a87cd09a3`). Pre-registration B and amendments 1 to 17 are the rules. `--self-test` passes; `--check-only` reports 485 values, 7 DOIs, 423 values after the aggregation of
+amendments 2 and 3, 324 of them to compare (159 cluster-level only, 86 with an edge-sensitivity bin), and 14 rows below 300 K, 61 at or above 800 K and 24 recorded by a `[not-compared]` token. This freeze commit also adds
+`scripts/na12_not_legible_counts.py`, a reporting script that counts the entries of the committed extraction runs' `not_legible.csv` (it reads no prediction).
+
+The comparison is run once, from the clean commit that holds this entry, into `results/na12_comparison/<UTC>/` (`run_config.json` records the commit, the tree state and the SHA256 of the values file, the snapfix CSV and every prediction file read), and reported as
+pre-registered: per paper, the training-source paper separately, the exact and the cluster level separately, the headline and the edge-sensitivity runs, the overall summary weighting papers equally, and the not-legible counts. If a defect of the script is found after the
+run, the run is not silently repeated: it is reported, and any corrected rerun is reported alongside the first.
