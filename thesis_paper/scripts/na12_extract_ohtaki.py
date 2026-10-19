@@ -278,13 +278,15 @@ def measure(fig, folder, image):
         for (t_c, v), (cx, cy) in zip(pts, px):
             if inv:
                 t_c = 1000.0 / t_c - C_TO_K  # the click's own temperature (deg C) from its 1000/T
-            c_sym, n_ok, spread = oh.refine_x(dark, cx, cy, 24)
+            c_sym, n_ok, spread = oh.refine_x(dark, cx, cy, 24)  # the raw column-profile fit: used for the symbols with no enclosed interior only (amendment 17)
+            c_raw = c_sym
             area = None
             cyc = None
             try:
                 if d["estimator"] == "interior":
-                    h = oh.hole_centre(dark, c_sym if n_ok >= oh.MIN_AGREE else cx, cy, d["filled"], **d.get("hole", {}))
+                    h = oh.body_find(dark, cx, cy, d["filled"], **d.get("hole", {}))
                     assert h is not None and abs(h[0] - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: no enclosed interior / body near the click"
+                    c_sym, n_ok, spread = oh.body_symmetry(dark, h, d["filled"], win=d.get("hole", {}).get("win", 34), search=24)  # amendment 17: on the opened body
                     c, area, cyc = h[0], h[2], h[1]
                 else:  # an isolated symbol without an enclosed interior: the symmetry fit, which must be a majority of the settings and near the click
                     assert n_ok >= oh.MIN_AGREE and abs(c_sym - cx) <= 25.0, f"{name} marker at {t_c:.0f} deg C: the symmetry fit is not reliable ({n_ok} of {len(oh.SETTINGS)} settings, {c_sym - cx:.1f} px from the click)"
@@ -310,7 +312,7 @@ def measure(fig, folder, image):
                 t_alt = float((1 - frac) * t_img + frac * (top["line"][0] * c + top["line"][1]))
             assert c > prev  # the markers of a series are clicked in order along the temperature axis
             prev = c
-            mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": c, "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok,
+            mk.append({"dataset": name, "click_T_C": t_c, "click_value": v, "centre_px": c, "click_px": [cx, cy], "T_image_C": t_img, "centre_px_symmetry": c_sym, "centre_px_symmetry_raw": c_raw, "n_settings_agreeing": n_ok,
                        "centre_method": d["estimator"], "fill": oh.interior_fill(dark, c, cy), "sample": d["sample"]["tag"], "T_image_topbottom_interpolated_C": t_alt,
                        "centre_symmetry_minus_used_px": float(c_sym - c), "interior_area_px": area, "u_K": u_K, "value_from_centre_row_minus_click": (None if cyc is None else float(ay * cyc + by - v)),
                        "value_out": (100.0 * 10.0 ** v if d.get("value_transform") == "log10_Scm_to_Sm" else v)})

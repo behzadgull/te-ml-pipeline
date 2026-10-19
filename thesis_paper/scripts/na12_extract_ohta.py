@@ -216,7 +216,7 @@ def refine_x(dark, cx, cy, search=SEARCH_PX):
     return float(ok.mean()), int(ok.size), float(ok.max() - ok.min())
 
 
-def hole_centre(dark, cx, cy, filled, win=34, area=(60, 1500)):
+def hole_centre(dark, cx, cy, filled, win=34, area=(60, 1500), open_radius=11):
     """Marker centre (x, y, area) that does not depend on the line joining the markers: the centroid of the enclosed white interior of an open symbol (the connecting line never enters
     it), or of the body of a filled symbol after a morphological opening with a disc of radius 11 px (wider than the line). None if no such region is near the click."""
     cx, cy = int(round(cx)), int(round(cy))
@@ -234,8 +234,8 @@ def hole_centre(dark, cx, cy, filled, win=34, area=(60, 1500)):
             if best is None or d < best[0]:
                 best = (d, xs.mean(), ys.mean(), int(m.sum()))
     else:
-        r = np.arange(-11, 12)
-        op = ndi.binary_opening(sub, structure=(r[:, None] ** 2 + r[None, :] ** 2) <= 121)
+        r = np.arange(-open_radius, open_radius + 1)
+        op = ndi.binary_opening(sub, structure=(r[:, None] ** 2 + r[None, :] ** 2) <= open_radius ** 2)
         lab, n = ndi.label(op)
         for k in range(1, n + 1):
             m = lab == k
@@ -246,6 +246,41 @@ def hole_centre(dark, cx, cy, filled, win=34, area=(60, 1500)):
     if best is None:
         return None
     return float(cx - win + best[1]), float(cy - win + best[2]), best[3]
+
+
+def body_find(dark, cx, cy, filled, win=34, area=(60, 1500), open_radius=11):
+    """Amendment 17: the marker's enclosed interior or opened body, found in two passes: a window centred on the click, then the window centred on what that pass found (the window of the first pass can
+    clip a marker whose click is off-centre; amendments 5 and 12 centred it on a symmetry fit, which a joining line biases). Returns (x, y, area) of the centroid, or None."""
+    h = hole_centre(dark, cx, cy, filled, win, area, open_radius)
+    if h is None:
+        return None
+    h2 = hole_centre(dark, h[0], h[1], filled, win, area, open_radius)
+    return h2 if h2 is not None else h
+
+
+def body_symmetry(dark, h, filled, win=34, open_radius=11, search=SEARCH_PX):
+    """Amendment 17: the left-right symmetry cross-check computed on the opened body, which a joining line does not bias: the symbol (an open one with its interior filled) is opened with a disc wider than the
+    line, the component at the found centre is pasted into an empty image and fitted as refine_x fits a raw profile. Returns (centre, n_ok, spread) as refine_x does."""
+    cx, cy = int(round(h[0])), int(round(h[1]))
+    sub = dark[cy - win: cy + win + 1, cx - win: cx + win + 1]
+    base = sub if filled else ndi.binary_fill_holes(sub)
+    r = np.arange(-open_radius, open_radius + 1)
+    op = ndi.binary_opening(base, structure=(r[:, None] ** 2 + r[None, :] ** 2) <= open_radius ** 2)
+    lab, n = ndi.label(op)
+    k = lab[win, win]
+    if k == 0:
+        best = None
+        for j in range(1, n + 1):
+            ys, xs = np.nonzero(lab == j)
+            d = float(np.hypot(xs.mean() - win, ys.mean() - win))
+            if best is None or d < best[0]:
+                best = (d, j)
+        if best is None:
+            return refine_x(dark, h[0], h[1], search)
+        k = best[1]
+    full = np.zeros(dark.shape, dtype=bool)
+    full[cy - win: cy + win + 1, cx - win: cx + win + 1] = lab == k
+    return refine_x(full, h[0], h[1], search)
 
 
 def interior_fill(dark, cx, cy):
@@ -369,8 +404,9 @@ def measure(fig, csv_dir, image, pdf):
                 px, py = click_px(ucal, logy, tc, vc)
                 if fl in held:
                     assert abs(held[fl][i][0] - px) < 3.0 and abs(held[fl][i][1] - py) < 1.0, (fl, i, held[fl][i], (px, py))
-            c_sym, n_ok, spread = refine_x(dark, px, py, cfg["search_px"])
-            h = hole_centre(dark, c_sym if n_ok >= MIN_AGREE else px, py, SYMBOL_FILLED[s])
+            c_raw, n_raw, spread = refine_x(dark, px, py, cfg["search_px"])  # the raw column-profile fit: recorded, no longer the cross-check (amendment 17)
+            h = body_find(dark, px, py, SYMBOL_FILLED[s])
+            c_sym, n_ok, spread = body_symmetry(dark, h, SYMBOL_FILLED[s], search=cfg["search_px"]) if h is not None else (c_raw, n_raw, spread)
             method = "interior"
             if cfg["estimator"] == "symmetry":
                 assert n_ok >= MIN_AGREE, f"series {fl} marker at click {tc:.1f} K: only {n_ok} of {len(SETTINGS)} window settings agree"
@@ -393,7 +429,7 @@ def measure(fig, csv_dir, image, pdf):
             assert t_assign > prev
             prev = t_assign
             mk.append({"file_letter": fl, "sample": s, "click_T": tc, "click_value": vc, "centre_px": c, "click_px": [px, py], "T_image": t_img, "T_assign": t_assign, "centre_method": method,
-                       "centre_px_symmetry": c_sym, "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0],
+                       "centre_px_symmetry": c_sym, "centre_px_symmetry_raw": c_raw, "n_settings_agreeing": n_ok, "spread_px": spread, "centre_px_hole": None if h is None else h[0],
                        "interior_area_px": (h[2] if (h is not None and method == "interior" and cfg["estimator"] != "symmetry") else None),
                        "fill": interior_fill(dark, c if c is not None else px, py)})
     if logy and cfg.get("ydev_from_markers"):  # the clicked values against the printed ticks at every marker (a rotated calibration drifts along the axis)

@@ -596,3 +596,43 @@ a factor of about 1.6 to 1.8 (a difference of 0.2 dex, the size of the model's o
    for Figs. 2 and 4"), so amendment 2 aggregates them (n = 2, identifiers kept). The S of undoped LaRhO3 stays from Fig. 5 (the Fig. 2 and 4 end markers agree with it, the cross-check of amendment 14).
 3. **Records.** The Fig. 5 conductivity of the two x = 0 markers stays in the values file with the token `[not-compared: unreadable in Fig. 5 (within 1% of the axis range), replaced by Figs. 2 and 4, amendment 15]`; the notes of the Fig. 2 and
    Fig. 4 rows state the Fig. 5 value, its share of the axis range and this reason. The cross-check of amendment 14 is unchanged and still reports the difference.
+
+## 2026-10-19: NA12, amendment 16 to pre-registration B (Rajasekaran et al. Fig. 10: values from the printed ticks, marker opening radius, the abstract as a check); made after the test run of the digitised files, before the official run and the comparison, with no out-of-fold prediction looked at
+
+Fig. 10(a) and 10(b) were digitised by hand (amendment 14, item 3). The test run of `scripts/na12_extract_rajasekaran.py` (a dirty-tree run, discarded) showed the points below.
+**Disclosure:** while looking up the composition formula in the abstract, its text values came into view: the Seebeck coefficient of BSOLa5 at 573 K and the two electrical conductivities (BSOLa5 and BSOLa10, mantissas 1.19 and
+1.03, temperature not stated in the sentence). They are used only as checks (item 4); no prediction was looked at.
+
+1. **The clicked value axes do not match the printed ticks, so the clicked values are not used.** In both projects the two value-calibration points were entered on a 0 to 1000 scale across the frame height: in panel (a) the top
+   frame line (printed 1.5e3) was entered as 1000, and in panel (b) the frame height (0 at the top, -70 uV/K at the bottom) was entered as 0 to 1000 (the test run reports the clicked value against the printed tick at both calibration
+   points). The clicked temperature axis is correct (300 and 600 on the first and last printed tick). The pixel position of every click is exact (the projects' linear calibrations are inverted; the series not held in a project are placed by the
+   inverse of its map), so each value is read at the click's pixel row on the printed ticks of the panel (sigma: 0, 500, 1000, 1500 S/m; S: 0 to -70 uV/K in steps of 10), after correcting the frame's small tilt. This replaces "the value comes from
+   the clicked value" of amendment 4 for this figure; the click row, not the marker centre row, is used, as the click is the digitiser's reading.
+2. **Marker centre.** The markers of Fig. 10 (squares and circles about 20 to 26 px across, joined by a line about 4 px wide) are filled; their centre is the centroid of the opened body (amendment 5, item 3) of the series' own colour (black
+   or red), with an opening disc of radius 7 px (`hole_centre` takes the radius as an optional argument whose default, 11 px, is unchanged, so no earlier extraction changes): 11 px removes the squares. The radius was chosen after the 11 px
+   failed on the test run, which is stated here.
+3. **Compositions.** BSOLa5 and BSOLa10 are Ba1-xLaxSnO3 with x = 0.05 and 0.10 (the paper: La at the Ba site), written Ba0.95La0.05SnO3 and Ba0.9La0.1SnO3; La is 1 and 2 at%, below 5 at%, so both are compared at the cluster level
+   (`[cluster-level]`). The two samples are two stated samples, the two panels one measurement run (one combined column set, amendment 5).
+4. **The abstract as a check.** The Seebeck coefficient of BSOLa5 at 573 K stated in the abstract is compared with the digitised 573 K marker (asserted, to 3 uV/K; the test run agrees to 0.1 uV/K); the ratio of the two printed conductivities
+   is compared with the ratio of the two 573 K conductivity markers (reported; agreement 0.7%). No row is taken from the abstract (the 573 K marker is the same measurement, and Table 2 stays unread, amendment 14, item 3).
+5. **Gates and unplaceable clicks (amendments 11 to 13) apply.** The first test run of this figure removed three markers by gates (the 323 K S marker of both samples, and sigma of BSOLa10 at 575 K) and skipped BSOLa5 sigma at 424 and
+   476 K (the black squares are covered by the red circles); that run exposed an artefact of the symmetry cross-check and of the search window, which amendment 17 corrects for every scanned figure.
+
+## 2026-10-19: NA12, amendment 17 to pre-registration B (the symmetry cross-check on the opened body, and a window centred on the click; every scanned figure); made before the comparison, with no out-of-fold prediction looked at
+
+**Disclosure:** this amendment was prompted by the end markers of Rajasekaran et al. Fig. 10, where the gates of amendment 13 removed markers for a reason that is not about legibility. It changes rules that were already applied to Ohta et al. and
+Ohtaki et al., so every scanned extraction is re-run and the changes are shown (below, and in the run folders).
+
+1. **What went wrong.** The left-right symmetry fit of amendments 5 and 12 is computed on the raw column profile. A joining line (Ohta et al. Figs. 1 to 4, Rajasekaran et al. Fig. 10) lies on one side only at the first and last marker of a series and biases
+   that fit. Two things followed: gate (b), which compares the fit with the interior centre, fired on those end markers; and the interior search window, which was centred on the biased fit, was cut across the marker (the first S marker of both
+   samples of Fig. 10(b): the biased fit lay 24 px from the click, the 68 px window clipped the marker, and its interior area was measured as 260 and 307 px instead of 365 and 426), so gate (a) fired too.
+2. **Image check of the area gate (from the image only).** The opened bodies of those markers, measured with a window centred on the marker, have the same size as the others (365 and 426 px against 344 to 373 and 422 to 432 px; 21 x 21 and 23 x 23 px).
+   The two series' markers touch each other at the first column (their 3 px halos share 17 and 22 px) but neither is covered. The area-gate failure was therefore the window artefact, not a genuine loss of marker, and the markers stay in.
+3. **Rule.** (i) The symmetry cross-check of gate (b) is computed on the opened body: the symbol (an open one with its interior filled) is opened with the disc that removes the joining line (radius 11 px, 7 px for Fig. 10), the component at the found centre is
+   pasted into an empty image and fitted as before; the raw fit is recorded as `centre_px_symmetry_raw`, not used by the gate. (ii) The enclosed interior or opened body is searched in two passes: a window centred on the click, then a window centred on what the first pass
+   found, so that a marker is not clipped when the click is off-centre. The centre of a marker is still the centroid of its enclosed interior or opened body (amendment 5, item 3); where the old window was centred well, the centre is unchanged. The gates and their
+   thresholds (amendment 13) are unchanged; the area is now the area of the unclipped body. The symbols with no enclosed interior (hatched, dotted, plus) keep the raw fit as their centre (amendment 11, item 5).
+4. **Scope.** Every scanned figure: Ohta et al. Figs. 1 to 4, Ohtaki et al. Figs. 1, 4, 6 and 7, Rajasekaran et al. Fig. 10(a) and (b); the vector figures have no marker centres to place. Implemented in `body_find` and `body_symmetry` of
+   `na12_extract_ohta.py`, used by the three extraction scripts.
+5. **Effect.** In the test run of the changed code (a dirty-tree run, discarded; the official runs' `extraction.json` are the record) the three Ohta markers removed under amendment 13 return; Ohtaki Fig. 1 goes from 12 to 8 removed markers and Ohtaki Fig. 4 keeps its 5 and
+   places the Sb marker at 108 deg C that was unplaceable (the window artefact again); the Rajasekaran end markers stay. The per-figure comparison with the rows of amendment 13 is in the reply that introduced this amendment and in the run folders.
