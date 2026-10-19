@@ -130,8 +130,8 @@ def main():
     L.append("; ".join(parts) + ".\n")
     L.append(f"**Edge sensitivity.** {es['n_edge_values_in_window']} of the compared values lie within twice the calibration uncertainty of a 25 K bin edge and were also evaluated in the neighbouring bin. Table 13 gives the overall summary of the independent papers for the headline assignment and "
              f"for the neighbouring-bin assignment. {len(changing)} value-level results change (a changed in-band status, or no prediction in the neighbouring bin): "
-             + ", ".join(f"{sum(1 for e in changing if e['lit_id'].startswith(p))} of {name.rstrip('.')}" for p, name in (("OHTAKI", "Ohtaki et al."), ("OH2005", "Ohta et al."), ("RJ2020", "Rajasekaran et al."), ("SH2009", "Shibasaki et al."), ("SG2017", "Singh and Pandey"), ("SL2022", "Sebastia-Luna et al."), ("FL", "Flahaut et al."))
-                         if sum(1 for e in changing if e['lit_id'].startswith(p))) + ".")
+             + ", ".join(f"{sum(1 for e in changing if e['lit_id'].startswith(p))} of {name}" for p, name in (("OHTAKI", "Ohtaki et al."), ("OH2005", "Ohta et al."), ("RJ2020", "Rajasekaran et al."), ("SH2009", "Shibasaki et al."), ("SG2017", "Singh and Pandey"), ("SL2022", "Sebastia-Luna et al."), ("FL", "Flahaut et al."))
+                         if sum(1 for e in changing if e['lit_id'].startswith(p))))
     L.append("")
     th, tn = es["training_source_headline"], es["training_source_neighbouring_bin"]
     chg = []
