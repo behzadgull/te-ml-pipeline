@@ -1266,4 +1266,108 @@ def na12_comparison_values():
     key = {"10.1109/ict.2006.331291": "flahaut", "10.1063/1.1847723": "ohta", "10.1039/d0ce00702a": "rajasekaran", "10.1007/s11664-009-0666-x": "shibasaki"}
     for doi, rec in s["added_after_run"]["training_source_rows"].items():
         out[f"na12_ts_rows_{key[doi]}"] = str(rec["rows_in_training_table"])
+    out.update(na12_results_values(s))
+    return out
+
+
+NA12_PAPER_KEY = {"10.1006/jssc.1995.1384": "ohtaki", "10.1007/s11664-009-0666-x": "shibasaki", "10.1021/acsaem.2c01936": "sebastia", "10.1039/d0ce00702a": "rajasekaran", "10.1063/1.1847723": "ohta",
+                  "10.1080/14786435.2016.1263404": "singh", "10.1109/ict.2006.331291": "flahaut"}
+NA12_LEVELS = ("exact", "cluster")
+
+
+def na12_results_values(s):
+    """Every number of the NA12 results (Section 4.5.1, Tables 12 and 13), from the committed summary.json of the comparison run, its added_after_run block and not_legible_counts.json.
+    Keys: na12_<paper>_<property>_<level>_<n|in|fr|mre|mal|msl> per paper; na12_ind_* the independent papers pooled by count; na12_ov_* the overall summary (papers weigh equally); na12_edge_*; na12_nl_*; na12_rung_*; na12_ctx_*."""
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    nl = json.loads((root / NA12_COMPARISON_RUN / "not_legible_counts.json").read_text(encoding="utf-8"))
+    add = s["added_after_run"]
+    lg = add["log10_comparison"]
+    by = s["by_paper"]
+    f3 = lambda x: f"{x:.3f}"  # noqa: E731
+    out = {"na12_n_read": str(s["n_values_read"]), "na12_n_after": str(s["n_values_after_aggregation"]), "na12_n_window": str(s["n_in_window"]), "na12_n_cluster_only": str(s["n_cluster_level_only"]),
+           "na12_n_win_independent": str(sum(b["n_in_window"] for b in by.values() if not b["training_source"])), "na12_n_win_training": str(sum(b["n_in_window"] for b in by.values() if b["training_source"]))}
+    for t, k in (("S", "S"), ("sigma", "sigma"), ("kappa", "kappa"), ("zT", "zT")):
+        out[f"na12_eps_{k}"] = f"{s['relative_uncertainty'][t]:g}"
+    eps_pct = [100 * x for x in s["relative_uncertainty"].values()]
+    out["na12_eps_min_pct"], out["na12_eps_max_pct"] = f"{min(eps_pct):g}", f"{max(eps_pct):g}"
+    for doi, b in by.items():
+        P = NA12_PAPER_KEY[doi]
+        lgp = lg["headline"]["by_paper"][doi]["by_property_and_level"]
+        for key, v in b["by_property_and_level"].items():
+            if not v["n_compared"]:
+                continue
+            t, lev = key.split("_")
+            pre = f"na12_{P}_{t}_{lev}"
+            out[f"{pre}_n"], out[f"{pre}_in"], out[f"{pre}_fr"], out[f"{pre}_mre"] = str(v["n_compared"]), str(v["n_inside_band"]), f3(v["fraction_inside_band"]), f3(v["median_abs_rel_error"])
+            if t in ("sigma", "kappa"):
+                out[f"{pre}_mal"], out[f"{pre}_msl"] = f3(lgp[key]["median_abs_log10_ratio"]), _sg(lgp[key]["median_signed_log10_ratio"])
+        out[f"na12_{P}_nwin"], out[f"na12_{P}_nval"] = str(b["n_in_window"]), str(b["n_values"])
+        out[f"na12_{P}_ncl"] = str(sum(v["n_compared"] for kk, v in b["by_property_and_level"].items() if kk.endswith("_cluster")))
+        out[f"na12_{P}_nex"] = str(sum(v["n_compared"] for kk, v in b["by_property_and_level"].items() if kk.endswith("_exact")))
+    for doi, rec in add["training_source_rows"].items():
+        P = NA12_PAPER_KEY[doi]
+        out[f"na12_ts_{P}_comps"] = str(rec["distinct_compositions"])
+        out[f"na12_ts_{P}_samedoi"] = str(rec["compared_values_with_a_training_row_of_the_same_doi_and_composition"])
+    indep = {d: b for d, b in by.items() if not b["training_source"]}
+    ov, ovl = s["overall_independent_papers"]["by_property_and_level"], lg["headline"]["overall_independent_papers"]["by_property_and_level"]
+    for t in ("S", "sigma", "kappa", "zT"):
+        for lev in NA12_LEVELS:
+            k = f"{t}_{lev}"
+            rec = [b["by_property_and_level"][k] for b in indep.values() if b["by_property_and_level"][k]["n_compared"]]
+            if not rec:
+                continue
+            pre = f"na12_ind_{t}_{lev}"
+            out[f"{pre}_n"], out[f"{pre}_in"], out[f"{pre}_np"] = str(sum(r["n_compared"] for r in rec)), str(sum(r["n_inside_band"] for r in rec)), str(len(rec))
+            o = ov[k]
+            out[f"na12_ov_{t}_{lev}_fr"], out[f"na12_ov_{t}_{lev}_mre"] = f3(o["mean_over_papers_of_fraction_inside_band"]), f3(o["median_over_papers_of_median_abs_rel_error"])
+            out[f"na12_ov_{t}_{lev}_np"] = str(o["n_papers_with_comparisons"])
+            if t in ("sigma", "kappa"):
+                out[f"na12_ov_{t}_{lev}_mal"], out[f"na12_ov_{t}_{lev}_msl"] = f3(ovl[k]["median_over_papers_of_median_abs_log10_ratio"]), _sg(ovl[k]["median_over_papers_of_signed_median_log10_ratio"])
+    es = s["edge_sensitivity"]
+    alt_lg = lg["neighbouring_bin"]["overall_independent_papers"]["by_property_and_level"]
+    out["na12_edge_n"] = str(es["n_edge_values_in_window"])
+    changing = [e for e in es["edge_values"] if e["status_changes"]]
+    out["na12_edge_changes"] = str(len(changing))
+    for pre, P in (("OHTAKI", "ohtaki"), ("OH2005", "ohta")):
+        out[f"na12_edge_changes_{P}"] = str(sum(1 for e in changing if e["lit_id"].startswith(pre)))
+    for t in ("S", "sigma", "kappa", "zT"):
+        for lev in NA12_LEVELS:
+            k = f"{t}_{lev}"
+            h, a_ = es["headline_overall_independent_papers"]["by_property_and_level"][k], es["neighbouring_bin_overall_independent_papers"]["by_property_and_level"][k]
+            if not h["n_papers_with_comparisons"]:
+                continue
+            pre = f"na12_edge_{t}_{lev}"
+            out[f"{pre}_frh"], out[f"{pre}_fra"] = f3(h["mean_over_papers_of_fraction_inside_band"]), f3(a_["mean_over_papers_of_fraction_inside_band"])
+            out[f"{pre}_mreh"], out[f"{pre}_mrea"] = f3(h["median_over_papers_of_median_abs_rel_error"]), f3(a_["median_over_papers_of_median_abs_rel_error"])
+            if t in ("sigma", "kappa"):
+                out[f"{pre}_malh"], out[f"{pre}_mala"] = f3(ovl[k]["median_over_papers_of_median_abs_log10_ratio"]), f3(alt_lg[k]["median_over_papers_of_median_abs_log10_ratio"])
+    th, tn = es["training_source_headline"], es["training_source_neighbouring_bin"]
+    for doi in th:
+        P = NA12_PAPER_KEY[doi]
+        for k, v in th[doi]["by_property_and_level"].items():
+            w = tn[doi]["by_property_and_level"][k]
+            if v["n_compared"] and (v["n_inside_band"] != w["n_inside_band"] or abs((v["median_abs_rel_error"] or 0) - (w["median_abs_rel_error"] or 0)) > 1e-9):
+                pre = f"na12_edgets_{P}_{k}"
+                out[f"{pre}_n"], out[f"{pre}_inh"], out[f"{pre}_ina"] = str(v["n_compared"]), str(v["n_inside_band"]), str(w["n_inside_band"])
+                out[f"{pre}_mreh"], out[f"{pre}_mrea"] = f3(v["median_abs_rel_error"]), f3(w["median_abs_rel_error"])
+    for name, v in nl.items():
+        P = {"Ohta et al. 2005": "ohta", "Ohtaki et al. 1995": "ohtaki", "Rajasekaran et al. 2020": "rajasekaran"}[name]
+        out[f"na12_nl_{P}_entries"] = str(v["entries"])
+        out[f"na12_nl_{P}_gate"], out[f"na12_nl_{P}_unplaced"], out[f"na12_nl_{P}_empty"] = (str(v["by_kind"][k]["total"]) for k in ("removed by a gate", "unplaceable click", "empty derived column"))
+    rung = add["NOT_PRE_REGISTERED_context_rung_errors"]["by_property"]
+    for t, r in rung.items():
+        out[f"na12_rung_{t}_mre"] = f3(r["median_abs_rel_error"])
+        if t in ("sigma", "kappa"):
+            out[f"na12_rung_{t}_mal"], out[f"na12_rung_{t}_msl"] = f3(r["median_abs_log10_ratio"]), _sg(r["median_signed_log10_ratio"])
+    # the exact level of the independent papers, pooled by count: all properties, and sigma, kappa and zT together (for the abstract and the conclusion)
+    ex = [(t, int(out[f"na12_ind_{t}_exact_n"]), int(out[f"na12_ind_{t}_exact_in"])) for t in ("S", "sigma", "kappa", "zT") if f"na12_ind_{t}_exact_n" in out]
+    out["na12_ind_exact_n"], out["na12_ind_exact_in"] = str(sum(n for _, n, _ in ex)), str(sum(i for _, _, i in ex))
+    out["na12_ind_nonS_exact_n"], out["na12_ind_nonS_exact_in"] = str(sum(n for t, n, _ in ex if t != "S")), str(sum(i for t, _, i in ex if t != "S"))
+    out["na12_ind_exact_npapers"] = str(len({d for d, b in by.items() if not b["training_source"] and any(v["n_compared"] for k, v in b["by_property_and_level"].items() if k.endswith("_exact"))}))
+    # the plain comparison of the independent papers' exact-level error with the rung's typical error (S and zT: relative error; sigma and kappa: absolute log10 ratio)
+    for t, key_ in (("S", "mre"), ("zT", "mre"), ("sigma", "mal"), ("kappa", "mal")):
+        ratio = float(out[f"na12_ov_{t}_exact_{key_}"]) / float(out[f"na12_rung_{t}_{key_}"])
+        out[f"na12_ctx_{t}_ratio"] = f"{ratio:.1f}"
     return out

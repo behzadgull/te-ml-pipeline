@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "ea55651890f69ac1d7b5f08a9374162282f9c72cb4b7884ae3091521fea9dfb6",
+      "bytes": 174833
+    }
+  },
+  "git_head": "6dc4ba44bd71a5f2393925cf8bd49c02985acb32",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/docs/number_registry.csv",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/thesis_values.py",
+    "thesis_paper/docs/reframe_draft.md",
+    "thesis_paper/paper/supplement_amendments.md",
+    "thesis_paper/reports/number_audit/20261020T042241/",
+    "thesis_paper/reports/number_audit/20261020T042254/",
+    "thesis_paper/reports/number_audit/20261020T042341/",
+    "thesis_paper/scripts/make_supplement_amendments.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "5d8119abc0989dd608b4ee202d41cf7627267666da6e135db82a5898b0c10912",
+  "python": "3.12.10",
+  "registry_rows": 109
+}

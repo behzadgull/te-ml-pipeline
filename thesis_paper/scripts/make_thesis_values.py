@@ -256,7 +256,62 @@ def table1(v):
     return "\n".join(lines)
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b}
+NA12_NAMES = {"ohtaki": "Ohtaki et al. [@ohtaki1995]", "sebastia": "Sebastia-Luna et al. [@sebastialuna2022]", "singh": "Singh and Pandey [@singh2016]", "flahaut": "Flahaut et al. [@flahaut2006effect]",
+              "ohta": "Ohta et al. [@ohta2005temperature]", "rajasekaran": "Rajasekaran et al. [@rajasekaran2020]", "shibasaki": "Shibasaki et al. [@shibasaki2009]"}
+NA12_PROP = {"S": "S", "sigma": "*σ*", "kappa": "*κ*", "zT": "zT"}
+
+
+def _na12_rows(v, papers, levels):
+    """The rows of a per-paper table of the NA12 comparison: one per paper, level and property that has a comparison."""
+    rows = []
+    for lev in levels:
+        for P in papers:
+            for t in T4:
+                if f"na12_{P}_{t}_{lev}_n" not in v:
+                    continue
+                pre = f"na12_{P}_{t}_{lev}"
+                rows.append(f"| {NA12_NAMES[P]} | {lev} | {NA12_PROP[t]} | {v[pre + '_n']} | {v[pre + '_in']} ({v[pre + '_fr']}) | {v[pre + '_mre']} | {v.get(pre + '_mal', '–')} | {v.get(pre + '_msl', '–')} |")
+    return rows
+
+
+def table12(v):
+    """Per-paper results of the NA12 comparison: independent papers (exact level first), their overall summary (papers weigh equally), and the training-source papers separately."""
+    head = ("**Table 12:** Comparison of out-of-fold predictions with published measurements, per paper. n: values compared; inside: values whose absolute relative error is within the relative uncertainty of the measurement "
+            f"(S {v['na12_eps_S']}, *σ* {v['na12_eps_sigma']}, *κ* {v['na12_eps_kappa']}, zT {v['na12_eps_zT']}), with the fraction; median abs. rel. error: median absolute relative error (linear units); "
+            "log~10~ ratio: median absolute and signed median of log~10~(prediction) − log~10~(literature) for *σ* and *κ*. Exact level: the same composition at the same temperature bin; cluster level: the mean of the held-out predictions "
+            "of the sample's chemistry cluster at that bin (a family average). Part A: the independent papers; Part B: the papers whose DOI is among the DOIs of the training data (training sources), not pooled with part A.")
+    hdr = ["| **Paper** | **Level** | **Property** | **n** | **Inside (fraction)** | **Median abs. rel. error** | **Median abs. log~10~ ratio** | **Signed median log~10~ ratio** |", "|---|---|---|---|---|---|---|---|"]
+    indep, train = ("ohtaki", "sebastia", "singh"), ("flahaut", "ohta", "rajasekaran", "shibasaki")
+    lines = [head, "", "*Part A: independent papers.*", ""] + hdr + _na12_rows(v, indep, NA12_LEVELS_ORDER)
+    lines += ["", "*Overall, independent papers: papers weigh equally (the mean over papers of the fraction inside the band; the median over papers of each paper's median).*", "",
+              "| **Level** | **Property** | **Papers** | **Mean fraction inside** | **Median of median abs. rel. error** | **Median of median abs. log~10~ ratio** | **Median of signed median log~10~ ratio** |", "|---|---|---|---|---|---|---|"]
+    for lev in NA12_LEVELS_ORDER:
+        for t in T4:
+            pre = f"na12_ov_{t}_{lev}"
+            if f"{pre}_np" in v:
+                lines.append(f"| {lev} | {NA12_PROP[t]} | {v[pre + '_np']} | {v[pre + '_fr']} | {v[pre + '_mre']} | {v.get(pre + '_mal', '–')} | {v.get(pre + '_msl', '–')} |")
+    lines += ["", "*Part B: training-source papers (not pooled with part A).*", ""] + hdr + _na12_rows(v, train, NA12_LEVELS_ORDER)
+    return "\n".join(lines)
+
+
+def table13(v):
+    """Edge sensitivity: the overall summary of the independent papers with every edge value in its floor bin (headline) and in its neighbouring bin."""
+    head = ("**Table 13:** Edge sensitivity: the overall summary of the independent papers (papers weigh equally) with every value that lies within twice the calibration uncertainty of a temperature-bin edge evaluated in its floor bin (headline) "
+            "and in the neighbouring bin.")
+    lines = [head, "", "| **Level** | **Property** | **Fraction inside, headline** | **Fraction inside, neighbouring bin** | **Median abs. rel. error, headline** | **Median abs. rel. error, neighbouring bin** | "
+             "**Median abs. log~10~ ratio, headline** | **Median abs. log~10~ ratio, neighbouring bin** |", "|---|---|---|---|---|---|---|---|"]
+    for lev in NA12_LEVELS_ORDER:
+        for t in T4:
+            pre = f"na12_edge_{t}_{lev}"
+            if f"{pre}_frh" in v:
+                lines.append(f"| {lev} | {NA12_PROP[t]} | {v[pre + '_frh']} | {v[pre + '_fra']} | {v[pre + '_mreh']} | {v[pre + '_mrea']} | {v.get(pre + '_malh', '–')} | {v.get(pre + '_mala', '–')} |")
+    return "\n".join(lines)
+
+
+NA12_LEVELS_ORDER = ("exact", "cluster")
+
+
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b, "TABLE 12": table12, "TABLE 13": table13}
 
 
 def render(text):
