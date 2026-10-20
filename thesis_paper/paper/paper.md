@@ -316,8 +316,7 @@ Ohta et al. <!--v:na12_ts_rows_ohta-->3<!--/v-->, Rajasekaran et al. <!--v:na12_
 composition (the value is then probably a training label, although its cluster was held out).
 
 **Pre-registration and its amendments.** The comparison script was run only after the values file was filled and committed. The rules above are the pre-registration plus <!--v:na12_amendments-->17<!--/v--> dated amendments
-(`docs/decisions.md`; the full list is Supplementary Table S1), each written before the comparison and with no out-of-fold prediction for these compounds looked at. The thresholds of the legibility gates
-were set after viewing the digitised figures, and a later amendment applies them to every scanned figure. The symmetry cross-check of the gates was then corrected in a final amendment after the end markers of Rajasekaran et al., Fig. 10, showed that a joining line biased it, and
+(`docs/decisions.md`; the full list is Supplementary Table S1), each written before the comparison and with no out-of-fold prediction for these compounds looked at. The thresholds of the legibility gates (amendments 12 and 13) were set after viewing the digitised figures, and amendment 13 applies them to every scanned figure. The symmetry cross-check of the gates was then corrected (amendment 17) after the end markers of Rajasekaran et al., Fig. 10, showed that a joining line biased it, and
 all scanned figures were extracted again, which restored markers that the biased check had removed. While the last two PDFs were inventoried, some values of their running text and tables came into view; this is disclosed in the amendments. No prediction was involved at any
 point. Every extraction was run from a committed script on a clean tree, with the SHA256 of each input recorded. The results are in Section 4.5.1.
 

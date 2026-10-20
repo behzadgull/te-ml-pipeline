@@ -55,6 +55,10 @@ PROTOCOL_PHRASES = [  # the full phrases of this study's own protocol names; lit
     "5-fold and 10-fold are single partitions", "random 80/20 minus chemistry cluster", "random 80/20 draws", "(ii) 5-fold and (iii) 10-fold CV", "shuffled 5-fold",
 ]
 
+AMENDMENT_REF = re.compile(r"\b[Aa]mendments?\s+\d{1,2}(?:(?:,\s*|\s+and\s+|,\s+and\s+)\d{1,2})*\b")
+DECISIONS = REPO / "thesis_paper" / "docs" / "decisions.md"
+SUPPLEMENT_S1 = REPO / "thesis_paper" / "paper" / "supplement_amendments.md"
+
 EXCLUSIONS = [  # (category, regex, group holding the excluded text or 0)
     ("LINK", re.compile(r"\]\([^)\n]*\)"), 0),
     ("LINK", re.compile(r"https?://\S+"), 0),
@@ -74,9 +78,10 @@ EXCLUSIONS = [  # (category, regex, group holding the excluded text or 0)
     ("EQUATION", re.compile(r"\*\u03c3\* = 1/\*\u03c1\*"), 0),  # the conversion of a resistivity to a conductivity
     ("STEPRANGE", re.compile(r"\(steps \d{1,2}--\d{1,2}\)"), 0),  # the run-in headings of the cleaning pipeline, "(steps 1--5)"
     ("PROTOCOL", re.compile("|".join(re.escape(p) for p in PROTOCOL_PHRASES)), 0),  # names of the splitting protocols; tied to the run configurations in thesis_values.py
+    ("LAB", AMENDMENT_REF, 0),  # "amendment 12", "amendments 12 and 13": labels of the NA12 amendments; main() asserts that each cited number is an amendment of docs/decisions.md and a row of Table S1
     ("PENDING", re.compile(r"\[\[PENDING:[^\]\n]*\]\]"), 0),  # placeholders of analyses that have not run; the build refuses them anyway
 ]
-NEW_RULES = ("SPACEGROUP", "EQUATION", "STEPRANGE", "PROTOCOL", "PENDING")
+NEW_RULES = ("SPACEGROUP", "EQUATION", "STEPRANGE", "PROTOCOL", "LAB", "PENDING")
 NOTATION = [re.compile(r"~[^~\s]+~"), re.compile(r"\^[^^\s]+\^")]  # sub- and superscripts, matched on the text with the math masked out
 TOKEN = re.compile(r"(?<![\w.])10\^[−-]?\d+\^|(?<![\w.])\d+(?:,\d{3})*(?:\.\d+)?")
 
@@ -304,6 +309,18 @@ def audit(paper_text, reg):
     return rows
 
 
+def amendment_refs(text):
+    """The sorted set of amendment numbers cited by the LAB rule in the cleaned text."""
+    return sorted({int(n) for m in AMENDMENT_REF.finditer(text) for n in re.findall(r"\d+", m.group(0))})
+
+
+def check_amendment_refs(cited):
+    """Hook of the LAB rule: every cited number must be an amendment heading of docs/decisions.md and a row of Table S1. Returns the list of problems."""
+    heads = {int(n) for n in re.findall(r"^## .*NA12, amendment (\d+) to pre-registration B", DECISIONS.read_text(encoding="utf-8"), re.M)}
+    rows = {int(n) for n in re.findall(r"^\| (\d+) \|", SUPPLEMENT_S1.read_text(encoding="utf-8"), re.M)} if SUPPLEMENT_S1.exists() else set()
+    return [f"amendment {n} is cited in paper.md but " + ("is not a heading of docs/decisions.md" if n not in heads else "is not a row of Supplementary Table S1") for n in cited if n not in heads or n not in rows]
+
+
 def main():
     """Entry point."""
     ap = argparse.ArgumentParser()
@@ -322,6 +339,10 @@ def main():
     spans = Counter(cat for (_, _, cat) in exclusion_spans(text_clean))
     summary["exclusion_rules"] = {cat: {"pattern": next(rx.pattern for (cc, rx, _) in EXCLUSIONS if cc == cat), "spans": spans.get(cat, 0),
                                         "numbers_excluded": c.get(f"EXCLUDED:{cat}", 0)} for cat in NEW_RULES}
+    cited = amendment_refs(text_clean)
+    problems = check_amendment_refs(cited)
+    summary["lab_amendments_cited"] = cited
+    summary["lab_amendment_problems"] = problems
     if not args.no_write:
         out = OUT_ROOT / rr.utc_stamp()
         out.mkdir(parents=True, exist_ok=True)
@@ -333,6 +354,9 @@ def main():
         rr.write_json(out / "run_config.json", {**prov, "registry_rows": len(reg)})
         print("wrote", out)
     print(json.dumps(summary, indent=1))
+    if problems:
+        print("FAIL (LAB rule): " + "; ".join(problems), file=sys.stderr)
+        return 1
     if args.strict and bad:
         print(f"FAIL: {len(bad)} numbers are unclassified or carry an invalid marker (see audit.csv)", file=sys.stderr)
         return 1

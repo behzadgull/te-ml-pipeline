@@ -1,0 +1,19 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "c929430ef60621c10b83f09c13e6e8e72a92227af1ce63dd4174720f54cd4802",
+      "bytes": 174845
+    }
+  },
+  "git_head": "60e8b9a5696fba20af3fc2afdc556c1d6c810062",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/audit_numbers.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "e1815890000924c5d48a1ad90aaf7637ba9d66c93e0754252eae30730b94f060",
+  "python": "3.12.10",
+  "registry_rows": 109
+}
