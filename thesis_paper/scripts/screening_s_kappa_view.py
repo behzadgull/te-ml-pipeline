@@ -63,7 +63,8 @@ def main():
         "n_rows_in_duplicate_prediction_groups": int(dup.sum()), "n_duplicate_prediction_groups": int(d[dup].groupby(["zT_max", "S_at_max", "kappa_at_max"]).ngroups),
         "duplicate_formulas": sorted(d[dup]["formula"].unique().tolist()),
     }
-    out = rr.new_run_dir("screening_s_kappa")
+    prov = rr.provenance({"ranked_main_30": f"{RANKED}/ranked_main_30.csv", "ranked_all_409": f"{RANKED}/ranked_all_409.csv"}, __file__)
+    out = rr.new_run_dir("screening_s_kappa")  # the provenance is taken first: the new folder would otherwise make the tree dirty
     cols = ["formula", "material_id", "cluster_seen_any", "zT_max", "S_at_max", "kappa_at_max", "rank_zT", "rank_absS", "rank_kappa", "rank_sum", "rank_S_kappa", "sign_overridden_at_max", "shortlist"]
     d[cols].to_csv(out / "table11c.csv", index=False)
     rr.write_json(out / "summary.json", summary)
@@ -86,7 +87,6 @@ def main():
     ax.legend(fontsize=7, frameon=False)
     fig.tight_layout()
     fig.savefig(out / "fig_s_kappa.png", dpi=300)
-    prov = rr.provenance({"ranked_main_30": f"{RANKED}/ranked_main_30.csv", "ranked_all_409": f"{RANKED}/ranked_all_409.csv"}, __file__)
     rr.write_json(out / "run_config.json", prov)
     print("wrote", out, "tree_clean", prov["tree_clean"])
     print(summary)
