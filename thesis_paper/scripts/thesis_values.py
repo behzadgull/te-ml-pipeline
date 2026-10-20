@@ -1230,7 +1230,28 @@ def new_analysis_values():
     v.update(noise_ceiling_values())
     v.update(na2_design_values())
     v.update(na12_values())
+    v.update(screening_sk_values())
     return v
+
+
+SCREENING_SK_RUN = "thesis_paper/results/screening_s_kappa/20261020T042641"  # the one run of the S and kappa view (added after NA12, not pre-registered); clean tree
+
+
+def screening_sk_values():
+    """Numbers of the screening view by predicted S and kappa, from the committed summary.json of scripts/screening_s_kappa_view.py (keys sk_*)."""
+    import json
+
+    f = Path(__file__).resolve().parents[2] / SCREENING_SK_RUN / "summary.json"
+    if not f.exists():
+        return {}
+    s = json.loads(f.read_text(encoding="utf-8"))
+    r2 = lambda x: f"{x:.2f}".replace("-", "−")  # noqa: E731
+    assert s["main_temperatures_K"] == [800] and s["n_main"] == 30
+    return {"sk_n_main": str(s["n_main"]), "sk_top_n": str(s["top_n"]), "sk_T": str(s["main_temperatures_K"][0]),
+            "sk_rho_zT_S": r2(s["spearman_zT_absS"]), "sk_rho_zT_kappa": r2(s["spearman_zT_lowkappa"]), "sk_rho_S_kappa": r2(s["spearman_absS_lowkappa"]),
+            "sk_top_zT_S": str(s["top_zT_and_top_absS"]), "sk_top_zT_kappa": str(s["top_zT_and_top_lowkappa"]), "sk_top_S_kappa": str(s["top_absS_and_top_lowkappa"]),
+            "sk_seen_zT": str(s["seen_in_top_zT"]), "sk_seen_S_kappa": str(s["seen_in_top_S_kappa"]), "sk_n_all": str(s["n_all"]), "sk_n_all_800": str(s["n_all_at_800K"]),
+            "sk_n_override": str(s["n_sign_overridden_main"])}
 
 
 def na12_values():

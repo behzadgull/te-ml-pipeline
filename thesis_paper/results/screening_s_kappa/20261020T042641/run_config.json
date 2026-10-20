@@ -1,0 +1,20 @@
+{
+  "inputs": {
+    "ranked_main_30": {
+      "path": "thesis_paper/results/na11_ranked/20261005T053426/ranked_main_30.csv",
+      "sha256": "9390b31acd32d237c8497b59690cd81b2c6e26fe11705328f4fa42925e82a474",
+      "bytes": 8093
+    },
+    "ranked_all_409": {
+      "path": "thesis_paper/results/na11_ranked/20261005T053426/ranked_all_409.csv",
+      "sha256": "7dd0bca6a55a5d046a8e86ba3ad9b744ef738c6a2c18d66e69f519c5591f5de3",
+      "bytes": 97744
+    }
+  },
+  "git_head": "e962164be6a5a8b34d8757c59693f5f8684f26ce",
+  "tree_clean": true,
+  "dirty_files": [],
+  "script": "thesis_paper/scripts/screening_s_kappa_view.py",
+  "script_sha256": "52b6eb41af50c07f7f6ee14570487a208282f1b26a5c7f4fc182b87dfb269773",
+  "python": "3.12.10"
+}
