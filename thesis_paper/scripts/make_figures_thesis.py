@@ -19,6 +19,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.append(str(HERE.parents[1] / "scripts"))  # the shared style, scripts/figstyle.py (appended: it must not shadow the modules of this folder)
 import matplotlib  # noqa: E402
+import matplotlib.ticker  # noqa: E402
+import matplotlib.transforms  # noqa: E402
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -360,6 +362,50 @@ def fig4_workflow(out):
     plt.close(fig)
 
 
+def fig13_s_kappa(out):
+    """Predicted |S| against predicted kappa at the zT maximum for the 30 main-list candidates, seen and unseen chemistry clusters marked, the position # of Table 11 (rank by predicted zT within the cluster group) written beside each point
+    (added after NA12, not pre-registered). Every value is read from the table11c.csv of the committed run of scripts/screening_s_kappa_view.py."""
+    d = tv.screening_sk_table()
+    assert len(d) == 30
+    fs.apply()
+    fig, ax = fs.new_figure("double", 8.0)
+    for seen, mk, col in ((True, "o", fs.OI["blue"]), (False, "s", fs.OI["orange"])):
+        sel = d[d["cluster_seen_any"].astype(bool) == seen]
+        ax.scatter(sel["kappa_view"], sel["S_view"].abs(), marker=mk, s=34, color=col, edgecolor=fs.EDGE_GREY, linewidth=0.5, zorder=3)
+    ax.set_xscale("log")
+    ax.set_xlim(0.55, 8.0)
+    ax.set_ylim(-15, 450)
+    ax.set_xticks([0.6, 0.8, 1, 2, 3, 4, 6])
+    ax.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, _: f"{x:g}"))
+    ax.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    ax.set_xlabel("Predicted κ (W m$^{-1}$ K$^{-1}$)")
+    ax.set_ylabel("Predicted |S| (µV K$^{-1}$)")
+    fig.canvas.draw()
+    rend = fig.canvas.get_renderer()
+    placed = []  # window extents of the labels and markers already on the figure
+    pts = [(r["kappa_view"], abs(r["S_view"])) for _, r in d.iterrows()]
+    half = 3.8 * fig.dpi / 72  # half the marker size (the marker is about 5.8 pt across), in pixels at the figure dpi
+    for x_, y_ in pts:
+        px, py = ax.transData.transform((x_, y_))
+        placed.append(matplotlib.transforms.Bbox.from_extents(px - half, py - half, px + half, py + half))
+    for _, g in d.groupby(["kappa_view", "S_view", "cluster_seen_any"]):  # identical predictions are drawn once and carry every # of Table 11; labels are moved off each other
+        r = g.iloc[0]
+        for off in ((5, 3), (5, -11), (-15, 3), (-15, -11), (5, 12), (-15, 12), (5, -19), (-15, -19), (-25, -4), (14, -4)):
+            t = ax.annotate(", ".join(str(int(x)) for x in sorted(g["rank_in_group_main_30"])), (r["kappa_view"], abs(r["S_view"])), textcoords="offset points", xytext=off, fontsize=fs.MIN_PT, color="0.2")
+            bb = t.get_window_extent(rend)
+            if not any(bb.overlaps(q) for q in placed):
+                placed.append(bb)
+                break
+            t.remove()
+        else:
+            raise AssertionError("no free place for a rank label")
+    fs.grid(ax, "both")
+    handles = [matplotlib.lines.Line2D([], [], marker=m_, ls="", color=c_, mec=fs.EDGE_GREY, mew=0.5, ms=6) for m_, c_ in (("o", fs.OI["blue"]), ("s", fs.OI["orange"]))]
+    fs.legend_row(fig, handles, ["Chemistry cluster in the training data", "Chemistry cluster not in the training data"])
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
+    plt.close(fig)
+
+
 def check_paper_widths():
     """Every figure of paper.md that carries a width in cm must be included at its true width (the width of its PNG at the style's dpi), so that Word does not rescale it."""
     import re
@@ -368,7 +414,7 @@ def check_paper_widths():
 
     text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
     found = re.findall(r"!\[Figure (\d+)\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)
-    assert len(found) == 9, f"expected the nine drawn figures (4 to 12) with a width in cm, found {len(found)}"
+    assert len(found) == 10, f"expected the ten drawn figures (4 to 13) with a width in cm, found {len(found)}"
     for num, rel, w in found:
         with Image.open(REPO / "thesis_paper" / "figures" / rel) as im:
             cm = im.size[0] / fs.DPI * 2.54
@@ -399,8 +445,9 @@ def main():
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
     fig11_beeswarm(FIG / "fig11_shap_beeswarm", [REPO / d for d in tv.NA3_ROWS])
+    fig13_s_kappa(FIG / "fig13_s_kappa")
     widths = check_paper_widths()
-    print("Figures 4, 6, 7, 9, 10, 11 and 12 saved; widths in paper.md match the files:", widths)
+    print("Figures 4, 6, 7, 9, 10, 11, 12 and 13 saved; widths in paper.md match the files:", widths)
 
 
 if __name__ == "__main__":

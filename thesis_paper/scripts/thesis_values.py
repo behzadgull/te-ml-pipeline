@@ -1234,7 +1234,7 @@ def new_analysis_values():
     return v
 
 
-SCREENING_SK_RUN = "thesis_paper/results/screening_s_kappa/20261020T042641"  # the one run of the S and kappa view (added after NA12, not pre-registered); clean tree
+SCREENING_SK_RUN = "thesis_paper/results/screening_s_kappa/20261020T053227"  # the run of the S and kappa view with the Table 11b thermal limits (added after NA12, not pre-registered); clean tree; it supersedes 20261020T042641 (800 K for all 30)
 
 
 def screening_sk_values():
@@ -1246,12 +1246,33 @@ def screening_sk_values():
         return {}
     s = json.loads(f.read_text(encoding="utf-8"))
     r2 = lambda x: f"{x:.2f}".replace("-", "−")  # noqa: E731
-    assert s["main_temperatures_K"] == [800] and s["n_main"] == 30
-    return {"sk_n_main": str(s["n_main"]), "sk_top_n": str(s["top_n"]), "sk_T": str(s["main_temperatures_K"][0]),
+    assert s["main_temperatures_K"] == [700, 800] and s["n_main"] == 30 and s["limited_formulas"] == ["CsSnI3"] and s["n_main_limited"] == 2 and s["n_main_at_800K"] == 28
+    return {"sk_n_main": str(s["n_main"]), "sk_top_n": str(s["top_n"]), "sk_T_limit": str(s["main_temperatures_K"][0]), "sk_T": str(s["main_temperatures_K"][-1]), "sk_n_limited": str(s["n_main_limited"]), "sk_n_800": str(s["n_main_at_800K"]),
             "sk_rho_zT_S": r2(s["spearman_zT_absS"]), "sk_rho_zT_kappa": r2(s["spearman_zT_lowkappa"]), "sk_rho_S_kappa": r2(s["spearman_absS_lowkappa"]),
             "sk_top_zT_S": str(s["top_zT_and_top_absS"]), "sk_top_zT_kappa": str(s["top_zT_and_top_lowkappa"]), "sk_top_S_kappa": str(s["top_absS_and_top_lowkappa"]),
             "sk_seen_zT": str(s["seen_in_top_zT"]), "sk_seen_S_kappa": str(s["seen_in_top_S_kappa"]), "sk_n_all": str(s["n_all"]), "sk_n_all_800": str(s["n_all_at_800K"]),
-            "sk_n_override": str(s["n_sign_overridden_main"])}
+            "sk_n_override": str(s["n_sign_overridden_main"]), **screening_sk_table_values()}
+
+
+def screening_sk_table():
+    """The table11c.csv of the S and kappa view run: the 30 main-list candidates ordered by the rank sum of |S| and kappa."""
+    import pandas as pd
+
+    d = pd.read_csv(Path(__file__).resolve().parents[2] / SCREENING_SK_RUN / "table11c.csv")
+    assert len(d) == 30 and list(d["rank_S_kappa"]) == list(range(1, 31)) and (d["rank_sum"].diff().dropna() >= 0).all()
+    return d
+
+
+def screening_sk_table_values():
+    """Cell values of Table 11c (keys sk_t_<position>_<name|group|rz|rs|rk|rsum>)."""
+    v = {}
+    for i, r in screening_sk_table().iterrows():
+        k = i + 1
+        v[f"sk_t_{k}_pos"] = str(int(r["rank_S_kappa"]))
+        v[f"sk_t_{k}_name"] = _formula_md(r["formula"]) + (" †" if r["shortlist"] else "") + f" ({r['material_id']})"
+        v[f"sk_t_{k}_group"] = "seen" if r["cluster_seen_any"] else "unseen"
+        v[f"sk_t_{k}_rz"], v[f"sk_t_{k}_rs"], v[f"sk_t_{k}_rk"], v[f"sk_t_{k}_rsum"], v[f"sk_t_{k}_T"] = (str(int(r[c])) for c in ("rank_in_group_main_30", "rank_absS", "rank_kappa", "rank_sum", "T_view"))
+    return v
 
 
 def na12_values():

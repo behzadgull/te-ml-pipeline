@@ -647,3 +647,22 @@ amendments 2 and 3, 324 of them to compare (159 cluster-level only, 86 with an e
 The comparison is run once, from the clean commit that holds this entry, into `results/na12_comparison/<UTC>/` (`run_config.json` records the commit, the tree state and the SHA256 of the values file, the snapfix CSV and every prediction file read), and reported as
 pre-registered: per paper, the training-source paper separately, the exact and the cluster level separately, the headline and the edge-sensitivity runs, the overall summary weighting papers equally, and the not-legible counts. If a defect of the script is found after the
 run, the run is not silently repeated: it is reported, and any corrected rerun is reported alongside the first.
+
+## 2026-10-20: the view by predicted S and kappa is added to the paper (decided after the NA12 result; not pre-registered)
+
+Decision. The paper gets one added view of the main list: the 30 candidates of Table 11 ordered by the sum of their rank by predicted |S| and their rank by predicted *κ*, at the temperature of the maximum predicted zT (800 K for every one of the 30), with one figure (|S|
+against *κ*, seen and unseen chemistry clusters marked) and Table 11c. The pre-registered zT ranking (Table 11, the shortlist rule fixed before the predictions were seen) stays the main result and is unchanged; the new view sits beside it and replaces nothing.
+
+Timing and rationale. This is a post hoc decision, made after the NA12 result had been seen. The rationale is the reliability of each property in the literature comparison (Section 4.5.1): the Seebeck coefficient and the thermal conductivity have exact-level errors close to the
+typical error of the model (ratios to the cross-validation rung of 0.7 and 1.9), the electrical conductivity and zT do not (3.2 and 11.8; a rough comparison, per-bin means against per-row errors). A view built on the two better-validated properties is therefore shown next to the
+zT ranking. The design (30 candidates, ranks by |S| and by *κ* only, their sum as the ordering, ties sharing a rank, top 10 compared) was fixed in `docs/reframe_draft.md` before `scripts/screening_s_kappa_view.py` was run; the run (`results/screening_s_kappa/20261020T053227`, clean
+tree) is the one that is cited (see the correction below). It reads the committed ranked lists only; nothing is refitted and no new prediction is made.
+
+Status of the view. It is an ordering of two predicted properties, not a performance score and not a prediction of zT. The text states that the electrical conductivity was not validated by NA12 and that neither view predicts performance. Every number in the paragraph, the
+figure caption and Table 11c is generated from the committed run (`thesis_values.screening_sk_values()`, `make_thesis_values.py` block TABLE 11c, `make_figures_thesis.py` Figure 13).
+
+Correction, the same day, before the view was committed to the paper. The first run (`results/screening_s_kappa/20261020T042641`, kept as a superseded record) took S and kappa at 800 K for all 30 candidates, although Table 11b limits CsSnI3 (melting point 724.15 K) and the
+two CsSnI3 entries sit at positions 1 and 2 of Table 11c. The script now applies the thermal limits of `docs/shortlist_thermal_limits.csv` exactly as `na11_shortlist_limits.py` does: S and kappa at the grid temperature of the maximum predicted zT below an unconditional limit (CsSnI3: 700 K,
+applied to both Materials Project entries of the formula, as Table 11 marks them); a conditional limit (LaCoO3, reducing atmosphere) is flagged and not applied, so LaCoO3 stays at 800 K as in Table 11b; compounds absent from that file have no limit applied, because limits were sought only for
+the shortlist (a stated gap). The zT used for the correlations and the top-10 lists is the predicted zT at that same temperature. The zT rank shown in Table 11c and in Figure 13 is the position # of Table 11 (the rank within the cluster group, from the pre-registered primary maximum): the
+first version showed a rank over all 30 candidates, which is not the rank Table 11 uses. The second run's numbers are the ones in the paper; the first run's differ by at most 0.014 in the Spearman values (0.08 and 0.45 became 0.06 and 0.45) and not at all in the counts.

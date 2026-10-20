@@ -1,0 +1,36 @@
+{
+  "note": "added after NA12, not pre-registered; reads the committed ranked lists only",
+  "n_main": 30,
+  "top_n": 10,
+  "spearman_zT_absS": 0.06301491872634156,
+  "spearman_zT_lowkappa": 0.4504564684925406,
+  "spearman_absS_lowkappa": -0.05232687597417056,
+  "top_zT_and_top_absS": 4,
+  "top_zT_and_top_lowkappa": 5,
+  "top_absS_and_top_lowkappa": 4,
+  "seen_in_top_zT": 2,
+  "seen_in_top_S_kappa": 5,
+  "n_seen_main": 9,
+  "n_unseen_main": 21,
+  "main_temperatures_K": [
+    700,
+    800
+  ],
+  "n_main_at_800K": 28,
+  "n_main_limited": 2,
+  "limited_formulas": [
+    "CsSnI3"
+  ],
+  "n_main_changed_by_limit": 2,
+  "n_all_at_800K": 406,
+  "n_all": 409,
+  "n_sign_overridden_main": 3,
+  "n_rows_in_duplicate_prediction_groups": 8,
+  "n_duplicate_prediction_groups": 4,
+  "duplicate_formulas": [
+    "CaVO3",
+    "CsSnI3",
+    "MnBO3",
+    "YCoO3"
+  ]
+}

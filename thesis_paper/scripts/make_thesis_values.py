@@ -177,6 +177,18 @@ def table11b(v):
     return "\n".join(lines)
 
 
+def table11c(v):
+    """The main-list candidates ordered by the rank sum of |S| and kappa (added after NA12): an ordering of two predicted properties, not a performance score."""
+    head = (f"**Table 11c:** The {v['sk_n_main']} candidates of Table 11 ordered by the sum of their rank by predicted |S| (largest first) and their rank by predicted *κ* (lowest first), both at the grid temperature T of the "
+            f"maximum predicted zT within the compound's thermal limit (Table 11b: only CsSnI~3~ is limited, to {v['sk_T_limit']} K; the other {v['sk_n_800']} entries have no limit applied and use {v['sk_T']} K; limits were sought only for the shortlist). "
+            "Added after the literature comparison (NA12); not pre-registered. This is an ordering of two predicted properties only, not a performance score and not a prediction of zT. The best rank is the lowest; compounds with identical "
+            "predictions (separate Materials Project entries of one composition) share a rank. zT rank: the position # of Table 11 (the rank within the cluster group by the pre-registered ranking, unchanged). † the shortlist of the pre-registered rule.")
+    lines = [head, "", "| **Position** | **Compound (MP id)** | **Cluster** | **zT rank (Table 11)** | **T (K)** | **\\|S\\| rank** | ***κ*** **rank** | **Rank sum** |", "|---|-----------|------|---|---|---|---|---|"]
+    for k in range(1, 31):
+        lines.append(f"| {v[f'sk_t_{k}_pos']} | {v[f'sk_t_{k}_name']} | {v[f'sk_t_{k}_group']} | {v[f'sk_t_{k}_rz']} | {v[f'sk_t_{k}_T']} | {v[f'sk_t_{k}_rs']} | {v[f'sk_t_{k}_rk']} | {v[f'sk_t_{k}_rsum']} |")
+    return "\n".join(lines)
+
+
 def table7(v):
     """Architecture comparison: R2 under chemistry-cluster CV (mean and SD over 5 repeats), and the paired difference from XGBoost with its cluster-bootstrap interval."""
     names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
@@ -311,7 +323,7 @@ def table13(v):
 NA12_LEVELS_ORDER = ("exact", "cluster")
 
 
-BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b, "TABLE 12": table12, "TABLE 13": table13}
+BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b, "TABLE 11c": table11c, "TABLE 12": table12, "TABLE 13": table13}
 
 
 def render(text):
