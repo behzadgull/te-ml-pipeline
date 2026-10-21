@@ -406,6 +406,256 @@ def fig13_s_kappa(out):
     plt.close(fig)
 
 
+def _assert_texts_apart(fig, texts):
+    """No two of the given text artists may overlap (window extents), so that a schematic has no colliding labels."""
+    fig.canvas.draw()
+    rend = fig.canvas.get_renderer()
+    bbs = [(t.get_text(), t.get_window_extent(rend)) for t in texts if t.get_text().strip()]
+    for i in range(len(bbs)):
+        for j in range(i + 1, len(bbs)):
+            assert not bbs[i][1].overlaps(bbs[j][1]), f"labels overlap: {bbs[i][0]!r} and {bbs[j][0]!r}"
+
+
+def fig1_thermocouple(out):
+    """Schematic of a thermoelectric p-n couple (Figure 1): hot and cold side, p- and n-type legs, electrodes, load, heat flow, carrier diffusion and conventional current. Drawn in code; no data."""
+    from matplotlib.patches import Circle, Rectangle
+
+    fs.apply()
+    W, H = 16.0, 10.6
+    fig, ax = fs.new_figure("double", H)
+    ax.set_xlim(0, W)
+    ax.set_ylim(-0.5, H - 0.5)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    RED_L, BLUE_L, GREY = "#F6D5CC", "#D2E7F5", "#B8BCC2"
+    texts, boxes = [], []
+
+    def rect(x0, y0, x1, y1, fc, ec):
+        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc=fc, ec=ec, lw=1.0, zorder=2))
+
+    def label(x, y, s, box=None, **kw):
+        kw.setdefault("ha", "center")
+        kw.setdefault("va", "center")
+        kw.setdefault("fontsize", fs.TEXT_PT)
+        t = ax.text(x, y, s, zorder=6, **kw)
+        texts.append(t)
+        if box:
+            boxes.append((t, box))
+        return t
+
+    def arrow(p0, p1, color="black", lw=1.6, ls="-"):
+        ax.annotate("", xy=p1, xytext=p0, arrowprops=dict(arrowstyle="-|>", color=color, lw=lw, ls=ls, mutation_scale=11, shrinkA=0, shrinkB=0), zorder=5)
+
+    # plates, electrodes, legs
+    rect(3.9, 8.35, 10.9, 9.0, RED_L, fs.OI["vermillion"])
+    label(7.4, 8.675, "Hot side, $T_h$", box=(3.9, 8.35, 10.9, 9.0), color=fs.OI["vermillion"], fontweight="bold")
+    rect(4.6, 7.85, 10.3, 8.35, GREY, "0.35")
+    label(7.45, 8.1, "hot electrode", box=(4.6, 7.85, 10.3, 8.35))
+    rect(4.6, 3.35, 6.6, 7.85, fs.OI["vermillion"], "0.25")
+    rect(8.3, 3.35, 10.3, 7.85, fs.OI["blue"], "0.25")
+    label(5.6, 7.3, "p-type", box=(4.6, 3.35, 6.6, 7.85), color="white", fontweight="bold")
+    label(9.3, 7.3, "n-type", box=(8.3, 3.35, 10.3, 7.85), color="white", fontweight="bold")
+    rect(4.6, 2.85, 6.6, 3.35, GREY, "0.35")
+    rect(8.3, 2.85, 10.3, 3.35, GREY, "0.35")
+    label(5.6, 3.1, "electrode", box=(4.6, 2.85, 6.6, 3.35))
+    label(9.3, 3.1, "electrode", box=(8.3, 2.85, 10.3, 3.35))
+    rect(3.9, 2.15, 10.9, 2.85, BLUE_L, fs.OI["blue"])
+    label(7.4, 2.5, "Cold side, $T_c$", box=(3.9, 2.15, 10.9, 2.85), color=fs.OI["blue"], fontweight="bold")
+
+    # heat flow
+    for x in np.linspace(4.9, 9.9, 4):
+        arrow((x, 9.75), (x, 9.05), color=fs.OI["vermillion"])
+        arrow((x, 2.1), (x, 1.5), color=fs.OI["blue"])
+    label(11.15, 9.4, "Heat in", ha="left", color=fs.OI["vermillion"], fontweight="bold")
+    label(7.4, 1.2, "Heat out", color=fs.OI["blue"], fontweight="bold")
+
+    # carriers (hot to cold diffusion) in the legs
+    for cx, sym, pts in ((5.6, "+", ((5.0, 6.4), (6.2, 5.6), (5.0, 4.8))), (9.3, "−", ((8.7, 6.4), (9.9, 5.6), (8.7, 4.8)))):
+        arrow((cx, 6.85), (cx, 4.15), color="white", lw=1.2, ls=(0, (3, 2)))
+        for (x, y) in pts:
+            ax.add_patch(Circle((x, y), 0.26, fc="none", ec="white", lw=1.3, zorder=4))
+            label(x, y - 0.02, sym, color="white", fontweight="bold")
+    label(5.6, 3.7, "holes", box=(4.6, 3.35, 6.6, 7.85), color="white", fontweight="bold")
+    label(9.3, 3.7, "electrons", box=(8.3, 3.35, 10.3, 7.85), color="white", fontweight="bold")
+
+    # external circuit with the load, and the conventional current
+    wire = dict(color="black", lw=1.6, solid_capstyle="butt", zorder=3)
+    ax.plot([4.6, 3.4, 3.4, 6.2], [3.1, 3.1, 0.5, 0.5], **wire)
+    ax.plot([8.6, 11.4, 11.4, 10.3], [0.5, 0.5, 3.1, 3.1], **wire)
+    zx = np.linspace(6.2, 8.6, 13)
+    zy = 0.5 + np.array([0] + [0.22 * (-1) ** k for k in range(11)] + [0])
+    ax.plot(zx, zy, **wire)
+    label(7.4, 0.0, "Load $R_L$", va="top")
+    arrow((3.55, 0.5), (4.75, 0.5))
+    label(4.15, 0.85, "$I$")
+
+    # temperature axis
+    ax.annotate("", xy=(1.0, 9.0), xytext=(1.0, 2.5), arrowprops=dict(arrowstyle="-|>", color="0.2", lw=1.3, mutation_scale=10, shrinkA=0, shrinkB=0))
+    label(1.35, 8.8, "$T_h$", ha="left")
+    label(1.35, 2.5, "$T_c$", ha="left")
+    label(1.35, 5.65, "$\\Delta T = T_h - T_c$", ha="left")
+    label(0.45, 5.75, "temperature", rotation=90, color="0.2")
+
+    # voltage
+    label(11.9, 6.15, "Open-circuit voltage", ha="left")
+    label(11.9, 5.55, "$V_{oc} = (S_p - S_n)\\,\\Delta T$", ha="left")
+
+    fs.check_text_fits(fig, ax, boxes)
+    _assert_texts_apart(fig, texts)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
+    plt.close(fig)
+
+
+def fig2_carrier_concentration(out):
+    """Schematic dependence of S, sigma, kappa (electronic and lattice) and zT on the carrier concentration (Figure 2), in arbitrary units. The curves follow the qualitative model S ~ ln(1 + (n_S/n)^(2/3))
+    (logarithmic at low n, degenerate n^(-2/3) at high n), sigma ~ n, kappa_e ~ sigma (Wiedemann-Franz) and a constant kappa_l; zT ~ S^2 sigma / kappa. The shaded optimum range is read from the registry rows of
+    Snyder and Toberer 2008 (snyder2008_n_lo, snyder2008_n_hi); the zT maximum of the model must fall inside it (asserted)."""
+    import audit_numbers as an
+
+    reg = an.load_registry()
+    lo, hi = (float(reg[k]["value"].split()[0]) for k in ("snyder2008_n_lo", "snyder2008_n_hi"))
+    assert (lo, hi) == (1e19, 1e21), (lo, hi)
+    fs.apply()
+    u = np.linspace(17.0, 22.0, 801)
+    n = 10.0 ** u
+    n_s, n_k = 1.0e20, 1.0e20  # schematic scales: the carrier concentration where S bends, and where kappa_e equals kappa_l
+    S = np.log1p((n_s / n) ** (2 / 3))
+    S = S / S.max()
+    sig = n / n.max()
+    kl = np.ones_like(n)
+    ke = n / n_k
+    kt = ke + kl
+    zt = S ** 2 * sig / kt
+    zt = zt / zt.max()
+    u_pk = u[zt.argmax()]
+    assert np.log10(lo) <= u_pk <= np.log10(hi), u_pk
+    fig, axes = fs.new_figure("double", 13.0, 4, 1, sharex=True)
+    axes = list(axes)
+    x_ins, x_met = 18.0, 21.0  # region boundaries in log10 n (schematic)
+    panels = [("S (a.u.)", False), ("$\\sigma$ (a.u., log)", True), ("$\\kappa$ (a.u., log)", True), ("zT (a.u.)", False)]
+    for ax, (yl, logy) in zip(axes, panels):
+        ax.axvspan(17.0, x_ins, color="0.5", alpha=0.10, lw=0, zorder=0)
+        ax.axvspan(x_met, 22.0, color="0.5", alpha=0.10, lw=0, zorder=0)
+        ax.axvspan(np.log10(lo), np.log10(hi), color=fs.OI["orange"], alpha=0.22, lw=0, zorder=0)
+        ax.set_ylabel(yl)
+        ax.set_xlim(17.0, 22.0)
+        if logy:
+            ax.set_yscale("log")
+        ax.yaxis.set_major_locator(matplotlib.ticker.NullLocator())  # arbitrary units: no y tick labels
+        ax.yaxis.set_minor_locator(matplotlib.ticker.NullLocator())
+        fs.grid(ax, "x")
+    axes[0].plot(u, S, color=fs.OI["vermillion"], lw=2.0)
+    axes[0].set_ylim(0, 1.1)
+    axes[1].plot(u, sig, color=fs.OI["blue"], lw=2.0)
+    axes[1].set_ylim(1e-5, 3.0)
+    axes[2].plot(u, kt, color="black", lw=2.0, label="$\\kappa = \\kappa_e + \\kappa_l$")
+    axes[2].plot(u, ke, color=fs.OI["sky"], lw=1.6, ls="--", label="$\\kappa_e$")
+    axes[2].plot(u, kl, color=fs.OI["green"], lw=1.6, ls="--", label="$\\kappa_l$")
+    axes[2].set_ylim(3e-3, 4e4)
+    axes[2].legend(loc="upper left", ncol=1, handlelength=2.2)
+    axes[3].plot(u, zt, color=fs.OI["purple"], lw=2.0)
+    axes[3].plot([u_pk], [1.0], "o", color=fs.OI["purple"], ms=5, mec=fs.EDGE_GREY, mew=0.6, zorder=5)
+    axes[3].set_ylim(0, 1.18)
+    ticks = [17, 18, 19, 20, 21, 22]
+    axes[3].set_xticks(ticks)
+    axes[3].set_xticklabels([f"$10^{{{t}}}$" for t in ticks])
+    axes[3].set_xlabel("Carrier concentration $n$ (cm$^{-3}$)")
+    top = axes[0]
+    texts = []
+    for xc, s in ((17.5, "Insulator"), ((x_ins + x_met) / 2, "Semiconductor"), (21.5, "Metal")):
+        texts.append(top.annotate(s, xy=(xc, 1.0), xycoords=("data", "axes fraction"), xytext=(0, 3), textcoords="offset points", ha="center", va="bottom", fontsize=fs.TEXT_PT, color="0.25", fontweight="bold"))
+    texts.append(top.annotate(f"Optimum zT: $10^{{{int(np.log10(lo))}}}$ to $10^{{{int(np.log10(hi))}}}$ cm$^{{-3}}$", xy=(np.log10(np.sqrt(lo * hi)), 1.0), xycoords=("data", "axes fraction"),
+                              xytext=(0, 17), textcoords="offset points", ha="center", va="bottom", fontsize=fs.TEXT_PT, color=fs.OI["vermillion"], fontweight="bold"))
+    _assert_texts_apart(fig, texts)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("double"))
+    plt.close(fig)
+
+
+def fig3_perovskite(out):
+    """The ideal cubic ABX3 perovskite (Figure 3), drawn from fractional coordinates in an oblique projection: A at the corners (0 or 1, 0 or 1, 0 or 1), B at the body centre (1/2, 1/2, 1/2),
+    X at the six face centres, with the BX6 octahedron (the 12 edges between the six X atoms). No data."""
+    from itertools import combinations, product
+
+    from matplotlib.patches import Polygon
+
+    fs.apply()
+    W, H = 8.5, 8.9
+    fig, ax = fs.new_figure("single", H)
+    ax.set_xlim(0, W)
+    ax.set_ylim(0, H)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    side, dx, dy = 3.4, 1.0, 0.85  # the cube edge in cm, and the projection of the depth axis
+    ox, oy = 2.4, 3.3
+
+    def proj(p):
+        x, y, z = p
+        return (ox + side * (x + dx / side * z), oy + side * (y + dy / side * z))
+
+    A = [p for p in product((0, 1), repeat=3)]
+    B = (0.5, 0.5, 0.5)
+    X = [(0.5, 0.5, 0), (0.5, 0.5, 1), (0.5, 0, 0.5), (0.5, 1, 0.5), (0, 0.5, 0.5), (1, 0.5, 0.5)]
+    opp = lambda a, b: all(abs(i + j - 1) < 1e-9 for i, j in zip(a, b))  # noqa: E731  (the two X on opposite faces)
+    oct_edges = [(a, b) for a, b in combinations(X, 2) if not opp(a, b)]
+    assert len(oct_edges) == 12
+    # octahedron faces (each triple of mutually adjacent X), drawn first
+    for tri in combinations(X, 3):
+        if all(not opp(a, b) for a, b in combinations(tri, 2)):
+            ax.add_patch(Polygon([proj(p) for p in tri], closed=True, fc=fs.OI["sky"], ec="none", alpha=0.10, zorder=1))
+    # cube edges: the front face solid, the others thin and dashed (the cube is drawn transparent)
+    for a, b in combinations(A, 2):
+        if sum(abs(i - j) for i, j in zip(a, b)) == 1:
+            (x0, y0), (x1, y1) = proj(a), proj(b)
+            front = a[2] == 0 and b[2] == 0
+            ax.plot([x0, x1], [y0, y1], color="black" if front else "0.45", lw=1.4 if front else 0.9, ls="-" if front else (0, (4, 3)), zorder=2)
+    for a, b in oct_edges:
+        (x0, y0), (x1, y1) = proj(a), proj(b)
+        ax.plot([x0, x1], [y0, y1], color=fs.OI["blue"], lw=0.9, alpha=0.9, zorder=3)
+    # atoms, back to front
+    atoms = [(p, "A") for p in A] + [(B, "B")] + [(p, "X") for p in X]
+    style = {"A": (fs.OI["green"], 230), "B": (fs.OI["blue"], 150), "X": (fs.OI["vermillion"], 110)}
+    for p, kind in sorted(atoms, key=lambda t: -t[0][2]):
+        c, s = style[kind]
+        ax.scatter(*proj(p), s=s, color=c, edgecolor=fs.EDGE_GREY, linewidth=0.6, zorder=4 + (1 - p[2]))
+    texts = []
+
+    def lab(xy, text, **kw):
+        kw.setdefault("ha", "left")
+        t = ax.text(*xy, text, fontsize=fs.TEXT_PT, va="center", fontweight="bold", zorder=7, **kw)
+        texts.append(t)
+        return t
+
+    def leader(p, q):
+        ax.annotate("", xy=p, xytext=q, arrowprops=dict(arrowstyle="-", color="0.15", lw=0.8, shrinkA=0, shrinkB=3), zorder=6)
+
+    leader(proj((0, 1, 0)), (0.55, 6.9))
+    lab((0.25, 7.1), "A")
+    leader(proj(B), (6.8, 6.2))
+    lab((6.85, 6.2), "B")
+    leader(proj((0, 0.5, 0.5)), (1.45, 5.0))
+    lab((1.0, 5.0), "X")
+    leader(proj((0.75, 0.75, 0.5)), (5.6, 8.1))
+    lab((5.6, 8.4), "BX$_6$ octahedron", ha="center")
+    # lattice parameter: a dimension line below the front face, with extension lines
+    ya = oy - 0.55
+    for xe in (ox, ox + side):
+        ax.plot([xe, xe], [oy - 0.25, ya - 0.12], color="black", lw=0.8, zorder=6)
+    ax.annotate("", xy=(ox + side, ya), xytext=(ox, ya), arrowprops=dict(arrowstyle="<|-|>", color="black", lw=1.0, shrinkA=0, shrinkB=0, mutation_scale=9), zorder=6)
+    lab((ox + side / 2, ya - 0.4), "$a$", ha="center")
+    # key
+    key_y = [1.75, 1.15, 0.55]
+    key = [("A", "A site (e.g. Sr, Ca, Ba, Cs)"), ("B", "B site (e.g. Ti, Mn, Co, Sn)"), ("X", "X site (O, Cl, Br, I, S, Se, Te)")]
+    for y, (kind, s) in zip(key_y, key):
+        c, _ = style[kind]
+        ax.scatter(0.55, y, s=90, color=c, edgecolor=fs.EDGE_GREY, linewidth=0.6, zorder=4)
+        t = ax.text(0.95, y, s, fontsize=fs.TEXT_PT, ha="left", va="center", zorder=7)
+        texts.append(t)
+    fig.canvas.draw()
+    _assert_texts_apart(fig, texts)
+    fs.save(fig, str(out), expect_width_cm=fs.width_cm("single"))
+    plt.close(fig)
+
+
 def check_paper_widths():
     """Every figure of paper.md that carries a width in cm must be included at its true width (the width of its PNG at the style's dpi), so that Word does not rescale it."""
     import re
@@ -414,7 +664,7 @@ def check_paper_widths():
 
     text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
     found = re.findall(r"!\[Figure (\d+)\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)
-    assert len(found) == 10, f"expected the ten drawn figures (4 to 13) with a width in cm, found {len(found)}"
+    assert len(found) == 13, f"expected the thirteen drawn figures (1 to 13) with a width in cm, found {len(found)}"
     for num, rel, w in found:
         with Image.open(REPO / "thesis_paper" / "figures" / rel) as im:
             cm = im.size[0] / fs.DPI * 2.54
@@ -445,9 +695,12 @@ def main():
     fig10_shap(FIG / "fig10_shap_global")
     fig12_shares(FIG / "fig12_shap_shares")
     fig11_beeswarm(FIG / "fig11_shap_beeswarm", [REPO / d for d in tv.NA3_ROWS])
+    fig1_thermocouple(FIG / "fig1_thermocouple")
+    fig2_carrier_concentration(FIG / "fig2_carrier_concentration")
+    fig3_perovskite(FIG / "fig3_perovskite_structure")
     fig13_s_kappa(FIG / "fig13_s_kappa")
     widths = check_paper_widths()
-    print("Figures 4, 6, 7, 9, 10, 11, 12 and 13 saved; widths in paper.md match the files:", widths)
+    print("Figures 1 to 4, 6, 7, 9, 10, 11, 12 and 13 saved; widths in paper.md match the files:", widths)
 
 
 if __name__ == "__main__":

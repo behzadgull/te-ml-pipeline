@@ -666,3 +666,16 @@ two CsSnI3 entries sit at positions 1 and 2 of Table 11c. The script now applies
 applied to both Materials Project entries of the formula, as Table 11 marks them); a conditional limit (LaCoO3, reducing atmosphere) is flagged and not applied, so LaCoO3 stays at 800 K as in Table 11b; compounds absent from that file have no limit applied, because limits were sought only for
 the shortlist (a stated gap). The zT used for the correlations and the top-10 lists is the predicted zT at that same temperature. The zT rank shown in Table 11c and in Figure 13 is the position # of Table 11 (the rank within the cluster group, from the pre-registered primary maximum): the
 first version showed a rank over all 30 candidates, which is not the rank Table 11 uses. The second run's numbers are the ones in the paper; the first run's differ by at most 0.014 in the Spearman values (0.08 and 0.45 became 0.06 and 0.45) and not at all in the counts.
+
+## 2026-10-21: Figures 1 to 3 are now author-made
+
+Replaces the AI-generated images (decision of 2026-10-11, item 1). Figures 1 to 3 of the manuscript are drawn in code by `scripts/make_figures_thesis.py` in the shared style (`scripts/figstyle.py`: Helvetica or Arial, bold axis labels, 16 cm or 8.5 cm wide, 300 dpi PNG and PDF), with no image generation and
+no copied published figure:
+
+1. **Figure 1** (`fig1_thermocouple`): a schematic of a p-n couple (hot and cold side, electrodes, p- and n-type legs, load, heat flow, carrier diffusion hot to cold, conventional current, open-circuit voltage). No example material is named, because the text does not name one. The previous image printed Bi2Te3 and
+   Bi2Te2.7Se0.3 as examples; they are not in the new one.
+2. **Figure 2** (`fig2_carrier_concentration`): stacked panels of S, sigma, kappa (electronic, lattice, total) and zT against the carrier concentration on a log axis, arbitrary units, from a stated simple model (S ~ ln(1 + (n_S/n)^(2/3)), sigma ~ n, kappa_e ~ sigma, constant kappa_l, zT ~ S^2 sigma / kappa); the
+   schematic is not fitted to data. The shaded optimum range 10^19 to 10^21 cm^-3 is read from the registry rows `snyder2008_n_lo` and `snyder2008_n_hi` (Snyder & Toberer 2008, article page 105, `snyder2008_page`; the sentence was re-read in the PDF text on 2026-10-21). This replaces the 10^19 to 10^20 that the old image printed
+   (item 2 of the 2026-10-11 entry is closed). The model's zT maximum is asserted to lie inside the range. The caption says the figure is drawn by the authors from a simple model of the dependence described by Snyder & Toberer, with only the optimum range taken from that paper (maintainer's wording, 2026-10-21; an earlier version said "adapted, redrawn"); the region boundaries (10^18 and 10^21 cm^-3) are schematic and say so.
+3. **Figure 3** (`fig3_perovskite_structure`): the ideal cubic ABX3 cell drawn from fractional coordinates (A at the corners, B at the body centre, X at the face centres, the 12 edges of the BX6 octahedron) in an oblique projection; the example elements in the key are those named in Section 2.2.
+4. Every figure asserts that no two text labels overlap and, for Figure 1, that each label fits its box; the widths in `paper.md` are checked against the files by `check_paper_widths()`.
