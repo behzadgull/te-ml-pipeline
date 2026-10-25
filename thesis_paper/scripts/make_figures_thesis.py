@@ -663,7 +663,10 @@ def check_paper_widths():
     from PIL import Image
 
     text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
-    found = re.findall(r"!\[Figure (\d+)\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)
+    import resolve_labels as rl
+
+    numbers = rl.scan(text)[0]["fig"]  # figure numbers are assigned from the labels, in the order of the captions
+    found = [(str(numbers[lb]), rel, w) for lb, rel, w in re.findall(r"!\[Figure \[\[fig:(\w+)\]\]\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)]
     assert len(found) == 13, f"expected the thirteen drawn figures (1 to 13) with a width in cm, found {len(found)}"
     for num, rel, w in found:
         with Image.open(REPO / "thesis_paper" / "figures" / rel) as im:

@@ -1,0 +1,28 @@
+{
+  "inputs": {
+    "paper": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "15840b07006bcfc29f19599dfb2dae7b44c1c7959cd6677308671383ea0713fd",
+      "bytes": 182520
+    }
+  },
+  "git_head": "a11ff7f5da3d337115e87acf5a83fc4bb5472395",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/README.md",
+    "thesis_paper/docs/decisions.md",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/paper/supplement_hyperparameters.md",
+    "thesis_paper/reports/supplement_hyperparameters/",
+    "thesis_paper/scripts/make_supplement_hyperparameters.py",
+    "thesis_paper/scripts/resolve_labels.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "e1815890000924c5d48a1ad90aaf7637ba9d66c93e0754252eae30730b94f060",
+  "python": "3.12.10",
+  "registry_rows": 112
+}

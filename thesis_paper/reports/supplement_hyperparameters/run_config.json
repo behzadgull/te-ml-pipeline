@@ -1,0 +1,62 @@
+{
+  "inputs": {
+    "lightgbm_S": {
+      "path": "thesis_paper/results/na2_lightgbm/20261005T101837/frozen/S_lightgbm.json",
+      "sha256": "6765cf66af34787e993f086255485b720b86875e49573aff20ad7c2d1367efb2",
+      "bytes": 542
+    },
+    "lightgbm_sigma": {
+      "path": "thesis_paper/results/na2_lightgbm/20261005T101837/frozen/sigma_lightgbm.json",
+      "sha256": "233f223db687e207f3fe974f8eaf5c9a53b17b6347a31c9f2b335efad5fb7fb9",
+      "bytes": 546
+    },
+    "lightgbm_kappa": {
+      "path": "thesis_paper/results/na2_lightgbm/20261005T101837/frozen/kappa_lightgbm.json",
+      "sha256": "6a7d1bd4197e4ae1bd54bf6d78ee86c1083ee7dd4d033d93df40314afd428ad7",
+      "bytes": 547
+    },
+    "lightgbm_zT": {
+      "path": "thesis_paper/results/na2_lightgbm/20261005T101837/frozen/zT_lightgbm.json",
+      "sha256": "29c74ed34a4a0391b28e0480c4ac2e84720adaf9ec22a2f2717ed225198a038f",
+      "bytes": 543
+    },
+    "random_forest_S": {
+      "path": "thesis_paper/results/na2_rf_S/20261005T100927/frozen/S_random_forest.json",
+      "sha256": "e0f47ca7c010c8210244792130c213ac94438bc3db3a2eca0bca112c58baa90f",
+      "bytes": 400
+    },
+    "random_forest_sigma": {
+      "path": "thesis_paper/results/na2_rf_sigma/20261005T102059/frozen/sigma_random_forest.json",
+      "sha256": "e10b8d65ddbf6e8af1065286fdd3e103247c980330102cb9cbf0cc899043b10a",
+      "bytes": 403
+    },
+    "random_forest_kappa": {
+      "path": "thesis_paper/results/na2_rf_kappa/20261005T101358/frozen/kappa_random_forest.json",
+      "sha256": "9a9bd5513cb9caabf31409053ab5f97419cea9cef978acd40b56a15ac62d6101",
+      "bytes": 403
+    },
+    "random_forest_zT": {
+      "path": "thesis_paper/results/na2_rf_zT/20261005T101629/frozen/zT_random_forest.json",
+      "sha256": "257e9153308c98757356a324f943d9e0f7cbf3f82b324bb81547ca6f18a496c1",
+      "bytes": 401
+    },
+    "nested_cv": {
+      "path": "src/nested_cv.py",
+      "sha256": "ca3787ff5e36750aaa6062be3fdf5ec293f6584ca103a64a25322a2283b73254",
+      "bytes": 69364
+    }
+  },
+  "git_head": "a11ff7f5da3d337115e87acf5a83fc4bb5472395",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/paper/supplement_hyperparameters.md",
+    "thesis_paper/scripts/make_supplement_hyperparameters.py",
+    "thesis_paper/scripts/resolve_labels.py"
+  ],
+  "script": "thesis_paper/scripts/make_supplement_hyperparameters.py",
+  "script_sha256": "a45c3c04708c3190df7a9795b202af83810c33f708ad4bddc0453f61410511ab",
+  "python": "3.12.10"
+}

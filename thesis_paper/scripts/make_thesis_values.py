@@ -47,7 +47,7 @@ def extra_values(v):
 def table2(v):
     """Final dataset statistics (NA4), per property. Every cell is a key of the value dictionary (thesis_values.table_values)."""
     labels = {"S": "S (*µ*V K^−1^)", "sigma": "*σ* (S m^−1^)", "kappa": "*κ* (W m^−1^ K^−1^)", "zT": "zT"}
-    lines = [f"**Table 2:** Final dataset statistics: the {v['n_featurized']} featurised rows, per property (coverage is the share of those rows with a value; "
+    lines = [f"**Table [[tbl:data]]:** Final dataset statistics: the {v['n_featurized']} featurised rows, per property (coverage is the share of those rows with a value; "
              "SD is the sample standard deviation).", "",
              "| **Property** | **Rows** | **Coverage** | **Mean** | **Median** | **SD** | **Range** |",
              "|---------------|---------|-----------|-----------|-----------|-----------|----------------|"]
@@ -59,7 +59,7 @@ def table2(v):
 
 def table4(v):
     """XGBoost hyperparameters: the four frozen sets and the search space. Every cell is a key of the value dictionary."""
-    head = ("**Table 4:** XGBoost hyperparameters: the four frozen sets (each tuned once on all rows of its target, by a "
+    head = ("**Table [[tbl:hyper]]:** XGBoost hyperparameters: the four frozen sets (each tuned once on all rows of its target, by a "
             f"{v['optuna_trials']}-trial Optuna search scored with {v['inner_folds']}-fold chemistry-cluster cross-validation) and the search space.")
     lines = [head, "", "| **Parameter** | **S** | ***σ*** | ***κ*** | **zT** | **Search range** |",
              "|---------------------|-----------|-----------|-----------|-----------|------------------|"]
@@ -71,7 +71,7 @@ def table4(v):
 def table5(v):
     """Chemistry-cluster results per target."""
     labels = {"S": "S", "sigma": "log~10~*σ*", "kappa": "log~10~*κ*", "zT": "zT"}
-    head = (f"**Table 5:** Chemistry-cluster grouped cross-validation results ({v['repeats']} repeats of {v['outer_folds']}-fold CV; R^2^ is the mean "
+    head = (f"**Table [[tbl:cv]]:** Chemistry-cluster grouped cross-validation results ({v['repeats']} repeats of {v['outer_folds']}-fold CV; R^2^ is the mean "
             "± standard deviation across repeats of the per-repeat pooled value, and MAE and RMSE are the means of the per-repeat pooled values; the "
             "fold-level SD is over all folds). MAE and RMSE are in *µ*V K^−1^ for S and in log~10~ units for *σ* and *κ*.")
     lines = [head, "", "| **Target** | **R^2^** | **Fold-level SD** | **MAE** | **RMSE** | **Rows** | **Features** |",
@@ -84,7 +84,7 @@ def table5(v):
 
 def table6(v):
     """The five-way validation ladder."""
-    head = (f"**Table 6:** R^2^ obtained with five validation methods (same model, frozen hyperparameters and {v['n_feat']} features). "
+    head = (f"**Table [[tbl:ladder]]:** R^2^ obtained with five validation methods (same model, frozen hyperparameters and {v['n_feat']} features). "
             f"Random 80/20 pools {v['rand_draws']} independent draws; 5-fold and 10-fold are single partitions; composition and chemistry cluster are the "
             f"mean ± SD across {v['repeats']} repeats. ∆R^2^ is random 80/20 minus chemistry cluster.")
     lines = [head, "", "| **Target** | **Random 80/20** | **5-fold** | **10-fold** | **Composition** | **Chemistry cluster** | **∆R^2^** |",
@@ -98,7 +98,7 @@ def table6(v):
 
 def table8(v):
     """ESTM external validation."""
-    head = (f"**Table 8:** ESTM external validation (R^2^). The {v['estm_scope']} ESTM rows within {v['t_min']}--{v['t_max']} K are scored in two strata that are never pooled: "
+    head = (f"**Table [[tbl:estm]]:** ESTM external validation (R^2^). The {v['estm_scope']} ESTM rows within {v['t_min']}--{v['t_max']} K are scored in two strata that are never pooled: "
             f"rows sharing no source DOI with the training data (a, n = {v['estm_a_n']}) and rows whose chemistry cluster is absent from training "
             f"(b, n = {v['estm_b_n']}). The in-support column restricts (b) to rows inside the training range of S, *σ*, *κ* and temperature "
             f"(n = {v['estm_b_insup_n']}). The drop is stratum (b) minus the internal chemistry-cluster value.")
@@ -112,7 +112,7 @@ def table8(v):
 
 def table8b(v):
     """teMatDb scoring with the saved final models: R2 per target and stratum with the sample-level bootstrap interval."""
-    head = (f"**Table 8b:** teMatDb scoring with the same final models (R^2^ with the {v['tm_ci_level']}% interval of a bootstrap over whole samples, {v['tm_nboot']} draws, in brackets). "
+    head = (f"**Table [[tbl:tematdb]]:** teMatDb scoring with the same final models (R^2^ with the {v['tm_ci_level']}% interval of a bootstrap over whole samples, {v['tm_nboot']} draws, in brackets). "
             "Strata are never pooled: a0, the sample's source DOI is in the training data (not an external test); a, the DOI is not in the training data; "
             "b, the chemistry cluster is absent from training. zT (direct) is scored against the declared zT; *σ* and *κ* in log~10~ units. "
             "An ordering is stated only where the difference exceeds the fit-to-fit difference of the ESTM scoring (Section 4.2) and the intervals do not overlap; this is a descriptive rule, not a test.")
@@ -126,7 +126,7 @@ def table8b(v):
 
 def table10(v):
     """Direct versus derived zT, under chemistry-cluster CV (Paper A run) and random row-level CV (NA7)."""
-    lines = [f"**Table 10:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
+    lines = [f"**Table [[tbl:dvd]]:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
              f"({v['dvd_clusters']} chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is {v['dvd_repeats']} repeats x {v['dvd_folds']} folds "
              f"of grouped folds; random CV is {v['na7_repeats']} repeats x {v['na7_folds']} folds of shuffled row-level folds; both pool the out-of-fold predictions "
              f"(n = {v.get('na7_n', _pend('NA7'))}).", "",
@@ -139,7 +139,7 @@ def table10(v):
 
 def table9(v):
     """Top five features per target by mean |SHAP| (NA3, chemistry-cluster folds), in the order S, sigma, kappa, zT; with the interval across the folds and the number of folds in which the feature is in the top three."""
-    lines = [f"**Table 9:** The five features with the largest mean \\|SHAP\\| per target (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows), each with the {v['iv_lo']}th to {v['iv_hi']}th percentile "
+    lines = [f"**Table [[tbl:shap]]:** The five features with the largest mean \\|SHAP\\| per target (mean over {v['shap_folds']} chemistry-cluster test folds, each on {v['shap_rows']} random test rows), each with the {v['iv_lo']}th to {v['iv_hi']}th percentile "
              f"of the per-fold mean across the {v['shap_folds']} folds and the number of folds in which it is among the three most important features. The folds are five repeats of five grouped folds, so they are not independent. "
              "Only orderings the folds support are interpreted: the intervals of ranks two to five overlap in every model, so those ranks are listed by their mean without a ranking claim. "
              "Units of the SHAP values are those of the target (*µ*V K^−1^ for S; log~10~ units for *σ* and *κ*). Every feature is a statistic of an ELEMENTAL property of the elements in the formula (or the temperature), "
@@ -153,10 +153,10 @@ def table9(v):
 
 def table11(v):
     """The ranked list of the main-list candidates, in two groups (chemistry cluster seen or not seen in the training data)."""
-    head = (f"**Table 11:** Ranked list of the {v['mp_f6']} lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group "
+    head = (f"**Table [[tbl:ranked]]:** Ranked list of the {v['mp_f6']} lead-free, narrow-gap, perovskite-type candidates of the main list: hypotheses to test, not findings. Within each group "
             f"(chemistry cluster present in the training data, or absent) the candidates are ordered by the maximum over {v['t_min']}--{v['t_max']} K of the predicted zT, reached at the temperature "
             "T; the other columns are the predictions at T (S with the sign of the carrier-type classifier). E~hull~ in eV atom^−1^ (on hull: no energy above the convex hull), E~g~ the PBE gap in eV, "
-            "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). ‡ the maximum lies above the melting point of the compound; see Table 11b. Studied before: a paper whose title or abstract reports a thermoelectric measurement "
+            "*σ* in S m^−1^, *κ* in W m^−1^ K^−1^. † the shortlist of the pre-registered rule (docs/decisions.md). ‡ the maximum lies above the melting point of the compound; see Table [[tbl:limits]]. Studied before: a paper whose title or abstract reports a thermoelectric measurement "
             "or calculation of the compound was found by a literature check made independently of the predictions (no evidence = none found, not none existing). The features are composition-only, so polymorphs of one compound (separate Materials Project entries) share their predictions.")
     lines = [head, "", "| **Cluster** | **#** | **Compound (MP id)** | **E~hull~** | **Stability** | **E~g~** | **T (K)** | **S (*µ*V K^−1^)** | ***σ*** | ***κ*** | **zT** | **Studied before** |",
              "|------|---|-----------|------|--------|-----|-----|------|--------|-----|-----|---------|"]
@@ -168,7 +168,7 @@ def table11(v):
 
 def table11b(v):
     """The shortlist: thermal limit, the maximum within the limit and the secondary view at 600 K."""
-    lines = [f"**Table 11b:** The {v['sl_n']} shortlist compounds with their thermal limits (sources in the text) and the predictions within them: the highest grid temperature reported, the maximum predicted zT up to it (at the temperature T), "
+    lines = [f"**Table [[tbl:limits]]:** The {v['sl_n']} shortlist compounds with their thermal limits (sources in the text) and the predictions within them: the highest grid temperature reported, the maximum predicted zT up to it (at the temperature T), "
              f"and the secondary view, the predicted zT at {v['lim_secondary_T']} K with the rank at {v['lim_secondary_T']} K next to the primary rank (maximum over the whole grid). Model outputs, not findings.", "",
              f"| **Compound** | **Thermal limit** | **Highest T reported (K)** | **Maximum zT within the limit** | **T (K)** | **zT at {v['lim_secondary_T']} K** | **Rank, primary** | **Rank, {v['lim_secondary_T']} K** |",
              "|-------------|--------------------|----------|---------|-----|-------|-----|-----|"]
@@ -179,11 +179,11 @@ def table11b(v):
 
 def table11c(v):
     """The main-list candidates ordered by the rank sum of |S| and kappa (added after NA12): an ordering of two predicted properties, not a performance score."""
-    head = (f"**Table 11c:** The {v['sk_n_main']} candidates of Table 11 ordered by the sum of their rank by predicted |S| (largest first) and their rank by predicted *κ* (lowest first), both at the grid temperature T of the "
-            f"maximum predicted zT within the compound's thermal limit (Table 11b: only CsSnI~3~ is limited, to {v['sk_T_limit']} K; the other {v['sk_n_800']} entries have no limit applied and use {v['sk_T']} K; limits were sought only for the shortlist). "
+    head = (f"**Table [[tbl:skview]]:** The {v['sk_n_main']} candidates of Table [[tbl:ranked]] ordered by the sum of their rank by predicted |S| (largest first) and their rank by predicted *κ* (lowest first), both at the grid temperature T of the "
+            f"maximum predicted zT within the compound's thermal limit (Table [[tbl:limits]]: only CsSnI~3~ is limited, to {v['sk_T_limit']} K; the other {v['sk_n_800']} entries have no limit applied and use {v['sk_T']} K; limits were sought only for the shortlist). "
             "Added after the literature comparison (NA12); not pre-registered. This is an ordering of two predicted properties only, not a performance score and not a prediction of zT. The best rank is the lowest; compounds with identical "
-            "predictions (separate Materials Project entries of one composition) share a rank. zT rank: the position # of Table 11 (the rank within the cluster group by the pre-registered ranking, unchanged). † the shortlist of the pre-registered rule.")
-    lines = [head, "", "| **Position** | **Compound (MP id)** | **Cluster** | **zT rank (Table 11)** | **T (K)** | **\\|S\\| rank** | ***κ*** **rank** | **Rank sum** |", "|---|-----------|------|---|---|---|---|---|"]
+            "predictions (separate Materials Project entries of one composition) share a rank. zT rank: the position # of Table [[tbl:ranked]] (the rank within the cluster group by the pre-registered ranking, unchanged). † the shortlist of the pre-registered rule.")
+    lines = [head, "", "| **Position** | **Compound (MP id)** | **Cluster** | **zT rank (Table [[tbl:ranked]])** | **T (K)** | **\\|S\\| rank** | ***κ*** **rank** | **Rank sum** |", "|---|-----------|------|---|---|---|---|---|"]
     for k in range(1, 31):
         lines.append(f"| {v[f'sk_t_{k}_pos']} | {v[f'sk_t_{k}_name']} | {v[f'sk_t_{k}_group']} | {v[f'sk_t_{k}_rz']} | {v[f'sk_t_{k}_T']} | {v[f'sk_t_{k}_rs']} | {v[f'sk_t_{k}_rk']} | {v[f'sk_t_{k}_rsum']} |")
     return "\n".join(lines)
@@ -192,12 +192,12 @@ def table11c(v):
 def table7(v):
     """Architecture comparison: R2 under chemistry-cluster CV (mean and SD over 5 repeats), and the paired difference from XGBoost with its cluster-bootstrap interval."""
     names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
-    lines = [f"**Table 7:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM, a random forest, the mean of the three and their stack on the same folds, with each model's difference from XGBoost "
+    lines = [f"**Table [[tbl:algo]]:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM, a random forest, the mean of the three and their stack on the same folds, with each model's difference from XGBoost "
              f"(same folds, paired) and the chemistry-cluster bootstrap interval of that difference in brackets. XGBoost and LightGBM are tuned with the same {v['optuna_trials']}-trial search; the random forest uses one fixed, "
              "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. The mean of the three models has no fitted weights. The stack is a non-negative ridge meta-learner over the three models whose weights are fitted on inner out-of-fold predictions inside each "
              "outer training fold, never on the outer test rows (Section 4.1.3). The last three rows are the paired comparisons fixed before the stack was run (difference of the pooled R^2^ on the same folds, "
              "chemistry-cluster bootstrap interval in brackets); the best single model is chosen on the same folds, which favours the single model, and the last row is given to four decimals because it is "
-             "below the third.", "",
+             "below the third. The hyperparameters of LightGBM and the fixed setting of the random forest are in Supplementary Table S2.", "",
              "| **Model** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
     for k, nm in names.items():
         cells = []
@@ -220,7 +220,7 @@ def table7(v):
 
 def table7b(v):
     """Explicit feature selection (NA13): the frozen XGBoost on all 397 features and on the features the thesis's selection keeps, paired on the same folds; and the post hoc refit with temperature_bin added."""
-    lines = [f"**Table 7b:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of each target's frozen XGBoost on all {v['n_feat']} features and on the features kept by the selection of the "
+    lines = [f"**Table [[tbl:featsel]]:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of each target's frozen XGBoost on all {v['n_feat']} features and on the features kept by the selection of the "
              f"earlier work, applied inside every outer training fold (Pearson filter at |r| = {v['na13_pearson']}, a LassoCV over {v['na13_alphas']} penalties, then the top k by mutual information on a {v['na13_mi_rows']}-row subsample; "
              f"k = {v['na13_S_k']}, {v['na13_sigma_k']}, {v['na13_kappa_k']}, {v['na13_zT_k']} for S, *σ*, *κ*, zT). Both fits of a fold use the same rows, machine and device. The paired difference is the comparison fixed before the run "
              "(difference of the pooled R^2^, chemistry-cluster bootstrap interval in brackets). The last three rows are post hoc and exploratory: the same selected features plus temperature_bin, added after the result above was seen; "
@@ -260,7 +260,7 @@ LIT_ROWS = [  # (study, model, data source, rows, reported metric, validation pr
 
 def table1(v):
     """Recent ML studies: the metric and the validation protocol each reports (no value of this work, no ranking)."""
-    lines = ["**Table 1:** Recent ML studies of thermoelectric property prediction: the metric and the validation protocol each reports, as the authors report them. "
+    lines = ["**Table [[tbl:lit]]:** Recent ML studies of thermoelectric property prediction: the metric and the validation protocol each reports, as the authors report them. "
              "The studies differ in dataset, target, preprocessing and protocol, so the values are not comparable with one another or with the R^2^ of this work.", "",
              "| **Study** | **Model** | **Source** | **Rows** | **Reported metric** | **Validation protocol** |",
              "|--------------|----------|-----------|-----------|-------------------|------------|"]
@@ -288,7 +288,7 @@ def _na12_rows(v, papers, levels):
 
 def table12(v):
     """Per-paper results of the NA12 comparison: independent papers (exact level first), their overall summary (papers weigh equally), and the training-source papers separately."""
-    head = ("**Table 12:** Comparison of out-of-fold predictions with published measurements, per paper. n: values compared; inside: values whose absolute relative error is within the relative uncertainty of the measurement "
+    head = ("**Table [[tbl:na12]]:** Comparison of out-of-fold predictions with published measurements, per paper. n: values compared; inside: values whose absolute relative error is within the relative uncertainty of the measurement "
             f"(S {v['na12_eps_S']}, *σ* {v['na12_eps_sigma']}, *κ* {v['na12_eps_kappa']}, zT {v['na12_eps_zT']}), with the fraction; median abs. rel. error: median absolute relative error (linear units); "
             "log~10~ ratio: median absolute and signed median of log~10~(prediction) − log~10~(literature) for *σ* and *κ*. Exact level: the same composition at the same temperature bin; cluster level: the mean of the held-out predictions "
             "of the sample's chemistry cluster at that bin (a family average). Part A: the independent papers; Part B: the papers whose DOI is among the DOIs of the training data (training sources), not pooled with part A.")
@@ -308,7 +308,7 @@ def table12(v):
 
 def table13(v):
     """Edge sensitivity: the overall summary of the independent papers with every edge value in its floor bin (headline) and in its neighbouring bin."""
-    head = ("**Table 13:** Edge sensitivity: the overall summary of the independent papers (papers weigh equally) with every value that lies within twice the calibration uncertainty of a temperature-bin edge evaluated in its floor bin (headline) "
+    head = ("**Table [[tbl:edge]]:** Edge sensitivity: the overall summary of the independent papers (papers weigh equally) with every value that lies within twice the calibration uncertainty of a temperature-bin edge evaluated in its floor bin (headline) "
             "and in the neighbouring bin.")
     lines = [head, "", "| **Level** | **Property** | **Fraction inside, headline** | **Fraction inside, neighbouring bin** | **Median abs. rel. error, headline** | **Median abs. rel. error, neighbouring bin** | "
              "**Median abs. log~10~ ratio, headline** | **Median abs. log~10~ ratio, neighbouring bin** |", "|---|---|---|---|---|---|---|---|"]
