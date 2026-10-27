@@ -49,15 +49,11 @@ def git(*a):
     return subprocess.run(["git", *a], cwd=REPO, capture_output=True, text=True).stdout.strip()
 
 
-def line_terminator(path):
-    with open(path, "rb") as f:
-        head = f.read(1 << 20)
-    return "\r\n" if b"\r\n" in head else "\n"
+SNAPFIX_LINE_TERMINATOR = "\r\n"  # the snapfix CSV was written on Windows by pandas (os.linesep); File A has "\n" (first run of this script: every cell equal, 280,174 bytes fewer = one per line)
 
 
-def rebuild(src, dst):
-    """Stream src to dst, replacing only the chemistry_cluster_id field. Returns counts."""
-    term = line_terminator(src)
+def rebuild(src, dst, term=SNAPFIX_LINE_TERMINATOR):
+    """Stream src to dst, replacing only the chemistry_cluster_id field and writing line terminator `term`. Returns counts."""
     cache, n, changed, comp_id_mismatch, failed = {}, 0, 0, 0, 0
     with open(src, encoding="utf-8", newline="") as fi, open(dst, "w", encoding="utf-8", newline="") as fo:
         rd, wr = csv.reader(fi), csv.writer(fo, lineterminator=term)
