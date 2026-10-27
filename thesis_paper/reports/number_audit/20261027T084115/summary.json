@@ -1,0 +1,65 @@
+{
+  "files": [
+    "paper.md",
+    "supplement.md",
+    "highlights.md"
+  ],
+  "numbers_total": 2861,
+  "by_class": {
+    "CITED": 94,
+    "DESIGN": 64,
+    "EXCLUDED:ENUM": 9,
+    "EXCLUDED:EQNUM": 4,
+    "EXCLUDED:EQUATION": 1,
+    "EXCLUDED:FRONT": 1,
+    "EXCLUDED:LAB": 4,
+    "EXCLUDED:MATH": 23,
+    "EXCLUDED:NOTATION": 356,
+    "EXCLUDED:PROTOCOL": 23,
+    "EXCLUDED:SECTION": 24,
+    "EXCLUDED:SPACEGROUP": 2,
+    "EXCLUDED:STEPRANGE": 12,
+    "EXCLUDED:XREF": 98,
+    "GENERATED": 2146
+  },
+  "unclassified_or_invalid": 0,
+  "unclassified_by_section": {},
+  "exclusion_rules": {
+    "SPACEGROUP": {
+      "pattern": "\\*Pm\\*3\\u0304\\*m\\*",
+      "spans": 2,
+      "numbers_excluded": 2
+    },
+    "EQUATION": {
+      "pattern": "\\*\\u03c3\\* = 1/\\*\\u03c1\\*",
+      "spans": 1,
+      "numbers_excluded": 1
+    },
+    "STEPRANGE": {
+      "pattern": "\\(steps \\d{1,2}--\\d{1,2}\\)",
+      "spans": 6,
+      "numbers_excluded": 12
+    },
+    "PROTOCOL": {
+      "pattern": "Random\\ split,\\ 5\\-fold\\ and\\ 10\\-fold\\ CV|Random,\\ 5\\-fold\\ and\\ 10\\-fold\\ CV|\\*\\*Random\\ 80/20\\*\\*\\ \\|\\ \\*\\*5\\-fold\\*\\*\\ \\|\\ \\*\\*10\\-fold\\*\\*|Random\\ 80/20\\ pools|5\\-fold\\ and\\ 10\\-fold\\ are\\ single\\ partitions|random\\ 80/20\\ minus\\ chemistry\\ cluster|random\\ 80/20\\ draws|\\(ii\\)\\ 5\\-fold\\ and\\ \\(iii\\)\\ 10\\-fold\\ CV|shuffled\\ 5\\-fold",
+      "spans": 11,
+      "numbers_excluded": 23
+    },
+    "LAB": {
+      "pattern": "\\b[Aa]mendments?\\s+\\d{1,2}(?:(?:,\\s*|\\s+and\\s+|,\\s+and\\s+)\\d{1,2})*\\b",
+      "spans": 3,
+      "numbers_excluded": 4
+    },
+    "PENDING": {
+      "pattern": "\\[\\[PENDING:[^\\]\\n]*\\]\\]",
+      "spans": 0,
+      "numbers_excluded": 0
+    }
+  },
+  "lab_amendments_cited": [
+    12,
+    13,
+    17
+  ],
+  "lab_amendment_problems": []
+}

@@ -1,0 +1,47 @@
+{
+  "inputs": {
+    "paper.md": {
+      "path": "thesis_paper\\paper\\paper.md",
+      "sha256": "d553f768b9a8aaa876e1d2f4d2a3343cfb167afd194437e461a8a915c1e9f8a8",
+      "bytes": 133509
+    },
+    "supplement.md": {
+      "path": "thesis_paper\\paper\\supplement.md",
+      "sha256": "7a26c4cb74988123204ce84c9b806ab923ec33f0916c774be45025c86b908fba",
+      "bytes": 53974
+    },
+    "highlights.md": {
+      "path": "thesis_paper\\paper\\highlights.md",
+      "sha256": "798492868fa31be20c9d2e4a909be35e90209605e8b526601c325a0ae79a0cce",
+      "bytes": 912
+    }
+  },
+  "git_head": "999494bb239e947b9f1e478bc03a52113c6a09e5",
+  "tree_clean": false,
+  "dirty_files": [
+    "thesis_paper/README.md",
+    "thesis_paper/docs/decisions.md",
+    "thesis_paper/figures/fig4_workflow.pdf",
+    "thesis_paper/figures/fig4_workflow.png",
+    "thesis_paper/paper/build/supplementary_tables.docx",
+    "thesis_paper/paper/build/thesis_paper_draft.docx",
+    "thesis_paper/paper/paper.md",
+    "thesis_paper/paper/supplement_amendments.md",
+    "thesis_paper/paper/supplement_hyperparameters.md",
+    "thesis_paper/scripts/audit_numbers.py",
+    "thesis_paper/scripts/build_paper.ps1",
+    "thesis_paper/scripts/build_paper.sh",
+    "thesis_paper/scripts/make_figures_thesis.py",
+    "thesis_paper/scripts/make_supplement_amendments.py",
+    "thesis_paper/scripts/make_supplement_hyperparameters.py",
+    "thesis_paper/scripts/make_thesis_values.py",
+    "thesis_paper/scripts/resolve_labels.py",
+    "thesis_paper/paper/highlights.md",
+    "thesis_paper/paper/supplement.md",
+    "thesis_paper/scripts/check_restructure.py"
+  ],
+  "script": "thesis_paper/scripts/audit_numbers.py",
+  "script_sha256": "bec70907ec5a0818dcf979a17f4b31a979d0c5e80ecd1e6b9df7706c33061606",
+  "python": "3.12.10",
+  "registry_rows": 112
+}
