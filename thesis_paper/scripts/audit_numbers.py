@@ -220,34 +220,41 @@ class TrackV(dict):
         return Tag(dict.__getitem__(self, k), k) if k in self else default
 
 
+_PLAIN = {}
+
+
 def block_traces(paper_text):
     """{block number: [(start, end, key)]}: which characters of each generated table block come from a value of the generator's dictionary, found by
     rendering every block with tagged values and checking that the untagged rendering equals the block in paper.md."""
-    if _TRACES:
-        return _TRACES
-    import make_thesis_values as mtv
-    import thesis_values as tv
+    if not _PLAIN:
+        import make_thesis_values as mtv
+        import thesis_values as tv
 
-    v = tv.values()
-    v.update(mtv.extra_values(v))
-    tracked = TrackV(v)
-    sentinel = re.compile(S1 + "([^" + S2 + "]*)" + S2 + "(.*?)" + S3, re.S)
-    for name, fn in mtv.BLOCKS.items():
-        n = name.split()[1]
-        raw = fn(tracked) + NL
-        plain, out, i = "", [], 0
-        for m in sentinel.finditer(raw):
-            plain += raw[i:m.start()]
-            st = len(plain)
-            plain += m.group(2)
-            out.append((st, len(plain), m.group(1)))
-            i = m.end()
-        plain += raw[i:]
+        v = tv.values()
+        v.update(mtv.extra_values(v))
+        tracked = TrackV(v)
+        sentinel = re.compile(S1 + "([^" + S2 + "]*)" + S2 + "(.*?)" + S3, re.S)
+        for name, fn in mtv.BLOCKS.items():
+            n = name.split()[1]
+            raw = fn(tracked) + NL
+            plain, out, i = "", [], 0
+            for m in sentinel.finditer(raw):
+                plain += raw[i:m.start()]
+                st = len(plain)
+                plain += m.group(2)
+                out.append((st, len(plain), m.group(1)))
+                i = m.end()
+            plain += raw[i:]
+            _PLAIN[n] = (plain, out)
+    traces = {}
+    for n, (plain, out) in _PLAIN.items():
         want = re.search(rf"<!-- BEGIN TABLE {n} -->\n(.*?)<!-- END TABLE {n} -->", paper_text.replace("\r\n", NL), re.S)
-        if want is None or want.group(1) != plain:
-            raise SystemExit(f"block {n}: paper.md is not the current rendering of its generator; run make_thesis_values.py first")
-        _TRACES[n] = out
-    return _TRACES
+        if want is None:
+            continue  # the block is in another file of the manuscript (checked in main)
+        if want.group(1) != plain:
+            raise SystemExit(f"block {n}: the file is not the current rendering of its generator; run make_thesis_values.py first")
+        traces[n] = out
+    return traces
 
 
 def audit(paper_text, reg):
@@ -324,21 +331,35 @@ def check_amendment_refs(cited):
 def main():
     """Entry point."""
     ap = argparse.ArgumentParser()
-    ap.add_argument("--paper", default=str(PAPER))
+    ap.add_argument("--paper", nargs="*", default=None, help="the files to audit (default: paper.md, supplement.md and highlights.md, those that exist)")
     ap.add_argument("--strict", action="store_true")
     ap.add_argument("--no-write", action="store_true")
     args = ap.parse_args()
     reg = load_registry()
-    prov = rr.provenance({"paper": str(Path(args.paper).resolve().relative_to(REPO))}, __file__) if not args.no_write else None
-    rows = audit(Path(args.paper).read_bytes().decode("utf-8"), reg)
+    files = [Path(f) for f in args.paper] if args.paper else [f for f in (PAPER, PAPER.with_name("supplement.md"), PAPER.with_name("highlights.md")) if f.exists()]
+    prov = rr.provenance({f.name: str(f.resolve().relative_to(REPO)) for f in files}, __file__) if not args.no_write else None
+    rows, texts = [], []
+    for f in files:
+        text = f.read_bytes().decode("utf-8")
+        texts.append(text)
+        for r in audit(text, reg):
+            rows.append({**r, "file": f.name})
     c = Counter(r["class"] for r in rows)
     bad = [r for r in rows if r["class"] in ("UNCLASSIFIED", "INVALID_MARKER")]
     by_sec = Counter(r["section"].split(" ")[0] if r["section"] else "(front)" for r in bad)
-    summary = {"numbers_total": len(rows), "by_class": dict(sorted(c.items())), "unclassified_or_invalid": len(bad), "unclassified_by_section": dict(sorted(by_sec.items()))}
-    text_clean = prepare(Path(args.paper).read_bytes().decode("utf-8"))[0]
+    summary = {"files": [f.name for f in files], "numbers_total": len(rows), "by_class": dict(sorted(c.items())), "unclassified_or_invalid": len(bad), "unclassified_by_section": dict(sorted(by_sec.items()))}
+    text_clean = NL.join(prepare(t)[0] for t in texts)
     spans = Counter(cat for (_, _, cat) in exclusion_spans(text_clean))
     summary["exclusion_rules"] = {cat: {"pattern": next(rx.pattern for (cc, rx, _) in EXCLUSIONS if cc == cat), "spans": spans.get(cat, 0),
                                         "numbers_excluded": c.get(f"EXCLUDED:{cat}", 0)} for cat in NEW_RULES}
+    found = set()
+    for t in texts:
+        found |= set(block_traces(t))
+    import make_thesis_values as _mtv
+
+    expected = {name.split()[1] for name in _mtv.BLOCKS}
+    if len(files) > 1 and found != expected:
+        raise SystemExit(f"generated tables missing from the manuscript files: {sorted(expected - found)}")
     cited = amendment_refs(text_clean)
     problems = check_amendment_refs(cited)
     summary["lab_amendments_cited"] = cited
@@ -347,7 +368,7 @@ def main():
         out = OUT_ROOT / rr.utc_stamp()
         out.mkdir(parents=True, exist_ok=True)
         with open(out / "audit.csv", "w", encoding="utf-8", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=["line", "token", "value", "class", "id", "problem", "section", "context"], lineterminator=NL)
+            w = csv.DictWriter(f, fieldnames=["file", "line", "token", "value", "class", "id", "problem", "section", "context"], lineterminator=NL)
             w.writeheader()
             w.writerows(rows)
         rr.write_json(out / "summary.json", summary)

@@ -51,7 +51,7 @@ def main():
         nums.append(no)
     assert nums == list(range(1, len(nums) + 1)), nums
     prov = rr.provenance({"decisions": "thesis_paper/docs/decisions.md"}, __file__)
-    out = ["**Supplementary Table S1.** The pre-registration of the literature comparison (NA12) and its amendments, with the date of each and when it was made relative to the data, as the entries of `docs/decisions.md` state. "
+    out = ["**Supplementary Table [[stbl:amend]]:** The pre-registration of the literature comparison (NA12) and its amendments, with the date of each and when it was made relative to the data, as the entries of `docs/decisions.md` state. "
            "Every entry was written before the comparison was run and before any out-of-fold prediction for these compounds was looked at; entries marked as made after a test run or after the digitising of a figure were made after the "
            "digitised values of that figure had been seen. A disclosure states what came into view that was not meant to be read (values of a source while it was inventoried, or the reason an amendment was prompted). The full rules are in `docs/decisions.md`.", "",
            "| **No.** | **Date** | **Subject** | **Timing, as stated in the entry** | **Entry contains a disclosure** |", "|---|---|---|---|---|"]

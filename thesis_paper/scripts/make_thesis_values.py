@@ -28,6 +28,8 @@ import audit_numbers as an  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[2]
 PAPER = REPO / "thesis_paper" / "paper" / "paper.md"
+SUPPLEMENT = REPO / "thesis_paper" / "paper" / "supplement.md"
+HIGHLIGHTS = REPO / "thesis_paper" / "paper" / "highlights.md"
 T4 = pav.TARGETS
 INLINE = re.compile(r"<!--v:(\w+)-->(.*?)<!--/v-->")
 DESIGN_MARK = re.compile(r"<!--d:([\w.\-]+)-->(.*?)<!--/d-->")
@@ -84,7 +86,7 @@ def table5(v):
 
 def table6(v):
     """The five-way validation ladder."""
-    head = (f"**Table [[tbl:ladder]]:** R^2^ obtained with five validation methods (same model, frozen hyperparameters and {v['n_feat']} features). "
+    head = (f"**Supplementary Table [[stbl:ladder]]:** R^2^ obtained with five validation methods (same model, frozen hyperparameters and {v['n_feat']} features). "
             f"Random 80/20 pools {v['rand_draws']} independent draws; 5-fold and 10-fold are single partitions; composition and chemistry cluster are the "
             f"mean ± SD across {v['repeats']} repeats. ∆R^2^ is random 80/20 minus chemistry cluster.")
     lines = [head, "", "| **Target** | **Random 80/20** | **5-fold** | **10-fold** | **Composition** | **Chemistry cluster** | **∆R^2^** |",
@@ -115,7 +117,7 @@ def table8b(v):
     head = (f"**Table [[tbl:tematdb]]:** teMatDb scoring with the same final models (R^2^ with the {v['tm_ci_level']}% interval of a bootstrap over whole samples, {v['tm_nboot']} draws, in brackets). "
             "Strata are never pooled: a0, the sample's source DOI is in the training data (not an external test); a, the DOI is not in the training data; "
             "b, the chemistry cluster is absent from training. zT (direct) is scored against the declared zT; *σ* and *κ* in log~10~ units. "
-            "An ordering is stated only where the difference exceeds the fit-to-fit difference of the ESTM scoring (Section 4.2) and the intervals do not overlap; this is a descriptive rule, not a test.")
+            "An ordering is stated only where the difference exceeds the fit-to-fit difference of the ESTM scoring (Section 3.2) and the intervals do not overlap; this is a descriptive rule, not a test.")
     lines = [head, "", "| **Stratum** | **Rows** | **Samples** | **S** | ***σ*** | ***κ*** | **zT (direct)** |", "|-------|-----|-----|---------|---------|---------|---------|"]
     names = {"a0": "a0, DOI in training", "a": "a, DOI not in training", "b": "b, cluster absent from training"}
     for s in ("a0", "a", "b"):
@@ -126,7 +128,7 @@ def table8b(v):
 
 def table10(v):
     """Direct versus derived zT, under chemistry-cluster CV (Paper A run) and random row-level CV (NA7)."""
-    lines = [f"**Table [[tbl:dvd]]:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
+    lines = [f"**Supplementary Table [[stbl:dvd]]:** Direct versus component-wise zT prediction on the {v['dvd_rows']} rows with all four properties present "
              f"({v['dvd_clusters']} chemistry clusters); each model uses its own target's frozen hyperparameters. Chemistry-cluster CV is {v['dvd_repeats']} repeats x {v['dvd_folds']} folds "
              f"of grouped folds; random CV is {v['na7_repeats']} repeats x {v['na7_folds']} folds of shuffled row-level folds; both pool the out-of-fold predictions "
              f"(n = {v.get('na7_n', _pend('NA7'))}).", "",
@@ -194,10 +196,10 @@ def table7(v):
     names = {"xgb": "XGBoost (tuned once, frozen)", "lgbm": "LightGBM (tuned, same protocol)", "rf": "Random forest (one fixed setting, not tuned)"}
     lines = [f"**Table [[tbl:algo]]:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of XGBoost, LightGBM, a random forest, the mean of the three and their stack on the same folds, with each model's difference from XGBoost "
              f"(same folds, paired) and the chemistry-cluster bootstrap interval of that difference in brackets. XGBoost and LightGBM are tuned with the same {v['optuna_trials']}-trial search; the random forest uses one fixed, "
-             "literature-based setting and is not tuned (Section 3.4), which favours XGBoost. The mean of the three models has no fitted weights. The stack is a non-negative ridge meta-learner over the three models whose weights are fitted on inner out-of-fold predictions inside each "
-             "outer training fold, never on the outer test rows (Section 4.1.3). The last three rows are the paired comparisons fixed before the stack was run (difference of the pooled R^2^ on the same folds, "
+             "literature-based setting and is not tuned (Section 2.3), which favours XGBoost. The mean of the three models has no fitted weights. The stack is a non-negative ridge meta-learner over the three models whose weights are fitted on inner out-of-fold predictions inside each "
+             "outer training fold, never on the outer test rows (Section 3.1.2). The last three rows are the paired comparisons fixed before the stack was run (difference of the pooled R^2^ on the same folds, "
              "chemistry-cluster bootstrap interval in brackets); the best single model is chosen on the same folds, which favours the single model, and the last row is given to four decimals because it is "
-             "below the third. The hyperparameters of LightGBM and the fixed setting of the random forest are in Supplementary Table S2.", "",
+             "below the third. The hyperparameters of LightGBM and the fixed setting of the random forest are in Supplementary Table [[stbl:hyper]].", "",
              "| **Model** | **S** | ***σ*** | ***κ*** | **zT** |", "|--------------------|------------|------------|------------|------------|"]
     for k, nm in names.items():
         cells = []
@@ -220,7 +222,7 @@ def table7(v):
 
 def table7b(v):
     """Explicit feature selection (NA13): the frozen XGBoost on all 397 features and on the features the thesis's selection keeps, paired on the same folds; and the post hoc refit with temperature_bin added."""
-    lines = [f"**Table [[tbl:featsel]]:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of each target's frozen XGBoost on all {v['n_feat']} features and on the features kept by the selection of the "
+    lines = [f"**Supplementary Table [[stbl:featsel]]:** Chemistry-cluster CV R^2^ (mean ± SD over {v['n_repeats']} repeats of {v['n_folds']} grouped folds) of each target's frozen XGBoost on all {v['n_feat']} features and on the features kept by the selection of the "
              f"earlier work, applied inside every outer training fold (Pearson filter at |r| = {v['na13_pearson']}, a LassoCV over {v['na13_alphas']} penalties, then the top k by mutual information on a {v['na13_mi_rows']}-row subsample; "
              f"k = {v['na13_S_k']}, {v['na13_sigma_k']}, {v['na13_kappa_k']}, {v['na13_zT_k']} for S, *σ*, *κ*, zT). Both fits of a fold use the same rows, machine and device. The paired difference is the comparison fixed before the run "
              "(difference of the pooled R^2^, chemistry-cluster bootstrap interval in brackets). The last three rows are post hoc and exploratory: the same selected features plus temperature_bin, added after the result above was seen; "
@@ -288,7 +290,7 @@ def _na12_rows(v, papers, levels):
 
 def table12(v):
     """Per-paper results of the NA12 comparison: independent papers (exact level first), their overall summary (papers weigh equally), and the training-source papers separately."""
-    head = ("**Table [[tbl:na12]]:** Comparison of out-of-fold predictions with published measurements, per paper. n: values compared; inside: values whose absolute relative error is within the relative uncertainty of the measurement "
+    head = ("**Supplementary Table [[stbl:na12]]:** Comparison of out-of-fold predictions with published measurements, per paper. n: values compared; inside: values whose absolute relative error is within the relative uncertainty of the measurement "
             f"(S {v['na12_eps_S']}, *σ* {v['na12_eps_sigma']}, *κ* {v['na12_eps_kappa']}, zT {v['na12_eps_zT']}), with the fraction; median abs. rel. error: median absolute relative error (linear units); "
             "log~10~ ratio: median absolute and signed median of log~10~(prediction) − log~10~(literature) for *σ* and *κ*. Exact level: the same composition at the same temperature bin; cluster level: the mean of the held-out predictions "
             "of the sample's chemistry cluster at that bin (a family average). Part A: the independent papers; Part B: the papers whose DOI is among the DOIs of the training data (training sources), not pooled with part A.")
@@ -308,7 +310,7 @@ def table12(v):
 
 def table13(v):
     """Edge sensitivity: the overall summary of the independent papers with every edge value in its floor bin (headline) and in its neighbouring bin."""
-    head = ("**Table [[tbl:edge]]:** Edge sensitivity: the overall summary of the independent papers (papers weigh equally) with every value that lies within twice the calibration uncertainty of a temperature-bin edge evaluated in its floor bin (headline) "
+    head = ("**Supplementary Table [[stbl:edge]]:** Edge sensitivity: the overall summary of the independent papers (papers weigh equally) with every value that lies within twice the calibration uncertainty of a temperature-bin edge evaluated in its floor bin (headline) "
             "and in the neighbouring bin.")
     lines = [head, "", "| **Level** | **Property** | **Fraction inside, headline** | **Fraction inside, neighbouring bin** | **Median abs. rel. error, headline** | **Median abs. rel. error, neighbouring bin** | "
              "**Median abs. log~10~ ratio, headline** | **Median abs. log~10~ ratio, neighbouring bin** |", "|---|---|---|---|---|---|---|---|"]
@@ -326,8 +328,12 @@ NA12_LEVELS_ORDER = ("exact", "cluster")
 BLOCKS = {"TABLE 1": table1, "TABLE 2": table2, "TABLE 4": table4, "TABLE 5": table5, "TABLE 6": table6, "TABLE 7": table7, "TABLE 7b": table7b, "TABLE 8": table8, "TABLE 8b": table8b, "TABLE 9": table9, "TABLE 10": table10, "TABLE 11": table11, "TABLE 11b": table11b, "TABLE 11c": table11c, "TABLE 12": table12, "TABLE 13": table13}
 
 
-def render(text):
-    """Return `text` with every inline value and block recomputed. Raises KeyError on an unknown key or missing block."""
+BLOCKS_SUPPLEMENT = ("TABLE 6", "TABLE 7b", "TABLE 10", "TABLE 12", "TABLE 13")  # the tables of the Supplement (supplement.md); every other block is in paper.md
+TARGETS = ((PAPER, tuple(k for k in BLOCKS if k not in BLOCKS_SUPPLEMENT)), (SUPPLEMENT, BLOCKS_SUPPLEMENT), (HIGHLIGHTS, ()))  # (file, the blocks it must hold)
+
+
+def render(text, names=None):
+    """Return `text` with every inline value and the blocks `names` (default: all) recomputed. Raises KeyError on an unknown key or missing block."""
     v = tv.values()
     v.update(extra_values(v))
 
@@ -346,10 +352,11 @@ def render(text):
         return f"<!--d:{m.group(1)}-->{tv.config_value(row['source_or_config'])}<!--/d-->"
 
     text = DESIGN_MARK.sub(sub_design, text)
-    for name, fn in BLOCKS.items():
+    for name in (BLOCKS if names is None else names):
+        fn = BLOCKS[name]
         pat = re.compile(rf"(<!-- BEGIN {re.escape(name)} -->\n)(?:.*?\n)?(<!-- END {re.escape(name)} -->)", re.S)
         if not pat.search(text):
-            raise KeyError(f"block {name!r} not found in paper.md")
+            raise KeyError(f"block {name!r} not found")
         body = fn(v) + "\n"
         text = pat.sub(lambda m, body=body: m.group(1) + body + m.group(2), text)
     return text
@@ -360,25 +367,28 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--list-pending", action="store_true")
-    ap.add_argument("--paper", default=str(PAPER))
+    ap.add_argument("--paper", default=None, help="one file only (all blocks)")
     args = ap.parse_args()
-    path = Path(args.paper)
-    old = path.read_bytes().decode("utf-8").replace("\r\n", "\n")
-    if args.list_pending:
-        for i, line in enumerate(old.split("\n"), 1):
-            for m in PENDING.finditer(line):
-                print(f"line {i}: {m.group(0)}")
-        return 0
-    new = render(old)
-    if args.check:
-        if new != old:
-            print("paper.md is out of date: run python thesis_paper/scripts/make_thesis_values.py")
-            return 1
-        print(f"paper.md values and blocks are current ({len(INLINE.findall(new))} inline values, {len(PENDING.findall(new))} pending)")
-        return 0
-    path.write_bytes(new.encode("utf-8"))
-    print(f"wrote {path} ({len(INLINE.findall(new))} inline values, {len(BLOCKS)} blocks, {len(PENDING.findall(new))} pending)")
-    return 0
+    targets = [(Path(args.paper), None)] if args.paper else [(f, names) for f, names in TARGETS if f.exists()]
+    rc = 0
+    for path, names in targets:
+        old = path.read_bytes().decode("utf-8").replace("\r\n", "\n")
+        if args.list_pending:
+            for i, line in enumerate(old.split("\n"), 1):
+                for m in PENDING.finditer(line):
+                    print(f"{path.name} line {i}: {m.group(0)}")
+            continue
+        new = render(old, names)
+        if args.check:
+            if new != old:
+                print(f"{path.name} is out of date: run python thesis_paper/scripts/make_thesis_values.py")
+                rc = 1
+            else:
+                print(f"{path.name} values and blocks are current ({len(INLINE.findall(new))} inline values, {len(PENDING.findall(new))} pending)")
+            continue
+        path.write_bytes(new.encode("utf-8"))
+        print(f"wrote {path} ({len(INLINE.findall(new))} inline values, {len(PENDING.findall(new))} pending)")
+    return rc
 
 
 if __name__ == "__main__":

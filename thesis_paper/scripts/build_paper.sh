@@ -12,6 +12,7 @@ PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/import_paper_a_figures.py 
 # Standing rule of 2026-10-04: the build fails on an unclassified number; DRAFT=1 prints the audit summary and builds anyway.
 if [ "${DRAFT:-0}" = "1" ]; then PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/audit_numbers.py --no-write; else PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/audit_numbers.py --strict --no-write; fi
 # Tables and figures are numbered here, from their labels, in the order of the captions (scripts/resolve_labels.py).
-PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/resolve_labels.py --write thesis_paper/paper/build/paper_resolved.md
+PYTHONIOENCODING=utf-8 "$PYTHON" thesis_paper/scripts/resolve_labels.py --write thesis_paper/paper/build/paper_resolved.md thesis_paper/paper/build/supplement_resolved.md
 "$PANDOC" thesis_paper/paper/build/paper_resolved.md --resource-path="thesis_paper/paper:." --citeproc --bibliography=thesis_paper/paper/refs.bib --csl=thesis_paper/paper/csl/nature.csl -o thesis_paper/paper/build/thesis_paper_draft.docx
-"$PANDOC" thesis_paper/paper/supplement_amendments.md thesis_paper/paper/supplement_hyperparameters.md -o thesis_paper/paper/build/supplementary_tables.docx
+"$PANDOC" thesis_paper/paper/build/supplement_resolved.md --resource-path="thesis_paper/paper:." --citeproc --bibliography=thesis_paper/paper/refs.bib --csl=thesis_paper/paper/csl/nature.csl -o thesis_paper/paper/build/supplementary_material.docx
+"$PANDOC" thesis_paper/paper/highlights.md -o thesis_paper/paper/build/highlights.docx

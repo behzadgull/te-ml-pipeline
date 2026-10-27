@@ -1,4 +1,4 @@
-**Supplementary Table S2.** Hyperparameters of the comparison models of Section 4.1.3. Part A: LightGBM, tuned once per target on all rows of the target by a 20-trial Optuna search scored with 3-fold chemistry-cluster cross-validation (the XGBoost protocol), then frozen; the search ranges are those of the code. Part B: the random forest, which is not tuned: one setting, fixed in advance, is used for all four targets (Section 3.4). The target scale is log~10~ for *σ* and *κ* and linear for S and zT.
+**Supplementary Table [[stbl:hyper]]:** Hyperparameters of the comparison models of Section 3.1.2. Part A: LightGBM, tuned once per target on all rows of the target by a 20-trial Optuna search scored with 3-fold chemistry-cluster cross-validation (the XGBoost protocol), then frozen; the search ranges are those of the code. Part B: the random forest, which is not tuned: one setting, fixed in advance, is used for all four targets (Section 2.3). The target scale is log~10~ for *σ* and *κ* and linear for S and zT.
 
 *Part A: LightGBM (tuned, frozen).*
 

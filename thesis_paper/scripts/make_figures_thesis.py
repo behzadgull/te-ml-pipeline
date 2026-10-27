@@ -242,9 +242,9 @@ def fig4_workflow(out):
         assert len(found) == 1, (title, found)
         return found[0]
 
-    s_ladder, s_methods, s_algo = sec("Chemistry-cluster cross-validation"), sec("Validation method comparison"), sec("Algorithm comparison")
-    s_nested, s_dvd, s_shap, s_ext = sec("Model development"), sec("Direct versus component-wise zT prediction"), sec("Feature importance and explainability"), sec("External validation")
-    s_screen = [n for n, h in heads.items() if h == "Virtual screening" and n.startswith("4.")]
+    s_ladder, s_methods, s_algo = sec("Chemistry-cluster cross-validation and validation inflation"), sec("Validation design"), sec("Algorithm comparison")
+    s_nested, s_dvd, s_shap, s_ext = sec("Models"), sec("Direct versus component-wise zT prediction"), sec("Feature importance"), sec("External validation")
+    s_screen = [n for n, h in heads.items() if h == "Screening results" and n.startswith("3.")]
     assert len(s_screen) == 1
     s_screen = s_screen[0]
 
@@ -657,22 +657,26 @@ def fig3_perovskite(out):
 
 
 def check_paper_widths():
-    """Every figure of paper.md that carries a width in cm must be included at its true width (the width of its PNG at the style's dpi), so that Word does not rescale it."""
+    """Every figure of paper.md and of the Supplement that carries a width in cm must be included at its true width (the width of its PNG at the style's dpi), so that Word does not rescale it.
+    Figure numbers come from the labels (scripts/resolve_labels.py)."""
     import re
 
     from PIL import Image
 
-    text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
     import resolve_labels as rl
 
-    numbers = rl.scan(text)[0]["fig"]  # figure numbers are assigned from the labels, in the order of the captions
-    found = [(str(numbers[lb]), rel, w) for lb, rel, w in re.findall(r"!\[Figure \[\[fig:(\w+)\]\]\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", text)]
-    assert len(found) == 13, f"expected the thirteen drawn figures (1 to 13) with a width in cm, found {len(found)}"
+    main_text = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
+    supp_text = rl.load_supplement()
+    numbers = rl.scan(main_text, supp_text)[0]
+    found = [("Figure " + str(numbers["fig"][lb]), rel, w) for lb, rel, w in re.findall(r"!\[Figure \[\[fig:(\w+)\]\]\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", main_text)]
+    found += [("Supplementary Figure S" + str(numbers["sfig"][lb]), rel, w) for lb, rel, w in re.findall(r"!\[Supplementary Figure \[\[sfig:(\w+)\]\]\]\(\.\./figures/([^)]+)\)\{width=([\d.]+)cm\}", supp_text)]
+    drawn = len(re.findall(r"!\[(?:Supplementary )?Figure \[\[(?:fig|sfig):\w+\]\]\]\(\.\./figures/(?!source_media)", main_text + supp_text))
+    assert len(found) == 13 and drawn >= 13, f"expected the thirteen drawn figures with a width in cm, found {len(found)} of {drawn}"
     for num, rel, w in found:
         with Image.open(REPO / "thesis_paper" / "figures" / rel) as im:
             cm = im.size[0] / fs.DPI * 2.54
-        assert abs(cm - float(w)) < 0.05, f"Figure {num}: paper.md says {w} cm, the file is {cm:.2f} cm wide"
-    return {int(n): float(w) for n, _, w in found}
+        assert abs(cm - float(w)) < 0.05, f"{num}: the text says {w} cm, the file is {cm:.2f} cm wide"
+    return {n: float(w) for n, _, w in found}
 
 
 def main():

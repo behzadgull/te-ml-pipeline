@@ -1,5 +1,5 @@
 """
-Supplementary Table S2: the hyperparameters of the two comparison models of Section 4.1.3, generated from the committed frozen-hyperparameter files of the NA2 runs (nothing is typed here).
+Supplementary Table S2: the hyperparameters of the two comparison models of Section 3.1.2, generated from the committed frozen-hyperparameter files of the NA2 runs (nothing is typed here).
 Part A: LightGBM, tuned once per target by the XGBoost protocol (results/na2_lightgbm/<run>/frozen/<target>_lightgbm.json), with the search space read from src/nested_cv.py
 (_lightgbm_search_space, parsed with ast). Part B: the random forest, one fixed setting for every target (results/na2_rf_<target>/<run>/frozen/<target>_random_forest.json); the script asserts that
 the four files hold the same setting. Writes thesis_paper/paper/supplement_hyperparameters.md.
@@ -70,8 +70,8 @@ def main():
     prov = rr.provenance(inputs, __file__)
     rr.write_json(REPO / "thesis_paper" / "reports" / "supplement_hyperparameters" / "run_config.json", prov)
     n_tr, n_in = lg["S"]["n_trials"], lg["S"]["n_inner_folds"]
-    out = [f"**Supplementary Table S2.** Hyperparameters of the comparison models of Section 4.1.3. Part A: LightGBM, tuned once per target on all rows of the target by a {n_tr}-trial Optuna search scored with {n_in}-fold chemistry-cluster "
-           "cross-validation (the XGBoost protocol), then frozen; the search ranges are those of the code. Part B: the random forest, which is not tuned: one setting, fixed in advance, is used for all four targets (Section 3.4). "
+    out = [f"**Supplementary Table [[stbl:hyper]]:** Hyperparameters of the comparison models of Section 3.1.2. Part A: LightGBM, tuned once per target on all rows of the target by a {n_tr}-trial Optuna search scored with {n_in}-fold chemistry-cluster "
+           "cross-validation (the XGBoost protocol), then frozen; the search ranges are those of the code. Part B: the random forest, which is not tuned: one setting, fixed in advance, is used for all four targets (Section 2.3). "
            "The target scale is log~10~ for *σ* and *κ* and linear for S and zT.", "",
            "*Part A: LightGBM (tuned, frozen).*", "",
            "| **Parameter** | **S** | ***σ*** | ***κ*** | **zT** | **Search range** |", "|---------------------|-----------|-----------|-----------|-----------|------------------|"]
