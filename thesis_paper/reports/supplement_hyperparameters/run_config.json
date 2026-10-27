@@ -46,16 +46,9 @@
       "bytes": 69364
     }
   },
-  "git_head": "a11ff7f5da3d337115e87acf5a83fc4bb5472395",
-  "tree_clean": false,
-  "dirty_files": [
-    "thesis_paper/paper/paper.md",
-    "thesis_paper/scripts/make_figures_thesis.py",
-    "thesis_paper/scripts/make_thesis_values.py",
-    "thesis_paper/paper/supplement_hyperparameters.md",
-    "thesis_paper/scripts/make_supplement_hyperparameters.py",
-    "thesis_paper/scripts/resolve_labels.py"
-  ],
+  "git_head": "98ef031cf65391af661492adcfb2852f080578f1",
+  "tree_clean": true,
+  "dirty_files": [],
   "script": "thesis_paper/scripts/make_supplement_hyperparameters.py",
   "script_sha256": "a45c3c04708c3190df7a9795b202af83810c33f708ad4bddc0453f61410511ab",
   "python": "3.12.10"
