@@ -1276,14 +1276,14 @@ def screening_sk_table_values():
 
 
 def na12_values():
-    """Counts of the NA12 literature validation, read from committed files: the papers of the NA12 table of source/pdfs/README.md (pre-registration B) and the
-    amendments of docs/decisions.md (numbered 1 to N without gaps; the pre-registration itself is not counted)."""
-    root = Path(__file__).resolve().parents[1]
-    readme = (root / "source" / "pdfs" / "README.md").read_text(encoding="utf-8")
-    block = readme.split("## NA12 literature validation", 1)[1]
-    papers = [ln for ln in block.splitlines() if re.match(r"\| `[a-z]+\d{4}\.pdf` \|", ln)]
-    assert len({ln.split("|")[1].strip() for ln in papers}) == len(papers)
-    nums = sorted(int(m.group(1)) for m in re.finditer(r"^## .*NA12, amendment (\d+) to pre-registration B", (root / "docs" / "decisions.md").read_text(encoding="utf-8"), re.M))
+    """Counts of the NA12 literature validation, read from the committed files of inputs/ (written by make_manuscript_inputs.py): the papers of the NA12 table of source/pdfs/README.md
+    (pre-registration B) and the amendments of docs/decisions.md (numbered 1 to N without gaps; the pre-registration itself is not counted)."""
+    import json
+
+    root = Path(__file__).resolve().parents[1] / "inputs"
+    papers = json.loads((root / "na12_papers.json").read_text(encoding="utf-8"))["papers"]
+    assert len({p["file"] for p in papers}) == len(papers)
+    nums = json.loads((root / "na12_amendments.json").read_text(encoding="utf-8"))["numbers"]
     assert nums == list(range(1, len(nums) + 1)), nums
     out = {"na12_papers": str(len(papers)), "na12_amendments": str(len(nums))}
     out.update(na12_comparison_values())

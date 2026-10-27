@@ -234,8 +234,7 @@ def fig4_workflow(out):
 
     v = tv.values()
     v.update(tv.new_analysis_values())
-    paper = (REPO / "thesis_paper" / "paper" / "paper.md").read_text(encoding="utf-8")
-    heads = {m.group(1): m.group(2).strip() for m in re.finditer(r"^#{2,3} (\d(?:\.\d+)*) (.+)$", paper, flags=re.M)}
+    heads = json.loads((REPO / "thesis_paper" / "inputs" / "manuscript_sections.json").read_text(encoding="utf-8"))  # section number -> heading, written from paper.md by make_manuscript_inputs.py
 
     def sec(title):
         found = [n for n, h in heads.items() if h == title]
@@ -706,8 +705,11 @@ def main():
     fig2_carrier_concentration(FIG / "fig2_carrier_concentration")
     fig3_perovskite(FIG / "fig3_perovskite_structure")
     fig13_s_kappa(FIG / "fig13_s_kappa")
-    widths = check_paper_widths()
-    print("Figures 1 to 4, 6, 7, 9, 10, 11, 12 and 13 saved; widths in paper.md match the files:", widths)
+    if (REPO / "thesis_paper" / "paper" / "paper.md").exists():  # a manuscript consistency check; the figures themselves do not depend on it
+        widths = check_paper_widths()
+        print("Figures 1 to 4, 6, 7, 9, 10, 11, 12 and 13 saved; widths in paper.md match the files:", widths)
+    else:
+        print("Figures 1 to 4, 6, 7, 9, 10, 11, 12 and 13 saved (paper.md absent: the width check against the manuscript was skipped)")
 
 
 if __name__ == "__main__":

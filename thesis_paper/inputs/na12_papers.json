@@ -1,0 +1,32 @@
+{
+ "papers": [
+  {
+   "file": "sebastialuna2022.pdf",
+   "doi": "10.1021/acsaem.2c01936"
+  },
+  {
+   "file": "singh2016.pdf",
+   "doi": "10.1080/14786435.2016.1263404"
+  },
+  {
+   "file": "shibasaki2009.pdf",
+   "doi": "10.1007/s11664-009-0666-x"
+  },
+  {
+   "file": "rajasekaran2020.pdf",
+   "doi": "10.1039/d0ce00702a"
+  },
+  {
+   "file": "ohta2005.pdf",
+   "doi": "10.1063/1.1847723"
+  },
+  {
+   "file": "ohtaki1995.pdf",
+   "doi": "10.1006/jssc.1995.1384"
+  },
+  {
+   "file": "flahaut2006.pdf",
+   "doi": "10.1109/ict.2006.331291"
+  }
+ ]
+}
